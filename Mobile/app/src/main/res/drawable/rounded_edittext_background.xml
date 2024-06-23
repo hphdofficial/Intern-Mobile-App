@@ -1,0 +1,14 @@
+<!-- rounded_edittext_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <corners android:radius="20dp" /> <!-- Điều chỉnh bán kính để làm tròn các góc -->
+
+    <solid android:color="@android:color/white" /> <!-- Màu nền của EditText -->
+
+    <!-- Nếu bạn muốn đường viền cho EditText, bạn có thể thêm dòng sau -->
+     <stroke
+        android:width="1dp"
+        android:color="@color/black" />
+
+</shape>

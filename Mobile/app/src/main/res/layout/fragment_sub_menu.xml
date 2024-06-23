@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".sub_menu">
+
+    <!-- TODO: Update blank fragment layout -->
+   <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="match_parent"
+       android:orientation="vertical">
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_marginTop="30dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:padding="16dp"
+           android:id="@+id/user"
+
+           tools:ignore="MissingConstraints">
+
+           <!-- Avatar người dùng -->
+
+           <!-- Tên người dùng -->
+           <ImageView
+               android:id="@+id/imageViewAvatar"
+               android:layout_width="80dp"
+               android:layout_height="80dp"
+               android:scaleType="centerCrop"
+               android:src="@drawable/ic_right_menu"
+
+               tools:layout_editor_absoluteX="16dp"
+               tools:layout_editor_absoluteY="16dp" />
+
+           <TextView
+               android:id="@+id/textViewName"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:text="John Doe"
+               android:textColor="@android:color/black"
+               android:textSize="18sp"
+               android:layout_marginLeft="20dp"
+               app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
+               tools:layout_editor_absoluteY="16dp" />
+           <TextView
+               android:id="@+id/txt_content"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:text="25 years old"
+               android:textSize="14sp"
+               android:textColor="@android:color/darker_gray"
+               app:layout_constraintStart_toStartOf="@id/textViewName"
+               app:layout_constraintEnd_toEndOf="@id/textViewName"
+               app:layout_constraintTop_toBottomOf="@+id/textViewName"
+               android:layout_marginTop="8dp"/>
+
+
+       </androidx.constraintlayout.widget.ConstraintLayout>
+       <com.google.android.material.navigation.NavigationView
+           android:id="@+id/nav_view"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:layout_gravity="start"
+           android:background="@android:color/white"
+           app:menu="@menu/sub_menu_options"
+           app:itemIconSize="30dp"
+           />
+   </LinearLayout>
+
+</FrameLayout>
