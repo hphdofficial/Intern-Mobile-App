@@ -15,6 +15,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+        </activity>
+        <activity
+            android:name=".activity_item_chapter"
+            android:exported="true" >
+
+        </activity>
+        <activity
+            android:name=".activity_chapters"
+            android:exported="true"></activity>
+        <activity
+            android:name=".activity_lessons"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
