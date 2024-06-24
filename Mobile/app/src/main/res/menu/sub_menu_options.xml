@@ -1,0 +1,25 @@
+<!-- res/menu/menu_main.xml -->
+<!-- res/menu/drawer_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single"
+        android:background="@android:color/white">
+        <item
+            android:id="@+id/action_item1"
+            android:title="Lý thyết võ thuật"
+            android:icon="@drawable/ic_right_menu"
+            />
+
+        <item
+            android:id="@+id/action_item2"
+            android:title="Thông tin phần mềm"
+            android:icon="@drawable/ic_right_menu_vn"
+            />
+
+        <item
+            android:id="@+id/action_item3"
+            android:title="Đăng xuất"
+            android:icon="@drawable/ic_logout"
+            />
+    </group>
+</menu>
