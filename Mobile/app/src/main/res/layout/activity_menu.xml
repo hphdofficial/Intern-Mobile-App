@@ -70,11 +70,11 @@
             android:id="@+id/imageViewAvatar"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_right_menu"
-            app:layout_constraintEnd_toStartOf="@id/guideline_center" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="16dp" />
 
         <!-- Tên người dùng -->
         <TextView
