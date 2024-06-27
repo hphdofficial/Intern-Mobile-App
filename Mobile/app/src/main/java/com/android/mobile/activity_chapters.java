@@ -43,6 +43,8 @@ public class activity_chapters extends AppCompatActivity {
 
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
+        TextView txtTitle = findViewById(R.id.txtTitle);
+        txtTitle.setText(title);
 
         ImageButton btnBack = findViewById(R.id.back_button);
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -53,8 +55,7 @@ public class activity_chapters extends AppCompatActivity {
             }
         });
 
-        TextView txtTitle = findViewById(R.id.txtTitle);
-        txtTitle.setText(title);
+
 
         Chapter_adapter chapterAdapter = new Chapter_adapter(this, chapters);
         RecyclerView recyclerView = findViewById(R.id.chapter_recycleview);
