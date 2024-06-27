@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuActivity">
+    <!-- Icon bên trái -->
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/header_title"
+      tools:ignore="MissingConstraints">
+      <ImageView
+          android:id="@+id/img_menu"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:src="@drawable/ic_left_menu"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="8dp"
+          android:layout_marginBottom="8dp"/>
+
+      <!-- Icon bên phải -->
+      <ImageView
+          android:id="@+id/img_language"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:src="@drawable/ic_right_menu_vn"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"
+          android:layout_marginEnd="16dp"
+          android:layout_marginTop="8dp"
+          android:layout_marginBottom="8dp"/>
+
+      <!-- Dòng text chính giữa -->
+      <TextView
+          android:id="@+id/txt_title"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:text="Center Text"
+          android:textSize="18sp"
+          android:textColor="@android:color/black"
+          app:layout_constraintStart_toEndOf="@id/img_menu"
+          app:layout_constraintEnd_toStartOf="@id/img_language"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:gravity="center"/>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_title"
+        tools:ignore="MissingConstraints">
+
+
+        <!-- Avatar người dùng -->
+        <ImageView
+            android:id="@+id/imageViewAvatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_right_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <!-- Tên người dùng -->
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="John Doe"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <LinearLayout
+            android:id="@+id/camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@id/imageViewAvatar">
+
+            <ImageView
+                android:id="@+id/view"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="end"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_right_menu"
+
+                />
+
+            <ImageView
+                android:id="@+id/change"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="8dp"
+
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_right_menu" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="25 years old"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/textViewName"
+            app:layout_constraintStart_toStartOf="@id/textViewName"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  <LinearLayout
+      android:layout_marginTop="20dp"
+      android:id="@+id/menu_item"
+      app:layout_constraintTop_toBottomOf="@+id/user"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+
+      android:orientation="vertical">
+      <com.google.android.material.bottomnavigation.BottomNavigationView
+          android:id="@+id/menu1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+
+          android:layout_alignParentBottom="true"
+          app:menu="@menu/menu_nav"
+          app:layout_constraintTop_toBottomOf="@+id/user"
+          tools:ignore="MissingConstraints"
+          app:labelVisibilityMode="labeled"
+          />
+      <com.google.android.material.bottomnavigation.BottomNavigationView
+          android:id="@+id/menu2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true"
+          app:menu="@menu/menu_nav"
+          app:layout_constraintTop_toBottomOf="@+id/user"
+          tools:ignore="MissingConstraints"
+          app:labelVisibilityMode="labeled"
+          />
+  </LinearLayout>
+
+
+<LinearLayout
+    android:id="@+id/sub_menu"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="10"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:clickable="true"
+    tools:ignore="MissingConstraints">
+    >
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/header_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        android:layout_marginEnd="16dp">
+        <TextView
+            android:id="@+id/language_vn"
+            android:layout_width="48dp"
+            android:gravity="center"
+
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext_background"
+            android:textColor="@android:color/black"
+            android:text="VN"
+            android:backgroundTint="#3DDC84"
+            android:hint=""
+            android:inputType="text"/>
+        <TextView
+            android:id="@+id/language_eng"
+            android:layout_width="48dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext_background"
+            android:textColor="@android:color/black"
+            android:text="ENG"
+            android:backgroundTint="#3DDC84"
+            android:hint=""
+            android:inputType="text"/>
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
