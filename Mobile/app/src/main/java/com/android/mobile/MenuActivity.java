@@ -21,14 +21,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MenuActivity extends AppCompatActivity {
 
+
     private ImageView img_menu;
     private ImageView img_language;
     private TextView txt_title;
+
     private ImageView imageViewAvatar;
     private TextView textViewName;
     private TextView txt_content;
     private BottomNavigationView bottomNavigationView;
+
     LinearLayout sub_menu;
+
     LinearLayout camera;
     LinearLayout language;
     ConstraintLayout main;
@@ -43,6 +47,7 @@ public class MenuActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         img_menu = findViewById(R.id.img_menu);
         img_language = findViewById(R.id.img_language);
         txt_title = findViewById(R.id.txt_title);
@@ -55,30 +60,35 @@ public class MenuActivity extends AppCompatActivity {
         main = findViewById(R.id.main);
         CreateFracmentSubMenu();
         restartView();
+      
         main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 restartView();
             }
         });
+      
         img_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sub_menu.setVisibility(View.VISIBLE);
             }
         });
+
         findViewById(R.id.action_item1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"abc",Toast.LENGTH_SHORT).show();
             }
         });
+      
         imageViewAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 camera.setVisibility(View.VISIBLE);
             }
         });
+
         img_language.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,14 +103,15 @@ public class MenuActivity extends AppCompatActivity {
         sub_menu.setVisibility(View.GONE);
 
     }
+
     public void CreateCamera(){
         camera.setVisibility(View.GONE);
     }
+    
     public void restartView(){
         sub_menu.setVisibility(View.GONE);
         camera.setVisibility(View.GONE);
         language.setVisibility(View.GONE);
-
     }
 
     @Override

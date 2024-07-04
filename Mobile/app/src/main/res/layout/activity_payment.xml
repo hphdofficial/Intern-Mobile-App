@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".payment">
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:padding="16dp"
+        android:layout_below="@+id/fragment_container"
+        tools:ignore="MissingConstraints">
+
+
+        <TextView
+
+            android:id="@+id/textViewFullNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Họ và tên:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewFullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewFullNameLabel"
+            android:layout_marginStart="8dp"
+            android:text="Nguyễn Văn A" />
+
+        <TextView
+            android:id="@+id/textViewPhoneNumberLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewFullName"
+            android:layout_marginTop="16dp"
+            android:text="Số điện thoại:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewPhoneNumberLabel"
+            android:layout_marginStart="8dp"
+            android:text="0123456789" />
+
+        <TextView
+            android:id="@+id/textViewDOBLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewPhoneNumber"
+            android:layout_marginTop="16dp"
+            android:text="Ngày sinh:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewDOB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewDOBLabel"
+            android:layout_marginStart="8dp"
+            android:text="01/01/1990" />
+
+        <TextView
+            android:id="@+id/textViewHealthStatusLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewDOB"
+            android:layout_marginTop="16dp"
+            android:text="Tình trạng sức khỏe:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewHealthStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewHealthStatusLabel"
+            android:layout_marginStart="8dp"
+            android:text="Bình thường" />
+
+        <TextView
+            android:id="@+id/textViewClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lớp học:"
+            android:textStyle="bold"
+            android:layout_below="@+id/textViewHealthStatus"
+            android:layout_marginTop="16dp"/>
+        <TextView
+            android:id="@+id/textViewInstructor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giảng viên:"
+            android:textStyle="bold"
+            android:layout_below="@id/textViewClass"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/textViewInstructorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewInstructor"
+            android:text="John Doe"
+            android:layout_marginStart="8dp"/>
+
+        <TextView
+            android:id="@+id/textViewCourseFee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số tiền đóng:"
+            android:textStyle="bold"
+            android:layout_below="@id/textViewInstructorName"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/textViewFeeAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewCourseFee"
+            android:text="500.000 VND"
+            android:layout_marginStart="8dp"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textViewPaymentMethodName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Payment Method"
+
+        android:textSize="20sp"
+        android:layout_below="@+id/relativeLayout2" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+       android:layout_below="@+id/textViewPaymentMethodName"
+        tools:ignore="MissingConstraints">
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+
+            <ImageView
+                android:id="@+id/payment_momo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_logo"
+                android:scaleType="centerCrop" />
+
+            <View
+                android:id="@+id/borderView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/border"
+                android:visibility="invisible" /> <!-- Ban đầu ẩn border -->
+
+        </FrameLayout>
+        <ImageView
+            android:id="@+id/payment_new"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_logo"
+            android:scaleType="centerCrop"
+            android:background="@drawable/border"
+
+            android:layout_margin="10dp"
+             />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thanh toán"
+
+        android:layout_below="@+id/linearLayout">
+
+    </Button>
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
+</RelativeLayout>
