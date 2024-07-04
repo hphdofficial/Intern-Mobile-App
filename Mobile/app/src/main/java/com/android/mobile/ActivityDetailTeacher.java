@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class ActivityDetailTeacher extends AppCompatActivity {
 
@@ -38,12 +40,23 @@ public class ActivityDetailTeacher extends AppCompatActivity {
         imageViewAvatar = findViewById(R.id.imageViewAvatar); // Assuming you have an imageViewAvatar ID in your XML
         imageViewAvatar.setOnClickListener(this::showPopupMenu);
 
-        ImageButton backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(ActivityDetailTeacher.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        });
+//        ImageButton backButton = findViewById(R.id.backButton);
+//        backButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(ActivityDetailTeacher.this, MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
+//        });
+
+        //chèn fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+// Thêm hoặc thay thế Fragment mới
+        titleFragment newFragment = new titleFragment();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+        fragmentTransaction.commit();
     }
 
     public void showPopupMenu(View v) {

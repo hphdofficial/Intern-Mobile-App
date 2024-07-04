@@ -7,32 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".ActivityNews">
 
-    <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="8dp"
-        android:background="?attr/selectableItemBackground"
-        android:src="@drawable/backicon"
-        android:contentDescription="Quay lại"
-        />
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="105dp"
-        android:layout_toEndOf="@id/backButton"
-        android:text="Tin tức"
-        android:layout_marginTop="18dp"
-        android:textSize="24sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/itemNews"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/textViewTitle"
+        android:layout_below="@+id/fragment_container"
         android:layout_marginTop="16dp"/>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
 </RelativeLayout>

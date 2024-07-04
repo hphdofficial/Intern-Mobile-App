@@ -1,0 +1,164 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupActivity">
+
+
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/image_view_logo"
+        android:layout_width="189dp"
+        android:layout_height="161dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/logo" />
+
+    <!-- Signup Text -->
+    <TextView
+        android:id="@+id/text_view_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_view_logo"
+        android:layout_centerHorizontal="true"
+        android:text="Signup"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="8dp"/>
+
+    <!-- First Name EditText -->
+    <EditText
+        android:id="@+id/edit_text_first_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_signup"
+        android:layout_marginTop="16dp"
+        android:hint="First Name"
+        android:minHeight="48dp" /> <!-- Thêm android:minHeight -->
+
+    <!-- Last Name EditText -->
+    <EditText
+        android:id="@+id/edit_text_last_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_first_name"
+        android:layout_marginTop="8dp"
+        android:hint="Last Name"
+        android:minHeight="48dp" /> <!-- Thêm android:minHeight -->
+
+    <!-- Email EditText -->
+    <EditText
+        android:id="@+id/edit_text_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_last_name"
+        android:layout_marginTop="8dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp" /> <!-- Thêm android:minHeight -->
+
+    <!-- Password EditText -->
+    <EditText
+        android:id="@+id/edit_text_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_email"
+        android:layout_marginTop="8dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp" /> <!-- Thêm android:minHeight -->
+
+    <!-- Eye icon for toggling password visibility -->
+    <ImageButton
+        android:id="@+id/image_button_toggle_password_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/edit_text_password"
+        android:layout_alignBottom="@id/edit_text_password"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Toggle password visibility"
+        android:padding="8dp"
+        android:src="@drawable/hide" />
+
+
+    <!-- Confirm Password EditText -->
+    <EditText
+        android:id="@+id/edit_text_confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_password"
+        android:layout_marginTop="8dp"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp" /> <!-- Thêm android:minHeight -->
+
+    <!-- Eye icon for toggling password visibility -->
+    <ImageButton
+        android:id="@+id/image_button_toggle_confirm_password_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/edit_text_confirm_password"
+        android:layout_alignBottom="@id/edit_text_confirm_password"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Toggle confirm password visibility"
+        android:padding="8dp"
+        android:src="@drawable/hide" />
+
+
+    <!-- Birthday EditText -->
+    <EditText
+        android:id="@+id/edit_text_birthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_confirm_password"
+        android:layout_marginTop="8dp"
+        android:hint="Birthday (YYYY-MM-DD)"
+        android:inputType="date"
+        android:minHeight="48dp" /> <!-- Thêm android:minHeight -->
+
+    <!-- Gender RadioGroup -->
+    <RadioGroup
+        android:id="@+id/radio_group_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_birthday"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <!-- Male RadioButton -->
+        <!-- Male RadioButton -->
+        <RadioButton
+            android:id="@+id/radio_button_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:checked="true"
+            android:padding="16dp" /> <!-- Tăng kích thước vùng chạm -->
+
+        <!-- Female RadioButton -->
+        <RadioButton
+            android:id="@+id/radio_button_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:padding="16dp" /> <!-- Tăng kích thước vùng chạm -->
+
+    </RadioGroup>
+
+
+    <!-- Sign Up Button -->
+    <Button
+        android:id="@+id/button_sign_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radio_group_gender"
+        android:layout_marginTop="16dp"
+        android:text="Sign Up" />
+</RelativeLayout>
