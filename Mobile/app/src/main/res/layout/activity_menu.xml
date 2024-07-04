@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuActivity">
+    <!-- Icon bên trái -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/fragment_container">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        tools:ignore="MissingConstraints">
+
+
+        <!-- Avatar người dùng -->
+        <ImageView
+            android:id="@+id/imageViewAvatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_right_menu"
+            />
+
+        <!-- Tên người dùng -->
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="John Doe"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <LinearLayout
+            android:id="@+id/camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@id/imageViewAvatar">
+
+            <ImageView
+                android:id="@+id/view"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="end"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_right_menu"
+
+                />
+
+            <ImageView
+                android:id="@+id/change"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="8dp"
+
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_right_menu" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="25 years old"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/textViewName"
+            app:layout_constraintStart_toStartOf="@id/textViewName"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:id="@+id/menu_item"
+        app:layout_constraintTop_toBottomOf="@+id/user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/menu1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/menu_nav"
+            app:layout_constraintTop_toBottomOf="@+id/user"
+            tools:ignore="MissingConstraints"
+            app:labelVisibilityMode="labeled"
+            />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/menu2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/menu_nav"
+            app:layout_constraintTop_toBottomOf="@+id/user"
+            tools:ignore="MissingConstraints"
+            app:labelVisibilityMode="labeled"
+            />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
+</RelativeLayout>

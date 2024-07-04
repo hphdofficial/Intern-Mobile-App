@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".titleFragment">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/header_title"
+        tools:ignore="MissingConstraints">
+        <ImageView
+            android:id="@+id/img_menu"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_left_menu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Icon bên phải -->
+        <ImageView
+            android:id="@+id/img_language"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_right_menu_vn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Dòng text chính giữa -->
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Center Text"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@id/img_menu"
+            app:layout_constraintEnd_toStartOf="@id/img_language"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/header_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        android:layout_marginEnd="16dp">
+        <TextView
+            android:id="@+id/language_vn"
+            android:layout_width="48dp"
+            android:gravity="center"
+
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext_background"
+            android:textColor="@android:color/black"
+            android:text="VN"
+            android:backgroundTint="#3DDC84"
+            android:hint=""
+            android:inputType="text"/>
+        <TextView
+            android:id="@+id/language_eng"
+            android:layout_width="48dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext_background"
+            android:textColor="@android:color/black"
+            android:text="ENG"
+            android:backgroundTint="#3DDC84"
+            android:hint=""
+            android:inputType="text"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/sub_menu"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="10"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:clickable="true"
+        tools:ignore="MissingConstraints">
+        >
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

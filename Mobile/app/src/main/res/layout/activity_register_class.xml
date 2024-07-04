@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterClass">
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/fragment_container"
+
+        android:padding="16dp">
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:id="@+id/textViewFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Họ và tên" />
+
+        <EditText
+            android:id="@+id/editTextFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewFullName"
+            android:hint="Nhập họ tên" />
+
+        <TextView
+            android:id="@+id/textViewPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextFullName"
+            android:text="Số điện thoại" />
+
+        <EditText
+            android:id="@+id/editTextPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewPhoneNumber"
+            android:hint="Nhập số điện thoại"
+
+            android:inputType="phone" />
+
+        <TextView
+            android:id="@+id/textViewDateOfBirth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextPhoneNumber"
+            android:text="Ngày tháng năm sinh" />
+
+        <EditText
+            android:id="@+id/editTextDateOfBirth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewDateOfBirth"
+            android:clickable="true"
+            android:focusable="false"
+            android:hint="Ngày tháng năm sinh" />
+
+
+        <TextView
+            android:id="@+id/textViewAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextDateOfBirth"
+            android:text="Địa chỉ" />
+
+        <EditText
+            android:id="@+id/editTextAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewAddress"
+            android:hint="Nhập địa chỉ" />
+
+        <TextView
+            android:id="@+id/textViewParentName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextAddress"
+            android:text="Họ và tên phụ huynh" />
+
+        <EditText
+            android:id="@+id/editTextParentName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewParentName"
+            android:hint="Nhập họ tên phụ huynh" />
+
+        <TextView
+            android:id="@+id/textViewParentPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextParentName"
+            android:text="Số điện thoại phụ huynh" />
+
+        <EditText
+            android:id="@+id/editTextParentPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewParentPhoneNumber"
+            android:hint="Nhập số điện thoại phụ huynh"
+            android:inputType="phone" />
+
+        <TextView
+            android:id="@+id/change_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextParentPhoneNumber"
+            android:text="Thông tin lớp học"></TextView>
+
+      <!--  <ScrollView
+            android:id="@+id/scroll_radio_class"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/change_class">
+
+            <RadioGroup
+                android:id="@+id/class_radiobutton"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radioButtonOption1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Option 1" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonOption2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Option 2" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonOption3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Option 3" />
+
+            </RadioGroup>
+        </ScrollView>-->
+<TextView
+    android:id="@+id/name_class"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/change_class"
+    android:text="Tên lớp - Giảng viên">
+
+</TextView>
+        <TextView
+            android:id="@+id/date_learn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name_class"
+            android:text="Thời gian">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/select_health"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/date_learn"
+            android:text="Tình trạng sức khỏe"></TextView>
+
+        <ScrollView
+            android:id="@+id/scroll_health"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/select_health">
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+               >
+
+                <CheckBox
+                    android:id="@+id/checkBoxOption1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Có vấn đề tim mạch" />
+                <CheckBox
+                    android:id="@+id/checkBoxOption3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Có vấn đề về hô hấp" />
+                <CheckBox
+                    android:id="@+id/checkBoxOption4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Có vấn đề về xương khớp (từng bị gãy tay/chân, trật khớp...)" />
+
+
+                <CheckBox
+                    android:id="@+id/checkBoxOption2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hoàn toàn khỏe mạnh" />
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                   <CheckBox
+                       android:id="@+id/checkBoxOption5"
+                       android:layout_width="0dp"
+                       android:layout_weight="1"
+                       android:layout_height="wrap_content"
+                       android:text="Mục khác" />
+                   <EditText
+                       android:layout_weight="3"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       ></EditText>
+               </LinearLayout>
+
+
+            </RadioGroup>
+        </ScrollView>
+
+
+        <Button
+            android:id="@+id/buttonRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/scroll_health"
+            android:layout_marginTop="16dp"
+            android:text="Đăng ký" />
+
+    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
+</RelativeLayout>
+<!--họ và ten phụ huynh
+sdt phụ huynh
+Lớp cần chọn 1 ds lớp
+ghi chú
+-->

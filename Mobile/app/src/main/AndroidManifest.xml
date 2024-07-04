@@ -44,6 +44,36 @@
             android:name=".ActivityNews"
             android:exported="false" />
         <activity
+            android:name=".PaymentQR"
+            android:exported="false" />
+        <activity
+            android:name=".payment"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterClass"
+            android:exported="false" />
+        <activity
+            android:name=".MenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StartActivity"
+            android:exported="false" />
+       <activity
+            android:name=".ClassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetailClassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetailClubActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AboutActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ClubActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
