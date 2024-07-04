@@ -19,6 +19,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity_member_checkin"
             android:exported="false" />
@@ -30,9 +40,6 @@
             android:exported="false" />
         <activity
             android:name=".ViewImageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity_view_image"
             android:exported="false" />
         <activity
             android:name=".ActivityReplaceCamera"
@@ -61,7 +68,7 @@
         <activity
             android:name=".StartActivity"
             android:exported="false" />
-       <activity
+        <activity
             android:name=".ClassActivity"
             android:exported="false" />
         <activity
@@ -77,54 +84,10 @@
             android:name=".ClubActivity"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activity_checkin"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".activity_classes"
-            android:exported="true"></activity>
-        <activity
-            android:name=".MenuActivity"
-            android:exported="true" />
-        <activity
-            android:name=".StartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AboutActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ClubActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ViewImageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity_view_image"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityReplaceCamera"
-            android:exported="false" />
-        <activity
-            android:name=".ImageSelectActivity"
-            android:exported="false" />
-        <activity
-            android:name=".profiletest"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityNews"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true" />
         <activity
             android:name=".activity_item_chapter"
