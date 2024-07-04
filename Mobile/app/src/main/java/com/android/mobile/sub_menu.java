@@ -1,8 +1,10 @@
 package com.android.mobile;
 
+
 import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.content.Context;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,6 +68,7 @@ public class sub_menu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View rootView = inflater.inflate(R.layout.fragment_sub_menu, container, false);
         rootView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,getScreenHeight()
@@ -77,5 +81,6 @@ public class sub_menu extends Fragment {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
+
     }
 }
