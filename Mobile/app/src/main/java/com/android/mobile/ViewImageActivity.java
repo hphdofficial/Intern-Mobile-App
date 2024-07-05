@@ -20,7 +20,7 @@ public class ViewImageActivity extends AppCompatActivity {
         // Check if the default image flag is passed
         boolean useDefaultImage = getIntent().getBooleanExtra("defaultImage", false);
         if (useDefaultImage) {
-            imageView.setImageResource(R.drawable.imgprofile);
+            imageView.setImageResource(R.drawable.photo3x4);
         } else {
             // Get the image URI from the intent
             String imageUriString = getIntent().getStringExtra("imageUri");

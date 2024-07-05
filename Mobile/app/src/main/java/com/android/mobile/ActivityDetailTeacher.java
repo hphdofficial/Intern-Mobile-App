@@ -1,8 +1,11 @@
 package com.android.mobile;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -59,30 +62,59 @@ public class ActivityDetailTeacher extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+//    public void showPopupMenu(View v) {
+//        PopupMenu popupMenu = new PopupMenu(this, v);
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int itemId = item.getItemId();
+//                if (itemId == R.id.menu_view_image) {
+//                    if (currentImageUri != null) {
+//                        Intent viewIntent = new Intent(ActivityDetailTeacher.this, ViewImageActivity.class);
+//                        viewIntent.putExtra("imageUri", currentImageUri);
+//                        startActivity(viewIntent);
+//                    } else {
+//                        Toast.makeText(ActivityDetailTeacher.this, "No image to view", Toast.LENGTH_SHORT).show();
+//                    }
+//                    return true;
+//                } else if (itemId == R.id.menu_replace_gallery) {
+//                    Intent galleryIntent = new Intent(ActivityDetailTeacher.this, ImageSelectActivity.class);
+//                    startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
+//                    return true;
+//                } else if (itemId == R.id.menu_replace_camera) {
+//                    Intent cameraIntent = new Intent(ActivityDetailTeacher.this, ActivityReplaceCamera.class);
+//                    startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//        popupMenu.inflate(R.menu.image_profile_menu);
+//        popupMenu.show();
+//    }
+
     public void showPopupMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.menu_view_image) {
-                    if (currentImageUri != null) {
-                        Intent viewIntent = new Intent(ActivityDetailTeacher.this, ViewImageActivity.class);
-                        viewIntent.putExtra("imageUri", currentImageUri);
-                        startActivity(viewIntent);
-                    } else {
-                        Toast.makeText(ActivityDetailTeacher.this, "No image to view", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
-                } else if (itemId == R.id.menu_replace_gallery) {
-                    Intent galleryIntent = new Intent(ActivityDetailTeacher.this, ImageSelectActivity.class);
-                    startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
-                    return true;
-                } else if (itemId == R.id.menu_replace_camera) {
-                    Intent cameraIntent = new Intent(ActivityDetailTeacher.this, ActivityReplaceCamera.class);
-                    startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
-                    return true;
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_view_image) {
+                Intent viewIntent = new Intent(ActivityDetailTeacher.this, ViewImageActivity.class);
+                if (currentImageUri != null) {
+                    viewIntent.putExtra("imageUri", currentImageUri.toString());
+                } else {
+                    viewIntent.putExtra("defaultImage", true);
                 }
+                startActivity(viewIntent);
+                return true;
+            } else if (itemId == R.id.menu_replace_gallery) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
+                return true;
+            } else if (itemId == R.id.menu_replace_camera) {
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
+                return true;
+            } else {
                 return false;
             }
         });
@@ -90,19 +122,53 @@ public class ActivityDetailTeacher extends AppCompatActivity {
         popupMenu.show();
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == RESULT_OK) {
+//            if (requestCode == REQUEST_CODE_GALLERY && data != null) {
+//                currentImageUri = data.getData();
+//                imageViewAvatar.setImageURI(currentImageUri);
+//            } else if (requestCode == REQUEST_CODE_CAMERA && data != null && data.getExtras() != null) {
+//                Bundle extras = data.getExtras();
+//                Uri imageUri = (Uri) extras.getParcelable("data");
+//                currentImageUri = imageUri;
+//                imageViewAvatar.setImageURI(currentImageUri);
+//            }
+//        }
+//    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_GALLERY && data != null) {
-                currentImageUri = data.getData();
-                imageViewAvatar.setImageURI(currentImageUri);
-            } else if (requestCode == REQUEST_CODE_CAMERA && data != null && data.getExtras() != null) {
+                Uri selectedImageUri = data.getData();
+                if (selectedImageUri != null) {
+                    currentImageUri = selectedImageUri;
+                    imageViewAvatar.setImageURI(selectedImageUri); // Hiển thị ảnh trong ImageView
+                }
+                Intent intent = new Intent(ActivityDetailTeacher.this, ImageSelectActivity.class);
+                intent.putExtra("imageUri", selectedImageUri.toString());
+                startActivity(intent);
+            } else if (requestCode == REQUEST_CODE_CAMERA && data != null) {
                 Bundle extras = data.getExtras();
-                Uri imageUri = (Uri) extras.getParcelable("data");
-                currentImageUri = imageUri;
-                imageViewAvatar.setImageURI(currentImageUri);
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                if (imageBitmap != null) {
+                    currentImageUri = getImageUriFromBitmap(imageBitmap);
+                    imageViewAvatar.setImageBitmap(imageBitmap); // Hiển thị ảnh trong ImageView
+                }
+                Intent intent = new Intent(ActivityDetailTeacher.this, ActivityReplaceCamera.class);
+                intent.putExtra("data", imageBitmap);
+                startActivity(intent);
             }
         }
     }
+
+    // Phương thức để chuyển Bitmap thành Uri
+    private Uri getImageUriFromBitmap(Bitmap bitmap) {
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
 }
