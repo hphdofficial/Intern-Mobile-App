@@ -22,20 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MenuActivity extends AppCompatActivity {
 
 
-    private ImageView img_menu;
-    private ImageView img_language;
-    private TextView txt_title;
 
-    private ImageView imageViewAvatar;
-    private TextView textViewName;
-    private TextView txt_content;
-    private BottomNavigationView bottomNavigationView;
-
-    LinearLayout sub_menu;
-
-    LinearLayout camera;
-    LinearLayout language;
-    ConstraintLayout main;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,70 +35,28 @@ public class MenuActivity extends AppCompatActivity {
             return insets;
         });
 
-        img_menu = findViewById(R.id.img_menu);
-        img_language = findViewById(R.id.img_language);
-        txt_title = findViewById(R.id.txt_title);
-        imageViewAvatar = findViewById(R.id.imageViewAvatar);
-        textViewName = findViewById(R.id.textViewName);
-        txt_content = findViewById(R.id.txt_content);
-        sub_menu = findViewById(R.id.sub_menu);
-        camera = findViewById(R.id.camera);
-        language = findViewById(R.id.language);
-        main = findViewById(R.id.main);
-        CreateFracmentSubMenu();
-        restartView();
-      
-        main.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                restartView();
-            }
-        });
-      
-        img_menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sub_menu.setVisibility(View.VISIBLE);
-            }
-        });
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        findViewById(R.id.action_item1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"abc",Toast.LENGTH_SHORT).show();
-            }
-        });
-      
-        imageViewAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                camera.setVisibility(View.VISIBLE);
-            }
-        });
-
-        img_language.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                language.setVisibility(View.GONE);
-            }
-        });
-    }
-    public void CreateFracmentSubMenu(){
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new sub_menu())
-                .commit();
-        sub_menu.setVisibility(View.GONE);
-
+// Thêm hoặc thay thế Fragment mới
+        titleFragment newFragment = new titleFragment();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+        fragmentTransaction.commit();
     }
 
-    public void CreateCamera(){
-        camera.setVisibility(View.GONE);
-    }
-    
-    public void restartView(){
-        sub_menu.setVisibility(View.GONE);
-        camera.setVisibility(View.GONE);
-        language.setVisibility(View.GONE);
+
+private TextView text;
+    public void onMenuItemClick(View view) {
+         text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+           if(language.contains("VN")){
+               text.setText("ENG");
+           }else text.setText("VN");
+            Toast.makeText(this,language,Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -122,6 +67,6 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        restartView();
+
     }
 }
