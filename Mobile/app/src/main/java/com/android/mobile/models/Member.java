@@ -3,9 +3,11 @@ package com.android.mobile.models;
 public class Member {
     private String ten;
     private String capDai;
+    private String maHocVien;
 
-    public Member(String capDai, String ten) {
+    public Member(String capDai, String maHocVien, String ten) {
         this.capDai = capDai;
+        this.maHocVien = maHocVien;
         this.ten = ten;
     }
 
@@ -26,5 +28,13 @@ public class Member {
 
     public void setTen(String ten) {
         this.ten = ten;
+    }
+
+    public String getMaHocVien() {
+        return maHocVien;
+    }
+
+    public void setMaHocVien(String maHocVien) {
+        this.maHocVien = maHocVien;
     }
 }

@@ -34,6 +34,8 @@ public class Checkin_adapter extends RecyclerView.Adapter<Checkin_adapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         String txtMemberName = memberList.get(i).getTen();
         viewHolder.txtMemberName.setText(txtMemberName);
+        String txtMemberID = memberList.get(i).getMaHocVien();
+        viewHolder.txtMemberID.setText(txtMemberID);
     }
 
     @Override
@@ -43,10 +45,12 @@ public class Checkin_adapter extends RecyclerView.Adapter<Checkin_adapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtMemberName;
+        TextView txtMemberID;
 
         ViewHolder(View itemView) {
             super(itemView);
             txtMemberName = itemView.findViewById(R.id.txtMemberName);
+            txtMemberID = itemView.findViewById(R.id.txtMemberID);
         }
     }
 }

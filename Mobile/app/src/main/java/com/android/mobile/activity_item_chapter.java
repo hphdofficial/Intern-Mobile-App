@@ -7,6 +7,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class activity_item_chapter extends AppCompatActivity {
 
@@ -18,16 +20,15 @@ public class activity_item_chapter extends AppCompatActivity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
 
-        ImageButton btnBack = findViewById(R.id.back_button);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent1 = new Intent(getApplicationContext(), activity_chapters.class);
-                startActivity(intent1);
-            }
-        });
 
-        TextView txtTitle = findViewById(R.id.txtTitle);
-        txtTitle.setText(title);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+// Thêm hoặc thay thế Fragment mới
+        titleFragment newFragment = new titleFragment();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+        fragmentTransaction.commit();
     }
 }
