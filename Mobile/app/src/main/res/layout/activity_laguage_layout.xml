@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LaguageLayout">
+    >
     <TextView
         android:id="@+id/languageText"
         android:layout_width="48dp"
@@ -19,7 +19,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginLeft="10dp"
-        android:src="@drawable/ic_left_menu"
+        android:src="@drawable/change1"
         android:clickable="true"
         android:onClick="onMenuItemClick"
         tools:layout_editor_absoluteY="0dp"

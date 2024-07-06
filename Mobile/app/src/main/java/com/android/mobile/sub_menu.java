@@ -4,8 +4,8 @@ package com.android.mobile;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.content.Context;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Picasso;
 
 
 /**
@@ -39,6 +40,8 @@ public class sub_menu extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 private NavigationView navigationView;
+    private int placeholderResourceId = R.drawable.photo3x4;
+private ImageView image_avatar;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -83,7 +86,18 @@ private NavigationView navigationView;
         rootView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,getScreenHeight()
                ));
+
+        // lấy link image
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("myImage", Context.MODE_PRIVATE);
+        String linkImage = sharedPreferences.getString("linkImage", "default_value");
+        ImageView imageView = rootView.findViewById(R.id.image_avatar_sub);
+        Picasso.get()
+                .load(linkImage)
+                .placeholder(placeholderResourceId ) // Hình ảnh placeholder
+                .error(placeholderResourceId) // Hình ảnh sẽ hiển thị nếu tải lỗi
+                .into(imageView);
         navigationView = rootView.findViewById(R.id.nav_view);
+        navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -117,7 +131,6 @@ private NavigationView navigationView;
                 }
 
                 if(id == R.id.btn_language){
-
                 }
                 // Close the navigation drawer
                return true;
@@ -131,8 +144,17 @@ private NavigationView navigationView;
         return rootView;
     }
 
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem item = menu.findItem(R.id.btn_self);
 
-/*    @Override
+
+            item.setEnabled(true);
+            item.getIcon().setAlpha(255);
+
+    }
+
+    /*    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.sub_menu_options, menu);
         Log.e("zzz","aaa");
