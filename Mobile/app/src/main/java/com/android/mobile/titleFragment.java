@@ -20,7 +20,6 @@ import org.w3c.dom.Text;
 
 public class titleFragment extends Fragment {
 
-    LinearLayout language;
     LinearLayout sub_menu;
     private TextView title;
     ConstraintLayout main;
@@ -37,7 +36,6 @@ public class titleFragment extends Fragment {
         rootView.bringToFront();
         title = rootView.findViewById(R.id.txt_title);
         main =  rootView.findViewById(R.id.main);
-        language = rootView.findViewById(R.id.language);
         sub_menu = rootView.findViewById(R.id.sub_menu);
         img_menu = rootView.findViewById(R.id.img_menu);
         title.setText("Nội dung tiêu đề");
@@ -64,9 +62,9 @@ public class titleFragment extends Fragment {
     public void restartView(){
         sub_menu.setVisibility(View.GONE);
 
-        language.setVisibility(View.GONE);
 
     }
+
     public void CreateFracmentSubMenu(){
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new sub_menu())

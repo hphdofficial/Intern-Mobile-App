@@ -3,23 +3,59 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single"
+
         android:background="@android:color/white">
+
         <item
-            android:id="@+id/action_item1"
-            android:title="Lý thyết võ thuật"
+            android:id="@+id/btn_self"
+            android:title="Thông tin cá nhân"
+            android:icon="@drawable/imgprofile"
+
+            />
+        <item
+            android:id="@+id/btn_lythuyet"
+            android:title="Lý thuyết võ thuật"
+            android:icon="@drawable/booklt"
+            />
+        <item
+            android:id="@+id/btn_club"
+            android:title="Câu lạc bộ"
+            android:icon="@drawable/club"
+            />
+        <item
+            android:id="@+id/btn_registerclass"
+            android:title="Đăng ký lớp học võ"
+            android:icon="@drawable/images"
+            />
+        <item
+            android:id="@+id/btn_class"
+            android:title="Lớp học"
             android:icon="@drawable/ic_right_menu"
             />
-
         <item
-            android:id="@+id/action_item2"
-            android:title="Thông tin phần mềm"
-            android:icon="@drawable/ic_right_menu_vn"
+            android:id="@+id/btn_infor"
+            android:title="Tin tức võ học"
+            android:icon="@drawable/newin"
             />
 
         <item
-            android:id="@+id/action_item3"
+            android:id="@+id/btn_inforsoftware"
+            android:title="Thông tin phần mềm"
+            android:icon="@drawable/logo"
+            />
+        <item
+            app:actionLayout="@layout/activity_laguage_layout"
+            app:showAsAction="always"
+            android:id="@+id/btn_language"
+            android:title="Ngôn ngữ"
+            android:icon="@drawable/ic_right_menu_vn"
+
+            />
+
+        <item
+            android:id="@+id/btn_logout"
             android:title="Đăng xuất"
-            android:icon="@drawable/ic_logout"
+            android:icon="@drawable/ic_logout1"
             />
 
     </group>

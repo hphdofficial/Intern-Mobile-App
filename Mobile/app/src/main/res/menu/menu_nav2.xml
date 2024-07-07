@@ -1,0 +1,21 @@
+<!-- res/menu/menu_main.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/btn_class"
+        android:title="Điểm danh"
+        android:icon="@drawable/ic_right_menu"
+        />
+
+    <item
+        android:id="@+id/btn_infor"
+        android:title="Tin tức"
+        android:icon="@drawable/ic_right_menu_vn"
+        />
+
+    <item
+        android:id="@+id/btn_logout"
+        android:title="Đăng xuất"
+        android:icon="@drawable/ic_logout"
+        />
+</menu>

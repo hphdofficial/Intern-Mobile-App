@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,219 +11,354 @@
     tools:context=".MenuActivity">
     <!-- Icon bên trái -->
 
-  <androidx.constraintlayout.widget.ConstraintLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:id="@+id/header_title"
-      tools:ignore="MissingConstraints">
-      <ImageView
-          android:id="@+id/img_menu"
-          android:layout_width="48dp"
-          android:layout_height="48dp"
-          android:src="@drawable/ic_left_menu"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintBottom_toBottomOf="parent"
-          android:layout_marginStart="16dp"
-          android:layout_marginTop="8dp"
-          android:layout_marginBottom="8dp"/>
 
-      <!-- Icon bên phải -->
-      <ImageView
-          android:id="@+id/img_language"
-          android:layout_width="48dp"
-          android:layout_height="48dp"
-          android:src="@drawable/ic_right_menu_vn"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintBottom_toBottomOf="parent"
-          android:layout_marginEnd="16dp"
-          android:layout_marginTop="8dp"
-          android:layout_marginBottom="8dp"/>
 
-      <!-- Dòng text chính giữa -->
-      <TextView
-          android:id="@+id/txt_title"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:text="Center Text"
-          android:textSize="18sp"
-          android:textColor="@android:color/black"
-          app:layout_constraintStart_toEndOf="@id/img_menu"
-          app:layout_constraintEnd_toStartOf="@id/img_language"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintBottom_toBottomOf="parent"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:gravity="center"/>
-  </androidx.constraintlayout.widget.ConstraintLayout>
-
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/fragment_container"
+    tools:ignore="MissingConstraints">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/header_title"
-
         tools:ignore="MissingConstraints">
 
-
         <!-- Avatar người dùng -->
-        <ImageView
-            android:id="@+id/imageViewAvatar"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_right_menu"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="16dp" />
-
 
         <!-- Tên người dùng -->
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="John Doe"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
-            tools:layout_editor_absoluteY="16dp" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/img_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="75dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            tools:layout_editor_absoluteX="16dp">
+
+            <ImageView
+                android:id="@+id/img_avatar_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar_anime"
+
+                tools:layout_editor_absoluteX="16dp" />
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
-            android:id="@+id/camera"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintEnd_toStartOf="@id/imageViewAvatar">
+            app:layout_constraintBottom_toBottomOf="@+id/img_avatar"
+            app:layout_constraintStart_toEndOf="@+id/img_avatar"
+            app:layout_constraintTop_toTopOf="@+id/img_avatar">
 
-            <ImageView
-                android:id="@+id/view"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="end"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_right_menu"
+            <TextView
+                android:id="@+id/textViewName"
 
-                />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            <ImageView
-                android:id="@+id/change"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="8dp"
+                android:text="Nguyễn Mộng Mơ"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_right_menu" />
+            <TextView
+                android:id="@+id/txt_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="22 Tuổi"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user">
+
+        <LinearLayout
+
+            android:id="@+id/menu_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user">
+
+            <LinearLayout
+                android:id="@+id/btn_lythuyet"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btn_test1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="75dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/booklt">
+
+                    </ImageView>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Lý thuyết võ đạo">
+
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_club"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btn_test2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="75dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/club">
+
+                    </ImageView>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Câu lạc bộ">
+
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_register"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btn_test3"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="75dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/images">
+
+                    </ImageView>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Đăng ký học">
+
+                </TextView>
+            </LinearLayout>
 
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txt_content"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="25 years old"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@id/textViewName"
-            app:layout_constraintStart_toStartOf="@id/textViewName"
-            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+        <LinearLayout
+            android:id="@+id/menu_item2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu_item">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:id="@+id/btn_class"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-  <LinearLayout
-      android:layout_marginTop="20dp"
-      android:id="@+id/menu_item"
-      app:layout_constraintTop_toBottomOf="@+id/user"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btn_class1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="75dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
 
-      android:orientation="vertical">
-      <com.google.android.material.bottomnavigation.BottomNavigationView
-          android:id="@+id/menu1"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+                    tools:layout_editor_absoluteX="16dp">
 
-          android:layout_alignParentBottom="true"
-          app:menu="@menu/menu_nav"
-          app:layout_constraintTop_toBottomOf="@+id/user"
-          tools:ignore="MissingConstraints"
-          app:labelVisibilityMode="labeled"
-          />
-      <com.google.android.material.bottomnavigation.BottomNavigationView
-          android:id="@+id/menu2"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_alignParentBottom="true"
-          app:menu="@menu/menu_nav"
-          app:layout_constraintTop_toBottomOf="@+id/user"
-          tools:ignore="MissingConstraints"
-          app:labelVisibilityMode="labeled"
-          />
-  </LinearLayout>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/tick">
+
+                    </ImageView>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Điểm danh">
+
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_infor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btn_infor2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="75dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/newin">
+
+                    </ImageView>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Tin tức võ học">
+
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_logout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btn_logout2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="75dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/run">
+
+                    </ImageView>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Đăng xuất">
+
+                </TextView>
+            </LinearLayout>
 
 
-<LinearLayout
-    android:id="@+id/sub_menu"
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="10"
-    android:orientation="vertical"
-    android:background="@android:color/white"
-    android:clickable="true"
-    tools:ignore="MissingConstraints">
-    >
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         />
-</LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/language"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/header_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical"
-        android:layout_marginEnd="16dp">
-        <TextView
-            android:id="@+id/language_vn"
-            android:layout_width="48dp"
-            android:gravity="center"
-
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_edittext_background"
-            android:textColor="@android:color/black"
-            android:text="VN"
-            android:backgroundTint="#3DDC84"
-            android:hint=""
-            android:inputType="text"/>
-        <TextView
-            android:id="@+id/language_eng"
-            android:layout_width="48dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_edittext_background"
-            android:textColor="@android:color/black"
-            android:text="ENG"
-            android:backgroundTint="#3DDC84"
-            android:hint=""
-            android:inputType="text"/>
+        tools:ignore="MissingConstraints" />
 
 
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
 

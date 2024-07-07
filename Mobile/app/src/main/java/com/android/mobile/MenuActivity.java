@@ -1,8 +1,17 @@
 package com.android.mobile;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,24 +28,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Method;
 
 public class MenuActivity extends AppCompatActivity {
 
+    private int placeholderResourceId = R.drawable.photo3x4;
 
-    private ImageView img_menu;
-    private ImageView img_language;
-    private TextView txt_title;
-
-    private ImageView imageViewAvatar;
-    private TextView textViewName;
-    private TextView txt_content;
-    private BottomNavigationView bottomNavigationView;
-
-    LinearLayout sub_menu;
-
-    LinearLayout camera;
-    LinearLayout language;
-    ConstraintLayout main;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,71 +47,142 @@ public class MenuActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // lưu trữ hình ảnh
+        String linkAvatar = "https://firebasestorage.googleapis.com/v0/b/fir-43107.appspot.com/o/avatar-anime-707x600.jpg?alt=media&token=7f20d70e-a0d1-4244-8f35-0f32b69b1c46";
+        SharedPreferences sharedPreferences = getSharedPreferences("myImage", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("linkImage", linkAvatar);
+        editor.apply();  // Lưu thay đổi vào SharedPreferences
 
-        img_menu = findViewById(R.id.img_menu);
-        img_language = findViewById(R.id.img_language);
-        txt_title = findViewById(R.id.txt_title);
-        imageViewAvatar = findViewById(R.id.imageViewAvatar);
-        textViewName = findViewById(R.id.textViewName);
-        txt_content = findViewById(R.id.txt_content);
-        sub_menu = findViewById(R.id.sub_menu);
-        camera = findViewById(R.id.camera);
-        language = findViewById(R.id.language);
-        main = findViewById(R.id.main);
-        CreateFracmentSubMenu();
-        restartView();
-      
-        main.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                restartView();
-            }
-        });
-      
-        img_menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sub_menu.setVisibility(View.VISIBLE);
-            }
-        });
 
-        findViewById(R.id.action_item1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"abc",Toast.LENGTH_SHORT).show();
-            }
-        });
-      
-        imageViewAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                camera.setVisibility(View.VISIBLE);
-            }
-        });
 
-        img_language.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                language.setVisibility(View.GONE);
-            }
-        });
-    }
-    public void CreateFracmentSubMenu(){
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new sub_menu())
-                .commit();
-        sub_menu.setVisibility(View.GONE);
 
+        ImageView imageView = findViewById(R.id.img_avatar_menu);
+        Picasso.get()
+                .load(linkAvatar)
+                .placeholder(placeholderResourceId) // Hình ảnh placeholder
+                .error(placeholderResourceId) // Hình ảnh sẽ hiển thị nếu tải lỗi
+                .into(imageView);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+// Thêm hoặc thay thế Fragment mới
+        titleFragment newFragment = new titleFragment();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+        fragmentTransaction.commit();
+
+
+        //click image
+        setEventClick();
     }
 
-    public void CreateCamera(){
-        camera.setVisibility(View.GONE);
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if(featureId == Window.FEATURE_ACTION_BAR && menu != null){
+            if(menu.getClass().getSimpleName().equals("MenuBuilder")){
+                try{
+                    Method m = menu.getClass().getDeclaredMethod(
+                            "setOptionalIconsVisible", Boolean.TYPE);
+                    m.setAccessible(true);
+                    m.invoke(menu, true);
+                }
+                catch(NoSuchMethodException e){
+                    Log.e( "onMenuOpened", e.getMessage());
+                }
+                catch(Exception e){
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
     }
-    
-    public void restartView(){
-        sub_menu.setVisibility(View.GONE);
-        camera.setVisibility(View.GONE);
-        language.setVisibility(View.GONE);
+
+
+    private TextView text;
+    public void onMenuItemClick(View view) {
+         text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+           if(language.contains("VN")){
+               text.setText("ENG");
+           }else text.setText("VN");
+        }
+    }
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_nav,menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        return true;
+    }
+
+    private LinearLayout btn_lythuyet;
+    private LinearLayout btn_club;
+    private LinearLayout btn_register;
+    private LinearLayout btn_class;
+    private LinearLayout btn_new;
+    private LinearLayout btn_logout;
+
+    private ConstraintLayout user;
+    public void setEventClick(){
+        btn_lythuyet = findViewById(R.id.btn_lythuyet);
+        btn_club = findViewById(R.id.btn_club);
+        btn_register = findViewById(R.id.btn_register);
+        btn_class = findViewById(R.id.btn_class);
+        btn_new = findViewById(R.id.btn_infor);
+        btn_logout = findViewById(R.id.btn_logout);
+        user = findViewById(R.id.user);
+        user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ActivityDetailMember.class));
+            }
+        });
+
+        btn_lythuyet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), activity_lessons.class));
+            }
+        });
+        btn_club.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ClubActivity.class));
+            }
+        });
+        btn_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), RegisterClass.class));
+            }
+        });
+        btn_new.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ActivityNews.class));
+            }
+        });
+        btn_class.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), activity_classes.class));
+            }
+        });
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), StartActivity.class));
+            }
+        });
     }
 
     @Override
@@ -122,6 +193,6 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        restartView();
+
     }
 }

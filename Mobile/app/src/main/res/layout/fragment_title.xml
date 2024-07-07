@@ -23,73 +23,48 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+
             android:layout_marginBottom="8dp"/>
 
         <!-- Icon bên phải -->
         <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/left_arr"
+            app:layout_constraintEnd_toStartOf="@+id/img_language"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/img_menu"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <ImageView
             android:id="@+id/img_language"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_right_menu_vn"
+            android:src="@drawable/setting"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <!-- Dòng text chính giữa -->
         <TextView
             android:id="@+id/txt_title"
             android:layout_width="0dp"
+            android:layout_marginLeft="20dp"
             android:layout_height="wrap_content"
-            android:text="Center Text"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintStart_toEndOf="@id/img_menu"
-            app:layout_constraintEnd_toStartOf="@id/img_language"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center"/>
+
+            app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+
+            app:layout_constraintEnd_toStartOf="@+id/img_language"
+            app:layout_constraintStart_toEndOf="@+id/btn_back"
+            app:layout_constraintTop_toTopOf="@+id/btn_back" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <LinearLayout
-        android:id="@+id/language"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/header_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical"
-        android:layout_marginEnd="16dp">
-        <TextView
-            android:id="@+id/language_vn"
-            android:layout_width="48dp"
-            android:gravity="center"
-
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_edittext_background"
-            android:textColor="@android:color/black"
-            android:text="VN"
-            android:backgroundTint="#3DDC84"
-            android:hint=""
-            android:inputType="text"/>
-        <TextView
-            android:id="@+id/language_eng"
-            android:layout_width="48dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_edittext_background"
-            android:textColor="@android:color/black"
-            android:text="ENG"
-            android:backgroundTint="#3DDC84"
-            android:hint=""
-            android:inputType="text"/>
-
-
-    </LinearLayout>
     <LinearLayout
         android:id="@+id/sub_menu"
         android:layout_width="0dp"
