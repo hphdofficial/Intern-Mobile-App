@@ -12,33 +12,16 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.mobile.adapter.Club_adapter;
-import com.android.mobile.models.Club;
+import com.android.mobile.adapter.ClubAdapter;
 
 import java.util.ArrayList;
 
 public class ClubActivity extends AppCompatActivity {
-    Club club1 = new Club("Trần Hưng Đạo, Q10, TPHCM", "Trần Hưng Đạo");
-    Club club2 = new Club("Trần Hưng Đạo, Q12, TPHCM", "Trần Hưng Đạo 1");
-    Club club3 = new Club("Trần Hưng Đạo, Q3, TPHCM", "Trần Hưng Đạo 2");
-    Club club4 = new Club("Trần Hưng Đạo, Q2, TPHCM", "Trần Hưng Đạo 3");
-    ArrayList<Club> clubs = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_club);
-        clubs.add(club1);
-        clubs.add(club2);
-        clubs.add(club3);
-        clubs.add(club4);
-
-        Club_adapter clubAdapter = new Club_adapter(this, clubs);
-        RecyclerView recyclerView = findViewById(R.id.recycler_location);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(clubAdapter);
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -47,13 +30,22 @@ public class ClubActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-// Thêm hoặc thay thế Fragment mới
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
+        ArrayList<String> data = new ArrayList<>();
+        data.add("Club 1");
+        data.add("Club 2");
+        data.add("Club 3");
+        data.add("Club 4");
+        data.add("Club 5");
+
+        ClubAdapter clubAdapter = new ClubAdapter(this, data);
+        RecyclerView recyclerView = findViewById(R.id.recycler_club);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(clubAdapter);
     }
 }

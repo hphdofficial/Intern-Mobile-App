@@ -7,6 +7,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.mobile.adapter.ClassAdapter;
+
+import java.util.ArrayList;
 
 public class ClassActivity extends AppCompatActivity {
 
@@ -20,5 +28,25 @@ public class ClassActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        titleFragment newFragment = new titleFragment();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        ArrayList<String> data = new ArrayList<>();
+        data.add("Class 1");
+        data.add("Class 2");
+        data.add("Class 3");
+        data.add("Class 4");
+        data.add("Class 5");
+
+        ClassAdapter classAdapter = new ClassAdapter(this, data);
+        RecyclerView recyclerView = findViewById(R.id.recycler_class);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(classAdapter);
     }
 }
