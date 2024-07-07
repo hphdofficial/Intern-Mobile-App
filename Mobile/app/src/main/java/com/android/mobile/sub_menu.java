@@ -6,10 +6,14 @@ import static androidx.core.content.ContextCompat.getSystemService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +50,7 @@ private ImageView image_avatar;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private  ImageView avatar_sub;
     public sub_menu() {
         // Required empty public constructor
     }
@@ -83,6 +88,8 @@ private ImageView image_avatar;
         // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.fragment_sub_menu, container, false);
+
+        // xét chiều ngang và dọc
         rootView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,getScreenHeight()
                ));
@@ -97,7 +104,13 @@ private ImageView image_avatar;
                 .error(placeholderResourceId) // Hình ảnh sẽ hiển thị nếu tải lỗi
                 .into(imageView);
         navigationView = rootView.findViewById(R.id.nav_view);
+
+
+        // xét icon item đủ màu
         navigationView.setItemIconTintList(null);
+
+
+        // sự kiện các nút
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -121,7 +134,7 @@ private ImageView image_avatar;
                     startActivity(new Intent(getContext(), ActivityNews.class));
                 }
                 if(id == R.id.btn_inforsoftware){
-                    startActivity(new Intent(getContext(), ActivityDetailMember.class));
+                    startActivity(new Intent(getContext(),  AboutActivity.class));
                 }
                 if(id == R.id.btn_class){
                     startActivity(new Intent(getContext(), activity_classes.class));
@@ -138,11 +151,22 @@ private ImageView image_avatar;
         });
 
 
+        back_content = rootView.findViewById(R.id.back_content);
+        back_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+                fragmentManager.beginTransaction().hide(sub_menu.this).commit();
+            }
+        });
 
 
         return rootView;
     }
+    ConstraintLayout main;
+    private LinearLayout back_content;
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
@@ -173,7 +197,7 @@ private ImageView image_avatar;
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.heightPixels;
+        return displayMetrics.heightPixels + 100;
 
     }
     public void onIconClick(View view) {

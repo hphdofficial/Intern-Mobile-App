@@ -11,39 +11,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/background_blue1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/header_title"
         tools:ignore="MissingConstraints">
+
         <ImageView
             android:id="@+id/img_menu"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginLeft="20dp"
             android:src="@drawable/ic_left_menu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
 
-            android:layout_marginBottom="8dp"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Icon bên phải -->
         <ImageView
             android:id="@+id/btn_back"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            android:layout_marginLeft="20dp"
+
             android:src="@drawable/left_arr"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/img_language"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/img_menu"
-            tools:layout_editor_absoluteY="0dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/img_language"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="8dp"
+
             android:src="@drawable/setting"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +76,6 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
         android:orientation="vertical"
-        android:background="@android:color/white"
         android:clickable="true"
         tools:ignore="MissingConstraints">
         >

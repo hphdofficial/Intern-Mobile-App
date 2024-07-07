@@ -130,6 +130,13 @@ public class MenuActivity extends AppCompatActivity {
     private LinearLayout btn_class;
     private LinearLayout btn_new;
     private LinearLayout btn_logout;
+    private ImageView img_avatar_menu;
+    private ImageView test;
+    private ImageView test1;
+    private ImageView test2;
+    private ImageView test3;
+    private ImageView test4;
+    private ImageView test5;
 
     private ConstraintLayout user;
     public void setEventClick(){
@@ -140,6 +147,20 @@ public class MenuActivity extends AppCompatActivity {
         btn_new = findViewById(R.id.btn_infor);
         btn_logout = findViewById(R.id.btn_logout);
         user = findViewById(R.id.user);
+        test = findViewById(R.id.test);
+        test1 = findViewById(R.id.test1);
+        test2 = findViewById(R.id.test2);
+        test3 = findViewById(R.id.test3);
+        test4 = findViewById(R.id.test4);
+        test5 = findViewById(R.id.test5);
+
+        img_avatar_menu = findViewById(R.id.img_avatar_menu);
+        img_avatar_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ActivityDetailMember.class));
+            }
+        });
         user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +202,44 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), StartActivity.class));
+            }
+        });
+        eventAnimationImage();
+    }
+
+    public void eventAnimationImage(){
+        eventMenuItem(test);
+        eventMenuItem(test1);
+        eventMenuItem(test2);
+        eventMenuItem(test3);
+        eventMenuItem(test4);
+        eventMenuItem(test5);
+    }
+
+    public void eventMenuItem(ImageView imageView){
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Thực hiện animation khi ImageView được chạm
+                v.animate()
+                        .scaleX(1.2f)  // Phóng to theo trục X
+                        .scaleY(1.2f)  // Phóng to theo trục Y
+                        .alpha(0.8f)   // Giảm độ mờ (alpha)
+                        .setDuration(300)  // Độ dài của animation (milliseconds)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Đoạn code sau khi animation kết thúc (nếu cần)
+                                v.animate()
+                                        .scaleX(1.0f)  // Trở về kích thước ban đầu trên trục X
+                                        .scaleY(1.0f)  // Trở về kích thước ban đầu trên trục Y
+                                        .alpha(1.0f)   // Trở về độ mờ ban đầu
+                                        .setDuration(300)  // Độ dài của animation (milliseconds)
+                                        .start();  // Bắt đầu animation
+                            }
+                        })
+                        .start();  // Bắt đầu animation
             }
         });
     }

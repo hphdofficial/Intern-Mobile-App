@@ -8,17 +8,16 @@
     >
     <TextView
         android:id="@+id/languageText"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:gravity="center"
-
         app:layout_constraintEnd_toEndOf="@+id/btn_change"
         android:text="VN"></TextView>
     <ImageView
         android:id="@+id/btn_change"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+
         android:src="@drawable/change1"
         android:clickable="true"
         android:onClick="onMenuItemClick"

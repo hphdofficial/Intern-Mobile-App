@@ -1,0 +1,10 @@
+<!-- Ví dụ về shape drawable với các góc bo tròn -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FF4081" /> <!-- Màu nền của shape -->
+    <corners
+        android:topLeftRadius="20dp"
+        android:topRightRadius="0dp"
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="20dp" />
+</shape>

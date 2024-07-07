@@ -9,33 +9,36 @@
         <item
             android:id="@+id/btn_self"
             android:title="Thông tin cá nhân"
-            android:icon="@drawable/imgprofile"
+            android:icon="@drawable/infor1"
+
+
 
             />
         <item
             android:id="@+id/btn_lythuyet"
             android:title="Lý thuyết võ thuật"
-            android:icon="@drawable/booklt"
+            android:icon="@drawable/booklt2"
             />
         <item
             android:id="@+id/btn_club"
             android:title="Câu lạc bộ"
-            android:icon="@drawable/club"
+            android:icon="@drawable/club3"
             />
         <item
             android:id="@+id/btn_registerclass"
             android:title="Đăng ký lớp học võ"
-            android:icon="@drawable/images"
+            android:icon="@drawable/re2"
             />
         <item
             android:id="@+id/btn_class"
             android:title="Lớp học"
-            android:icon="@drawable/ic_right_menu"
+            android:icon="@drawable/class2"
+
             />
         <item
             android:id="@+id/btn_infor"
             android:title="Tin tức võ học"
-            android:icon="@drawable/newin"
+            android:icon="@drawable/new2"
             />
 
         <item
@@ -55,7 +58,8 @@
         <item
             android:id="@+id/btn_logout"
             android:title="Đăng xuất"
-            android:icon="@drawable/ic_logout1"
+            android:icon="@drawable/logout2"
+
             />
 
     </group>

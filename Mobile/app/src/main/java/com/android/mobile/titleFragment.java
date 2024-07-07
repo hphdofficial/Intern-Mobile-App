@@ -1,6 +1,8 @@
 package com.android.mobile;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -12,14 +14,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 public class titleFragment extends Fragment {
 
+    private ImageView btn_back;
     LinearLayout sub_menu;
     private TextView title;
     ConstraintLayout main;
@@ -38,8 +43,9 @@ public class titleFragment extends Fragment {
         main =  rootView.findViewById(R.id.main);
         sub_menu = rootView.findViewById(R.id.sub_menu);
         img_menu = rootView.findViewById(R.id.img_menu);
+        btn_back = rootView.findViewById(R.id.btn_back);
         title.setText("Nội dung tiêu đề");
-        CreateFracmentSubMenu();
+      //  CreateFracmentSubMenu();
 
 
         main.setOnClickListener(new View.OnClickListener() {
@@ -52,17 +58,38 @@ public class titleFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                sub_menu.setVisibility(View.VISIBLE);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                sub_menu fragmentB = (sub_menu) fragmentManager.findFragmentByTag("FRAGMENT_B_TAG");
+                if (fragmentB != null) {
+                    fragmentTransaction.show(fragmentB);
+                } else {
+                    fragmentB = new sub_menu();
+                    fragmentTransaction.add(R.id.fragment_container, fragmentB, "FRAGMENT_B_TAG");
+                }
+
+                fragmentTransaction.commit();
             }
         });
+        String menu = getActivity().toString();
 
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!menu.contains("MenuActivity")){
+                    getActivity().finish();
+                }else {
+                    Toast.makeText(getContext(),"Không thể quay về",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
         return rootView;
 
     }
     public void restartView(){
         sub_menu.setVisibility(View.GONE);
-
-
     }
 
     public void CreateFracmentSubMenu(){

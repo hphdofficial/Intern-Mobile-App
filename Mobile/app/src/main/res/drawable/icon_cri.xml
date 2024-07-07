@@ -1,0 +1,11 @@
+<!-- res/drawable/rounded_image.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Circle background -->
+    <item android:drawable="@drawable/circle_shape" />
+
+    <!-- Image -->
+    <item
+        android:id="@+id/image_item"
+        android:drawable="@drawable/imgprofile"
+        android:gravity="center" />
+</layer-list>
