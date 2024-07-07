@@ -1,28 +1,34 @@
 package com.android.mobile;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class ViewImageActivity extends AppCompatActivity {
+
+    private ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_image);
 
-        ImageView imageView = findViewById(R.id.imageView);
+        imageView = findViewById(R.id.imageView);
 
-        Intent intent = getIntent();
-        Uri imageUri = intent.getParcelableExtra("imageUri");
-        if (imageUri != null) {
-            imageView.setImageURI(imageUri);
+        // Check if the default image flag is passed
+        boolean useDefaultImage = getIntent().getBooleanExtra("defaultImage", false);
+        if (useDefaultImage) {
+            imageView.setImageResource(R.drawable.photo3x4);
+        } else {
+            // Get the image URI from the intent
+            String imageUriString = getIntent().getStringExtra("imageUri");
+            if (imageUriString != null) {
+                Uri imageUri = Uri.parse(imageUriString);
+                imageView.setImageURI(imageUri);
+            }
         }
     }
+
 }
