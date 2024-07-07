@@ -70,13 +70,13 @@
             android:exported="false" />
         <activity
             android:name=".ClassActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".DetailClassActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".DetailClubActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".AboutActivity"
             android:exported="true" />
