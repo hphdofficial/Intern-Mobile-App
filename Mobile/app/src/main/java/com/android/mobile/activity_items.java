@@ -55,11 +55,11 @@ public class activity_items extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 View filterDialogView = LayoutInflater.from(activity_items.this).inflate(R.layout.bottom_sheet_dialog_filter, null);
-                BottomSheetDialog postsCommentDialog = new BottomSheetDialog(activity_items.this);
-                postsCommentDialog.setContentView(filterDialogView);
-                postsCommentDialog.setCanceledOnTouchOutside(true);
-                postsCommentDialog.setDismissWithAnimation(true);
-                postsCommentDialog.show();
+                BottomSheetDialog filterDialog = new BottomSheetDialog(activity_items.this);
+                filterDialog.setContentView(filterDialogView);
+                filterDialog.setCanceledOnTouchOutside(true);
+                filterDialog.setDismissWithAnimation(true);
+                filterDialog.show();
 
             }
         });

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/textView4"
@@ -43,21 +43,21 @@
         app:layout_constraintTop_toBottomOf="@+id/textView10">
 
         <CheckBox
-            android:id="@+id/checkBox2"
+            android:id="@+id/checkBoxGaulet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:text="Găng" />
 
         <CheckBox
-            android:id="@+id/checkBox3"
+            android:id="@+id/checkBoxDai"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:text="Đai" />
 
         <CheckBox
-            android:id="@+id/checkBox4"
+            android:id="@+id/checkBoxClothes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="3"
@@ -78,14 +78,14 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         <CheckBox
-            android:id="@+id/checkBox8"
+            android:id="@+id/checkBoxQuaDam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:text="Quả đấm" />
 
         <CheckBox
-            android:id="@+id/checkBox9"
+            android:id="@+id/checkBoxArmor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="3"
@@ -116,31 +116,76 @@
         app:layout_constraintTop_toBottomOf="@+id/textView11">
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/radioHigh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Giá cao - thấp" />
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/radioLow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Giá thấp - cao" />
+
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Nhà sản xuất:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
+
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnFilter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/bg_btn_item_lesson"
         android:backgroundTint="#006DFF"
         android:text="Lọc"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Vovinam Club 1" />
+
+        <CheckBox
+            android:id="@+id/checkBox3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Vovinam Club 2" />
+
+        <CheckBox
+            android:id="@+id/checkBox4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Vovinam Club 3" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
