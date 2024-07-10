@@ -2,9 +2,6 @@ package com.android.mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,14 +13,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.mobile.adapter.Class_adapter;
-import com.android.mobile.adapter.Club_adapter;
+import com.android.mobile.adapter.MyClassAdapter;
 import com.android.mobile.models.Class;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class activity_classes extends AppCompatActivity {
+public class MyClassActivity extends AppCompatActivity {
     Date today = new Date();
     Class class1 = new Class(400000, today, today, "Tự vệ", 3, "Hữu lợi");
     Class class2 = new Class(400000, today, today, "Tự vệ 1", 3, "Hữu lợi");
@@ -35,7 +31,7 @@ public class activity_classes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_classes);
+        setContentView(R.layout.activity_my_class);
 
         classes.add(class1);
         classes.add(class2);
@@ -45,7 +41,7 @@ public class activity_classes extends AppCompatActivity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
 
-        Class_adapter classAdapter = new Class_adapter(this, classes);
+        MyClassAdapter classAdapter = new MyClassAdapter(this, classes);
         RecyclerView recyclerView = findViewById(R.id.recycler_class);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(classAdapter);

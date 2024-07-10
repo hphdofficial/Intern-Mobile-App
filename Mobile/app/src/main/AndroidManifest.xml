@@ -132,7 +132,7 @@
             android:name=".activity_checkin"
             android:exported="true" />
         <activity
-            android:name=".activity_classes"
+            android:name=".MyClassActivity"
             android:exported="true" />
         <activity
             android:name=".activity_item_chapter"

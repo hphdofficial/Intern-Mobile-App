@@ -12,25 +12,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
 import com.android.mobile.activity_checkin;
-import com.android.mobile.activity_classes;
 import com.android.mobile.models.Class;
 
 import java.util.ArrayList;
 
-public class Class_adapter extends RecyclerView.Adapter<Class_adapter.ViewHolder>{
+public class MyClassAdapter extends RecyclerView.Adapter<MyClassAdapter.ViewHolder>{
     Context context;
 
     ArrayList<Class> classList = new ArrayList<>();
 
-    public Class_adapter(Context context, ArrayList<Class> classList) {
+    public MyClassAdapter(Context context, ArrayList<Class> classList) {
         this.context = context;
         this.classList = classList;
     }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_class, viewGroup, false);
-        return new Class_adapter.ViewHolder(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_my_class, viewGroup, false);
+        return new MyClassAdapter.ViewHolder(view);
     }
 
     @Override
