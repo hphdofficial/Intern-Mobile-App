@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReviewActivity">
+
+    <!-- Rating Summary -->
+    <RelativeLayout
+        android:id="@+id/rating_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_container"
+        android:padding="16dp"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/rating_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4.8"
+            android:textSize="48sp"
+            android:textColor="@android:color/black" />
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/rating_value"
+            android:layout_marginLeft="8dp"
+            android:rating="4.8"
+            android:stepSize="0.1"
+            android:numStars="5"
+            android:isIndicator="true" />
+
+        <TextView
+            android:id="@+id/rating_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tất cả (50,2k)"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_below="@id/rating_value"
+            android:layout_marginTop="8dp" />
+    </RelativeLayout>
+
+    <!-- Filter Options -->
+    <RelativeLayout
+        android:id="@+id/filter_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rating_summary"
+        android:padding="8dp"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/filter_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tất cả"
+            android:padding="8dp"
+            android:background="@drawable/filter_selected_background"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/filter_5_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 Sao"
+            android:padding="8dp"
+            android:layout_toRightOf="@id/filter_all"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/filter_unselected_background"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/filter_4_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4 Sao"
+            android:padding="8dp"
+            android:layout_toRightOf="@id/filter_5_star"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/filter_unselected_background"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/filter_3_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 Sao"
+            android:padding="8dp"
+            android:layout_toRightOf="@id/filter_4_star"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/filter_unselected_background"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/filter_2_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 Sao"
+            android:padding="8dp"
+            android:layout_toRightOf="@id/filter_3_star"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/filter_unselected_background"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/filter_1_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 Sao"
+            android:padding="8dp"
+            android:layout_toRightOf="@id/filter_2_star"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/filter_unselected_background"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
+
+    <!-- Reviews List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reviews_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/filter_options"
+        android:background="@android:color/white" />
+
+    <!-- Write Review Button -->
+    <Button
+        android:id="@+id/btn_write_review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Viết đánh giá"
+        android:textColor="@android:color/white"
+        android:background="@color/black"
+        android:layout_below="@id/reviews_recycler_view"
+        android:layout_margin="16dp"
+        android:padding="12dp"
+        android:layout_centerHorizontal="true" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+</RelativeLayout>

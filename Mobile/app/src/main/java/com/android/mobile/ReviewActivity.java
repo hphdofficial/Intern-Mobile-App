@@ -1,10 +1,6 @@
 package com.android.mobile;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,46 +12,30 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.mobile.adapter.Class_adapter;
-import com.android.mobile.adapter.Club_adapter;
-import com.android.mobile.models.Class;
+import com.android.mobile.adapter.ReviewAdapter;
+import com.android.mobile.models.ReviewModel;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
-public class activity_classes extends AppCompatActivity {
-    Date today = new Date();
-    Class class1 = new Class(400000, today, today, "Tự vệ", 3, "Hữu lợi");
-    Class class2 = new Class(400000, today, today, "Tự vệ 1", 3, "Hữu lợi");
-    Class class3 = new Class(400000, today, today, "Tự vệ 2", 6, "Hữu lợi");
-    Class class4 = new Class(400000, today, today, "Tự vệ 3", 6, "Hữu lợi");
-    ArrayList<Class> classes = new ArrayList<>();
+public class ReviewActivity extends AppCompatActivity {
+
+    private RecyclerView reviewsRecyclerView;
+    private ReviewAdapter reviewAdapter;
+    private List<ReviewModel> reviewList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_classes);
-
-        classes.add(class1);
-        classes.add(class2);
-        classes.add(class3);
-        classes.add(class4);
-
-        Intent intent = getIntent();
-        String title = intent.getStringExtra("title");
-
-        Class_adapter classAdapter = new Class_adapter(this, classes);
-        RecyclerView recyclerView = findViewById(R.id.recycler_class);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(classAdapter);
-
+        setContentView(R.layout.activity_review);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        //chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -65,5 +45,18 @@ public class activity_classes extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+
+        reviewsRecyclerView = findViewById(R.id.reviews_recycler_view);
+        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        reviewList = new ArrayList<>();
+        // Thêm dữ liệu mẫu
+        reviewList.add(new ReviewModel("huong22071997", "09-07-2024 14:10", "Kính cường lực iphone tự dán KTM KingKong", 5));
+        reviewList.add(new ReviewModel("huong22071997", "09-07-2024 14:10", "Kính cường lực iphone tự dán KTM KingKong", 5));
+
+        // Thêm các mục khác tương tự
+
+        reviewAdapter = new ReviewAdapter(this, reviewList);
+        reviewsRecyclerView.setAdapter(reviewAdapter);
     }
 }

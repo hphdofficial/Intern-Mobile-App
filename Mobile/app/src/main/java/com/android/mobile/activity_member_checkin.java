@@ -1,10 +1,6 @@
 package com.android.mobile;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -18,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.Checked_adapter;
-import com.android.mobile.adapter.Class_adapter;
 import com.android.mobile.models.Checkin;
 
 import java.util.ArrayList;

@@ -40,6 +40,10 @@ dependencies {
     implementation libs.lifecycle.viewmodel.ktx
     testImplementation libs.junit
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation 'com.google.zxing:core:3.4.1'

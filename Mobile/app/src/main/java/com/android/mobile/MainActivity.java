@@ -26,6 +26,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        startActivity(new Intent(getApplicationContext(),StartActivity.class));
+        startActivity(new Intent(getApplicationContext(),Purchase.class));
     }
 }

@@ -10,22 +10,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.mobile.ClubActivity;
 import com.android.mobile.R;
-import com.android.mobile.activity_chapters;
-import com.android.mobile.activity_checkin;
-import com.android.mobile.activity_classes;
-import com.android.mobile.models.Chapter;
+import com.android.mobile.MyClassActivity;
 import com.android.mobile.models.Club;
 
 import java.util.ArrayList;
 
-public class Club_adapter extends RecyclerView.Adapter<Club_adapter.ViewHolder>{
+public class MyClubAdapter extends RecyclerView.Adapter<MyClubAdapter.ViewHolder>{
     Context context;
 
     ArrayList<Club> clubList = new ArrayList<>();
 
-    public Club_adapter(Context context, ArrayList<Club> clubList) {
+    public MyClubAdapter(Context context, ArrayList<Club> clubList) {
         this.context = context;
         this.clubList = clubList;
     }
@@ -33,8 +29,8 @@ public class Club_adapter extends RecyclerView.Adapter<Club_adapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_club, viewGroup, false);
-        return new Club_adapter.ViewHolder(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_my_club, viewGroup, false);
+        return new MyClubAdapter.ViewHolder(view);
     }
 
     @Override
@@ -46,7 +42,7 @@ public class Club_adapter extends RecyclerView.Adapter<Club_adapter.ViewHolder>{
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, activity_classes.class);
+                Intent intent = new Intent(context, MyClassActivity.class);
                 intent.putExtra("title", txtClubTitle);
                 context.startActivity(intent);
             }

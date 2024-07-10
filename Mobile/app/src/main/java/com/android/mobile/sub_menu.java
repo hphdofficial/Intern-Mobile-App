@@ -1,12 +1,9 @@
 package com.android.mobile;
 
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,18 +13,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
@@ -137,7 +130,7 @@ private ImageView image_avatar;
                     startActivity(new Intent(getContext(),  AboutActivity.class));
                 }
                 if(id == R.id.btn_class){
-                    startActivity(new Intent(getContext(), activity_classes.class));
+                    startActivity(new Intent(getContext(), MyClassActivity.class));
                 }
                 if(id == R.id.btn_logout){
                     startActivity(new Intent(getContext(), StartActivity.class));

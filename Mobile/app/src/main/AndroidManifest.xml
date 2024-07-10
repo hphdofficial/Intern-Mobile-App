@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -20,6 +21,42 @@
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
         <activity
+            android:name=".Purchase"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.ItemSupplierProductAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".SupplierProductActivity"
+            android:exported="true" />
+        <activity
+            android:name=".adapter.ArticleAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.ReviewAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ReviewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SupplierInfoActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity_item_detail"
+            android:exported="false" />
+        <activity
+            android:name=".activity_items"
+            android:exported="true" />
+        <activity
+            android:name=".PurchaseHistoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ShippingItemActivity"
+            android:exported="true" />
+        <activity
+            android:name=".StoredItemActivity"
+            android:exported="true" />
+        <activity
             android:name=".LaguageLayout"
             android:exported="false" />
         <activity
@@ -27,7 +64,7 @@
             android:exported="true" />
         <activity
             android:name=".SignupActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -95,7 +132,7 @@
             android:name=".activity_checkin"
             android:exported="true" />
         <activity
-            android:name=".activity_classes"
+            android:name=".MyClassActivity"
             android:exported="true" />
         <activity
             android:name=".activity_item_chapter"
