@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SupplierInfoActivity"
+    android:padding="16dp">
+
+    <!-- Back Button -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
+    <!-- Supplier Logo -->
+    <ImageView
+        android:id="@+id/supplierLogo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/logosupplier"
+        android:contentDescription="Supplier Logo"
+        android:layout_below="@id/fragment_container"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentStart="true" />
+
+    <!-- Supplier Name -->
+    <TextView
+        android:id="@+id/supplierName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/supplierLogo"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="9dp"
+        android:layout_toEndOf="@id/supplierLogo"
+        android:text="Nhà cung cấp A"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Product Count Section -->
+    <LinearLayout
+        android:id="@+id/productCountSection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/supplierLogo"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/supplychain"
+            android:contentDescription="Products Icon" />
+
+        <TextView
+            android:id="@+id/productCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sản phẩm: 121"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Supplier Link Section -->
+    <LinearLayout
+        android:id="@+id/supplierLinkSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/productCountSection"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/link"
+            android:contentDescription="Link Icon" />
+
+        <TextView
+            android:id="@+id/supplierLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Link của Nhà cung cấp: supplier.com"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Supplier Address Section -->
+    <LinearLayout
+        android:id="@+id/supplierAddressSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/supplierLinkSection"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/pin"
+            android:contentDescription="Address Icon" />
+
+        <TextView
+            android:id="@+id/supplierAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ: 123 Đường ABC, Quận XYZ, Thành phố Hồ Chí Minh"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Supplier Phone Section -->
+    <LinearLayout
+        android:id="@+id/supplierPhoneSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/supplierAddressSection"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/phonecall"
+            android:contentDescription="Phone Icon" />
+
+        <TextView
+            android:id="@+id/supplierPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số điện thoại: 0123456789"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Supplier Fax Section -->
+    <LinearLayout
+        android:id="@+id/supplierFaxSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/supplierPhoneSection"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/faxmachine"
+            android:contentDescription="Fax Icon" />
+
+        <TextView
+            android:id="@+id/supplierFax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số fax: 0987654321"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Supplier Email Section -->
+    <LinearLayout
+        android:id="@+id/supplierEmailSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/supplierFaxSection"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/mail"
+            android:contentDescription="Email Icon" />
+
+        <TextView
+            android:id="@+id/supplierEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email: supplier@example.com"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Product Type Section -->
+    <LinearLayout
+        android:id="@+id/productTypeSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/supplierEmailSection"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/types"
+            android:contentDescription="Product Type Icon" />
+
+        <TextView
+            android:id="@+id/productType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loại mặt hàng: Găng, Đai, Quần Áo, Giáp,..."
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Articles Section -->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/articlesRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/productTypeSection"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp" />-->
+
+    <!-- Đánh giá Section -->
+    <TextView
+        android:id="@+id/reviewText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đánh giá"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_below="@id/productTypeSection"
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:gravity="center"
+        android:background="@drawable/filter_unselected_background"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- Supplier Description -->
+    <TextView
+        android:id="@+id/supplierDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mô tả: Đây là nhà cung cấp uy tín từ năm 1960 với công nghệ sản xuất hiện đại."
+        android:textSize="16sp"
+        android:layout_below="@id/reviewText"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp" />
+
+    <!-- View All Products Button -->
+    <Button
+        android:id="@+id/viewAllProductsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Xem tất cả sản phẩm"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/supplierDescription"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp" />
+
+</RelativeLayout>
