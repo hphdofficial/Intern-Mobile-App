@@ -48,6 +48,15 @@
             android:name=".activity_items"
             android:exported="true" />
         <activity
+            android:name=".PurchaseHistoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ShippingItemActivity"
+            android:exported="true" />
+        <activity
+            android:name=".StoredItemActivity"
+            android:exported="true" />
+        <activity
             android:name=".LaguageLayout"
             android:exported="false" />
         <activity
