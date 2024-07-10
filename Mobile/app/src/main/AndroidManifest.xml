@@ -42,6 +42,12 @@
             android:name=".SupplierInfoActivity"
             android:exported="true" />
         <activity
+            android:name=".activity_item_detail"
+            android:exported="false" />
+        <activity
+            android:name=".activity_items"
+            android:exported="true" />
+        <activity
             android:name=".LaguageLayout"
             android:exported="false" />
         <activity
