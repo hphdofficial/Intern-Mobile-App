@@ -37,8 +37,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
         holder.name_product.setText(item.getName());
         holder.type_product.setText(item.getType());
         holder.supplier_product.setText(item.getSupplier());
-        holder.price_product.setText(item.getPrice()+"");
-        holder.quantity_product.setText(item.getQuantity()+"");
+        holder.price_product.setText("Giá tiền: "+item.getPrice()+"");
+        holder.quantity_product.setText("x"+item.getQuantity()+"");
 
 
         /*Picasso.get()

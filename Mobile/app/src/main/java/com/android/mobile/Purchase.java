@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,8 +23,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.mobile.adapter.ProductAdapter;
 import com.android.mobile.models.Product;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Purchase extends AppCompatActivity {
 
@@ -36,6 +39,11 @@ public class Purchase extends AppCompatActivity {
     private List<String > paymentList;
     private Button btn_payment;
     private int positionVoucher;
+    private TextView sum_money;
+    private TextView discount;
+    private TextView transport;
+    private TextView total;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +56,12 @@ public class Purchase extends AppCompatActivity {
         });
 
         btn_payment = findViewById(R.id.btn_payment);
+        sum_money = findViewById(R.id.sum_money);
+        discount = findViewById(R.id.discount);
+        transport = findViewById(R.id.transport);
+        total = findViewById(R.id.total);
+
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -66,6 +80,45 @@ public class Purchase extends AppCompatActivity {
         // tạo voucher
         CreateVoucher();
         CreatePayment();
+
+    }
+
+    public void Summoney(){
+        float sum = 0;
+        for (Product value : itemList){
+            sum += value.getPrice();
+        }
+
+
+        sum_money.setText(formatMoney(sum)+"đ");
+    }
+    public void DiscountMoney(){
+        // lấy id voucher check voucher sao đó ghi tiền giảm giá vô
+        discount.setText(formatMoney(10000)+"đ");
+    }
+    public String formatMoney(float money){
+        NumberFormat numberFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
+        String formattedAmount = numberFormat.format(money);
+        return  formattedAmount;
+    }
+    public void Transport(){
+        //kiểm tra theo gg map lấy kích thước đường đi quy ra tiền 1km = 10k
+
+
+        transport.setText(formatMoney(4000)+"đ");
+    }
+    public void TotalMoney(){
+        float sum = 0;
+        for (Product value : itemList){
+            sum += value.getPrice();
+        }
+        float dis = Float.parseFloat(discount.getText().toString().replace("đ","").replace(".",""));
+
+        float tran = Float.parseFloat(transport.getText().toString().replace("đ","").replace(".",""));
+
+        float to = sum - dis + tran;
+
+        total.setText(formatMoney(to)+"đ");
     }
 
     @Override
@@ -74,6 +127,10 @@ public class Purchase extends AppCompatActivity {
         CreateItem();
       //  EventVoucher();
         EventPayment();
+        Summoney();
+        DiscountMoney();
+        Transport();
+        TotalMoney();
 
     }
     public void EventPayment(){
@@ -88,10 +145,10 @@ public class Purchase extends AppCompatActivity {
 
     public  void CreateItem(){
         itemList = new ArrayList<>();
-        Product p1 = new Product("Sản phẩm 1",10000f,"Nhà cung cấp không xác định","Mặt hàng chưa rõ ",1,"null");
-        Product p2 = new Product("Sản phẩm 2",10000f,"Nhà cung cấp không xác định","Mặt hàng chưa rõ ",2,"null");
-        Product p3 = new Product("Sản phẩm 3",10000f,"Nhà cung cấp không xác định","Mặt hàng chưa rõ ",3,"null");
-        Product p4 = new Product("Sản phẩm 4",10000f,"Nhà cung cấp không xác định","Mặt hàng chưa rõ ",4,"null");
+        Product p1 = new Product("Sản phẩm 1",10000f,"Nhà cung cấp: không xác định","Mặt hàng chưa rõ ",1,"null");
+        Product p2 = new Product("Sản phẩm 2",10000f,"Nhà cung cấp: không xác định","Mặt hàng chưa rõ ",2,"null");
+        Product p3 = new Product("Sản phẩm 3",10000f,"Nhà cung cấp: không xác định","Mặt hàng chưa rõ ",3,"null");
+        Product p4 = new Product("Sản phẩm 4",10000f,"Nhà cung cấp: không xác định","Mặt hàng chưa rõ ",4,"null");
 
         itemList.add(p1);
         itemList.add(p2);
@@ -109,7 +166,7 @@ public class Purchase extends AppCompatActivity {
         paymentList.add("Thanh toán trực tiếp");
         paymentList.add("Thanh toán Momo");
         paymentList.add("Thay toán ...");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paymentList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.layout_textviewsize, paymentList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         paymentSpinner.setAdapter(adapter);
     }
@@ -120,7 +177,7 @@ public class Purchase extends AppCompatActivity {
         voucherList.add("Voucher 1");
         voucherList.add("Voucher 2");
         voucherList.add("Voucher 3");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, voucherList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.layout_textviewsize, voucherList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         voucherSpinner.setAdapter(adapter);
     }
