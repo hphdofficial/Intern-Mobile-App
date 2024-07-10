@@ -1,6 +1,9 @@
 package com.android.mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,15 +26,25 @@ public class SupplierInfoActivity extends AppCompatActivity {
             return insets;
         });
 
-        //chèn fragment
+        // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-// Thêm hoặc thay thế Fragment mới
+        // Thêm hoặc thay thế Fragment mới
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+
+        // Xử lý sự kiện bấm vào "Đánh giá"
+        TextView reviewText = findViewById(R.id.reviewText);
+        reviewText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SupplierInfoActivity.this, ReviewActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

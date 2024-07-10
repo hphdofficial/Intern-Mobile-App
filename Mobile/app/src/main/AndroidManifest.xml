@@ -21,6 +21,21 @@
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
         <activity
+            android:name=".adapter.ItemSupplierProductAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".SupplierProductActivity"
+            android:exported="true" />
+        <activity
+            android:name=".adapter.ArticleAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.ReviewAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ReviewActivity"
+            android:exported="true" />
+        <activity
             android:name=".SupplierInfoActivity"
             android:exported="true" />
         <activity
@@ -31,7 +46,7 @@
             android:exported="true" />
         <activity
             android:name=".SignupActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

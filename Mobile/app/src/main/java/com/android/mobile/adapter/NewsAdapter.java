@@ -5,25 +5,40 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.mobile.R;
+import com.android.mobile.models.NewsModel;
+
+import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
+    private List<NewsModel> newsList;
+
+    public NewsAdapter(List<NewsModel> newsList) {
+        this.newsList = newsList;
+    }
+
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        // Không cần thiết lập lại dữ liệu ở đây nữa
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        NewsModel news = newsList.get(position);
+        holder.textView.setText(news.getTitle());
+        holder.imageView.setImageResource(news.getImageResource());
     }
 
     @Override
     public int getItemCount() {
-        return 5; // Số lượng items hiển thị là 5
+        return newsList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

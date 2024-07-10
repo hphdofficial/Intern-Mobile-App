@@ -20,7 +20,7 @@
         android:id="@+id/supplierLogo"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/imgprofile"
+        android:src="@drawable/logosupplier"
         android:contentDescription="Supplier Logo"
         android:layout_below="@id/fragment_container"
         android:layout_marginStart="16dp"
@@ -217,115 +217,29 @@
     </LinearLayout>
 
     <!-- Articles Section -->
-    <LinearLayout
-        android:id="@+id/articlesSection"
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/articlesRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/productTypeSection"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp" />-->
+
+    <!-- Đánh giá Section -->
+    <TextView
+        android:id="@+id/reviewText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:text="Đánh giá"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_blue_dark"
         android:layout_below="@id/productTypeSection"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bài viết"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Individual Article Item -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="8dp">
-
-            <!-- Title Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Bài viết 1: Giới thiệu về sản phẩm mới"
-                android:textSize="16sp"
-                android:padding="8dp"
-                android:background="#3E50B4"
-                android:textColor="@android:color/white" />
-
-            <!-- Content Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#F5F5F5"
-                android:padding="8dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Chúng tôi xin giới thiệu các sản phẩm mới với chất lượng cao và công nghệ tiên tiến."
-                android:textSize="16sp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:textColor="#333333"
-            />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Các sản phẩm gồm có:"
-                android:textSize="16sp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:textColor="#333333"
-            />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1. Găng tay: Chất liệu bền bỉ."
-                android:textSize="16sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:textColor="#333333"
-            />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="2. Đai: Thiết kế chắc chắn."
-                android:textSize="16sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:textColor="#333333"
-            />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="3. Quần Áo: Mẫu mã đa dạng."
-                android:textSize="16sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:textColor="#333333"
-            />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="4. Giáp: Bảo vệ toàn diện."
-                android:textSize="16sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:textColor="#333333"
-            />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-
-</LinearLayout>
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:gravity="center"
+        android:background="@drawable/filter_unselected_background"
+        android:clickable="true"
+        android:focusable="true" />
 
     <!-- Supplier Description -->
     <TextView
@@ -334,7 +248,7 @@
         android:layout_height="wrap_content"
         android:text="Mô tả: Đây là nhà cung cấp uy tín từ năm 1960 với công nghệ sản xuất hiện đại."
         android:textSize="16sp"
-        android:layout_below="@id/articlesSection"
+        android:layout_below="@id/reviewText"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp" />
