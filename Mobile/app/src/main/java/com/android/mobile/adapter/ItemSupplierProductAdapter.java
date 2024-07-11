@@ -1,6 +1,7 @@
 package com.android.mobile.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
+import com.android.mobile.activity_item_detail;
 import com.android.mobile.models.Item;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplierProductAdapter.ViewHolder> {
-    private Context context;
-    private ArrayList<Item> itemList;
+    Context context;
+    ArrayList<Item> itemList = new ArrayList<>();
 
     public ItemSupplierProductAdapter(Context context, ArrayList<Item> itemList) {
         this.context = context;
@@ -34,17 +36,34 @@ public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplie
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Item item = itemList.get(i);
-        viewHolder.txtItemName.setText(item.getName());
-        viewHolder.txtItemPrice.setText(item.getPrice() + " VND");
-        viewHolder.txtItemSupplier.setText(item.getSupplier());
+        String txtItemName = itemList.get(i).getName();
+        viewHolder.txtItemName.setText(txtItemName);
 
-        // Sử dụng Glide để tải ảnh từ URL hoặc từ resource nếu không có URL
-        if (item.getImg().isEmpty()) {
-            viewHolder.imgItem.setImageResource(R.drawable.gang1); // gang1.jpg phải có trong res/drawable
-        } else {
-            Glide.with(context).load(item.getImg()).into(viewHolder.imgItem);
-        }
+        int txtItemPrice = itemList.get(i).getPrice();
+        System.out.println(txtItemPrice);
+        viewHolder.txtItemPrice.setText(txtItemPrice+ " VND");
+
+        String txtItemSupplier = itemList.get(i).getSupplier();
+        viewHolder.txtItemSupplier.setText(txtItemSupplier);
+
+        String txtItemDateProduct = itemList.get(i).getDateProduct();
+        String txtItemMaterial = itemList.get(i).getMaterial();
+        String txtItemUse = itemList.get(i).getUse();
+        String txtItemType = itemList.get(i).getType();
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, activity_item_detail.class);
+                intent.putExtra("name", txtItemName);
+                intent.putExtra("price", txtItemPrice);
+                intent.putExtra("supplier", txtItemSupplier);
+                intent.putExtra("dateProduct", txtItemDateProduct);
+                intent.putExtra("material", txtItemMaterial);
+                intent.putExtra("use", txtItemUse);
+                intent.putExtra("type", txtItemType);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

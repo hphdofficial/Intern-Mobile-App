@@ -6,4 +6,12 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="beautiful_color">#FF5733</color>
+    <color name="special_color">#FF6347</color>
+    <color name="background_color">#1E3A5F</color>
+    <color name="item_name_color">#FFFFFF</color>
+    <color name="price_color">#FFFFFF</color>
+    <color name="supplier_color">#FFD700</color>
+
 </resources>

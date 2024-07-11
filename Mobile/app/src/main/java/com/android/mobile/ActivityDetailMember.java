@@ -2,6 +2,7 @@ package com.android.mobile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,10 @@ public class ActivityDetailMember extends AppCompatActivity {
     private static final int REQUEST_CODE_CAMERA = 101;
     private ImageView imageViewAvatar; // ImageView for the avatar
     private Uri currentImageUri; // Current URI for the image
+    private SharedPreferences sharedPreferences;
+    private static final String NAME_SHARED = "myContent";
+    private static final String KEY_TITLE = "title";
+    private static final String VALUE_INFO = "InfoDetailMember";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +46,18 @@ public class ActivityDetailMember extends AppCompatActivity {
             return insets;
         });
 
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
+        saveToSharedPreferences(KEY_TITLE, VALUE_INFO);
+
         imageViewAvatar = findViewById(R.id.imageViewAvatar);
         imageViewAvatar.setOnClickListener(this::showPopupMenu);
-        //chèn fragment
+
+        // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-// Thêm hoặc thay thế Fragment mới
+        // Thêm hoặc thay thế Fragment mới
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
@@ -55,62 +65,41 @@ public class ActivityDetailMember extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-//    public void showPopupMenu(View v) {
-//        PopupMenu popupMenu = new PopupMenu(this, v);
-//        popupMenu.setOnMenuItemClickListener(item -> {
-//            int itemId = item.getItemId();
-//            if (itemId == R.id.menu_view_image) {
-//                if (currentImageUri != null) {
-//                    Intent viewIntent = new Intent(ActivityDetailMember.this, ViewImageActivity.class);
-//                    viewIntent.putExtra("imageUri", currentImageUri.toString());
-//                    startActivity(viewIntent);
-//                } else {
-//                    Toast.makeText(ActivityDetailMember.this, "No image to view", Toast.LENGTH_SHORT).show();
-//                }
-//                return true;
-//            } else if (itemId == R.id.menu_replace_gallery) {
-//                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
-//                return true;
-//            } else if (itemId == R.id.menu_replace_camera) {
-//                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        });
-//        popupMenu.inflate(R.menu.image_profile_menu);
-//        popupMenu.show();
-//    }
-public void showPopupMenu(View v) {
-    PopupMenu popupMenu = new PopupMenu(this, v);
-    popupMenu.setOnMenuItemClickListener(item -> {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_view_image) {
-            Intent viewIntent = new Intent(ActivityDetailMember.this, ViewImageActivity.class);
-            if (currentImageUri != null) {
-                viewIntent.putExtra("imageUri", currentImageUri.toString());
+    private void saveToSharedPreferences(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public void showPopupMenu(View v) {
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_view_image) {
+                Intent viewIntent = new Intent(ActivityDetailMember.this, ViewImageActivity.class);
+                if (currentImageUri != null) {
+                    viewIntent.putExtra("imageUri", currentImageUri.toString());
+                } else {
+                    viewIntent.putExtra("defaultImage", true);
+                }
+                startActivity(viewIntent);
+                return true;
+            } else if (itemId == R.id.menu_replace_gallery) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
+                return true;
+            } else if (itemId == R.id.menu_replace_camera) {
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
+                return true;
             } else {
-                viewIntent.putExtra("defaultImage", true);
+                return false;
             }
-            startActivity(viewIntent);
-            return true;
-        } else if (itemId == R.id.menu_replace_gallery) {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
-            return true;
-        } else if (itemId == R.id.menu_replace_camera) {
-            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
-            return true;
-        } else {
-            return false;
-        }
-    });
-    popupMenu.inflate(R.menu.image_profile_menu);
-    popupMenu.show();
-}
+        });
+        popupMenu.inflate(R.menu.image_profile_menu);
+        popupMenu.show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -143,5 +132,4 @@ public void showPopupMenu(View v) {
         String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
         return Uri.parse(path);
     }
-
 }

@@ -1,5 +1,6 @@
 package com.android.mobile;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -20,11 +21,20 @@ import java.util.List;
 
 public class ActivityNews extends AppCompatActivity {
 
+    private SharedPreferences sharedPreferences;
+    private static final String NAME_SHARED = "myContent";
+    private static final String KEY_TITLE = "title";
+    private static final String VALUE_INFO = "info";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_news);
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
+        saveToSharedPreferences(KEY_TITLE, VALUE_INFO);
 
         RecyclerView recyclerView = findViewById(R.id.itemNews);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -54,5 +64,11 @@ public class ActivityNews extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+    }
+
+    private void saveToSharedPreferences(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 }
