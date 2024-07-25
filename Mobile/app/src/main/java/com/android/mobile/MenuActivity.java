@@ -32,9 +32,17 @@ public class MenuActivity extends AppCompatActivity {
 
     private int placeholderResourceId = R.drawable.photo3x4;
 
+    private ImageView imgAvatarMenu;
+    private TextView textViewName;
+    private SharedPreferences sharedPreferences;
+    private TextView textViewBirthday;
+
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_menu);
@@ -63,7 +71,7 @@ public class MenuActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-// Thêm hoặc thay thế Fragment mới
+        // Thêm hoặc thay thế Fragment mới
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
@@ -71,9 +79,20 @@ public class MenuActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
 
+        // Tham chiếu đến các thành phần giao diện
+        imgAvatarMenu = findViewById(R.id.img_avatar_menu);
+        textViewName = findViewById(R.id.textViewName);
+        textViewBirthday= findViewById(R.id.txt_content);
+
         //click image
         setEventClick();
+
+
+
+        // Gọi phương thức loadUserData để hiển thị thông tin người dùng
+        loadUserData();
     }
+
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
@@ -239,6 +258,30 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
     }
+    private void loadUserData() {
+        // Load avatar
+        String avatarUrl = sharedPreferences.getString("avatar_url", null);
+        if (avatarUrl != null) {
+            Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imgAvatarMenu);
+        }
+
+        // Load username
+        String username = sharedPreferences.getString("username", "User");
+        textViewName.setText(username);
+
+        // Load birthday
+        String birthday = sharedPreferences.getString("birthday", "Unknown");
+        textViewBirthday.setText(birthday);
+    }
+
+    private void saveUserData(String avatarUrl, String username, String birthday) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("avatar_url", avatarUrl);
+        editor.putString("username", username);
+        editor.putString("birthday", birthday);
+        editor.apply();
+    }
+
 
     @Override
     protected void onRestart() {
@@ -248,6 +291,6 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        loadUserData();
     }
 }

@@ -1,45 +1,98 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.android.mobile.models.LoginModel;
+import com.android.mobile.models.TokenModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.UserApiService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity {
 
     private Button btn_login;
     private Button btn_register;
+    private EditText editEmail;
+    private EditText editPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_start);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
+        editEmail = findViewById(R.id.edit_email);
+        editPassword = findViewById(R.id.edit_password);
+
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),MenuActivity.class));
+                loginUser();
             }
         });
 
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),SignupActivity.class));
+                startActivity(new Intent(getApplicationContext(), SignupActivity.class));
             }
         });
+    }
+
+    private void loginUser() {
+        String email = editEmail.getText().toString();
+        String password = editPassword.getText().toString();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(StartActivity.this, "Vui lòng nhập email và mật khẩu", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        LoginModel request = new LoginModel(email, password);
+        UserApiService apiService = ApiServiceProvider.getUserApiService();
+        Call<TokenModel> call = apiService.loginUser(request);
+        call.enqueue(new Callback<TokenModel>() {
+            @Override
+            public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
+                if (response.isSuccessful()) {
+                    TokenModel tokenResponse = response.body();
+                    if (tokenResponse != null) {
+                        saveLoginDetails(tokenResponse);
+                        Toast.makeText(StartActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                    }
+                } else {
+                    Toast.makeText(StartActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TokenModel> call, Throwable t) {
+                Toast.makeText(StartActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveLoginDetails(TokenModel tokenResponse) {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("access_token", tokenResponse.getAccess_token());
+        editor.putString("token_type", tokenResponse.getToken_type());
+        editor.putInt("expires_in", tokenResponse.getExpires_in());
+        editor.putInt("member_id", tokenResponse.getMember_id());
+        editor.apply();
     }
 }

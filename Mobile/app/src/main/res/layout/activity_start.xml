@@ -17,11 +17,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-
             android:id="@+id/imageViewLogo"
             android:layout_width="200dp"
             android:layout_height="200dp"
-
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
@@ -56,9 +54,7 @@
                 android:paddingBottom="5dp"
                 android:text="Email"
                 android:textSize="9pt"
-                android:textStyle="bold"
-
-                ></TextView>
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edit_email"
@@ -68,13 +64,12 @@
                 android:layout_weight="4"
                 android:background="@drawable/rounded_edittext_background"
                 android:hint=""
-                android:inputType="text"
+                android:inputType="textEmailAddress"
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="5dp"
                 android:textColor="@android:color/black"
-
                 android:textStyle="normal" />
         </LinearLayout>
 
@@ -93,11 +88,7 @@
                 android:gravity="start"
                 android:text="Password"
                 android:textSize="9pt"
-                android:textStyle="bold"
-
-                >
-
-            </TextView>
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edit_password"
@@ -105,10 +96,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_weight="4"
-
                 android:background="@drawable/rounded_edittext_background"
                 android:hint=""
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
                 android:paddingRight="15dp"
@@ -156,8 +146,5 @@
                 android:text="Register"
                 android:textSize="10pt" />
         </LinearLayout>
-
-
     </RelativeLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
