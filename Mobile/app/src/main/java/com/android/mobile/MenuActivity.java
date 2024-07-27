@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,9 +25,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.models.ProfileModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Method;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -36,7 +44,6 @@ public class MenuActivity extends AppCompatActivity {
     private TextView textViewName;
     private SharedPreferences sharedPreferences;
     private TextView textViewBirthday;
-
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -216,11 +223,25 @@ public class MenuActivity extends AppCompatActivity {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StartActivity.class));
+                logout();
+            }
+        });
+        test5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
             }
         });
         eventAnimationImage();
     }
+    private void logout() {
+        Intent intent = new Intent(MenuActivity.this, StartActivity.class); // Giả sử StartActivity là trang đăng nhập của bạn
+        startActivity(intent);
+        finish();
+    }
+
+
+
 
     public void eventAnimationImage(){
         eventMenuItem(test);
@@ -259,29 +280,42 @@ public class MenuActivity extends AppCompatActivity {
         });
     }
     private void loadUserData() {
-        // Load avatar
-        String avatarUrl = sharedPreferences.getString("avatar_url", null);
-        if (avatarUrl != null) {
-            Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imgAvatarMenu);
+        String token = sharedPreferences.getString("access_token", null);
+        int memberId = sharedPreferences.getInt("member_id", -1); // Lấy member_id từ SharedPreferences khi đăng nhập
+        if (token != null && memberId != -1) {
+            UserApiService apiService = ApiServiceProvider.getUserApiService();
+            Call<ProfileModel> call = apiService.getProfile("Bearer " + token);
+            call.enqueue(new Callback<ProfileModel>() {
+                @Override
+                public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+                    if (response.isSuccessful()) {
+                        ProfileModel profile = response.body();
+                        if (profile != null) {
+                            textViewName.setText(profile.getUsername());
+                            textViewBirthday.setText(profile.getNgaysinh());
+
+                            // Load avatar từ SharedPreferences cho user cụ thể
+                            String avatarUrl = sharedPreferences.getString("avatar_url_" + memberId, null);
+                            if (avatarUrl != null) {
+                                Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imgAvatarMenu);
+                            } else {
+                                imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
+                            }
+                        }
+                    } else {
+                        Toast.makeText(MenuActivity.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileModel> call, Throwable t) {
+                    Toast.makeText(MenuActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
         }
-
-        // Load username
-        String username = sharedPreferences.getString("username", "User");
-        textViewName.setText(username);
-
-        // Load birthday
-        String birthday = sharedPreferences.getString("birthday", "Unknown");
-        textViewBirthday.setText(birthday);
     }
-
-    private void saveUserData(String avatarUrl, String username, String birthday) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("avatar_url", avatarUrl);
-        editor.putString("username", username);
-        editor.putString("birthday", birthday);
-        editor.apply();
-    }
-
 
     @Override
     protected void onRestart() {

@@ -19,13 +19,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.mobile.models.ProfileModel;
-import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -80,16 +76,14 @@ public class ActivityDetailMember extends AppCompatActivity {
         // Fetch profile information
         fetchProfileInformation();
 
-        // Load avatar from SharedPreferences
-        String avatarUrl = sharedPreferences.getString("avatar_url", null);
-        if (avatarUrl != null) {
-            Picasso.get().load(avatarUrl).into(imageViewAvatar);
-        }
+        // Load avatar for the user
+        loadUserAvatar();
     }
 
     private void fetchProfileInformation() {
         String token = sharedPreferences.getString("access_token", null);
-        if (token != null) {
+        int memberId = sharedPreferences.getInt("member_id", -1); // Lấy member_id từ SharedPreferences
+        if (token != null && memberId != -1) {
             UserApiService apiService = ApiServiceProvider.getUserApiService();
             Call<ProfileModel> call = apiService.getProfile("Bearer " + token);
             call.enqueue(new Callback<ProfileModel>() {
@@ -108,18 +102,6 @@ public class ActivityDetailMember extends AppCompatActivity {
                             textViewLastloginValue.setText(profile.getLastlogin());
                             textViewHotengiamhoValue.setText(profile.getHotengiamho());
                             textViewDienthoaiGiamhoValue.setText(profile.getDienthoai_giamho());
-
-                            // Lưu avatar URL và username vào SharedPreferences
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("username", profile.getTen());
-                            editor.putString("birthday", profile.getNgaysinh());
-                            if (profile.getAvatar() != null && profile.getAvatar().getAvatarUrl() != null) {
-                                String avatarUrl = profile.getAvatar().getAvatarUrl();
-                                Picasso.get().load(avatarUrl).into(imageViewAvatar);
-                                editor.putString("avatar_url", avatarUrl);
-                            }
-
-                            editor.apply();
                         }
                     } else {
                         Toast.makeText(ActivityDetailMember.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
@@ -136,6 +118,17 @@ public class ActivityDetailMember extends AppCompatActivity {
         }
     }
 
+    private void loadUserAvatar() {
+        int memberId = sharedPreferences.getInt("member_id", -1);
+        if (memberId != -1) {
+            String avatarUrl = sharedPreferences.getString("avatar_url_" + memberId, null);
+            if (avatarUrl != null) {
+                Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageViewAvatar);
+            } else {
+                imageViewAvatar.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
+            }
+        }
+    }
 
     public void showPopupMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
@@ -184,7 +177,11 @@ public class ActivityDetailMember extends AppCompatActivity {
             } else if (requestCode == REQUEST_CODE_SELECT_IMAGE && data != null) {
                 String avatarUrl = data.getStringExtra("avatarUrl");
                 if (avatarUrl != null) {
-                    Picasso.get().load(avatarUrl).into(imageViewAvatar);
+                    Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageViewAvatar);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    int memberId = sharedPreferences.getInt("member_id", -1); // Lấy member_id từ SharedPreferences
+                    editor.putString("avatar_url_" + memberId, avatarUrl);
+                    editor.apply();
                 }
             }
         }

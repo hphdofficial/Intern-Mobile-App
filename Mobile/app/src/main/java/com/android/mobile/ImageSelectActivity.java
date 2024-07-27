@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -91,7 +92,8 @@ public class ImageSelectActivity extends AppCompatActivity {
 
     private void uploadImage(Uri imageUri) {
         String token = sharedPreferences.getString("access_token", null);
-        if (token != null && imageUri != null) {
+        int memberId = sharedPreferences.getInt("member_id", -1); // Lấy member_id từ SharedPreferences
+        if (token != null && memberId != -1 && imageUri != null) {
             String filePath = getRealPathFromUri(imageUri);
             if (filePath != null) {
                 File file = new File(filePath);
@@ -107,9 +109,13 @@ public class ImageSelectActivity extends AppCompatActivity {
                             Toast.makeText(ImageSelectActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
                             String avatarUrl = response.body().getAvatar();
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("avatar_url", avatarUrl);
+                            editor.putString("avatar_url_" + memberId, avatarUrl);
                             editor.apply();
 
+                            // Cập nhật giao diện với URL mới
+                            Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(selectedImageView);
+
+                            // Truyền URL về ActivityDetailMember
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("avatarUrl", avatarUrl);
                             setResult(Activity.RESULT_OK, resultIntent);
