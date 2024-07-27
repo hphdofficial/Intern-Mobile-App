@@ -1,5 +1,6 @@
 package com.android.mobile;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +24,10 @@ public class ReviewActivity extends AppCompatActivity {
     private RecyclerView reviewsRecyclerView;
     private ReviewAdapter reviewAdapter;
     private List<ReviewModel> reviewList;
+    private SharedPreferences sharedPreferences;
+    private static final String NAME_SHARED = "myContent";
+    private static final String KEY_TITLE = "title";
+    private static final String VALUE_INFO = "Review";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +40,15 @@ public class ReviewActivity extends AppCompatActivity {
             return insets;
         });
 
-        //chèn fragment
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
+        saveToSharedPreferences(KEY_TITLE, VALUE_INFO);
+
+        // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-// Thêm hoặc thay thế Fragment mới
+        // Thêm hoặc thay thế Fragment mới
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
@@ -58,5 +67,11 @@ public class ReviewActivity extends AppCompatActivity {
 
         reviewAdapter = new ReviewAdapter(this, reviewList);
         reviewsRecyclerView.setAdapter(reviewAdapter);
+    }
+
+    private void saveToSharedPreferences(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 }

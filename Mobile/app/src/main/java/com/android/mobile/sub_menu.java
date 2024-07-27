@@ -120,7 +120,7 @@ private ImageView image_avatar;
                     startActivity(new Intent(getContext(), ClubActivity.class));
                 }
                 if(id == R.id.btn_registerclass){
-                    startActivity(new Intent(getContext(), RegisterClass.class));
+                    startActivity(new Intent(getContext(), ClassActivity.class));
                 }
 
                 if(id == R.id.btn_infor){

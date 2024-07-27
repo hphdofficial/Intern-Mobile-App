@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,17 +25,31 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.models.ProfileModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Method;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuActivity extends AppCompatActivity {
 
     private int placeholderResourceId = R.drawable.photo3x4;
 
+    private ImageView imgAvatarMenu;
+    private TextView textViewName;
+    private SharedPreferences sharedPreferences;
+    private TextView textViewBirthday;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_menu);
@@ -63,7 +78,7 @@ public class MenuActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-// Thêm hoặc thay thế Fragment mới
+        // Thêm hoặc thay thế Fragment mới
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
@@ -71,9 +86,20 @@ public class MenuActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
 
+        // Tham chiếu đến các thành phần giao diện
+        imgAvatarMenu = findViewById(R.id.img_avatar_menu);
+        textViewName = findViewById(R.id.textViewName);
+        textViewBirthday= findViewById(R.id.txt_content);
+
         //click image
         setEventClick();
+
+
+
+        // Gọi phương thức loadUserData để hiển thị thông tin người dùng
+        loadUserData();
     }
+
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
@@ -197,11 +223,25 @@ public class MenuActivity extends AppCompatActivity {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StartActivity.class));
+                logout();
+            }
+        });
+        test5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
             }
         });
         eventAnimationImage();
     }
+    private void logout() {
+        Intent intent = new Intent(MenuActivity.this, StartActivity.class); // Giả sử StartActivity là trang đăng nhập của bạn
+        startActivity(intent);
+        finish();
+    }
+
+
+
 
     public void eventAnimationImage(){
         eventMenuItem(test);
@@ -239,6 +279,43 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
     }
+    private void loadUserData() {
+        String token = sharedPreferences.getString("access_token", null);
+        int memberId = sharedPreferences.getInt("member_id", -1); // Lấy member_id từ SharedPreferences khi đăng nhập
+        if (token != null && memberId != -1) {
+            UserApiService apiService = ApiServiceProvider.getUserApiService();
+            Call<ProfileModel> call = apiService.getProfile("Bearer " + token);
+            call.enqueue(new Callback<ProfileModel>() {
+                @Override
+                public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+                    if (response.isSuccessful()) {
+                        ProfileModel profile = response.body();
+                        if (profile != null) {
+                            textViewName.setText(profile.getUsername());
+                            textViewBirthday.setText(profile.getNgaysinh());
+
+                            // Load avatar từ SharedPreferences cho user cụ thể
+                            String avatarUrl = sharedPreferences.getString("avatar_url_" + memberId, null);
+                            if (avatarUrl != null) {
+                                Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imgAvatarMenu);
+                            } else {
+                                imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
+                            }
+                        }
+                    } else {
+                        Toast.makeText(MenuActivity.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileModel> call, Throwable t) {
+                    Toast.makeText(MenuActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     protected void onRestart() {
@@ -248,6 +325,6 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        loadUserData();
     }
 }
