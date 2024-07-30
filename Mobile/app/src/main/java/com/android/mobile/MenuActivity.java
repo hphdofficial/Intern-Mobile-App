@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Method;
+import java.sql.Date;
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,6 +82,12 @@ public class MenuActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Thêm hoặc thay thế Fragment mới
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Trang Chính");
+        myContentE.apply();
+
+
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
@@ -175,7 +184,6 @@ public class MenuActivity extends AppCompatActivity {
         test3 = findViewById(R.id.test3);
         test4 = findViewById(R.id.test4);
         test5 = findViewById(R.id.test5);
-
         img_avatar_menu = findViewById(R.id.img_avatar_menu);
         img_avatar_menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,16 +299,35 @@ public class MenuActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         ProfileModel profile = response.body();
                         if (profile != null) {
+
+
+                            SharedPreferences infor = getSharedPreferences("infor", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor myContentE = infor.edit();
+                            myContentE.putString("name", profile.getUsername());
+                            Calendar calendar = Calendar.getInstance();
+                            int year = calendar.get(Calendar.YEAR);
+                            String date[] = profile.getNgaysinh().split("-");
+
+                            myContentE.putInt("age", year-Integer.parseInt(date[0]));
+
+
+
+
                             textViewName.setText(profile.getUsername());
                             textViewBirthday.setText(profile.getNgaysinh());
 
                             // Load avatar từ SharedPreferences cho user cụ thể
                             String avatarUrl = sharedPreferences.getString("avatar_url_" + memberId, null);
+
+                            myContentE.putString("avatar", avatarUrl);
+                            myContentE.apply();
                             if (avatarUrl != null) {
+
                                 Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imgAvatarMenu);
                             } else {
                                 imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
                             }
+
                         }
                     } else {
                         Toast.makeText(MenuActivity.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();

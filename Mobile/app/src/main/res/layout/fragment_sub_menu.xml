@@ -72,7 +72,7 @@
                        app:layout_constraintTop_toTopOf="@+id/img_avatar">
 
                        <TextView
-                           android:id="@+id/textViewName"
+                           android:id="@+id/txt_name"
 
                            android:layout_width="match_parent"
                            android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                            android:textSize="18sp" />
 
                        <TextView
-                           android:id="@+id/txt_content"
+                           android:id="@+id/txt_age"
                            android:layout_width="match_parent"
                            android:layout_height="wrap_content"
                            android:layout_marginTop="4dp"

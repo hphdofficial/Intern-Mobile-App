@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
@@ -145,6 +146,9 @@ private ImageView image_avatar;
 
 
         back_content = rootView.findViewById(R.id.back_content);
+        txt_name = rootView.findViewById(R.id.txt_name);
+        txt_age = rootView.findViewById(R.id.txt_age);
+        image_avatar_sub = rootView.findViewById(R.id.image_avatar_sub);
         back_content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,11 +160,27 @@ private ImageView image_avatar;
         });
 
 
+        // đẩy tên và tuổi
+        SharedPreferences infor = getActivity().getSharedPreferences("infor", Context.MODE_PRIVATE);
+        String name = infor.getString("name","Default");
+        int age = infor.getInt("age",0);
+
+        txt_name.setText(name);
+        txt_age.setText(age+" tuổi");
+        String avatarUrl = infor.getString("avatar",null);
+        if (avatarUrl != null) {
+            Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(image_avatar_sub);
+        } else {
+            image_avatar_sub.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
+        }
+
         return rootView;
     }
     ConstraintLayout main;
     private LinearLayout back_content;
-
+    private TextView txt_name;
+    private  TextView txt_age;
+    private  ImageView image_avatar_sub;
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item = menu.findItem(R.id.btn_self);

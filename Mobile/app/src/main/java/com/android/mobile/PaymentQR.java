@@ -1,9 +1,11 @@
 package com.android.mobile;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +38,16 @@ public class PaymentQR extends AppCompatActivity {
         buttonGenerateQRCode = findViewById(R.id.buttonGenerateQRCode);
 
         buttonGenerateQRCode.setOnClickListener(v -> generateQRCode("Hello, QR Code!"));
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            // Lấy dữ liệu từ Bundle
+            String title = extras.getString("title");
+            if(title.contains("registerclass")){
+                Toast.makeText(getApplicationContext(),extras.getDouble("money")+"",Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
     private void generateQRCode(String content) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
