@@ -23,7 +23,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logovovinam" />
 
         <TextView
             android:id="@+id/title"
@@ -90,22 +90,40 @@
                 android:textSize="9pt"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/edit_password"
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_edittext_background"
-                android:hint=""
-                android:inputType="textPassword"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:textColor="@android:color/black"
-                android:textStyle="normal" />
+                android:layout_weight="4">
+
+                <EditText
+                    android:id="@+id/edit_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_edittext_background"
+                    android:hint=""
+                    android:inputType="textPassword"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="40dp"
+                    android:paddingBottom="5dp"
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/iconPasswordVisibility"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/hide"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </RelativeLayout>
+
         </LinearLayout>
+
 
         <TextView
             android:id="@+id/forgotPassword"

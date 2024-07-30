@@ -1,9 +1,11 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.ForgotPasswordModel;
 import com.android.mobile.models.LoginModel;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.models.RegisterModel;
 import com.android.mobile.models.ReponseModel;
+import com.android.mobile.models.ResetPasswordModel;
 import com.android.mobile.models.TokenModel;
 
 import okhttp3.MultipartBody;
@@ -31,4 +33,10 @@ public interface UserApiService {
             @Header("Authorization") String token,
             @Part MultipartBody.Part avatar
     );
+
+    @POST("api/forgotpassword/request")
+    Call<ReponseModel> sendOtp(@Body ForgotPasswordModel request);
+
+    @POST("api/forgotpassword/reset")
+    Call<ReponseModel> resetPassword(@Body ResetPasswordModel request);
 }

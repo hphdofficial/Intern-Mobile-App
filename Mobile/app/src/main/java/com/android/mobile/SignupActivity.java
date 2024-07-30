@@ -25,7 +25,7 @@ import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText editTextUsername, editTextPassword, editTextEmail, editTextTen, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotenGiamho, editTextDienthoaiGiamho;
+    private EditText editTextUsername, editTextPassword, editTextEmail, editTextTen, editTextChieucao, editTextCannang, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotenGiamho, editTextDienthoaiGiamho;
     private RadioGroup radioGroupGender;
     private Button buttonSignUp;
 
@@ -38,6 +38,8 @@ public class SignupActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.edit_text_password);
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextTen = findViewById(R.id.edit_text_ten);
+        editTextChieucao = findViewById(R.id.edit_text_chieucao);
+        editTextCannang = findViewById(R.id.edit_text_cannang);
         editTextDienthoai = findViewById(R.id.edit_text_dienthoai);
         editTextDiachi = findViewById(R.id.edit_text_diachi);
         editTextNgaysinh = findViewById(R.id.edit_text_ngaysinh);
@@ -96,6 +98,8 @@ public class SignupActivity extends AppCompatActivity {
         String password = editTextPassword.getText().toString();
         String email = editTextEmail.getText().toString();
         String ten = editTextTen.getText().toString();
+        int chieucao = Integer.parseInt(editTextChieucao.getText().toString());
+        int cannang = Integer.parseInt(editTextCannang.getText().toString());
         String dienthoai = editTextDienthoai.getText().toString();
         String diachi = editTextDiachi.getText().toString();
         String ngaysinh = editTextNgaysinh.getText().toString();
@@ -126,6 +130,8 @@ public class SignupActivity extends AppCompatActivity {
         request.setPassword(password);
         request.setEmail(email);
         request.setTen(ten);
+        request.setChieucao(chieucao);
+        request.setCannang(cannang);
         request.setDienthoai(dienthoai);
         request.setDiachi(diachi);
         request.setGioitinh(gioitinh);

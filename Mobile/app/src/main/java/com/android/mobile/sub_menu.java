@@ -21,9 +21,18 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.mobile.models.ProfileModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.UserApiService;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -37,9 +46,14 @@ public class sub_menu extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-private NavigationView navigationView;
+    private NavigationView navigationView;
     private int placeholderResourceId = R.drawable.photo3x4;
-private ImageView image_avatar;
+
+     ImageView image_avatar;
+    private SharedPreferences sharedPreferences;
+    private TextView textViewName;
+    private TextView textViewBirthday;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -81,6 +95,17 @@ private ImageView image_avatar;
         // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.fragment_sub_menu, container, false);
+
+        // Initialize SharedPreferences
+        sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+
+        // Initialize views
+        textViewName = rootView.findViewById(R.id.textViewName);
+        textViewBirthday = rootView.findViewById(R.id.txt_content);
+        image_avatar = rootView.findViewById(R.id.image_avatar_sub);
+
+        // Load user data
+        loadUserData();
 
         // xét chiều ngang và dọc
         rootView.setLayoutParams(new ViewGroup.LayoutParams(
@@ -185,6 +210,44 @@ private ImageView image_avatar;
 
         return super.onOptionsItemSelected(item);
     }*/
+
+    private void loadUserData() {
+        String token = sharedPreferences.getString("access_token", null);
+        int memberId = sharedPreferences.getInt("member_id", -1);
+        if (token != null && memberId != -1) {
+            UserApiService apiService = ApiServiceProvider.getUserApiService();
+            Call<ProfileModel> call = apiService.getProfile("Bearer " + token);
+            call.enqueue(new Callback<ProfileModel>() {
+                @Override
+                public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+                    if (response.isSuccessful()) {
+                        ProfileModel profile = response.body();
+                        if (profile != null) {
+                            textViewName.setText(profile.getUsername());
+                            textViewBirthday.setText(profile.getNgaysinh());
+
+                            // Load avatar từ SharedPreferences cho user cụ thể
+                            String avatarUrl = sharedPreferences.getString("avatar_url_" + memberId, null);
+                            if (avatarUrl != null) {
+                                Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(image_avatar);
+                            } else {
+                                image_avatar.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
+                            }
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileModel> call, Throwable t) {
+                    Toast.makeText(getActivity(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private int getScreenHeight() {
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);

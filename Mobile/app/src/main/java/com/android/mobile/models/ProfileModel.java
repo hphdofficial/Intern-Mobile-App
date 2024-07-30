@@ -11,7 +11,11 @@ public class ProfileModel {
     private String hotengiamho;
     private String dienthoai_giamho;
     private String lastlogin;
+    private int chieucao; // Thêm trường chiều cao
+    private int cannang; // Thêm trường cân nặng
+
     private AvatarModel avatar;
+
 
     // Getters and setters...
 
@@ -99,7 +103,28 @@ public class ProfileModel {
         return avatar;
     }
 
+    public int getChieucao() {
+        return chieucao;
+    }
+
+    public void setChieucao(int chieucao) {
+        this.chieucao = chieucao;
+    }
+
+    public int getCannang() {
+        return cannang;
+    }
+
+    public void setCannang(int cannang) {
+        this.cannang = cannang;
+    }
+
     public void setAvatar(AvatarModel avatar) {
         this.avatar = avatar;
     }
+
+    public String getAvatarUrl() {
+        return avatar != null ? avatar.getAvatarUrl() : null;
+    }
+
 }

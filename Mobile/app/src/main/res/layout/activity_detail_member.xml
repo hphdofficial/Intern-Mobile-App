@@ -176,6 +176,45 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/textViewNgaysinhLabel"
             android:padding="8dp"/>
+        <TextView
+            android:id="@+id/textViewChieucaoLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chiều cao:"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/avatarFrame"
+            app:layout_constraintTop_toBottomOf="@id/textViewLastloginValue"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/textViewChieucaoValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="175"
+            app:layout_constraintStart_toEndOf="@id/textViewChieucaoLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textViewChieucaoLabel"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/textViewCannangLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cân nặng:"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/avatarFrame"
+            app:layout_constraintTop_toBottomOf="@id/textViewChieucaoValue"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/textViewCannangValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="70"
+            app:layout_constraintStart_toEndOf="@id/textViewCannangLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textViewCannangLabel"
+            android:padding="8dp"/>
 
         <TextView
             android:id="@+id/textViewHotengiamhoLabel"

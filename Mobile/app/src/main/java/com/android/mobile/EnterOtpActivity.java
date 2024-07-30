@@ -6,23 +6,24 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EnterOtpActivity extends AppCompatActivity {
 
     private EditText inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
+    private String email;
+    private ImageView img_back;
 
-    // Trong phương thức onCreate của EnterOtpActivity.java
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_otp);
-        EdgeToEdge.enable(this);
 
-        // Initialize EditText fields
+        email = getIntent().getStringExtra("email");
+
         inputCode1 = findViewById(R.id.inputCode1);
         inputCode2 = findViewById(R.id.inputCode2);
         inputCode3 = findViewById(R.id.inputCode3);
@@ -30,18 +31,25 @@ public class EnterOtpActivity extends AppCompatActivity {
         inputCode5 = findViewById(R.id.inputCode5);
         inputCode6 = findViewById(R.id.inputCode6);
 
-        // Set listeners to move focus to the next EditText
+        img_back = findViewById(R.id.img_back);
+
         setupEditTextListeners();
 
-        // Find and set onClickListener for Verify button
         findViewById(R.id.btnVerify).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onVerifyButtonClick(v);
+                verifyOtp();
+            }
+        });
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EnterOtpActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
-
 
     private void setupEditTextListeners() {
         inputCode1.addTextChangedListener(new FocusTextWatcher(inputCode1, inputCode2));
@@ -49,10 +57,9 @@ public class EnterOtpActivity extends AppCompatActivity {
         inputCode3.addTextChangedListener(new FocusTextWatcher(inputCode3, inputCode4));
         inputCode4.addTextChangedListener(new FocusTextWatcher(inputCode4, inputCode5));
         inputCode5.addTextChangedListener(new FocusTextWatcher(inputCode5, inputCode6));
-        inputCode6.addTextChangedListener(new FocusTextWatcher(inputCode6, null)); // Last EditText, no next EditText
+        inputCode6.addTextChangedListener(new FocusTextWatcher(inputCode6, null));
     }
 
-    // Example of a TextWatcher to move focus to the next EditText
     private static class FocusTextWatcher implements TextWatcher {
         private final EditText currentEditText;
         private final EditText nextEditText;
@@ -78,28 +85,19 @@ public class EnterOtpActivity extends AppCompatActivity {
         }
     }
 
-    // Method to handle verification success and navigation
-    public void onVerifyButtonClick(View view) {
-        // Perform verification logic here (replace with your actual verification process)
-        boolean verified = verifyOTP();
+    private void verifyOtp() {
+        String otp = inputCode1.getText().toString() + inputCode2.getText().toString() +
+                inputCode3.getText().toString() + inputCode4.getText().toString() +
+                inputCode5.getText().toString() + inputCode6.getText().toString();
 
-        if (verified) {
-            // Show success message using Toast
-            Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-
-            // Navigate to MenuActivity
-            startActivity(new Intent(this, MenuActivity.class));
-            finish(); // Finish this activity after navigation
-        } else {
-            // Handle verification failure
-            // For example, show error message or retry OTP entry
+        if (otp.length() != 6) {
+            Toast.makeText(this, "Mã OTP phải là 6 chữ số", Toast.LENGTH_SHORT).show();
+            return;
         }
-    }
 
-    // Replace this method with your actual OTP verification logic
-    private boolean verifyOTP() {
-        // Example: Simulate successful verification
-        // Replace with your actual OTP verification logic (e.g., compare entered OTP with sent OTP)
-        return true; // Return true for demonstration
+        Intent intent = new Intent(EnterOtpActivity.this, ResetPasswordActivity.class);
+        intent.putExtra("email", email);
+        intent.putExtra("otp", otp);
+        startActivity(intent);
     }
 }

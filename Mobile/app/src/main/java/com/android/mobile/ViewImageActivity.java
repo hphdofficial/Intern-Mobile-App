@@ -6,6 +6,8 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.squareup.picasso.Picasso;
+
 public class ViewImageActivity extends AppCompatActivity {
 
     private ImageView imageView;
@@ -17,18 +19,14 @@ public class ViewImageActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
 
-        // Check if the default image flag is passed
         boolean useDefaultImage = getIntent().getBooleanExtra("defaultImage", false);
         if (useDefaultImage) {
             imageView.setImageResource(R.drawable.photo3x4);
         } else {
-            // Get the image URI from the intent
             String imageUriString = getIntent().getStringExtra("imageUri");
             if (imageUriString != null) {
-                Uri imageUri = Uri.parse(imageUriString);
-                imageView.setImageURI(imageUri);
+                Picasso.get().load(imageUriString).into(imageView);
             }
         }
     }
-
 }

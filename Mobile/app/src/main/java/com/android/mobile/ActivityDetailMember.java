@@ -32,7 +32,7 @@ import retrofit2.Response;
 
 public class ActivityDetailMember extends AppCompatActivity {
 
-    private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue;
+    private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue,textViewChieucaoValue, textViewCannangValue;;
     private ImageView imageViewAvatar;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
@@ -68,6 +68,8 @@ public class ActivityDetailMember extends AppCompatActivity {
         textViewNgaysinhValue = findViewById(R.id.textViewNgaysinhValue);
         textViewLastloginValue = findViewById(R.id.textViewLastloginValue);
         textViewHotengiamhoValue = findViewById(R.id.textViewHotengiamhoValue);
+        textViewChieucaoValue = findViewById(R.id.textViewChieucaoValue);
+        textViewCannangValue = findViewById(R.id.textViewCannangValue);
         textViewDienthoaiGiamhoValue = findViewById(R.id.textViewDienthoaiGiamhoValue);
         imageViewAvatar = findViewById(R.id.imageViewAvatar);
 
@@ -102,6 +104,8 @@ public class ActivityDetailMember extends AppCompatActivity {
                             textViewLastloginValue.setText(profile.getLastlogin());
                             textViewHotengiamhoValue.setText(profile.getHotengiamho());
                             textViewDienthoaiGiamhoValue.setText(profile.getDienthoai_giamho());
+                            textViewChieucaoValue.setText(String.valueOf(profile.getChieucao()));
+                            textViewCannangValue.setText(String.valueOf(profile.getCannang()));
                         }
                     } else {
                         Toast.makeText(ActivityDetailMember.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
@@ -136,6 +140,12 @@ public class ActivityDetailMember extends AppCompatActivity {
             int itemId = item.getItemId();
             if (itemId == R.id.menu_view_image) {
                 Intent viewIntent = new Intent(ActivityDetailMember.this, ViewImageActivity.class);
+                String avatarUrl = sharedPreferences.getString("avatar_url_" + sharedPreferences.getInt("member_id", -1), null);
+                if (avatarUrl != null) {
+                    viewIntent.putExtra("imageUri", avatarUrl);
+                } else {
+                    viewIntent.putExtra("defaultImage", true);
+                }
                 startActivity(viewIntent);
                 return true;
             } else if (itemId == R.id.menu_replace_gallery) {
@@ -153,6 +163,7 @@ public class ActivityDetailMember extends AppCompatActivity {
         popupMenu.inflate(R.menu.image_profile_menu);
         popupMenu.show();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
