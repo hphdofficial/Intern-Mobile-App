@@ -9,7 +9,7 @@ public class RegisterModel {
     private String diachi;
     private String gioitinh;
     private String ngaysinh;
-    private String hoten_giamho;
+    private String hotengiamho;
     private String dienthoai_giamho;
     private int chieucao; // Thêm trường chiều cao
     private int cannang; // Thêm trường cân nặng
@@ -80,11 +80,11 @@ public class RegisterModel {
     }
 
     public String getHoten_giamho() {
-        return hoten_giamho;
+        return hotengiamho;
     }
 
     public void setHoten_giamho(String hoten_giamho) {
-        this.hoten_giamho = hoten_giamho;
+        this.hotengiamho = hotengiamho;
     }
 
     public String getDienthoai_giamho() {
