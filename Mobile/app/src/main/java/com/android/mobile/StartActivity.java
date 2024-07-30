@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ public class StartActivity extends AppCompatActivity {
     private EditText editPassword;
     private TextView forgotPassword;
     private ImageView iconPasswordVisibility;
+    private CheckBox checkboxSavePassword;
     private boolean isPasswordVisible = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class StartActivity extends AppCompatActivity {
         editPassword = findViewById(R.id.edit_password);
         forgotPassword = findViewById(R.id.forgotPassword);
         iconPasswordVisibility = findViewById(R.id.iconPasswordVisibility);
+        checkboxSavePassword = findViewById(R.id.checkbox_save_password);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +74,11 @@ public class StartActivity extends AppCompatActivity {
                 togglePasswordVisibility();
             }
         });
+
+        // Load saved credentials if available
+        loadSavedCredentials();
     }
+
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
             editPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -103,6 +110,11 @@ public class StartActivity extends AppCompatActivity {
                     TokenModel tokenResponse = response.body();
                     if (tokenResponse != null) {
                         saveLoginDetails(tokenResponse);
+                        if (checkboxSavePassword.isChecked()) {
+                            saveCredentials(email, password);
+                        } else {
+                            clearCredentials();
+                        }
                         Toast.makeText(StartActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                     }
@@ -126,5 +138,33 @@ public class StartActivity extends AppCompatActivity {
         editor.putInt("expires_in", tokenResponse.getExpires_in());
         editor.putInt("member_id", tokenResponse.getMember_id());
         editor.apply();
+    }
+
+    private void saveCredentials(String email, String password) {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("saved_email", email);
+        editor.putString("saved_password", password);
+        editor.apply();
+    }
+
+    private void clearCredentials() {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("saved_email");
+        editor.remove("saved_password");
+        editor.apply();
+    }
+
+    private void loadSavedCredentials() {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String savedEmail = sharedPreferences.getString("saved_email", null);
+        String savedPassword = sharedPreferences.getString("saved_password", null);
+
+        if (savedEmail != null && savedPassword != null) {
+            editEmail.setText(savedEmail);
+            editPassword.setText(savedPassword);
+            checkboxSavePassword.setChecked(true);
+        }
     }
 }

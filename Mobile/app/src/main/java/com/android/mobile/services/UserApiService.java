@@ -7,11 +7,14 @@ import com.android.mobile.models.RegisterModel;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.models.ResetPasswordModel;
 import com.android.mobile.models.TokenModel;
+import com.android.mobile.models.UpdateInfoModel;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
+
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -39,4 +42,8 @@ public interface UserApiService {
 
     @POST("api/forgotpassword/reset")
     Call<ReponseModel> resetPassword(@Body ResetPasswordModel request);
+
+    @PUT("api/auth/updateInfo")
+    Call<ReponseModel> updateInfo(@Header("Authorization") String token, @Body UpdateInfoModel request);
+
 }

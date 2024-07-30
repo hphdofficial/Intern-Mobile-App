@@ -21,6 +21,9 @@
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
         <activity
+            android:name=".UpdateInfo"
+            android:exported="false" />
+        <activity
             android:name=".adapter.SupplierAdapter"
             android:exported="false" />
         <activity

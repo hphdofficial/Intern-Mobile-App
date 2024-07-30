@@ -125,21 +125,33 @@
         </LinearLayout>
 
 
+        <CheckBox
+            android:id="@+id/checkbox_save_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/password"
+            android:layout_marginTop="0dp"
+            android:textSize="18dp"
+            android:text="Save password"
+            android:textStyle="italic" />
+
         <TextView
             android:id="@+id/forgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/password"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:text="Forgot Password"
             android:textAppearance="?android:textAppearanceMedium"
-            android:textStyle="normal" />
+            android:textStyle="italic" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/forgotPassword"
+            android:layout_marginTop="27dp"
             android:orientation="horizontal">
 
             <Button
