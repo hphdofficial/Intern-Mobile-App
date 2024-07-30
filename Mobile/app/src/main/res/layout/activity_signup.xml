@@ -38,6 +38,16 @@
                 android:textColor="@android:color/black"
                 android:layout_marginTop="8dp"/>
 
+            <!-- Email EditText -->
+            <EditText
+                android:id="@+id/edit_text_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp" />
+
             <!-- Username EditText -->
             <EditText
                 android:id="@+id/edit_text_username"
@@ -99,17 +109,6 @@
                     android:src="@drawable/hide" />
             </RelativeLayout>
 
-
-            <!-- Email EditText -->
-            <EditText
-                android:id="@+id/edit_text_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:minHeight="48dp" />
-
             <!-- Ten (Name) EditText -->
             <EditText
                 android:id="@+id/edit_text_ten"
@@ -118,6 +117,7 @@
                 android:layout_marginTop="8dp"
                 android:hint="Full Name"
                 android:minHeight="48dp" />
+
             <!-- Chieucao (Height) EditText -->
             <EditText
                 android:id="@+id/edit_text_chieucao"

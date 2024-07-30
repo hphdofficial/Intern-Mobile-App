@@ -1,6 +1,7 @@
 package com.android.mobile;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.Button;
@@ -151,6 +152,9 @@ public class SignupActivity extends AppCompatActivity {
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(SignupActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SignupActivity.this,StartActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(SignupActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
