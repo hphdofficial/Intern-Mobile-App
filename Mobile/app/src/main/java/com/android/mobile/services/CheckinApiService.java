@@ -1,5 +1,7 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.CheckinMemberModel;
+import com.android.mobile.models.CheckinTeacherModel;
 import com.android.mobile.models.Class;
 import com.android.mobile.models.TheoryModel;
 
@@ -13,17 +15,17 @@ import retrofit2.http.POST;
 
 public interface CheckinApiService {
     @GET("api/member/view-checkin")
-    Call<TheoryModel> memberViewCheckin (@Body TheoryModel request);
+    Call<CheckinMemberModel> memberViewCheckin(@Body CheckinMemberModel request);
 
     @GET("api/teacher/view-checkin")
-    Call<TheoryModel> getMartialArtsTheoryDetail (@Body TheoryModel request);
+    Call<CheckinMemberModel> teacherViewCheckin(@Body CheckinMemberModel request);
 
     @POST("api/teacher/checkin")
-    Call<TheoryModel> teacherCheckin (@Body TheoryModel request);
+    Call<CheckinTeacherModel> teacherCheckin(@Body CheckinTeacherModel request);
 
     @GET("api/teacher/classes/getall")
     Call<List<Class>> getTeacherClasses();
 
     @GET("api/teacher/classes/getdetail")
-    Call<TheoryModel> getClassMembers (@Body TheoryModel request);
+    Call<Class> getClassMembers(@Body int idClass);
 }

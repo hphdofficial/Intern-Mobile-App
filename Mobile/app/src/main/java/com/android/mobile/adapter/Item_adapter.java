@@ -49,10 +49,16 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
         int txtProductInStock = ProductList[i].getUnitsInStock();
         viewHolder.txtProductInStock.setText("Còn: "+txtProductInStock);
 
+        int idProduct = ProductList[i].getProductID();
+        int idSupplier = ProductList[i].getSupplierID();
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, activity_item_detail.class);
+                intent.putExtra("id", idProduct);
+                intent.putExtra("IDSupplier", idSupplier);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

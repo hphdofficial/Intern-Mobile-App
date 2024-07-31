@@ -152,6 +152,7 @@ public class MenuActivity extends AppCompatActivity {
     private LinearLayout btn_class;
     private LinearLayout btn_new;
     private LinearLayout btn_logout;
+    private LinearLayout btn_product;
     private ImageView img_avatar_menu;
     private ImageView test;
     private ImageView test1;
@@ -168,6 +169,7 @@ public class MenuActivity extends AppCompatActivity {
         btn_class = findViewById(R.id.btn_class);
         btn_new = findViewById(R.id.btn_infor);
         btn_logout = findViewById(R.id.btn_logout);
+        btn_product = findViewById(R.id.btn_product);
         user = findViewById(R.id.user);
         test = findViewById(R.id.test);
         test1 = findViewById(R.id.test1);
@@ -218,6 +220,13 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), MyClassActivity.class));
+            }
+        });
+        // nút vào cửa hàng dụng cụ
+        btn_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), activity_items.class));
             }
         });
         btn_logout.setOnClickListener(new View.OnClickListener() {
