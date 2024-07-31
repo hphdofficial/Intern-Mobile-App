@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    tools:context=".RegisterClass">
+
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_container"
+
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:textSize="18sp"
+            android:id="@+id/change_class"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Thông tin đai"></TextView>
+
+        <!--  <ScrollView
+            android:id="@+id/scroll_radio_class"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/change_class">
+
+            <RadioGroup
+                android:id="@+id/class_radiobutton"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radioButtonOption1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Option 1" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonOption2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Option 2" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonOption3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Option 3" />
+
+            </RadioGroup>
+        </ScrollView>-->
+        <TextView
+            android:textSize="18sp"
+            android:id="@+id/name_class"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/change_class"
+            android:text="Mô tả">
+
+        </TextView>
+
+        <TextView
+            android:textSize="18sp"
+            android:id="@+id/date_learn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name_class"
+            android:text="Tình trạng: ">
+
+        </TextView>
+
+
+
+
+
+
+       <LinearLayout
+           android:id="@+id/payment_belt"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/date_learn"
+           android:orientation="vertical">
+           <LinearLayout
+               android:id="@+id/linear"
+
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:id="@+id/money"
+                   android:textSize="18sp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Phí đăng ký thi"
+                   >
+
+               </TextView>
+
+               <TextView
+                   android:textAlignment="textEnd"
+                   android:id="@+id/total"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/money"
+                   android:text="0đ "
+                   android:textSize="18sp">
+
+               </TextView>
+
+           </LinearLayout>
+           <LinearLayout
+               android:id="@+id/linear1"
+
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:id="@+id/date"
+                   android:textSize="18sp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Thời gian thi"
+                   >
+
+               </TextView>
+
+               <TextView
+                   android:textAlignment="textEnd"
+                   android:id="@+id/date1"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/money"
+                   android:text="22/06/2024 "
+                   android:textSize="18sp">
+
+               </TextView>
+
+           </LinearLayout>
+           <Button
+               android:id="@+id/buttonRegister"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_below="@id/linear"
+               android:layout_marginTop="16dp"
+               android:text="Đăng ký" />
+       </LinearLayout>
+
+    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+    <!--họ và ten phụ huynh
+    sdt phụ huynh
+    Lớp cần chọn 1 ds lớp
+    ghi chú
+    -->

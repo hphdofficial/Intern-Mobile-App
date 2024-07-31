@@ -25,6 +25,7 @@ public interface UserApiService {
     @GET("api/auth/profile")
     Call<ProfileModel> getProfile(@Header("Authorization") String token);
 
+
     @Multipart
     @POST("api/upload/avatar")
     Call<ReponseModel> uploadAvatar(
