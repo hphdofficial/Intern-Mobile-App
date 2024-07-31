@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -37,6 +38,7 @@ public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNew
     private List<NewsModel> newsList = new ArrayList<>();
     private NewsAdapter adapter;
     private static final String TAG = "ActivityNews";
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,22 @@ public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNew
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+
+        // Initialize SearchView and set up search query listener
+        searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchNews(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchNews(newText);
+                return true;
+            }
+        });
     }
 
     private void saveToSharedPreferences(String key, String value) {
@@ -100,6 +118,28 @@ public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNew
             @Override
             public void onFailure(Call<List<NewsModel>> call, Throwable t) {
                 Log.e(TAG, "API Call failed: " + t.getMessage());
+                Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void searchNews(String query) {
+        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
+        Call<List<NewsModel>> call = apiService.searchAnouncements(query);
+        call.enqueue(new Callback<List<NewsModel>>() {
+            @Override
+            public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    newsList.clear(); // Clear existing data
+                    newsList.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(ActivityNews.this, "Không thể tìm kiếm tin tức", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsModel>> call, Throwable t) {
                 Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
