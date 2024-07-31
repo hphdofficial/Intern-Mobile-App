@@ -1,4 +1,7 @@
 package com.android.mobile.network;
+import com.android.mobile.ClubActivity;
+import com.android.mobile.services.ClassApiService;
+import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.UserApiService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,5 +44,13 @@ public class ApiServiceProvider {
 
     public static UserApiService getUserApiService() {
         return getRetrofitInstance().create(UserApiService.class);
+    }
+
+    public static ClubApiService getClubApiService() {
+        return getRetrofitInstance().create(ClubApiService.class);
+    }
+
+    public static ClassApiService getClassApiService() {
+        return getRetrofitInstance().create(ClassApiService.class);
     }
 }

@@ -1,7 +1,10 @@
 package com.android.mobile.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.DetailClubActivity;
 import com.android.mobile.R;
+import com.android.mobile.models.Club;
 
 import java.util.List;
 
 public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ViewHolder> {
     Context context;
-    private List<String> data;
+    private List<Club> clubList;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
@@ -30,9 +34,9 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ViewHolder> {
         }
     }
 
-    public ClubAdapter(Context context, List<String> data) {
+    public ClubAdapter(Context context, List<Club> clubList) {
         this.context = context;
-        this.data = data;
+        this.clubList = clubList;
     }
 
     @Override
@@ -42,12 +46,15 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ClubAdapter.ViewHolder holder, int position) {
-        holder.textView.setText(data.get(position));
+    public void onBindViewHolder(ClubAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        holder.textView.setText(clubList.get(position).getName());
         holder.btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailClubActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("id_club", clubList.get(position).getId_club());
+                intent.putExtras(bundle);
                 context.startActivity(intent);
             }
         });
@@ -55,6 +62,12 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return clubList.size();
+    }
+
+    public void setData(List<Club> newData) {
+        clubList.clear();
+        clubList.addAll(newData);
+        notifyDataSetChanged();
     }
 }

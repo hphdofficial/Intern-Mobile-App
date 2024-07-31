@@ -9,6 +9,11 @@ public class Class {
     private Date ngayKetThuc;
     private int thoiGian;
     private String teacherName;
+    private int id, giatien;
+    private String thoigian, dienthoai, club, giangvien;
+
+    public Class() {
+    }
 
     public Class(int hocPhi, Date ngayBatDau, Date ngayKetThuc, String ten, int thoiGian, String teacherName) {
         this.hocPhi = hocPhi;
@@ -17,9 +22,6 @@ public class Class {
         this.ten = ten;
         this.thoiGian = thoiGian;
         this.teacherName = teacherName;
-    }
-
-    public Class() {
     }
 
     public String getTeacherName() {
@@ -68,5 +70,53 @@ public class Class {
 
     public void setThoiGian(int thoiGian) {
         this.thoiGian = thoiGian;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getGiatien() {
+        return giatien;
+    }
+
+    public void setGiatien(int giatien) {
+        this.giatien = giatien;
+    }
+
+    public String getThoigian() {
+        return thoigian;
+    }
+
+    public void setThoigian(String thoigian) {
+        this.thoigian = thoigian;
+    }
+
+    public String getDienthoai() {
+        return dienthoai;
+    }
+
+    public void setDienthoai(String dienthoai) {
+        this.dienthoai = dienthoai;
+    }
+
+    public String getClub() {
+        return club;
+    }
+
+    public void setClub(String club) {
+        this.club = club;
+    }
+
+    public String getGiangvien() {
+        return giangvien;
+    }
+
+    public void setGiangvien(String giangvien) {
+        this.giangvien = giangvien;
     }
 }
