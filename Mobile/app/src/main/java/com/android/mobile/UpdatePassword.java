@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.content.Intent;
 
@@ -12,7 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.mobile.models.ReponseModel;
-import com.android.mobile.models.UpdateInfoModel;
+import com.android.mobile.models.UpdatePasswordModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
@@ -20,17 +21,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UpdateInfo extends AppCompatActivity {
+public class UpdatePassword extends AppCompatActivity {
 
-    private EditText editTextEmail, editTextPassword, editTextPasswordConfirmation;
-    private Button buttonUpdateInfo;
+    private EditText editTextEmail, editTextCurrentPassword, editTextPassword, editTextPasswordConfirmation;
+    private Button buttonUpdatePassword;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_info);
+        setContentView(R.layout.activity_update_password);
         // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -43,9 +44,10 @@ public class UpdateInfo extends AppCompatActivity {
 
         // Khởi tạo các view
         editTextEmail = findViewById(R.id.edit_text_email);
+        editTextCurrentPassword = findViewById(R.id.edit_text_current_password);
         editTextPassword = findViewById(R.id.edit_text_password);
         editTextPasswordConfirmation = findViewById(R.id.edit_text_password_confirmation);
-        buttonUpdateInfo = findViewById(R.id.button_update_info);
+        buttonUpdatePassword = findViewById(R.id.button_update_info);
 
         // Nhận dữ liệu từ ActivityDetailMember
         Intent intent = getIntent();
@@ -54,35 +56,36 @@ public class UpdateInfo extends AppCompatActivity {
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
 
-        buttonUpdateInfo.setOnClickListener(v -> updateInfo());
+        buttonUpdatePassword.setOnClickListener(v -> updatePassword());
     }
 
-    private void updateInfo() {
+    private void updatePassword() {
         String token = sharedPreferences.getString("access_token", null);
         if (token != null) {
-            UpdateInfoModel updateInfoModel = new UpdateInfoModel();
-            updateInfoModel.setEmail(editTextEmail.getText().toString());
-            updateInfoModel.setPassword(editTextPassword.getText().toString());
-            updateInfoModel.setPasswordConfirmation(editTextPasswordConfirmation.getText().toString());
+            UpdatePasswordModel updatePasswordModel = new UpdatePasswordModel();
+            updatePasswordModel.setEmail(editTextEmail.getText().toString());
+            updatePasswordModel.setCurrent_pass(editTextCurrentPassword.getText().toString());
+            updatePasswordModel.setNew_pass(editTextPassword.getText().toString());
+            updatePasswordModel.setNew_pass_confirmation(editTextPasswordConfirmation.getText().toString());
 
             UserApiService apiService = ApiServiceProvider.getUserApiService();
-            Call<ReponseModel> call = apiService.updateInfo("Bearer " + token, updateInfoModel);
+            Call<ReponseModel> call = apiService.updatePassword("Bearer " + token, updatePasswordModel);
             call.enqueue(new Callback<ReponseModel>() {
                 @Override
                 public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        Toast.makeText(UpdateInfo.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(UpdateInfo.this,MenuActivity.class);
+                        Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(UpdatePassword.this, MenuActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(UpdateInfo.this, "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ReponseModel> call, Throwable t) {
-                    Toast.makeText(UpdateInfo.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdatePassword.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {

@@ -291,7 +291,7 @@ public class MenuActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         ProfileModel profile = response.body();
                         if (profile != null) {
-                            textViewName.setText(profile.getUsername());
+                            textViewName.setText(profile.getTen());
                             textViewBirthday.setText(profile.getNgaysinh());
 
                             // Load avatar từ SharedPreferences cho user cụ thể

@@ -38,7 +38,7 @@ public class ActivityDetailMember extends AppCompatActivity {
 
     private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue, textViewChieucaoValue, textViewCannangValue;
     private ImageView imageViewAvatar;
-    private Button buttonEditPassword;
+    private Button buttonEditPassword,buttonEditInfo;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
     private static final int REQUEST_CODE_GALLERY = 100;
@@ -79,12 +79,29 @@ public class ActivityDetailMember extends AppCompatActivity {
         textViewDienthoaiGiamhoValue = findViewById(R.id.textViewDienthoaiGiamhoValue);
         imageViewAvatar = findViewById(R.id.imageViewAvatar);
         buttonEditPassword = findViewById(R.id.button_edit_password);
+        buttonEditInfo = findViewById(R.id.button_edit_info);
+
 
         imageViewAvatar.setOnClickListener(this::showPopupMenu);
 
         buttonEditPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(ActivityDetailMember.this, UpdateInfo.class);
+            Intent intent = new Intent(ActivityDetailMember.this, UpdatePassword.class);
             intent.putExtra("email", textViewEmailValue.getText().toString());
+            startActivity(intent);
+        });
+        buttonEditInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(ActivityDetailMember.this, UpdateInfoMember.class);
+            intent.putExtra("username", textViewUsernameValue.getText().toString());
+            intent.putExtra("email", textViewEmailValue.getText().toString());
+            intent.putExtra("ten", textViewTenValue.getText().toString());
+            intent.putExtra("dienthoai", textViewDienthoaiValue.getText().toString());
+            intent.putExtra("diachi", textViewDiachiValue.getText().toString());
+            intent.putExtra("gioitinh", textViewGioitinhValue.getText().toString());
+            intent.putExtra("ngaysinh", textViewNgaysinhValue.getText().toString());
+            intent.putExtra("hotengiamho", textViewHotengiamhoValue.getText().toString());
+            intent.putExtra("dienthoaigiamho", textViewDienthoaiGiamhoValue.getText().toString());
+            intent.putExtra("chieucao", textViewChieucaoValue.getText().toString());
+            intent.putExtra("cannang", textViewCannangValue.getText().toString());
             startActivity(intent);
         });
 
@@ -165,6 +182,8 @@ public class ActivityDetailMember extends AppCompatActivity {
                             textViewLastloginValue.setText(profile.getLastlogin());
                             textViewHotengiamhoValue.setText(profile.getHotengiamho());
                             textViewDienthoaiGiamhoValue.setText(profile.getDienthoai_giamho());
+                            textViewChieucaoValue.setText(profile.getChieucao());
+                            textViewCannangValue.setText(profile.getCannang());
                             String avatarUrl = profile.getAvatarUrl();
                             if (avatarUrl != null) {
                                 Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageViewAvatar);

@@ -12,6 +12,8 @@ public class ProfileModel {
     private String hotengiamho;
     private String dienthoai_giamho;
     private String lastlogin;
+    private String chieucao;
+    private String cannang;
 
     // Getters and setters...
 
@@ -95,6 +97,7 @@ public class ProfileModel {
         this.dienthoai_giamho = dienthoai_giamho;
     }
 
+
     public String getLastlogin() {
         return lastlogin;
     }
@@ -105,5 +108,21 @@ public class ProfileModel {
 
     public String getAvatarUrl() {
         return avatar;
+    }
+
+    public String getChieucao() {
+        return chieucao;
+    }
+
+    public void setChieucao(String chieucao) {
+        this.chieucao = chieucao;
+    }
+
+    public String getCannang() {
+        return cannang;
+    }
+
+    public void setCannang(String cannang) {
+        this.cannang = cannang;
     }
 }

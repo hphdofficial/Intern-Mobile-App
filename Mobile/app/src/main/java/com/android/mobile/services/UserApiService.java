@@ -8,6 +8,7 @@ import com.android.mobile.models.ReponseModel;
 import com.android.mobile.models.ResetPasswordModel;
 import com.android.mobile.models.TokenModel;
 import com.android.mobile.models.UpdateInfoModel;
+import com.android.mobile.models.UpdatePasswordModel;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -44,6 +45,16 @@ public interface UserApiService {
     Call<ReponseModel> resetPassword(@Body ResetPasswordModel request);
 
     @PUT("api/auth/updateInfo")
-    Call<ReponseModel> updateInfo(@Header("Authorization") String token, @Body UpdateInfoModel request);
+    Call<ReponseModel> updateInfo(
+            @Header("Authorization") String token,
+            @Body UpdateInfoModel request
+    );
+
+
+    @PUT("api/auth/updatePass")
+    Call<ReponseModel> updatePassword(
+            @Header("Authorization") String token,
+            @Body UpdatePasswordModel request
+    );
 
 }

@@ -66,6 +66,21 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
+                    <TextView
+                        android:id="@+id/textViewEmailLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewEmailValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="email@example.com"
+                        android:padding="4dp"/>
 
                     <TextView
                         android:id="@+id/textViewUsernameLabel"
@@ -83,6 +98,7 @@
                         android:text="nguyenvana"
                         android:padding="4dp"/>
 
+
                     <TextView
                         android:id="@+id/textViewTenLabel"
                         android:layout_width="wrap_content"
@@ -97,22 +113,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Nguyen Van A"
-                        android:padding="4dp"/>
-
-                    <TextView
-                        android:id="@+id/textViewEmailLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Email:"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:padding="4dp"/>
-
-                    <TextView
-                        android:id="@+id/textViewEmailValue"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="email@example.com"
                         android:padding="4dp"/>
 
                     <TextView
@@ -258,6 +258,16 @@
                         android:layout_height="wrap_content"
                         android:text="2024-07-22 14:12:30"
                         android:padding="4dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_edit_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Thay đổi thông tin"
+                        app:cornerRadius="8dp"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="@color/colorPrimary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/button_edit_password"

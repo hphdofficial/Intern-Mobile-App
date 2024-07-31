@@ -11,8 +11,8 @@ public class RegisterModel {
     private String ngaysinh;
     private String hotengiamho;
     private String dienthoai_giamho;
-    private int chieucao; // Thêm trường chiều cao
-    private int cannang; // Thêm trường cân nặng
+    private int chieucao;
+    private int cannang;
 
     // Getters and setters...
     public String getUsername() {
@@ -83,7 +83,7 @@ public class RegisterModel {
         return hotengiamho;
     }
 
-    public void setHoten_giamho(String hoten_giamho) {
+    public void setHoten_giamho(String hotengiamho) {
         this.hotengiamho = hotengiamho;
     }
 
