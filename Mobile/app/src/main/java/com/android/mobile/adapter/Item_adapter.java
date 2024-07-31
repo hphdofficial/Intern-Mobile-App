@@ -16,53 +16,43 @@ import com.android.mobile.activity_item_chapter;
 import com.android.mobile.activity_item_detail;
 import com.android.mobile.models.Chapter;
 import com.android.mobile.models.Item;
+import com.android.mobile.models.ProductModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
     Context context;
 
-    ArrayList<Item> itemList = new ArrayList<>();
+    ProductModel[] ProductList;
 
-    public Item_adapter(Context context, ArrayList<Item> itemList) {
+    public Item_adapter(Context context, ProductModel[] ProductList) {
         this.context = context;
-        this.itemList = itemList;
+        this.ProductList = ProductList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_item_new, viewGroup, false);
         return new Item_adapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        String txtItemName = itemList.get(i).getName();
-        viewHolder.txtItemName.setText(txtItemName);
+        String txtItemName = ProductList[i].getProductName();
+        viewHolder.txtProductName.setText(txtItemName);
 
-        int txtItemPrice = itemList.get(i).getPrice();
-        System.out.println(txtItemPrice);
-        viewHolder.txtItemPrice.setText(txtItemPrice+ " VND");
+        String txtItemPrice = ProductList[i].getUnitPrice();
+        viewHolder.txtProductPrice.setText(txtItemPrice+ " VND");
 
-        String txtItemSupplier = itemList.get(i).getSupplier();
-        viewHolder.txtItemSupplier.setText(txtItemSupplier);
+        int txtProductInStock = ProductList[i].getUnitsInStock();
+        viewHolder.txtProductInStock.setText("Còn: "+txtProductInStock);
 
-        String txtItemDateProduct = itemList.get(i).getDateProduct();
-        String txtItemMaterial = itemList.get(i).getMaterial();
-        String txtItemUse = itemList.get(i).getUse();
-        String txtItemType = itemList.get(i).getType();
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, activity_item_detail.class);
-                intent.putExtra("name", txtItemName);
-                intent.putExtra("price", txtItemPrice);
-                intent.putExtra("supplier", txtItemSupplier);
-                intent.putExtra("dateProduct", txtItemDateProduct);
-                intent.putExtra("material", txtItemMaterial);
-                intent.putExtra("use", txtItemUse);
-                intent.putExtra("type", txtItemType);
                 context.startActivity(intent);
             }
         });
@@ -70,21 +60,19 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return ProductList.length;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtItemName;
-        TextView txtItemPrice;
-        TextView txtItemSupplier;
-        ImageView imgItem;
+        TextView txtProductName;
+        TextView txtProductPrice;
+        TextView txtProductInStock;
 
         ViewHolder(View itemView) {
             super(itemView);
-            txtItemName = itemView.findViewById(R.id.txtItemName);
-            txtItemPrice = itemView.findViewById(R.id.txtItemPrice);
-            txtItemSupplier = itemView.findViewById(R.id.txtItemSupplier);
-            imgItem = itemView.findViewById(R.id.imgItem);
+            txtProductName = itemView.findViewById(R.id.txtProductName);
+            txtProductPrice = itemView.findViewById(R.id.txtProductPrice);
+            txtProductInStock = itemView.findViewById(R.id.txtProductInStock);
         }
     }
 }

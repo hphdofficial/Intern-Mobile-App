@@ -130,7 +130,10 @@ private ImageView image_avatar;
                     startActivity(new Intent(getContext(),  AboutActivity.class));
                 }
                 if(id == R.id.btn_class){
+                    //Các lớp học giảng viên đang dạy điểm danh
                     startActivity(new Intent(getContext(), MyClassActivity.class));
+                    //Đã đăng ký lớp học (Học viên)
+//                    startActivity(new Intent(getContext(), activity_member_checkin.class));
                 }
                 if(id == R.id.btn_logout){
                     startActivity(new Intent(getContext(), StartActivity.class));

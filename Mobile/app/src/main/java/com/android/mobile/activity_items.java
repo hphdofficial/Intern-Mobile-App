@@ -1,6 +1,7 @@
 package com.android.mobile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -20,29 +21,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.mobile.adapter.Checkin_adapter;
 import com.android.mobile.adapter.Item_adapter;
 import com.android.mobile.models.Item;
+import com.android.mobile.models.ProductModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.ProductApiService;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class activity_items extends AppCompatActivity {
-    Item item = new Item("9/7/2024", "Torem", "Vovinam Club", 100000, "Găng đấu tập", "Vải", "", "Găng");
-    Item item1 = new Item("9/7/2024", "Torem1", "Vovinam Club1", 110000, "Găng đấu tập", "Vải", "", "Đai");
-    Item item2 = new Item("9/7/2024", "Torem2", "Vovinam Club2", 1220000, "Găng đấu tập", "Vải", "", "Quần áo");
-    Item item3 = new Item("9/7/2024", "Torem3", "Vovinam Club3", 166000, "Găng đấu tập", "Vải", "", "Quả đấm");
-    Item item4 = new Item("9/7/2024", "Torem4", "Vovinam Club4", 888000, "Găng đấu tập", "Vải", "", "Găng");
-    Item item5 = new Item("9/7/2024", "Torem5", "Vovinam Club5", 190000, "Găng đấu tập", "Vải", "", "Giáp");
-    ArrayList<Item> items = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_items);
-        items.add(item);
-        items.add(item1);
-        items.add(item2);
-        items.add(item3);
-        items.add(item4);
-        items.add(item5);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -74,9 +72,36 @@ public class activity_items extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
-        Item_adapter itemAdapter = new Item_adapter(this, items);
-        RecyclerView recyclerView = findViewById(R.id.recycler_item);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.setAdapter(itemAdapter);
+
+
+        FetchProducts();
+    }
+
+    private void FetchProducts(){
+        ProductApiService apiService = ApiServiceProvider.getProductApiService();
+        apiService.getProducts().enqueue(new Callback<ProductModel[]>() {
+            @Override
+            public void onResponse(Call<ProductModel[]> call, Response<ProductModel[]> response) {
+                if(response.isSuccessful()){
+                    ProductModel[] productList = response.body();
+                    for (ProductModel product : productList){
+                        Log.e("PostData", "Success: " + product.getProductName());
+                    }
+                    Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
+                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setAdapter(itemAdapter);
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductModel[]> call, Throwable throwable) {
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
     }
 }

@@ -1,4 +1,8 @@
 package com.android.mobile.network;
+import com.android.mobile.services.CatagoryApiService;
+import com.android.mobile.services.CheckinApiService;
+import com.android.mobile.services.ProductApiService;
+import com.android.mobile.services.TheoryApiService;
 import com.android.mobile.services.UserApiService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,5 +45,21 @@ public class ApiServiceProvider {
 
     public static UserApiService getUserApiService() {
         return getRetrofitInstance().create(UserApiService.class);
+    }
+
+    public static ProductApiService getProductApiService() {
+        return getRetrofitInstance().create(ProductApiService.class);
+    }
+
+    public static CatagoryApiService getCatagoryApiService() {
+        return getRetrofitInstance().create(CatagoryApiService.class);
+    }
+
+    public static CheckinApiService getCheckinApiService() {
+        return getRetrofitInstance().create(CheckinApiService.class);
+    }
+
+    public static TheoryApiService getTheoryApiService() {
+        return getRetrofitInstance().create(TheoryApiService.class);
     }
 }

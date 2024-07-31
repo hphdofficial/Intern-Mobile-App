@@ -2,6 +2,7 @@ package com.android.mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.MyClassAdapter;
 import com.android.mobile.models.Class;
+import com.android.mobile.models.ProductModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.CheckinApiService;
+import com.android.mobile.services.ProductApiService;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyClassActivity extends AppCompatActivity {
     Date today = new Date();
@@ -61,5 +72,31 @@ public class MyClassActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+
+        FetchClassesForTeacher();
+    }
+
+    private void FetchClassesForTeacher(){
+        CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
+        apiService.getTeacherClasses().enqueue(new Callback<List<Class>>() {
+            @Override
+            public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                if(response.isSuccessful()){
+                    List<Class> classList = response.body();
+                    for (Class product : classList){
+                        Log.e("PostData", "Success: " + product.getTen());
+                    }
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Class>> call, Throwable throwable) {
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
     }
 }
