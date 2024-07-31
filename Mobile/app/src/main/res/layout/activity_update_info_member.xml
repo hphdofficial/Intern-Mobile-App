@@ -1,4 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -6,132 +6,140 @@
     android:layout_height="match_parent"
     tools:context=".UpdateInfoMember">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignParentTop="true" />
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragment_container"
         android:padding="16dp">
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/edit_text_username"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Tên đăng nhập"
-            android:padding="12dp" />
-
-        <EditText
-            android:id="@+id/edit_text_email"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Email"
-            android:padding="12dp" />
-
-        <EditText
-            android:id="@+id/edit_text_ten"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Tên"
-            android:padding="12dp" />
-
-        <EditText
-            android:id="@+id/edit_text_dienthoai"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Điện thoại"
-            android:padding="12dp" />
-
-        <EditText
-            android:id="@+id/edit_text_diachi"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Địa chỉ"
-            android:padding="12dp" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Giới tính"
-            android:textSize="16sp"
-            android:textColor="@android:color/black" />
+            android:orientation="vertical">
 
-        <RadioGroup
-            android:id="@+id/radio_group_gioitinh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/edit_text_username"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Tên đăng nhập"
+                android:padding="12dp" />
 
-            <RadioButton
-                android:id="@+id/radio_nam"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/edit_text_email"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Email"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/edit_text_ten"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Tên"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/edit_text_dienthoai"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Điện thoại"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/edit_text_diachi"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Địa chỉ"
+                android:padding="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nam" />
+                android:layout_marginTop="16dp"
+                android:text="Giới tính"
+                android:textSize="16sp"
+                android:textColor="@android:color/black" />
 
-            <RadioButton
-                android:id="@+id/radio_nu"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/radio_group_gioitinh"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nữ" />
-        </RadioGroup>
+                android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/edit_text_ngaysinh"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Ngày sinh"
-            android:padding="12dp" />
+                <RadioButton
+                    android:id="@+id/radio_nam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nam" />
 
-        <EditText
-            android:id="@+id/edit_text_hotengiamho"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Họ tên giám hộ"
-            android:padding="12dp" />
+                <RadioButton
+                    android:id="@+id/radio_nu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nữ" />
+            </RadioGroup>
 
-        <EditText
-            android:id="@+id/edit_text_dienthoaigiamho"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Điện thoại giám hộ"
-            android:padding="12dp" />
+            <EditText
+                android:id="@+id/edit_text_ngaysinh"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Ngày sinh"
+                android:padding="12dp" />
 
-        <EditText
-            android:id="@+id/edit_text_chieucao"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Chiều cao"
-            android:padding="12dp" />
+            <EditText
+                android:id="@+id/edit_text_hotengiamho"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Họ tên giám hộ"
+                android:padding="12dp" />
 
-        <EditText
-            android:id="@+id/edit_text_cannang"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Cân nặng"
-            android:padding="12dp" />
+            <EditText
+                android:id="@+id/edit_text_dienthoaigiamho"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Điện thoại giám hộ"
+                android:padding="12dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_update_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Cập nhật thông tin"
-            app:cornerRadius="8dp"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/colorPrimary" />
-    </LinearLayout>
-</ScrollView>
+            <EditText
+                android:id="@+id/edit_text_chieucao"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Chiều cao"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/edit_text_cannang"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:hint="Cân nặng"
+                android:padding="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_update_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Cập nhật thông tin"
+                app:cornerRadius="8dp"
+                android:textColor="@android:color/white"
+                app:backgroundTint="@color/colorPrimary" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

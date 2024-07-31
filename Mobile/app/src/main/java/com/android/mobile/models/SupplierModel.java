@@ -7,15 +7,6 @@ public class SupplierModel {
     private String Phone;
     private String Email;
 
-    // Constructor for mock data
-    public SupplierModel(int supplierID, String supplierName, String address, String phone, String email) {
-        this.SupplierID = supplierID;
-        this.SupplierName = supplierName;
-        this.Address = address;
-        this.Phone = phone;
-        this.Email = email;
-    }
-
     // Getters and Setters
     public int getSupplierID() {
         return SupplierID;

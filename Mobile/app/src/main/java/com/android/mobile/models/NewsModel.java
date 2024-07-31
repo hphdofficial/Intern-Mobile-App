@@ -1,19 +1,62 @@
 package com.android.mobile.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class NewsModel {
-    private String title;
-    private int imageResource;
 
-    public NewsModel(String title, int imageResource) {
-        this.title = title;
-        this.imageResource = imageResource;
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("photo")
+    private String photo;
+
+    @SerializedName("tenvi")
+    private String tenvi;
+
+    @SerializedName("noidungvi")
+    private String noidungvi;
+
+    // Getters and Setters
+
+    public int getId() {
+        return id;
     }
 
-    public String getTitle() {
-        return title;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getTenvi() {
+        return tenvi;
+    }
+
+    public void setTenvi(String tenvi) {
+        this.tenvi = tenvi;
+    }
+
+    public String getNoidungvi() {
+        return noidungvi;
+    }
+
+    public void setNoidungvi(String noidungvi) {
+        this.noidungvi = noidungvi;
+    }
+
+    @Override
+    public String toString() {
+        return "NewsModel{" +
+                "id=" + id +
+                ", photo='" + photo + '\'' +
+                ", tenvi='" + tenvi + '\'' +
+                ", noidungvi='" + noidungvi + '\'' +
+                '}';
     }
 }

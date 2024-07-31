@@ -16,9 +16,11 @@ import java.util.List;
 public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.SupplierViewHolder> {
 
     private List<SupplierModel> suppliers;
+    private OnSupplierClickListener listener;
 
-    public SupplierAdapter(List<SupplierModel> suppliers) {
+    public SupplierAdapter(List<SupplierModel> suppliers, OnSupplierClickListener listener) {
         this.suppliers = suppliers;
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,6 +35,8 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.Suppli
         SupplierModel supplier = suppliers.get(position);
         holder.supplierName.setText(supplier.getSupplierName());
         holder.address.setText(supplier.getAddress());
+
+        holder.itemView.setOnClickListener(v -> listener.onSupplierClick(supplier));
     }
 
     @Override
@@ -48,5 +52,9 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.Suppli
             supplierName = itemView.findViewById(R.id.supplierName);
             address = itemView.findViewById(R.id.address);
         }
+    }
+
+    public interface OnSupplierClickListener {
+        void onSupplierClick(SupplierModel supplier);
     }
 }

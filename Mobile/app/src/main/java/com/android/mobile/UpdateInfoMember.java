@@ -10,8 +10,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.content.Intent;
+import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.models.UpdateInfoModel;
@@ -40,6 +43,22 @@ public class UpdateInfoMember extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_info_member);
+
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Chỉnh sửa thông tin");
+        myContentE.apply();
+
+        // chèn fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Thêm hoặc thay thế Fragment mới
+        titleFragment newFragment = new titleFragment();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+        fragmentTransaction.commit();
 
         // Khởi tạo các view
         editTextUsername = findViewById(R.id.edit_text_username);

@@ -4,5 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="password_visibility_toggle">Toggle Password Visibility</string>
+    <string name="news_image_desc">news_image_desc</string>
 
 </resources>

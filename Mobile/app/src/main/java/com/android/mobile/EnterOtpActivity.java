@@ -11,6 +11,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.models.VerifyOtpModel;
+import com.android.mobile.models.ReponseModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.UserApiService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class EnterOtpActivity extends AppCompatActivity {
 
     private EditText inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
@@ -95,9 +104,27 @@ public class EnterOtpActivity extends AppCompatActivity {
             return;
         }
 
-        Intent intent = new Intent(EnterOtpActivity.this, ResetPasswordActivity.class);
-        intent.putExtra("email", email);
-        intent.putExtra("otp", otp);
-        startActivity(intent);
+        VerifyOtpModel request = new VerifyOtpModel(email, otp);
+        UserApiService apiService = ApiServiceProvider.getUserApiService();
+        Call<ReponseModel> call = apiService.verifyOtp(request);
+        call.enqueue(new Callback<ReponseModel>() {
+            @Override
+            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(EnterOtpActivity.this, "OTP đã được xác thực", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EnterOtpActivity.this, ResetPasswordActivity.class);
+                    intent.putExtra("email", email);
+                    intent.putExtra("otp", otp);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(EnterOtpActivity.this, "Xác thực OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReponseModel> call, Throwable t) {
+                Toast.makeText(EnterOtpActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
