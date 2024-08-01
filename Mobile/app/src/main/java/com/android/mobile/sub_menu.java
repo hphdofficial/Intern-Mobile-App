@@ -101,12 +101,12 @@ public class sub_menu extends Fragment {
         sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
 
         // Initialize views
-        textViewName = rootView.findViewById(R.id.txt_name);
-        textViewBirthday = rootView.findViewById(R.id.txt_age);
+/*        textViewName = rootView.findViewById(R.id.textViewName);
+        textViewBirthday = rootView.findViewById(R.id.txt_content);*/
         image_avatar = rootView.findViewById(R.id.image_avatar_sub);
 
         // Load user data
-        loadUserData();
+      //  loadUserData();
 
         // xét chiều ngang và dọc
         rootView.setLayoutParams(new ViewGroup.LayoutParams(
@@ -196,6 +196,8 @@ public class sub_menu extends Fragment {
         txt_name.setText(name);
         txt_age.setText(age+" tuổi");
         String avatarUrl = infor.getString("avatar",null);
+      //  Toast.makeText(getContext(),avatarUrl,Toast.LENGTH_SHORT).show();
+
         if (avatarUrl != null) {
             Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(image_avatar_sub);
         } else {
