@@ -169,7 +169,8 @@ public class MenuActivity extends AppCompatActivity {
     private ImageView test3;
     private ImageView test4;
     private ImageView test5;
-
+    private LinearLayout btn_cart;
+    private LinearLayout btn_history;
     private ConstraintLayout user;
     public void setEventClick(){
         btn_lythuyet = findViewById(R.id.btn_lythuyet);
@@ -186,6 +187,23 @@ public class MenuActivity extends AppCompatActivity {
         test3 = findViewById(R.id.test3);
         test4 = findViewById(R.id.test4);
         test5 = findViewById(R.id.test5);
+        btn_cart = findViewById(R.id.btn_cart);
+        btn_history = findViewById(R.id.btn_history);
+
+        btn_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), PurchaseHistoryActivity.class));
+            }
+        });
+
+
+        btn_cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),CartActivity.class));
+            }
+        });
 
         img_avatar_menu = findViewById(R.id.img_avatar_menu);
         img_avatar_menu.setOnClickListener(new View.OnClickListener() {
