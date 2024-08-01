@@ -1,19 +1,41 @@
 package com.android.mobile.models;
 
 public class NewsModel {
-    private String title;
-    private int imageResource;
+    private int id;
+    private String tenvi;
+    private String noidungvi;
+    private String photo;
 
-    public NewsModel(String title, int imageResource) {
-        this.title = title;
-        this.imageResource = imageResource;
+    // Getters and Setters
+    public int getId() {
+        return id;
     }
 
-    public String getTitle() {
-        return title;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public String getTenvi() {
+        return tenvi;
+    }
+
+    public void setTenvi(String tenvi) {
+        this.tenvi = tenvi;
+    }
+
+    public String getNoidungvi() {
+        return noidungvi;
+    }
+
+    public void setNoidungvi(String noidungvi) {
+        this.noidungvi = noidungvi;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

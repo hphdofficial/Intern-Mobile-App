@@ -3,10 +3,8 @@ package com.android.mobile;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,7 +22,6 @@ public class SupplierInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_supplier_info);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -47,15 +44,21 @@ public class SupplierInfoActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
-        // Xử lý sự kiện bấm vào "Đánh giá"
-        TextView reviewText = findViewById(R.id.reviewText);
-        reviewText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SupplierInfoActivity.this, ReviewActivity.class);
-                startActivity(intent);
-            }
-        });
+        Intent intent = getIntent();
+        String supplierName = intent.getStringExtra("SupplierName");
+        String address = intent.getStringExtra("Address");
+        String phone = intent.getStringExtra("Phone");
+        String email = intent.getStringExtra("Email");
+
+        TextView supplierNameTextView = findViewById(R.id.supplierName);
+        TextView addressTextView = findViewById(R.id.supplierAddress);
+        TextView phoneTextView = findViewById(R.id.supplierPhone);
+        TextView emailTextView = findViewById(R.id.supplierEmail);
+
+        supplierNameTextView.setText(supplierName);
+        addressTextView.setText(address);
+        phoneTextView.setText(phone);
+        emailTextView.setText(email);
     }
 
     private void saveToSharedPreferences(String key, String value) {

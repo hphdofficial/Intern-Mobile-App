@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +30,10 @@ public class StartActivity extends AppCompatActivity {
     private Button btn_register;
     private EditText editEmail;
     private EditText editPassword;
-
+    private TextView forgotPassword;
+    private ImageView iconPasswordVisibility;
+    private CheckBox checkboxSavePassword;
+    private boolean isPasswordVisible = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +43,9 @@ public class StartActivity extends AppCompatActivity {
         btn_register = findViewById(R.id.btn_register);
         editEmail = findViewById(R.id.edit_email);
         editPassword = findViewById(R.id.edit_password);
+        forgotPassword = findViewById(R.id.forgotPassword);
+        iconPasswordVisibility = findViewById(R.id.iconPasswordVisibility);
+        checkboxSavePassword = findViewById(R.id.checkbox_save_password);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +60,35 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), SignupActivity.class));
             }
         });
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
+            }
+        });
+
+        iconPasswordVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisibility();
+            }
+        });
+
+        // Load saved credentials if available
+        loadSavedCredentials();
+    }
+
+    private void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            editPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            iconPasswordVisibility.setImageResource(R.drawable.hide);
+        } else {
+            editPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            iconPasswordVisibility.setImageResource(R.drawable.view);
+        }
+        isPasswordVisible = !isPasswordVisible;
+        editPassword.setSelection(editPassword.getText().length());
     }
 
     private void loginUser() {
@@ -71,6 +110,11 @@ public class StartActivity extends AppCompatActivity {
                     TokenModel tokenResponse = response.body();
                     if (tokenResponse != null) {
                         saveLoginDetails(tokenResponse);
+                        if (checkboxSavePassword.isChecked()) {
+                            saveCredentials(email, password);
+                        } else {
+                            clearCredentials();
+                        }
                         Toast.makeText(StartActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                     }
@@ -94,5 +138,33 @@ public class StartActivity extends AppCompatActivity {
         editor.putInt("expires_in", tokenResponse.getExpires_in());
         editor.putInt("member_id", tokenResponse.getMember_id());
         editor.apply();
+    }
+
+    private void saveCredentials(String email, String password) {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("saved_email", email);
+        editor.putString("saved_password", password);
+        editor.apply();
+    }
+
+    private void clearCredentials() {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("saved_email");
+        editor.remove("saved_password");
+        editor.apply();
+    }
+
+    private void loadSavedCredentials() {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String savedEmail = sharedPreferences.getString("saved_email", null);
+        String savedPassword = sharedPreferences.getString("saved_password", null);
+
+        if (savedEmail != null && savedPassword != null) {
+            editEmail.setText(savedEmail);
+            editPassword.setText(savedPassword);
+            checkboxSavePassword.setChecked(true);
+        }
     }
 }

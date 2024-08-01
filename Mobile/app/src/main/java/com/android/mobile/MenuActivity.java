@@ -184,6 +184,7 @@ public class MenuActivity extends AppCompatActivity {
         test3 = findViewById(R.id.test3);
         test4 = findViewById(R.id.test4);
         test5 = findViewById(R.id.test5);
+
         img_avatar_menu = findViewById(R.id.img_avatar_menu);
         img_avatar_menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,7 +314,7 @@ public class MenuActivity extends AppCompatActivity {
 
 
 
-                            textViewName.setText(profile.getUsername());
+                            textViewName.setText(profile.getTen());
                             textViewBirthday.setText(profile.getNgaysinh());
 
                             // Load avatar từ SharedPreferences cho user cụ thể

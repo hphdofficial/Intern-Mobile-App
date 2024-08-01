@@ -4,239 +4,283 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivityDetailMember">
+    tools:context=".ActivityDetailMember"
+    android:background="@color/background_light">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/fragment_container">
+        android:layout_below="@id/fragment_container"
+        android:padding="16dp">
 
-        <FrameLayout
-            android:id="@+id/avatarFrame"
-            android:layout_width="75dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="16dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/avatarCard"
+            android:layout_width="100dp"
+            android:layout_height="140dp"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
 
-            <ImageView
-                android:id="@+id/imageViewAvatar"
+            <FrameLayout
+                android:id="@+id/avatarFrame"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/photo3x4" />
+                android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/imageViewEditAvatar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/edit"
-                android:background="?attr/selectableItemBackground"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="4dp" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/imageViewAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/photo3x4" />
 
-        <TextView
-            android:id="@+id/textViewUsernameLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tên đăng nhập:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toTopOf="@id/avatarFrame"
-            android:padding="8dp"/>
+                <ImageView
+                    android:id="@+id/imageViewEditAvatar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/edit"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="4dp" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/textViewUsernameValue"
+        <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="nguyenvana"
-            app:layout_constraintStart_toEndOf="@id/textViewUsernameLabel"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toEndOf="@id/avatarCard"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewUsernameLabel"
-            android:padding="8dp"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
 
-        <TextView
-            android:id="@+id/textViewTenLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tên:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewUsernameLabel"
-            android:padding="8dp"/>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textViewTenValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Nguyen Van A"
-            app:layout_constraintStart_toEndOf="@id/textViewTenLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewTenLabel"
-            android:padding="8dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView
+                        android:id="@+id/textViewEmailLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewEmailLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewTenLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewEmailValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="email@example.com"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewEmailValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="email@example.com"
-            app:layout_constraintStart_toEndOf="@id/textViewEmailLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewEmailLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewUsernameLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tên đăng nhập:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewDienthoaiLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Số điện thoại:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewEmailLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewUsernameValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="nguyenvana"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewDienthoaiValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="0123456789"
-            app:layout_constraintStart_toEndOf="@id/textViewDienthoaiLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewDienthoaiLabel"
-            android:padding="8dp"/>
 
-        <TextView
-            android:id="@+id/textViewDiachiLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Địa chỉ:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewDienthoaiValue"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewTenLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tên:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewDiachiValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="123 Đường ABC, Quận 1, TP.HCM"
-            app:layout_constraintStart_toEndOf="@id/textViewDiachiLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewDiachiLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewTenValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nguyen Van A"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewGioitinhLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Giới tính:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewDiachiValue"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewDienthoaiLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Số điện thoại:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewGioitinhValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Nam"
-            app:layout_constraintStart_toEndOf="@id/textViewGioitinhLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewGioitinhLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewDienthoaiValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0123456789"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewNgaysinhLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ngày sinh:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewGioitinhValue"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewDiachiLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Địa chỉ:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewNgaysinhValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="1990-01-01"
-            app:layout_constraintStart_toEndOf="@id/textViewNgaysinhLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewNgaysinhLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewDiachiValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="123 Đường ABC, Quận 1, TP.HCM"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewHotengiamhoLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Họ tên giám hộ:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewNgaysinhValue"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewGioitinhLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giới tính:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewHotengiamhoValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="ABC"
-            app:layout_constraintStart_toEndOf="@id/textViewHotengiamhoLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewHotengiamhoLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewGioitinhValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nam"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewDienthoaiGiamhoLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SĐT giám hộ:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewHotengiamhoValue"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewNgaysinhLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ngày sinh:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewDienthoaiGiamhoValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="0912312312"
-            app:layout_constraintStart_toEndOf="@id/textViewDienthoaiGiamhoLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewDienthoaiGiamhoLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewNgaysinhValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1990-01-01"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewLastloginLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lần đăng nhập cuối:"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarFrame"
-            app:layout_constraintTop_toBottomOf="@id/textViewDienthoaiGiamhoValue"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewChieucaoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chiều cao:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
 
-        <TextView
-            android:id="@+id/textViewLastloginValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="2024-07-22 14:12:30"
-            app:layout_constraintStart_toEndOf="@id/textViewLastloginLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewLastloginLabel"
-            android:padding="8dp"/>
+                    <TextView
+                        android:id="@+id/textViewChieucaoValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="175"
+                        android:padding="4dp"/>
 
+                    <TextView
+                        android:id="@+id/textViewCannangLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cân nặng:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewCannangValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="70"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewHotengiamhoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Họ tên giám hộ:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewHotengiamhoValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ABC"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewDienthoaiGiamhoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SĐT giám hộ:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewDienthoaiGiamhoValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0912312312"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewLastloginLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lần đăng nhập cuối:"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textViewLastloginValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="2024-07-22 14:12:30"
+                        android:padding="4dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_edit_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Thay đổi thông tin"
+                        app:cornerRadius="8dp"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="@color/colorPrimary" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_edit_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Thay đổi mật khẩu"
+                        app:cornerRadius="8dp"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="@color/colorPrimary" />
+                </LinearLayout>
+            </ScrollView>
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout

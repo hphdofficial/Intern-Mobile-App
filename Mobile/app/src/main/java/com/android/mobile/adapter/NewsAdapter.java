@@ -11,29 +11,44 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
 import com.android.mobile.models.NewsModel;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
     private List<NewsModel> newsList;
+    private OnNewsClickListener listener;
 
-    public NewsAdapter(List<NewsModel> newsList) {
+    public NewsAdapter(List<NewsModel> newsList, OnNewsClickListener listener) {
         this.newsList = newsList;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
-        return new ViewHolder(view);
+        return new NewsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
         NewsModel news = newsList.get(position);
-        holder.textView.setText(news.getTitle());
-        holder.imageView.setImageResource(news.getImageResource());
+        holder.newsTitle.setText(news.getTenvi());
+
+        // Construct the correct full URL for the image
+        String imageUrl = "http://tambinh.websinhvien.net/upload/photo/" + news.getPhoto();
+
+
+        // Load image using Glide with fitCenter
+        Glide.with(holder.itemView.getContext())
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_launcher_background)
+                .fitCenter()
+                .into(holder.newsImage);
+
+        holder.itemView.setOnClickListener(v -> listener.onNewsClick(news));
     }
 
     @Override
@@ -41,14 +56,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         return newsList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imageView;
-        public TextView textView;
+    public static class NewsViewHolder extends RecyclerView.ViewHolder {
+        TextView newsTitle;
+        ImageView newsImage;
 
-        public ViewHolder(View itemView) {
+        public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
-            textView = itemView.findViewById(R.id.textView);
+            newsTitle = itemView.findViewById(R.id.news_title);
+            newsImage = itemView.findViewById(R.id.news_image);
         }
+    }
+
+    public interface OnNewsClickListener {
+        void onNewsClick(NewsModel news);
     }
 }
