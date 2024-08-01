@@ -1,10 +1,15 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.SearchView;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,8 +27,10 @@ import com.android.mobile.models.NewsModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.NewsApiService;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,13 +39,12 @@ import retrofit2.Response;
 public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNewsClickListener {
 
     private SharedPreferences sharedPreferences;
-    private static final String NAME_SHARED = "myContent";
-    private static final String KEY_TITLE = "title";
-    private static final String VALUE_INFO = "info";
     private List<NewsModel> newsList = new ArrayList<>();
+    private List<NewsModel> filteredNewsList = new ArrayList<>();
     private NewsAdapter adapter;
     private static final String TAG = "ActivityNews";
-    private SearchView searchView;
+    private EditText searchEditText;
+    private ImageButton searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +52,16 @@ public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNew
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_news);
 
-        // Initialize SharedPreferences
-        sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
-        saveToSharedPreferences(KEY_TITLE, VALUE_INFO);
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Tin Tức");
+        myContentE.apply();
 
         RecyclerView recyclerView = findViewById(R.id.itemNews);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new NewsAdapter(newsList, this);
+        adapter = new NewsAdapter(filteredNewsList, this);
         recyclerView.setAdapter(adapter);
 
         fetchNews();
@@ -75,19 +83,33 @@ public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNew
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
-        // Initialize SearchView and set up search query listener
-        searchView = findViewById(R.id.search_view);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchNews(query);
+        // Initialize EditText and ImageButton
+        searchEditText = findViewById(R.id.search_edit_text);
+        searchButton = findViewById(R.id.search_button);
+
+        searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                searchNews(searchEditText.getText().toString());
                 return true;
+            }
+            return false;
+        });
+
+        searchButton.setOnClickListener(v -> searchNews(searchEditText.getText().toString()));
+
+        // Listen for text changes to filter the list
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                searchNews(newText);
-                return true;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterNews(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
     }
@@ -108,7 +130,7 @@ public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNew
                     Log.d(TAG, "API Response: " + response.body().toString());
                     newsList.clear(); // Clear existing data
                     newsList.addAll(response.body());
-                    adapter.notifyDataSetChanged();
+                    filterNews(searchEditText.getText().toString());
                 } else {
                     Log.d(TAG, "API Response is not successful or body is null");
                     Toast.makeText(ActivityNews.this, "Không thể lấy danh sách tin tức", Toast.LENGTH_SHORT).show();
@@ -124,25 +146,51 @@ public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNew
     }
 
     private void searchNews(String query) {
-        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<NewsModel>> call = apiService.searchAnouncements(query);
-        call.enqueue(new Callback<List<NewsModel>>() {
-            @Override
-            public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    newsList.clear(); // Clear existing data
-                    newsList.addAll(response.body());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(ActivityNews.this, "Không thể tìm kiếm tin tức", Toast.LENGTH_SHORT).show();
+        if (query.isEmpty()) {
+            fetchNews(); // Fetch all news if query is empty
+        } else {
+            NewsApiService apiService = ApiServiceProvider.getNewsApiService();
+            Call<List<NewsModel>> call = apiService.searchAnouncements(query);
+            call.enqueue(new Callback<List<NewsModel>>() {
+                @Override
+                public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        newsList.clear(); // Clear existing data
+                        newsList.addAll(response.body());
+                        filterNews(query);
+                    } else {
+                        Toast.makeText(ActivityNews.this, "Không thể tìm kiếm tin tức", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<NewsModel>> call, Throwable t) {
+                    Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void filterNews(String query) {
+        filteredNewsList.clear();
+        String normalizedQuery = removeDiacritics(query.toLowerCase());
+        if (normalizedQuery.isEmpty()) {
+            filteredNewsList.addAll(newsList);
+        } else {
+            for (NewsModel news : newsList) {
+                if (removeDiacritics(news.getTenvi().toLowerCase()).contains(normalizedQuery) ||
+                        removeDiacritics(news.getNoidungvi().toLowerCase()).contains(normalizedQuery)) {
+                    filteredNewsList.add(news);
                 }
             }
+        }
+        adapter.notifyDataSetChanged();
+    }
 
-            @Override
-            public void onFailure(Call<List<NewsModel>> call, Throwable t) {
-                Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+    private String removeDiacritics(String input) {
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("");
     }
 
     @Override

@@ -101,8 +101,8 @@ public class sub_menu extends Fragment {
         sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
 
         // Initialize views
-        textViewName = rootView.findViewById(R.id.textViewName);
-        textViewBirthday = rootView.findViewById(R.id.txt_content);
+        textViewName = rootView.findViewById(R.id.txt_name);
+        textViewBirthday = rootView.findViewById(R.id.txt_age);
         image_avatar = rootView.findViewById(R.id.image_avatar_sub);
 
         // Load user data
