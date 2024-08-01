@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 
@@ -45,9 +46,13 @@ import retrofit2.Response;
 
 public class activity_items extends AppCompatActivity {
     private SearchView searchView;
+    private EditText editMinPrice;
+    private EditText editMaxPrice;
     private Button btnFilterActive;
     private OptionCheckBoxAdapter optionAdapter;
     private OptionCheckBoxAdapter2 optionAdapter2;
+    private int min_price;
+    private int max_price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,8 @@ public class activity_items extends AppCompatActivity {
                 filterDialog.setCanceledOnTouchOutside(true);
                 filterDialog.setDismissWithAnimation(true);
 
+                editMinPrice = filterDialog.findViewById(R.id.editMinPrice);
+                editMaxPrice = filterDialog.findViewById(R.id.editMaxPrice);
 
 
                 //Fetch Category
@@ -179,6 +186,8 @@ public class activity_items extends AppCompatActivity {
 
     private void performSearch() {
 
+        String min_price_str = editMinPrice.getText().toString().trim();
+        String max_price_str = editMaxPrice.getText().toString().trim();
         List<OptionCategory> selectedOptions = optionAdapter.getOptionList().stream()
                 .filter(OptionCategory::isChecked)
                 .collect(Collectors.toList());
@@ -186,8 +195,8 @@ public class activity_items extends AppCompatActivity {
         List<OptionSupplier> selectedOptions2 = optionAdapter2.getOptionList().stream()
                 .filter(OptionSupplier::isChecked)
                 .collect(Collectors.toList());
-
-        if(selectedOptions!=null){
+        System.out.println(selectedOptions);
+        if(selectedOptions != null){
             String CategoryID = "";
             for (OptionCategory option : selectedOptions) {
                 CategoryID = option.getCategoryID();
@@ -203,7 +212,7 @@ public class activity_items extends AppCompatActivity {
                         }
                         Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
                         RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                         recyclerView.setAdapter(itemAdapter);
                     }else {
                         System.out.println("Active: Call onResponse");
@@ -217,17 +226,41 @@ public class activity_items extends AppCompatActivity {
                     Log.e("PostData", "Failure: " + throwable.getMessage());
                 }
             });
-        }else if(selectedOptions2 != null){
-
         }
-//        // Thực hiện tìm kiếm với selectedOptions
-//        for (OptionCategory option : selectedOptions) {
-//            System.out.println("Selected Option: " + option.getCategoryName());
-//        }
-//
-//        for (OptionSupplier option : selectedOptions2) {
-//            System.out.println("Selected Option: " + option.getSupplierName());
-//        }
+        if(selectedOptions2 != null && !min_price_str.isEmpty() && !max_price_str.isEmpty()){
+
+            min_price = Integer.parseInt(min_price_str);
+            max_price = Integer.parseInt(max_price_str);
+            int SupplierID = 0;
+            for (OptionSupplier option : selectedOptions2) {
+                SupplierID = option.getSupplierID();
+            }
+            ProductApiService apiService = ApiServiceProvider.getProductApiService();
+            apiService.getFilter(SupplierID, min_price, max_price).enqueue(new Callback<ProductModel[]>() {
+                @Override
+                public void onResponse(Call<ProductModel[]> call, Response<ProductModel[]> response) {
+                    if(response.isSuccessful()){
+                        ProductModel[] productList = response.body();
+                        for (ProductModel product : productList){
+                            Log.e("PostData", "Success: " + product.getProductName());
+                        }
+                        Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
+                        RecyclerView recyclerView = findViewById(R.id.recycler_item);
+                        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                        recyclerView.setAdapter(itemAdapter);
+                    }else {
+                        System.out.println("Active: Call onResponse");
+                        Log.e("PostData", "Error: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProductModel[]> call, Throwable throwable) {
+                    System.out.println("Active: Call Onfail");
+                    Log.e("PostData", "Failure: " + throwable.getMessage());
+                }
+            });
+        }
     }
 
     private void FetchProducts(){
@@ -242,7 +275,7 @@ public class activity_items extends AppCompatActivity {
                     }
                     Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
                     RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                     recyclerView.setAdapter(itemAdapter);
                 }else {
                     System.out.println("Active: Call onResponse");
@@ -270,7 +303,7 @@ public class activity_items extends AppCompatActivity {
                     }
                     Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
                     RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                     recyclerView.setAdapter(itemAdapter);
                 }else {
                     System.out.println("Active: Call onResponse");

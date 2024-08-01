@@ -22,13 +22,25 @@ public class ProductModel {
     @SerializedName("CategoryID")
     private String categoryID;
 
-    public ProductModel(int productID, String productName, int supplierID, String unitPrice, int unitsInStock, String categoryID) {
+    @SerializedName("link_image")
+    private String image_link;
+
+    public ProductModel(String categoryID, String image_link, int productID, String productName, int supplierID, String unitPrice, int unitsInStock) {
+        this.categoryID = categoryID;
+        this.image_link = image_link;
         this.productID = productID;
         this.productName = productName;
         this.supplierID = supplierID;
         this.unitPrice = unitPrice;
         this.unitsInStock = unitsInStock;
-        this.categoryID = categoryID;
+    }
+
+    public String getImage_link() {
+        return image_link;
+    }
+
+    public void setImage_link(String image_link) {
+        this.image_link = image_link;
     }
 
     public int getProductID() {
