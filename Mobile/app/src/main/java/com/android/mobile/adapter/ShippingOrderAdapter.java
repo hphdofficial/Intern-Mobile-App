@@ -12,7 +12,7 @@ import com.android.mobile.R;
 
 import java.util.List;
 
-public class PurchaseHistoryAdapter extends RecyclerView.Adapter<PurchaseHistoryAdapter.ViewHolder> {
+public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdapter.ViewHolder> {
     Context context;
     private List<String> data;
 
@@ -21,23 +21,23 @@ public class PurchaseHistoryAdapter extends RecyclerView.Adapter<PurchaseHistory
 
         public ViewHolder(View view) {
             super(view);
-            textView = view.findViewById(R.id.txt_name_purchase_history);
+            textView = view.findViewById(R.id.txt_name_shipping_item);
         }
     }
 
-    public PurchaseHistoryAdapter(Context context, List<String> data) {
+    public ShippingOrderAdapter(Context context, List<String> data) {
         this.context = context;
         this.data = data;
     }
 
     @Override
-    public PurchaseHistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_purchase_history, parent, false);
+    public ShippingOrderAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shipping_order, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PurchaseHistoryAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ShippingOrderAdapter.ViewHolder holder, int position) {
         holder.textView.setText(data.get(position));
     }
 

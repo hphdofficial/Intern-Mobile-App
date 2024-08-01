@@ -12,18 +12,17 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.mobile.adapter.PurchaseHistoryAdapter;
-import com.android.mobile.adapter.ShippingItemAdapter;
+import com.android.mobile.adapter.ShippingOrderAdapter;
 
 import java.util.ArrayList;
 
-public class PurchaseHistoryActivity extends AppCompatActivity {
+public class ShippingOrderActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_purchase_history);
+        setContentView(R.layout.activity_shipping_order);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -45,9 +44,9 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         data.add("Sản phẩm 4");
         data.add("Sản phẩm 5");
 
-        PurchaseHistoryAdapter purchaseHistoryAdapter = new PurchaseHistoryAdapter(this, data);
-        RecyclerView recyclerView = findViewById(R.id.recycler_purchase_history);
+        ShippingOrderAdapter shippingItemAdapter = new ShippingOrderAdapter(this, data);
+        RecyclerView recyclerView = findViewById(R.id.recycler_shipping_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(purchaseHistoryAdapter);
+        recyclerView.setAdapter(shippingItemAdapter);
     }
 }
