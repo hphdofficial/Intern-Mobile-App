@@ -3,6 +3,8 @@ package com.android.mobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,6 +45,15 @@ public class activity_item_detail extends AppCompatActivity {
         TextView txtItemPrice = findViewById(R.id.txtItemPrice);
         TextView txtItemSupplier = findViewById(R.id.txtItemSupplier);
         TextView txtItemInStock = findViewById(R.id.txtItemInStock);
+        Button btnDanhGia = findViewById(R.id.btnDanhGia);
+
+        btnDanhGia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
+                startActivity(intent);
+            }
+        });
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -34,6 +34,8 @@ public interface ProductApiService {
     @GET("api/products/search/{name}")
     Call<ProductModel[]> search(@Path("name") String name);
 
-    @GET("api/products/filter")
-    Call<ProductModel[]> getFilter(@Query("SupplierID") int SupplierID);
+    @POST("api/products/filter")
+    Call<ProductModel[]> getFilter(@Query("SupplierID") int SupplierID,
+                                   @Query("min_price") int min_price,
+                                   @Query("max_price") int max_price);
 }
