@@ -9,10 +9,12 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PUT;
+import retrofit2.http.Query;
 
 public interface CartApiService {
     @GET("/api/cart")
     Call<JsonObject> getCart(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Query("member_id") int member_id
     );
 }

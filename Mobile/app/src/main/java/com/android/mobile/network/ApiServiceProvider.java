@@ -1,5 +1,6 @@
 package com.android.mobile.network;
 import com.android.mobile.services.NewsApiService;
+import com.android.mobile.services.OrderApiService;
 import com.android.mobile.services.ProductApiService;
 import com.android.mobile.services.SupplierApiService;
 import com.android.mobile.services.CatagoryApiService;
@@ -87,5 +88,9 @@ public class ApiServiceProvider {
 
     public static CartApiService getCartApiService() {
         return getRetrofitInstance().create(CartApiService.class);
+    }
+
+    public static OrderApiService getOrderApiService() {
+        return getRetrofitInstance().create(OrderApiService.class);
     }
 }
