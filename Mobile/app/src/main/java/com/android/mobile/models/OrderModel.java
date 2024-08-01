@@ -1,92 +1,94 @@
 package com.android.mobile.models;
 
+import java.time.LocalDateTime;
+
 public class OrderModel {
-    private int idCart;
-    private int memberId;
-    private String txnRef;
-    private long amount;
-    private String orderInfo;
-    private String responseCode;
-    private String transactionNo;
-    private String bankCode;
-    private String payDate;
+    private int id_cart;
+    private int member_id;
+    private String txn_ref;
+    private String amount;
+    private String order_info;
+    private String response_code;
+    private String transaction_no;
+    private String bank_code;
+    private String pay_date;
     private String status;
-    private String createdAt;
-    private String updatedAt;
+    private String created_at;
+    private String updated_at;
 
     public OrderModel() {
     }
 
-    public int getIdCart() {
-        return idCart;
+    public int getId_cart() {
+        return id_cart;
     }
 
-    public void setIdCart(int idCart) {
-        this.idCart = idCart;
+    public void setId_cart(int id_cart) {
+        this.id_cart = id_cart;
     }
 
-    public int getMemberId() {
-        return memberId;
+    public int getMember_id() {
+        return member_id;
     }
 
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
+    public void setMember_id(int member_id) {
+        this.member_id = member_id;
     }
 
-    public String getTxnRef() {
-        return txnRef;
+    public String getTxn_ref() {
+        return txn_ref;
     }
 
-    public void setTxnRef(String txnRef) {
-        this.txnRef = txnRef;
+    public void setTxn_ref(String txn_ref) {
+        this.txn_ref = txn_ref;
     }
 
-    public long getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(long amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 
-    public String getOrderInfo() {
-        return orderInfo;
+    public String getOrder_info() {
+        return order_info;
     }
 
-    public void setOrderInfo(String orderInfo) {
-        this.orderInfo = orderInfo;
+    public void setOrder_info(String order_info) {
+        this.order_info = order_info;
     }
 
-    public String getResponseCode() {
-        return responseCode;
+    public String getResponse_code() {
+        return response_code;
     }
 
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
+    public void setResponse_code(String response_code) {
+        this.response_code = response_code;
     }
 
-    public String getTransactionNo() {
-        return transactionNo;
+    public String getTransaction_no() {
+        return transaction_no;
     }
 
-    public void setTransactionNo(String transactionNo) {
-        this.transactionNo = transactionNo;
+    public void setTransaction_no(String transaction_no) {
+        this.transaction_no = transaction_no;
     }
 
-    public String getBankCode() {
-        return bankCode;
+    public String getBank_code() {
+        return bank_code;
     }
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
+    public void setBank_code(String bank_code) {
+        this.bank_code = bank_code;
     }
 
-    public String getPayDate() {
-        return payDate;
+    public String getPay_date() {
+        return pay_date;
     }
 
-    public void setPayDate(String payDate) {
-        this.payDate = payDate;
+    public void setPay_date(String pay_date) {
+        this.pay_date = pay_date;
     }
 
     public String getStatus() {
@@ -97,19 +99,19 @@ public class OrderModel {
         this.status = status;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public String getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 }

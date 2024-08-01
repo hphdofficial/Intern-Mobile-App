@@ -19,10 +19,12 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
+        public TextView textView2;
 
         public ViewHolder(View view) {
             super(view);
             textView = view.findViewById(R.id.txt_name_purchase_history);
+            textView2 = view.findViewById(R.id.txt_price_product);
         }
     }
 
@@ -39,7 +41,8 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
 
     @Override
     public void onBindViewHolder(HistoryOrderAdapter.ViewHolder holder, int position) {
-        holder.textView.setText(orderList.get(position).getOrderInfo());
+        holder.textView.setText(orderList.get(position).getOrder_info());
+        holder.textView2.setText(orderList.get(position).getAmount());
     }
 
     @Override
