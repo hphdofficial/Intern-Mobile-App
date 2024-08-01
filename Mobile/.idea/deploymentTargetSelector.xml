@@ -13,10 +13,14 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+<<<<<<< HEAD
       <SelectionState runConfigName="activity_items">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="StartActivity">
+=======
+      <SelectionState runConfigName="HistoryOrderActivity">
+>>>>>>> 49387fdee4b7c083eb450565be4af0161801e197
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

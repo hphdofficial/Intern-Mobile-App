@@ -193,7 +193,7 @@ public class MenuActivity extends AppCompatActivity {
         btn_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), PurchaseHistoryActivity.class));
+                startActivity(new Intent(getApplicationContext(), HistoryOrderActivity.class));
             }
         });
 

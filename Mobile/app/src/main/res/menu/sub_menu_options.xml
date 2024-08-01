@@ -2,67 +2,60 @@
 <!-- res/menu/drawer_menu.xml -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:checkableBehavior="single"
+    <group
+        android:background="@android:color/white"
 
-        android:background="@android:color/white">
+        android:checkableBehavior="single">
 
+        <item
+            android:id="@+id/btn_home"
+            android:icon="@drawable/infor1"
+            android:title="Trang chủ" />
         <item
             android:id="@+id/btn_self"
-            android:title="Thông tin cá nhân"
             android:icon="@drawable/infor1"
-
-
-
-            />
+            android:title="Thông tin cá nhân" />
         <item
             android:id="@+id/btn_lythuyet"
-            android:title="Lý thuyết võ thuật"
             android:icon="@drawable/booklt2"
-            />
+            android:title="Lý thuyết võ thuật" />
         <item
             android:id="@+id/btn_club"
-            android:title="Câu lạc bộ"
             android:icon="@drawable/club3"
-            />
+            android:title="Câu lạc bộ" />
         <item
             android:id="@+id/btn_registerclass"
-            android:title="Đăng ký lớp học võ"
             android:icon="@drawable/re2"
-            />
+            android:title="Đăng ký lớp học võ" />
         <item
             android:id="@+id/btn_class"
-            android:title="Lớp học"
             android:icon="@drawable/class2"
-
-            />
+            android:title="Lớp học" />
         <item
             android:id="@+id/btn_infor"
-            android:title="Tin tức võ học"
             android:icon="@drawable/new2"
-            />
+            android:title="Tin tức võ học" />
         <item
             android:id="@+id/btn_register_up"
-            android:title="Đăng ký thi lên đai"
             android:icon="@drawable/logout2"
-            />
+            android:title="Đăng ký thi lên đai" />
         <item
             android:id="@+id/btn_inforsoftware"
-            android:title="Thông tin phần mềm"
             android:icon="@drawable/logo"
-            />
+            android:title="Thông tin phần mềm" />
         <item
+            android:id="@+id/btn_language"
+            android:icon="@drawable/ic_right_menu_vn"
+            android:title="Ngôn ngữ"
             app:actionLayout="@layout/activity_laguage_layout"
             app:showAsAction="always"
-            android:id="@+id/btn_language"
-            android:title="Ngôn ngữ"
-            android:icon="@drawable/ic_right_menu_vn"
 
             />
 
         <item
             android:id="@+id/btn_logout"
-            android:title="Đăng xuất"
             android:icon="@drawable/logout2"
+            android:title="Đăng xuất"
 
             />
 
