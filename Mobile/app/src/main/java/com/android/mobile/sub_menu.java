@@ -136,6 +136,9 @@ public class sub_menu extends Fragment {
                 // Handle navigation view item clicks here
                 int id = item.getItemId();
 
+                if(id == R.id.btn_home){
+                    startActivity(new Intent(getContext(), MenuActivity.class));
+                }
                 if(id == R.id.btn_self){
                     startActivity(new Intent(getContext(), ActivityDetailMember.class));
                 }
