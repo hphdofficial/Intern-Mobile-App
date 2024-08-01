@@ -44,7 +44,6 @@ public class ProductModel {
     }
 
     public void setProductName(String productName) {
-        this.productName = productName;
     }
 
     public int getSupplierID() {
