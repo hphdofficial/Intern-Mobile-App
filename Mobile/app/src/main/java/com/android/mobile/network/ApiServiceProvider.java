@@ -65,10 +65,6 @@ public class ApiServiceProvider {
         return getRetrofitInstance().create(ProductApiService.class);
     }
 
-    public static ProductApiService getProductApiService() {
-        return getRetrofitInstance().create(ProductApiService.class);
-    }
-
     public static CatagoryApiService getCatagoryApiService() {
         return getRetrofitInstance().create(CatagoryApiService.class);
     }
