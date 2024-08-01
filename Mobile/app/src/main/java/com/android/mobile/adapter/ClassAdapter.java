@@ -1,5 +1,6 @@
 package com.android.mobile.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ClassAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ClassAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.textView.setText(classList.get(position).getTen());
         holder.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override

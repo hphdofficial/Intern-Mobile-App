@@ -12,14 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
-import com.android.mobile.activity_item_chapter;
 import com.android.mobile.activity_item_detail;
-import com.android.mobile.models.Chapter;
-import com.android.mobile.models.Item;
 import com.android.mobile.models.ProductModel;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.squareup.picasso.Picasso;
 
 public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
     Context context;
@@ -34,7 +29,7 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_item_new, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_item, viewGroup, false);
         return new Item_adapter.ViewHolder(view);
     }
 
@@ -48,6 +43,11 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
 
         int txtProductInStock = ProductList[i].getUnitsInStock();
         viewHolder.txtProductInStock.setText("Còn: "+txtProductInStock);
+
+        String image = ProductList[i].getImage_link();
+        if (image != null) {
+            Picasso.get().load(image).placeholder(R.drawable.photo3x4).into(viewHolder.imgProductImage);
+        }
 
         int idProduct = ProductList[i].getProductID();
         int idSupplier = ProductList[i].getSupplierID();
@@ -73,12 +73,14 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
         TextView txtProductName;
         TextView txtProductPrice;
         TextView txtProductInStock;
+        ImageView imgProductImage;
 
         ViewHolder(View itemView) {
             super(itemView);
-            txtProductName = itemView.findViewById(R.id.txtProductName);
-            txtProductPrice = itemView.findViewById(R.id.txtProductPrice);
-            txtProductInStock = itemView.findViewById(R.id.txtProductInStock);
+            txtProductName = itemView.findViewById(R.id.txtItemName);
+            txtProductPrice = itemView.findViewById(R.id.txtItemPrice);
+            txtProductInStock = itemView.findViewById(R.id.txtItemSupplier);
+            imgProductImage = itemView.findViewById(R.id.imgItem);
         }
     }
 }

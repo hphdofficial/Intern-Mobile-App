@@ -14,23 +14,45 @@
         android:layout_alignParentTop="true"
         tools:ignore="MissingConstraints" />
 
-    <SearchView
-        android:id="@+id/search_view"
+    <LinearLayout
+        android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fragment_container"
+        android:orientation="horizontal"
         android:layout_margin="16dp"
-        android:layout_marginBottom="0dp"
         android:background="@drawable/search_view_background"
-        android:iconifiedByDefault="false"
-        android:queryHint="Tìm kiếm tin tức"
-        app:closeIcon="@drawable/close"
-        app:searchIcon="@drawable/search" />
+        android:padding="8dp"
+        android:layout_gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Tìm kiếm tin tức"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:drawablePadding="8dp"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"/>
+
+        <ImageButton
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_view_background"
+            android:padding="8dp"
+            android:src="@drawable/search"
+            android:contentDescription="@string/search"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/itemNews"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/search_view"
+        android:layout_below="@id/search_layout"
         android:layout_marginTop="16dp"/>
 </RelativeLayout>

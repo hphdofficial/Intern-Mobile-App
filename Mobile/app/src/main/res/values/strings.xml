@@ -5,5 +5,6 @@
 
     <string name="password_visibility_toggle">Toggle Password Visibility</string>
     <string name="news_image_desc">news_image_desc</string>
+    <string name="search">search</string>
 
 </resources>

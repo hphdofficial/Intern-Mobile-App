@@ -59,14 +59,14 @@ public class DetailClubActivity extends AppCompatActivity {
         txtManagerClub = findViewById(R.id.txtManagerDetailClub);
         btnJoinClub = findViewById(R.id.btnJoinClub);
 
-        String idClub = "1";
-//        Intent intent = getIntent();
-//        if (intent != null) {
-//            Bundle bundle = intent.getExtras();
-//            if (bundle != null) {
-//                idClub = bundle.getString("id_club");
-//            }
-//        }
+        String idClub = null;
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                idClub = bundle.getString("id_club");
+            }
+        }
 
         String finalIdClub = idClub;
         btnJoinClub.setOnClickListener(new View.OnClickListener() {

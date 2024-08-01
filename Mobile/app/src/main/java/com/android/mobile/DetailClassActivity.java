@@ -58,21 +58,22 @@ public class DetailClassActivity extends AppCompatActivity {
         txtInfoClass = findViewById(R.id.infoClass);
         btnRegisterClass = findViewById(R.id.btn_registerclass);
 
-        String idClass = "1";
-//        Intent intent = getIntent();
-//        if (intent != null) {
-//            Bundle bundle = intent.getExtras();
-//            if (bundle != null) {
-//                idClass = bundle.getString("id_class");
-//            }
-//        }
+        String idClass = null;
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                idClass = bundle.getString("id_class");
+            }
+        }
 
+        String finalIdClass = idClass;
         btnRegisterClass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("id_class", idClass);
+                bundle.putString("id_class", finalIdClass);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

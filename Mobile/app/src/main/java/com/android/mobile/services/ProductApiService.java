@@ -21,18 +21,21 @@ public interface ProductApiService {
 
     @GET("api/products/{id}")
     Call<ProductModel> show(@Path("id") int id);
-    Call<List<ProductModel>> getAllProducts();
 
     @GET("api/reviews/{ProductID}")
     Call<List<ReviewModel>> getProductReviews(@Path("ProductID") int productId);
+
     @GET("api/products/category/{CategoryID}")
     Call<ProductModel[]> getByCategory(@Path("CategoryID") String CategoryID);
 
     @POST("api/reviews")
     Call<Void> addReview(@Header("Authorization") String token, @Body ReviewModel review);
+
     @GET("api/products/search/{name}")
     Call<ProductModel[]> search(@Path("name") String name);
 
-    @GET("api/products/filter")
-    Call<ProductModel[]> getFilter(@Query("SupplierID") int SupplierID);
+    @POST("api/products/filter")
+    Call<ProductModel[]> getFilter(@Query("SupplierID") int SupplierID,
+                                   @Query("min_price") int min_price,
+                                   @Query("max_price") int max_price);
 }
