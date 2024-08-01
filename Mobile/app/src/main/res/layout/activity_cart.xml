@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StoredItemActivity">
+    tools:context=".CartActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_stored_item"
@@ -20,5 +20,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/btn_thanhtoan"
+        android:layout_width="219dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="90dp"
+        android:layout_marginEnd="102dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#0D7EE4"
+        android:text="Thanh toán giỏ hàng" />
 
 </RelativeLayout>

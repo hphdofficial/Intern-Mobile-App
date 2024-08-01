@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.ShippingItemAdapter;
-import com.android.mobile.adapter.StoredItemAdapter;
 
 import java.util.ArrayList;
 

@@ -45,10 +45,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/nameClass"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Lớp võ A"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -63,10 +63,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/nameTeacher"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Giảng viên A"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -81,10 +81,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/timeLearn"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Thứ 2 - Thứ 6"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -99,10 +99,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/addressLearn"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="TPHCM"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -117,20 +117,21 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/infoClass"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="0123456789"
                     android:textSize="16sp" />
             </TableRow>
 
         </TableLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_registerclass"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_marginBottom="32dp"
+            android:backgroundTint="#14C814"
             android:text="Đăng ký"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

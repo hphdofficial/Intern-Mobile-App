@@ -85,7 +85,7 @@
             android:name=".ShippingItemActivity"
             android:exported="true" />
         <activity
-            android:name=".StoredItemActivity"
+            android:name=".CartActivity"
             android:exported="true" />
         <activity
             android:name=".LaguageLayout"

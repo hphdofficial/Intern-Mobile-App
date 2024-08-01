@@ -36,7 +36,7 @@ public class MyClubAdapter extends RecyclerView.Adapter<MyClubAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         String txtClubTitle = clubList.get(i).getTen();
-        String txtClubAddress = clubList.get(i).getDiaChi();
+        String txtClubAddress = clubList.get(i).getDiachi();
         viewHolder.txtClubTitle.setText(txtClubTitle);
         viewHolder.txtClubAddress.setText(txtClubAddress);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

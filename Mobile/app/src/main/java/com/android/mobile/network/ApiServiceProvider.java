@@ -6,6 +6,11 @@ import com.android.mobile.services.CatagoryApiService;
 import com.android.mobile.services.CheckinApiService;
 import com.android.mobile.services.ProductApiService;
 import com.android.mobile.services.TheoryApiService;
+import com.android.mobile.CartActivity;
+import com.android.mobile.ClubActivity;
+import com.android.mobile.services.CartApiService;
+import com.android.mobile.services.ClassApiService;
+import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.UserApiService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -74,5 +79,17 @@ public class ApiServiceProvider {
 
     public static TheoryApiService getTheoryApiService() {
         return getRetrofitInstance().create(TheoryApiService.class);
+    }
+
+    public static ClubApiService getClubApiService() {
+        return getRetrofitInstance().create(ClubApiService.class);
+    }
+
+    public static ClassApiService getClassApiService() {
+        return getRetrofitInstance().create(ClassApiService.class);
+    }
+
+    public static CartApiService getCartApiService() {
+        return getRetrofitInstance().create(CartApiService.class);
     }
 }
