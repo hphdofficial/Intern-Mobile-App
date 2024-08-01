@@ -1,5 +1,7 @@
 package com.android.mobile.network;
+import com.android.mobile.CartActivity;
 import com.android.mobile.ClubActivity;
+import com.android.mobile.services.CartApiService;
 import com.android.mobile.services.ClassApiService;
 import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.UserApiService;
@@ -52,5 +54,9 @@ public class ApiServiceProvider {
 
     public static ClassApiService getClassApiService() {
         return getRetrofitInstance().create(ClassApiService.class);
+    }
+
+    public static CartApiService getCartApiService() {
+        return getRetrofitInstance().create(CartApiService.class);
     }
 }
