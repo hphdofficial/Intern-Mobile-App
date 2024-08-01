@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.mobile.R;
 import com.android.mobile.activity_item_detail;
 import com.android.mobile.models.Item;
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 

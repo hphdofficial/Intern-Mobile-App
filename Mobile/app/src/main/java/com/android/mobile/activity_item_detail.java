@@ -3,6 +3,7 @@ package com.android.mobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -18,6 +19,7 @@ import com.android.mobile.models.SupplierModelOption;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CatagoryApiService;
 import com.android.mobile.services.ProductApiService;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +38,7 @@ public class activity_item_detail extends AppCompatActivity {
             return insets;
         });
 
+        ImageView imageItem = findViewById(R.id.imageItem);
         TextView txtItemName = findViewById(R.id.txtItemName);
         TextView txtItemPrice = findViewById(R.id.txtItemPrice);
         TextView txtItemSupplier = findViewById(R.id.txtItemSupplier);
@@ -85,6 +88,11 @@ public class activity_item_detail extends AppCompatActivity {
                     txtItemName.setText(product.getProductName());
                     txtItemPrice.setText(product.getUnitPrice() + " VND");
                     txtItemInStock.setText(product.getUnitsInStock() +"");
+                    String image = product.getImage_link();
+                    System.out.println("ABC" + image);
+                    if (image != null) {
+                        Picasso.get().load(image).placeholder(R.drawable.photo3x4).into(imageItem);
+                    }
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());

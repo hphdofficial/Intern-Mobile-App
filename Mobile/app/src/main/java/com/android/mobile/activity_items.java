@@ -203,7 +203,7 @@ public class activity_items extends AppCompatActivity {
                         }
                         Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
                         RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                         recyclerView.setAdapter(itemAdapter);
                     }else {
                         System.out.println("Active: Call onResponse");
@@ -242,7 +242,7 @@ public class activity_items extends AppCompatActivity {
                     }
                     Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
                     RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                     recyclerView.setAdapter(itemAdapter);
                 }else {
                     System.out.println("Active: Call onResponse");
@@ -270,7 +270,7 @@ public class activity_items extends AppCompatActivity {
                     }
                     Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
                     RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                     recyclerView.setAdapter(itemAdapter);
                 }else {
                     System.out.println("Active: Call onResponse");
