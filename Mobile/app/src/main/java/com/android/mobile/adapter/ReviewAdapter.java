@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
 import com.android.mobile.models.ReviewModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,14 +40,20 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.userName.setText(review.getUserName());
         holder.reviewDate.setText(review.getReviewDate());
         holder.reviewContent.setText(review.getReviewContent());
-        holder.userRating.setRating(review.getRating());
-        // Bạn có thể set avatar nếu có
-        // holder.userAvatar.setImageResource(review.getAvatarResourceId());
+        holder.userRating.setRating(Float.parseFloat(review.getRatingValue()));
+
+        // Load avatar từ URL
+        Picasso.get().load(review.getAvatarUrl()).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(holder.userAvatar);
     }
 
     @Override
     public int getItemCount() {
         return reviewList.size();
+    }
+
+    public void updateReviews(List<ReviewModel> reviews) {
+        this.reviewList = reviews;
+        notifyDataSetChanged();
     }
 
     public static class ReviewViewHolder extends RecyclerView.ViewHolder {

@@ -1,31 +1,77 @@
 package com.android.mobile.models;
 
 public class ReviewModel {
-    private String userName;
-    private String reviewDate;
-    private String reviewContent;
-    private float rating;
+    private int ReviewID;
+    private int ProductID;
+    private String RatingValue;
+    private int RatingCount;
+    private String UserName;
+    private String ReviewDate;
+    private String ReviewContent;
+    private String AvatarUrl; // Thêm trường này
 
-    public ReviewModel(String userName, String reviewDate, String reviewContent, float rating) {
-        this.userName = userName;
-        this.reviewDate = reviewDate;
-        this.reviewContent = reviewContent;
-        this.rating = rating;
+    // Getters and Setters
+    public int getReviewID() {
+        return ReviewID;
+    }
+
+    public void setReviewID(int reviewID) {
+        ReviewID = reviewID;
+    }
+
+    public int getProductID() {
+        return ProductID;
+    }
+
+    public void setProductID(int productID) {
+        ProductID = productID;
+    }
+
+    public String getRatingValue() {
+        return RatingValue;
+    }
+
+    public void setRatingValue(String ratingValue) {
+        RatingValue = ratingValue;
+    }
+
+    public int getRatingCount() {
+        return RatingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        RatingCount = ratingCount;
     }
 
     public String getUserName() {
-        return userName;
+        return UserName;
+    }
+
+    public void setUserName(String userName) {
+        UserName = userName;
     }
 
     public String getReviewDate() {
-        return reviewDate;
+        return ReviewDate;
+    }
+
+    public void setReviewDate(String reviewDate) {
+        ReviewDate = reviewDate;
     }
 
     public String getReviewContent() {
-        return reviewContent;
+        return ReviewContent;
     }
 
-    public float getRating() {
-        return rating;
+    public void setReviewContent(String reviewContent) {
+        ReviewContent = reviewContent;
+    }
+
+    public String getAvatarUrl() {
+        return AvatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        AvatarUrl = avatarUrl;
     }
 }

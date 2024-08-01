@@ -92,7 +92,7 @@ public class ImageSelectActivity extends AppCompatActivity {
 
     private void uploadImage(Uri imageUri) {
         String token = sharedPreferences.getString("access_token", null);
-        int memberId = sharedPreferences.getInt("member_id", -1); // Lấy member_id từ SharedPreferences
+        int memberId = sharedPreferences.getInt("member_id", -1);
         if (token != null && memberId != -1 && imageUri != null) {
             String filePath = getRealPathFromUri(imageUri);
             if (filePath != null) {

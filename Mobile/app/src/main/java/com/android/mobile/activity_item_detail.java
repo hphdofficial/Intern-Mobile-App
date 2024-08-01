@@ -2,6 +2,7 @@ package com.android.mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -11,6 +12,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.android.mobile.models.ProductModel;
+import com.android.mobile.models.SupplierModelOption;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.CatagoryApiService;
+import com.android.mobile.services.ProductApiService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class activity_item_detail extends AppCompatActivity {
 
@@ -25,6 +36,11 @@ public class activity_item_detail extends AppCompatActivity {
             return insets;
         });
 
+        TextView txtItemName = findViewById(R.id.txtItemName);
+        TextView txtItemPrice = findViewById(R.id.txtItemPrice);
+        TextView txtItemSupplier = findViewById(R.id.txtItemSupplier);
+        TextView txtItemInStock = findViewById(R.id.txtItemInStock);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -36,28 +52,53 @@ public class activity_item_detail extends AppCompatActivity {
         fragmentTransaction.commit();
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        int price = intent.getIntExtra("price", -1);
-        String supplier = intent.getStringExtra("supplier");
-        String dateProduct = intent.getStringExtra("dateProduct");
-        String material = intent.getStringExtra("material");
-        String use = intent.getStringExtra("use");
-        String type = intent.getStringExtra("type");
+        int idProduct = intent.getIntExtra("id", -1);
+        int idSupplier = intent.getIntExtra("IDSupplier", -1);
+        //Fetch Tên nhà cung cấp
 
-        TextView txtItemName = findViewById(R.id.txtItemName);
-        TextView txtItemPrice = findViewById(R.id.txtItemPrice);
-        TextView txtItemSupplier = findViewById(R.id.txtItemSupplier);
-        TextView txtItemDateProduct = findViewById(R.id.txtItemDateProduct);
-        TextView txtItemMaterial = findViewById(R.id.txtItemMaterial);
-        TextView txtItemUse = findViewById(R.id.txtItemUse);
-        TextView txtItemType = findViewById(R.id.txtItemType);
+        CatagoryApiService apiService2 = ApiServiceProvider.getCatagoryApiService();
+        apiService2.getSupplier(idSupplier).enqueue(new Callback<SupplierModelOption>() {
+            @Override
+            public void onResponse(Call<SupplierModelOption> call, Response<SupplierModelOption> response) {
+                if(response.isSuccessful()){
+                    SupplierModelOption supplier = response.body();
+                    txtItemSupplier.setText(supplier.getSupplierName());
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                }
+            }
 
-        txtItemName.setText(name);
-        txtItemPrice.setText(price + " VND");
-        txtItemSupplier.setText(supplier);
-        txtItemDateProduct.setText(dateProduct);
-        txtItemMaterial.setText(material);
-        txtItemUse.setText(use);
-        txtItemType.setText(type);
+            @Override
+            public void onFailure(Call<SupplierModelOption> call, Throwable throwable) {
+
+            }
+        });
+
+        //Fetch thông tin sản phẩm
+        ProductApiService apiService = ApiServiceProvider.getProductApiService();
+        apiService.show(idProduct).enqueue(new Callback<ProductModel>() {
+            @Override
+            public void onResponse(Call<ProductModel> call, Response<ProductModel> response) {
+                if(response.isSuccessful()){
+                    ProductModel product = response.body();
+                    txtItemName.setText(product.getProductName());
+                    txtItemPrice.setText(product.getUnitPrice() + " VND");
+                    txtItemInStock.setText(product.getUnitsInStock() +"");
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductModel> call, Throwable throwable) {
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
+
+
+
     }
 }

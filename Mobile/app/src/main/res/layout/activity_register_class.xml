@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     tools:context=".RegisterClass">
+
     <RelativeLayout
 
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/fragment_container"
 
-        android:padding="16dp">
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <!--  <TextView
             android:layout_marginTop="30dp"
             android:id="@+id/textViewFullName"
             android:layout_width="match_parent"
@@ -104,15 +108,16 @@
             android:layout_below="@id/textViewParentPhoneNumber"
             android:hint="Nhập số điện thoại phụ huynh"
             android:inputType="phone" />
-
+-->
         <TextView
+            android:textSize="18sp"
             android:id="@+id/change_class"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/editTextParentPhoneNumber"
+
             android:text="Thông tin lớp học"></TextView>
 
-      <!--  <ScrollView
+        <!--  <ScrollView
             android:id="@+id/scroll_radio_class"
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -144,15 +149,19 @@
 
             </RadioGroup>
         </ScrollView>-->
-<TextView
-    android:id="@+id/name_class"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/change_class"
-    android:text="Tên lớp - Giảng viên">
-
-</TextView>
         <TextView
+            android:textSize="16sp"
+            android:id="@+id/name_class"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/change_class"
+            android:text="Tên lớp - Giảng viên">
+
+        </TextView>
+
+        <TextView
+            android:textSize="18sp"
             android:id="@+id/date_learn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,73 +169,144 @@
             android:text="Thời gian">
 
         </TextView>
+        <RadioGroup
+            android:layout_below="@id/date_learn"
+            android:id="@+id/radio_group_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+         android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Male RadioButton -->
+            <RadioButton
+
+                android:id="@+id/radio_button_3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="3 Tháng"
+
+                android:checked="true"
+                 />
+
+            <!-- Female RadioButton -->
+            <RadioButton
+                android:id="@+id/radio_button_6"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="6 Tháng"
+              />
+
+            <RadioButton
+                android:id="@+id/radio_button_12"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="12 Tháng"
+                />
+
+        </RadioGroup>
 
         <TextView
+            android:textSize="18sp"
             android:id="@+id/select_health"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/date_learn"
+            android:layout_below="@id/radio_group_gender"
             android:text="Tình trạng sức khỏe"></TextView>
 
         <ScrollView
             android:id="@+id/scroll_health"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="200dp"
             android:layout_below="@id/select_health">
+
             <RadioGroup
                 android:id="@+id/radioGroup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-               >
+                android:layout_height="wrap_content">
 
                 <CheckBox
+                    android:textSize="16sp"
                     android:id="@+id/checkBoxOption1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Có vấn đề tim mạch" />
+
                 <CheckBox
+                    android:textSize="16sp"
                     android:id="@+id/checkBoxOption3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Có vấn đề về hô hấp" />
+
                 <CheckBox
+                    android:textSize="16sp"
                     android:id="@+id/checkBoxOption4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Có vấn đề về xương khớp (từng bị gãy tay/chân, trật khớp...)" />
 
-
                 <CheckBox
+                    android:textSize="16sp"
                     android:id="@+id/checkBoxOption2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hoàn toàn khỏe mạnh" />
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content">
-                   <CheckBox
-                       android:id="@+id/checkBoxOption5"
-                       android:layout_width="0dp"
-                       android:layout_weight="1"
-                       android:layout_height="wrap_content"
-                       android:text="Mục khác" />
-                   <EditText
-                       android:layout_weight="3"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       ></EditText>
-               </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxOption5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Mục khác" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"></EditText>
+                </LinearLayout>
 
 
             </RadioGroup>
         </ScrollView>
 
+      <LinearLayout
+          android:id="@+id/linear"
+          android:layout_below="@+id/scroll_health"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+          <TextView
+              android:id="@+id/money"
+              android:textSize="20dp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Số tiền cần thanh toán: "
+            >
 
+          </TextView>
+
+          <TextView
+                android:textAlignment="textEnd"
+              android:id="@+id/total"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/money"
+              android:text="0đ "
+              android:textSize="20dp">
+
+          </TextView>
+      </LinearLayout>
         <Button
             android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/scroll_health"
+            android:layout_below="@id/linear"
             android:layout_marginTop="16dp"
             android:text="Đăng ký" />
 
@@ -237,7 +317,7 @@
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 <!--họ và ten phụ huynh
 sdt phụ huynh
 Lớp cần chọn 1 ds lớp

@@ -25,7 +25,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/logovovinam" />
 
             <!-- Signup Text -->
             <TextView
@@ -37,6 +37,16 @@
                 android:textSize="24sp"
                 android:textColor="@android:color/black"
                 android:layout_marginTop="8dp"/>
+
+            <!-- Email EditText -->
+            <EditText
+                android:id="@+id/edit_text_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp" />
 
             <!-- Username EditText -->
             <EditText
@@ -99,17 +109,6 @@
                     android:src="@drawable/hide" />
             </RelativeLayout>
 
-
-            <!-- Email EditText -->
-            <EditText
-                android:id="@+id/edit_text_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:minHeight="48dp" />
-
             <!-- Ten (Name) EditText -->
             <EditText
                 android:id="@+id/edit_text_ten"
@@ -117,6 +116,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Full Name"
+                android:minHeight="48dp" />
+
+            <!-- Chieucao (Height) EditText -->
+            <EditText
+                android:id="@+id/edit_text_chieucao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Height (cm)"
+                android:inputType="number"
+                android:minHeight="48dp" />
+
+            <!-- Cannang (Weight) EditText -->
+            <EditText
+                android:id="@+id/edit_text_cannang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Weight (kg)"
+                android:inputType="number"
                 android:minHeight="48dp" />
 
             <!-- Dienthoai (Phone) EditText -->

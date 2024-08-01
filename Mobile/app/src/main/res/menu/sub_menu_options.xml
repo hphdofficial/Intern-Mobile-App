@@ -40,7 +40,11 @@
             android:title="Tin tức võ học"
             android:icon="@drawable/new2"
             />
-
+        <item
+            android:id="@+id/btn_register_up"
+            android:title="Đăng ký thi lên đai"
+            android:icon="@drawable/logout2"
+            />
         <item
             android:id="@+id/btn_inforsoftware"
             android:title="Thông tin phần mềm"

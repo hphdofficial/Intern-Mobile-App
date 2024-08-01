@@ -1,7 +1,11 @@
 package com.android.mobile;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,16 +19,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.NewsAdapter;
 import com.android.mobile.models.NewsModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.NewsApiService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityNews extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNewsClickListener {
 
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "myContent";
     private static final String KEY_TITLE = "title";
     private static final String VALUE_INFO = "info";
+    private List<NewsModel> newsList = new ArrayList<>();
+    private NewsAdapter adapter;
+    private static final String TAG = "ActivityNews";
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +53,10 @@ public class ActivityNews extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.itemNews);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<NewsModel> newsList = new ArrayList<>();
-        newsList.add(new NewsModel("Bài viết 1: Tin tức mới", R.drawable.imagenews));
-        newsList.add(new NewsModel("Bài viết 2: Võ Vovinam", R.drawable.imagenews));
-        newsList.add(new NewsModel("Bài viết 2: Võ Vovinam", R.drawable.imagenews));
-        newsList.add(new NewsModel("Bài viết 2: Võ Vovinam", R.drawable.imagenews));
-
-        NewsAdapter adapter = new NewsAdapter(newsList);
+        adapter = new NewsAdapter(newsList, this);
         recyclerView.setAdapter(adapter);
+
+        fetchNews();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -64,11 +74,83 @@ public class ActivityNews extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+
+        // Initialize SearchView and set up search query listener
+        searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchNews(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchNews(newText);
+                return true;
+            }
+        });
     }
 
     private void saveToSharedPreferences(String key, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
         editor.apply();
+    }
+
+    private void fetchNews() {
+        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
+        Call<List<NewsModel>> call = apiService.getAnouncements();
+        call.enqueue(new Callback<List<NewsModel>>() {
+            @Override
+            public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d(TAG, "API Response: " + response.body().toString());
+                    newsList.clear(); // Clear existing data
+                    newsList.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.d(TAG, "API Response is not successful or body is null");
+                    Toast.makeText(ActivityNews.this, "Không thể lấy danh sách tin tức", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsModel>> call, Throwable t) {
+                Log.e(TAG, "API Call failed: " + t.getMessage());
+                Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void searchNews(String query) {
+        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
+        Call<List<NewsModel>> call = apiService.searchAnouncements(query);
+        call.enqueue(new Callback<List<NewsModel>>() {
+            @Override
+            public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    newsList.clear(); // Clear existing data
+                    newsList.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(ActivityNews.this, "Không thể tìm kiếm tin tức", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsModel>> call, Throwable t) {
+                Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onNewsClick(NewsModel news) {
+        Intent intent = new Intent(ActivityNews.this, NewsDetailActivity.class);
+        intent.putExtra("NewsTitle", news.getTenvi());
+        intent.putExtra("NewsContent", news.getNoidungvi());
+        intent.putExtra("NewsImage", news.getPhoto());
+        startActivity(intent);
     }
 }

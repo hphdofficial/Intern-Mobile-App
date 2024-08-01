@@ -2,6 +2,7 @@ package com.android.mobile.models;
 
 public class ProfileModel {
     private String username;
+    private String avatar;
     private String ten;
     private String email;
     private String dienthoai;
@@ -11,7 +12,8 @@ public class ProfileModel {
     private String hotengiamho;
     private String dienthoai_giamho;
     private String lastlogin;
-    private AvatarModel avatar;
+    private String chieucao;
+    private String cannang;
 
     // Getters and setters...
 
@@ -21,6 +23,14 @@ public class ProfileModel {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getTen() {
@@ -87,6 +97,7 @@ public class ProfileModel {
         this.dienthoai_giamho = dienthoai_giamho;
     }
 
+
     public String getLastlogin() {
         return lastlogin;
     }
@@ -95,11 +106,23 @@ public class ProfileModel {
         this.lastlogin = lastlogin;
     }
 
-    public AvatarModel getAvatar() {
+    public String getAvatarUrl() {
         return avatar;
     }
 
-    public void setAvatar(AvatarModel avatar) {
-        this.avatar = avatar;
+    public String getChieucao() {
+        return chieucao;
+    }
+
+    public void setChieucao(String chieucao) {
+        this.chieucao = chieucao;
+    }
+
+    public String getCannang() {
+        return cannang;
+    }
+
+    public void setCannang(String cannang) {
+        this.cannang = cannang;
     }
 }

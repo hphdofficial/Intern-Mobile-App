@@ -1,6 +1,8 @@
 package com.android.mobile;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,10 +15,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.ClubAdapter;
+import com.android.mobile.models.Club;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.ClubApiService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ClubActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
+    private ClubAdapter adapter;
+    private List<Club> clubList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +56,33 @@ public class ClubActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-        ArrayList<String> data = new ArrayList<>();
-        data.add("Club 1");
-        data.add("Club 2");
-        data.add("Club 3");
-        data.add("Club 4");
-        data.add("Club 5");
-
-        ClubAdapter clubAdapter = new ClubAdapter(this, data);
-        RecyclerView recyclerView = findViewById(R.id.recycler_club);
+        adapter = new ClubAdapter(this, clubList);
+        recyclerView = findViewById(R.id.recycler_club);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(clubAdapter);
+        recyclerView.setAdapter(adapter);
+
+        ClubApiService service = ApiServiceProvider.getClubApiService();
+        Call<JsonObject> call = service.getListClubMap2(230, 50);
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonObject = response.body();
+                    Gson gson = new Gson();
+                    Type clubListType = new TypeToken<List<Club>>() {}.getType();
+                    List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
+                    adapter.setData(clubs);
+                    Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+                } else {
+                    System.err.println("Response error: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }

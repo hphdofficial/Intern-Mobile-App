@@ -14,4 +14,6 @@
     <color name="price_color">#FFFFFF</color>
     <color name="supplier_color">#FFD700</color>
 
+    <color name="background_light">#FFFFFF</color>
+
 </resources>

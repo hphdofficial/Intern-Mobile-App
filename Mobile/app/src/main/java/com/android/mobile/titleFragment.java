@@ -5,6 +5,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -44,7 +46,11 @@ public class titleFragment extends Fragment {
         sub_menu = rootView.findViewById(R.id.sub_menu);
         img_menu = rootView.findViewById(R.id.img_menu);
         btn_back = rootView.findViewById(R.id.btn_back);
-        title.setText("Nội dung tiêu đề");
+
+        SharedPreferences myContent = getActivity().getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        String value = myContent.getString("title", "default_value");
+
+        title.setText(value);
       //  CreateFracmentSubMenu();
 
 

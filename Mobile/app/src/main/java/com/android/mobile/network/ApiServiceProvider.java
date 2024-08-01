@@ -1,4 +1,16 @@
 package com.android.mobile.network;
+import com.android.mobile.services.NewsApiService;
+import com.android.mobile.services.ProductApiService;
+import com.android.mobile.services.SupplierApiService;
+import com.android.mobile.services.CatagoryApiService;
+import com.android.mobile.services.CheckinApiService;
+import com.android.mobile.services.ProductApiService;
+import com.android.mobile.services.TheoryApiService;
+import com.android.mobile.CartActivity;
+import com.android.mobile.ClubActivity;
+import com.android.mobile.services.CartApiService;
+import com.android.mobile.services.ClassApiService;
+import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.UserApiService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,5 +53,39 @@ public class ApiServiceProvider {
 
     public static UserApiService getUserApiService() {
         return getRetrofitInstance().create(UserApiService.class);
+    }
+
+    public static SupplierApiService getSupplierApiService() {
+        return getRetrofitInstance().create(SupplierApiService.class);
+    }
+    public static NewsApiService getNewsApiService() {
+        return getRetrofitInstance().create(NewsApiService.class);
+    }
+    public static ProductApiService getProductApiService() {
+        return getRetrofitInstance().create(ProductApiService.class);
+    }
+
+    public static CatagoryApiService getCatagoryApiService() {
+        return getRetrofitInstance().create(CatagoryApiService.class);
+    }
+
+    public static CheckinApiService getCheckinApiService() {
+        return getRetrofitInstance().create(CheckinApiService.class);
+    }
+
+    public static TheoryApiService getTheoryApiService() {
+        return getRetrofitInstance().create(TheoryApiService.class);
+    }
+
+    public static ClubApiService getClubApiService() {
+        return getRetrofitInstance().create(ClubApiService.class);
+    }
+
+    public static ClassApiService getClassApiService() {
+        return getRetrofitInstance().create(ClassApiService.class);
+    }
+
+    public static CartApiService getCartApiService() {
+        return getRetrofitInstance().create(CartApiService.class);
     }
 }

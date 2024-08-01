@@ -1,0 +1,27 @@
+package com.android.mobile.services;
+
+import com.android.mobile.models.Class;
+import com.android.mobile.models.Club;
+import com.android.mobile.models.ReponseModel;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.PUT;
+import retrofit2.http.Query;
+
+public interface ClassApiService {
+    @GET("/api/clubs/classes/getall")
+    Call<List<Class>> getClassofClub(
+            @Header("Authorization") String token
+    );
+
+    @GET("/api/clubs/classes/getdetail")
+    Call<Class> getDetailClassofClub(
+            @Header("Authorization") String token,
+            @Query("id_class") int classId
+    );
+}

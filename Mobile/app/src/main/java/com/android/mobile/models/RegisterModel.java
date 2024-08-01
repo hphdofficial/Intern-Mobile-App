@@ -9,8 +9,10 @@ public class RegisterModel {
     private String diachi;
     private String gioitinh;
     private String ngaysinh;
-    private String hoten_giamho;
+    private String hotengiamho;
     private String dienthoai_giamho;
+    private int chieucao;
+    private int cannang;
 
     // Getters and setters...
     public String getUsername() {
@@ -78,11 +80,11 @@ public class RegisterModel {
     }
 
     public String getHoten_giamho() {
-        return hoten_giamho;
+        return hotengiamho;
     }
 
-    public void setHoten_giamho(String hoten_giamho) {
-        this.hoten_giamho = hoten_giamho;
+    public void setHoten_giamho(String hotengiamho) {
+        this.hotengiamho = hotengiamho;
     }
 
     public String getDienthoai_giamho() {
@@ -91,5 +93,21 @@ public class RegisterModel {
 
     public void setDienthoai_giamho(String dienthoai_giamho) {
         this.dienthoai_giamho = dienthoai_giamho;
+    }
+
+    public int getChieucao() {
+        return chieucao;
+    }
+
+    public void setChieucao(int chieucao) {
+        this.chieucao = chieucao;
+    }
+
+    public int getCannang() {
+        return cannang;
+    }
+
+    public void setCannang(int cannang) {
+        this.cannang = cannang;
     }
 }

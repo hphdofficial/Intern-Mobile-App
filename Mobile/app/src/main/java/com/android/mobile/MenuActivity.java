@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Method;
+import java.sql.Date;
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,6 +82,12 @@ public class MenuActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Thêm hoặc thay thế Fragment mới
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Trang Chính");
+        myContentE.apply();
+
+
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
@@ -152,6 +161,7 @@ public class MenuActivity extends AppCompatActivity {
     private LinearLayout btn_class;
     private LinearLayout btn_new;
     private LinearLayout btn_logout;
+    private LinearLayout btn_product;
     private ImageView img_avatar_menu;
     private ImageView test;
     private ImageView test1;
@@ -168,6 +178,7 @@ public class MenuActivity extends AppCompatActivity {
         btn_class = findViewById(R.id.btn_class);
         btn_new = findViewById(R.id.btn_infor);
         btn_logout = findViewById(R.id.btn_logout);
+        btn_product = findViewById(R.id.btn_product);
         user = findViewById(R.id.user);
         test = findViewById(R.id.test);
         test1 = findViewById(R.id.test1);
@@ -218,6 +229,13 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), MyClassActivity.class));
+            }
+        });
+        // nút vào cửa hàng dụng cụ
+        btn_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), activity_items.class));
             }
         });
         btn_logout.setOnClickListener(new View.OnClickListener() {
@@ -291,16 +309,35 @@ public class MenuActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         ProfileModel profile = response.body();
                         if (profile != null) {
-                            textViewName.setText(profile.getUsername());
+
+
+                            SharedPreferences infor = getSharedPreferences("infor", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor myContentE = infor.edit();
+                            myContentE.putString("name", profile.getUsername());
+                            Calendar calendar = Calendar.getInstance();
+                            int year = calendar.get(Calendar.YEAR);
+                            String date[] = profile.getNgaysinh().split("-");
+
+                            myContentE.putInt("age", year-Integer.parseInt(date[0]));
+
+
+
+
+                            textViewName.setText(profile.getTen());
                             textViewBirthday.setText(profile.getNgaysinh());
 
                             // Load avatar từ SharedPreferences cho user cụ thể
                             String avatarUrl = sharedPreferences.getString("avatar_url_" + memberId, null);
+
+                            myContentE.putString("avatar", avatarUrl);
+                            myContentE.apply();
                             if (avatarUrl != null) {
+
                                 Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imgAvatarMenu);
                             } else {
                                 imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
                             }
+
                         }
                     } else {
                         Toast.makeText(MenuActivity.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
