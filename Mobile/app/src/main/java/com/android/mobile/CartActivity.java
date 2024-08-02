@@ -1,5 +1,6 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -56,12 +57,13 @@ public class CartActivity extends AppCompatActivity {
             return insets;
         });
 
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Giỏ hàng");
+        myContentE.apply();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        titleFragment newFragment = new titleFragment();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-        fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
 
         adapter = new CartAdapter(this, productList);

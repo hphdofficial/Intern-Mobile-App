@@ -1,8 +1,10 @@
 package com.android.mobile;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -77,12 +79,13 @@ public class ClubActivity extends AppCompatActivity {
             return insets;
         });
 
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Danh sách câu lạc bộ");
+        myContentE.apply();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        titleFragment newFragment = new titleFragment();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-        fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
 
         adapter = new ClubAdapter(this, clubList);
@@ -287,8 +290,7 @@ public class ClubActivity extends AppCompatActivity {
 
     public void loadClubListByCountry(int countryId) {
         ClubApiService service = ApiServiceProvider.getClubApiService();
-//        Call<JsonObject> call = service.getListClubMap1(230);
-        Call<JsonObject> call = service.getListClubMap2(countryId, 50);
+        Call<JsonObject> call = service.getListClubMap1(countryId);
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
