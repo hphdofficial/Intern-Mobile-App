@@ -41,7 +41,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.reviewDate.setText(review.getReviewDate());
         holder.reviewContent.setText(review.getReviewContent());
         holder.userRating.setRating(Float.parseFloat(review.getRatingValue()));
-
         // Load avatar từ URL
         Picasso.get().load(review.getAvatarUrl()).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(holder.userAvatar);
     }

@@ -1,5 +1,7 @@
 package com.android.mobile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RatingBar;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.ReviewAdapter;
 import com.android.mobile.models.ReviewModel;
+import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.ApiServiceProvider;
 
 import java.util.ArrayList;
@@ -31,9 +34,11 @@ public class ReviewActivity extends AppCompatActivity implements FragmentWriteRe
     private RecyclerView reviewsRecyclerView;
     private ReviewAdapter reviewAdapter;
     private List<ReviewModel> allReviews;
-    private int productId = 1;
+    private int productId;
     private TextView ratingValue;
     private RatingBar ratingBar;
+    private TextView filterAll, filter5Star, filter4Star, filter3Star, filter2Star, filter1Star;
+    private TextView[] filterButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +58,41 @@ public class ReviewActivity extends AppCompatActivity implements FragmentWriteRe
         reviewsRecyclerView = findViewById(R.id.reviews_recycler_view);
         reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Setup filter TextViews
-        findViewById(R.id.filter_all).setOnClickListener(v -> filterReviews(0));
-        findViewById(R.id.filter_5_star).setOnClickListener(v -> filterReviews(5));
-        findViewById(R.id.filter_4_star).setOnClickListener(v -> filterReviews(4));
-        findViewById(R.id.filter_3_star).setOnClickListener(v -> filterReviews(3));
-        findViewById(R.id.filter_2_star).setOnClickListener(v -> filterReviews(2));
-        findViewById(R.id.filter_1_star).setOnClickListener(v -> filterReviews(1));
+        productId = getIntent().getIntExtra("productId", -1);
+
+        filterAll = findViewById(R.id.filter_all);
+        filter5Star = findViewById(R.id.filter_5_star);
+        filter4Star = findViewById(R.id.filter_4_star);
+        filter3Star = findViewById(R.id.filter_3_star);
+        filter2Star = findViewById(R.id.filter_2_star);
+        filter1Star = findViewById(R.id.filter_1_star);
+
+        filterButtons = new TextView[]{filterAll, filter5Star, filter4Star, filter3Star, filter2Star, filter1Star};
+
+        filterAll.setOnClickListener(v -> {
+            setActiveFilter(0);
+            filterReviews(0);
+        });
+        filter5Star.setOnClickListener(v -> {
+            setActiveFilter(5);
+            filterReviews(5);
+        });
+        filter4Star.setOnClickListener(v -> {
+            setActiveFilter(4);
+            filterReviews(4);
+        });
+        filter3Star.setOnClickListener(v -> {
+            setActiveFilter(3);
+            filterReviews(3);
+        });
+        filter2Star.setOnClickListener(v -> {
+            setActiveFilter(2);
+            filterReviews(2);
+        });
+        filter1Star.setOnClickListener(v -> {
+            setActiveFilter(1);
+            filterReviews(1);
+        });
 
         loadReviews();
 
@@ -75,11 +108,8 @@ public class ReviewActivity extends AppCompatActivity implements FragmentWriteRe
             public void onResponse(Call<List<ReviewModel>> call, Response<List<ReviewModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     allReviews = response.body();
-                    // Đảo ngược thứ tự của danh sách đánh giá
                     Collections.reverse(allReviews);
-                    reviewAdapter = new ReviewAdapter(ReviewActivity.this, allReviews);
-                    reviewsRecyclerView.setAdapter(reviewAdapter);
-                    updateRatingSummary();
+                    loadUserProfiles();
                 } else {
                     Toast.makeText(ReviewActivity.this, "Không có đánh giá nào.", Toast.LENGTH_SHORT).show();
                 }
@@ -90,6 +120,34 @@ public class ReviewActivity extends AppCompatActivity implements FragmentWriteRe
                 Toast.makeText(ReviewActivity.this, "Lỗi khi lấy đánh giá.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void loadUserProfiles() {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("access_token", null);
+
+        for (ReviewModel review : allReviews) {
+            int memberId = review.getId_atg_members();
+            ApiServiceProvider.getUserApiService().getProfileViaId("Bearer " + token, memberId).enqueue(new Callback<ProfileModel>() {
+                @Override
+                public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        ProfileModel profile = response.body();
+                        review.setUserName(profile.getUsername());
+                        review.setAvatarUrl(profile.getAvatar());
+                    }
+                    reviewAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onFailure(Call<ProfileModel> call, Throwable t) {
+                    Toast.makeText(ReviewActivity.this, "Lỗi khi lấy thông tin hồ sơ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        reviewAdapter = new ReviewAdapter(ReviewActivity.this, allReviews);
+        reviewsRecyclerView.setAdapter(reviewAdapter);
+        updateRatingSummary();
     }
 
     private void filterReviews(int starRating) {
@@ -125,6 +183,76 @@ public class ReviewActivity extends AppCompatActivity implements FragmentWriteRe
 
     @Override
     public void onReviewSubmitted() {
-        loadReviews(); // Tải lại danh sách đánh giá sau khi đánh giá mới được thêm
+        ApiServiceProvider.getProductApiService().getProductReviews(productId).enqueue(new Callback<List<ReviewModel>>() {
+            @Override
+            public void onResponse(Call<List<ReviewModel>> call, Response<List<ReviewModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ReviewModel> newReviews = response.body();
+                    Collections.reverse(newReviews);
+                    ReviewModel newReview = newReviews.get(0);
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+                    String token = sharedPreferences.getString("access_token", null);
+                    int memberId = newReview.getId_atg_members();
+
+                    ApiServiceProvider.getUserApiService().getProfileViaId("Bearer " + token, memberId).enqueue(new Callback<ProfileModel>() {
+                        @Override
+                        public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                ProfileModel profile = response.body();
+                                newReview.setUserName(profile.getUsername());
+                                newReview.setAvatarUrl(profile.getAvatar());
+
+                                allReviews.add(0, newReview);
+                                reviewAdapter.notifyItemInserted(0);
+                                updateRatingSummary();
+                                reviewsRecyclerView.scrollToPosition(0);
+                            } else {
+                                Toast.makeText(ReviewActivity.this, "Lỗi khi lấy thông tin người dùng.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ProfileModel> call, Throwable t) {
+                            Toast.makeText(ReviewActivity.this, "Lỗi khi lấy thông tin người dùng.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Toast.makeText(ReviewActivity.this, "Lỗi khi lấy đánh giá mới.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReviewModel>> call, Throwable t) {
+                Toast.makeText(ReviewActivity.this, "Lỗi khi lấy đánh giá mới.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setActiveFilter(int starRating) {
+        for (TextView filterButton : filterButtons) {
+            filterButton.setBackgroundResource(R.drawable.filter_unselected_background);
+        }
+
+        switch (starRating) {
+            case 0:
+                filterAll.setBackgroundResource(R.drawable.filter_selected_background);
+                break;
+            case 5:
+                filter5Star.setBackgroundResource(R.drawable.filter_selected_background);
+                break;
+            case 4:
+                filter4Star.setBackgroundResource(R.drawable.filter_selected_background);
+                break;
+            case 3:
+                filter3Star.setBackgroundResource(R.drawable.filter_selected_background);
+                break;
+            case 2:
+                filter2Star.setBackgroundResource(R.drawable.filter_selected_background);
+                break;
+            case 1:
+                filter1Star.setBackgroundResource(R.drawable.filter_selected_background);
+                break;
+        }
     }
 }

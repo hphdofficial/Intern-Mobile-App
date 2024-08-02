@@ -36,12 +36,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/user_name"
         android:layout_toRightOf="@id/user_avatar"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="-50dp"
         android:rating="5"
         android:stepSize="1"
         android:numStars="5"
         android:isIndicator="true"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"
+        android:scaleX="0.5"
+        android:scaleY="0.5"/>
 
     <TextView
         android:id="@+id/review_date"

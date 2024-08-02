@@ -47,13 +47,8 @@ public class activity_item_detail extends AppCompatActivity {
         TextView txtItemInStock = findViewById(R.id.txtItemInStock);
         Button btnDanhGia = findViewById(R.id.btnDanhGia);
 
-        btnDanhGia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
-                startActivity(intent);
-            }
-        });
+
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -68,6 +63,16 @@ public class activity_item_detail extends AppCompatActivity {
         Intent intent = getIntent();
         int idProduct = intent.getIntExtra("id", -1);
         int idSupplier = intent.getIntExtra("IDSupplier", -1);
+        btnDanhGia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
+                intent.putExtra("productId", idProduct);
+                startActivity(intent);
+            }
+        });
+
+
         //Fetch Tên nhà cung cấp
 
         CatagoryApiService apiService2 = ApiServiceProvider.getCatagoryApiService();
