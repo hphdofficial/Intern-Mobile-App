@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.android.mobile"
-        minSdk 26
+        minSdk 25
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -50,6 +50,9 @@ dependencies {
 
     // Hỗ trợ camera
     implementation 'androidx.core:core:1.7.0'
+
+    // Location
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

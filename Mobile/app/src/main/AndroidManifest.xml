@@ -89,9 +89,9 @@
         <activity
             android:name=".CartActivity"
             android:exported="true" />
-        <activity
-            android:name=".LaguageLayout"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".LaguageLayout"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".EnterOtpActivity"
             android:exported="true" />

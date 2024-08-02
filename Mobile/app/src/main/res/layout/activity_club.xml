@@ -21,29 +21,38 @@
             android:layout_margin="10dp"
             android:background="@drawable/rounded_searchview"
             android:iconifiedByDefault="false"
-            android:queryHint="Tìm kiếm..." />
+            android:queryHint="Tìm kiếm..."
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:weightSum="2">-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-<!--            <Spinner-->
-<!--                android:id="@+id/spinner_country"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_weight="1"-->
-<!--                android:spinnerMode="dropdown" />-->
+            <Spinner
+                android:id="@+id/spinner_country"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:spinnerMode="dropdown" />
 
-<!--            <Spinner-->
-<!--                android:id="@+id/spinner_city"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_weight="1"-->
-<!--                android:spinnerMode="dropdown" />-->
-<!--        </LinearLayout>-->
+            <Spinner
+                android:id="@+id/spinner_city"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
 
+        <Button
+            android:id="@+id/btn_current_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="Tìm kiếm xung quanh vị trí của tôi"
+            android:textColor="#2196F3" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_club"
