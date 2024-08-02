@@ -3,100 +3,60 @@ package com.android.mobile.models;
 import java.util.Date;
 
 public class TheoryModel {
-    private int TheoryID;
-    private String Title;
-    private Date Upload_Date;
-    private String Theory_Type;
-    private String Content;
-    private String Img_Url;
-    private String Video_Url;
-    private String Source;
-    private String Difficulty_Level;
+    private int id;
+    private String tenvi;
+    private String photo;
+    private String noidungvi;
+    private String link_video;
 
-    public TheoryModel(String content, String difficulty_Level, String img_Url, String source, String theory_Type, int theoryID, String title, Date upload_Date, String video_Url) {
-        Content = content;
-        Difficulty_Level = difficulty_Level;
-        Img_Url = img_Url;
-        Source = source;
-        Theory_Type = theory_Type;
-        TheoryID = theoryID;
-        Title = title;
-        Upload_Date = upload_Date;
-        Video_Url = video_Url;
+    public TheoryModel(int id, String link_video, String noidungvi, String photo, String tenvi) {
+        this.id = id;
+        this.link_video = link_video;
+        this.noidungvi = noidungvi;
+        this.photo = photo;
+        this.tenvi = tenvi;
     }
 
     public TheoryModel() {
     }
 
-    public String getContent() {
-        return Content;
+    public int getId() {
+        return id;
     }
 
-    public void setContent(String content) {
-        Content = content;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getDifficulty_Level() {
-        return Difficulty_Level;
+    public String getLink_video() {
+        return link_video;
     }
 
-    public void setDifficulty_Level(String difficulty_Level) {
-        Difficulty_Level = difficulty_Level;
+    public void setLink_video(String link_video) {
+        this.link_video = link_video;
     }
 
-    public String getImg_Url() {
-        return Img_Url;
+    public String getNoidungvi() {
+        return noidungvi;
     }
 
-    public void setImg_Url(String img_Url) {
-        Img_Url = img_Url;
+    public void setNoidungvi(String noidungvi) {
+        this.noidungvi = noidungvi;
     }
 
-    public String getSource() {
-        return Source;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setSource(String source) {
-        Source = source;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
-    public String getTheory_Type() {
-        return Theory_Type;
+    public String getTenvi() {
+        return tenvi;
     }
 
-    public void setTheory_Type(String theory_Type) {
-        Theory_Type = theory_Type;
-    }
-
-    public int getTheoryID() {
-        return TheoryID;
-    }
-
-    public void setTheoryID(int theoryID) {
-        TheoryID = theoryID;
-    }
-
-    public String getTitle() {
-        return Title;
-    }
-
-    public void setTitle(String title) {
-        Title = title;
-    }
-
-    public Date getUpload_Date() {
-        return Upload_Date;
-    }
-
-    public void setUpload_Date(Date upload_Date) {
-        Upload_Date = upload_Date;
-    }
-
-    public String getVideo_Url() {
-        return Video_Url;
-    }
-
-    public void setVideo_Url(String video_Url) {
-        Video_Url = video_Url;
+    public void setTenvi(String tenvi) {
+        this.tenvi = tenvi;
     }
 }

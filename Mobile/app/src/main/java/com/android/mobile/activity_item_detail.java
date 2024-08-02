@@ -1,12 +1,17 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +34,8 @@ import retrofit2.Response;
 
 public class activity_item_detail extends AppCompatActivity {
 
+    EditText editQuantity;
+    int quantityInStock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +47,89 @@ public class activity_item_detail extends AppCompatActivity {
             return insets;
         });
 
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Chi tiết dụng cụ");
+        myContentE.apply();
+
         ImageView imageItem = findViewById(R.id.imageItem);
         TextView txtItemName = findViewById(R.id.txtItemName);
         TextView txtItemPrice = findViewById(R.id.txtItemPrice);
         TextView txtItemSupplier = findViewById(R.id.txtItemSupplier);
         TextView txtItemInStock = findViewById(R.id.txtItemInStock);
+        editQuantity = findViewById(R.id.editQuantity);
         Button btnDanhGia = findViewById(R.id.btnDanhGia);
+        Button btnMua = findViewById(R.id.btnBuy);
+        ImageButton btnDecre = findViewById(R.id.btnDecre);
+        ImageButton btnIncre = findViewById(R.id.btnIncre);
+
+        btnIncre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                incrementNumber();
+            }
+        });
+
+        btnDecre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                decrementNumber();
+            }
+        });
+
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("access_token", null);
+        int member_id = sharedPreferences.getInt("member_id", -1);
+
+
+        Intent intent = getIntent();
+        int idProduct = intent.getIntExtra("id", -1);
+        int idSupplier = intent.getIntExtra("IDSupplier", -1);
+
+//        txtItemSupplier.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent1 = new Intent(activity_item_detail.this, SupplierInfoActivity.class);
+//                intent.putExtra("IDSupplier", idSupplier);
+//                startActivity(intent1);
+//            }
+//        });
+
+        btnMua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String currentTextQuantity = editQuantity.getText().toString();
+                int currentNumberQuantity = Integer.parseInt(currentTextQuantity);
+                if(quantityInStock > currentNumberQuantity){
+                    ProductApiService apiService = ApiServiceProvider.getProductApiService();
+                    apiService.addToCart(token,member_id, idProduct, currentNumberQuantity).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(response.isSuccessful()){
+                                Toast.makeText(activity_item_detail.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+                                Intent intent1 = new Intent(activity_item_detail.this, CartActivity.class);
+                                startActivity(intent1);
+                            }else {
+                                System.out.println("On Response Fail");
+                                Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable throwable) {
+                            System.out.println("On Failure Fail");
+                            Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else{
+                    Toast.makeText(activity_item_detail.this, "Quá số hàng trong kho, không thể thêm", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
 
         btnDanhGia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,9 +149,7 @@ public class activity_item_detail extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
-        Intent intent = getIntent();
-        int idProduct = intent.getIntExtra("id", -1);
-        int idSupplier = intent.getIntExtra("IDSupplier", -1);
+
         //Fetch Tên nhà cung cấp
 
         CatagoryApiService apiService2 = ApiServiceProvider.getCatagoryApiService();
@@ -99,6 +181,7 @@ public class activity_item_detail extends AppCompatActivity {
                     txtItemName.setText(product.getProductName());
                     txtItemPrice.setText(product.getUnitPrice() + " VND");
                     txtItemInStock.setText(product.getUnitsInStock() +"");
+                    quantityInStock = product.getUnitsInStock();
                     String image = product.getImage_link();
                     System.out.println("ABC" + image);
                     if (image != null) {
@@ -119,5 +202,22 @@ public class activity_item_detail extends AppCompatActivity {
 
 
 
+    }
+    private void incrementNumber() {
+        String currentText = editQuantity.getText().toString();
+        int currentNumber = Integer.parseInt(currentText);
+        currentNumber++;
+        editQuantity.setText(String.valueOf(currentNumber));
+    }
+
+    private void decrementNumber() {
+        String currentText = editQuantity.getText().toString();
+        int currentNumber = Integer.parseInt(currentText);
+        if (currentNumber > 1) {
+            currentNumber--;
+            editQuantity.setText(String.valueOf(currentNumber));
+        } else {
+            Toast.makeText(this, "Số lượng không bé hơn 1", Toast.LENGTH_SHORT).show();
+        }
     }
 }

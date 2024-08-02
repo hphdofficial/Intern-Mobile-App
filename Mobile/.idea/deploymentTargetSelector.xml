@@ -13,7 +13,10 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="HistoryOrderActivity">
+      <SelectionState runConfigName="activity_items">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="activity_lessons">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

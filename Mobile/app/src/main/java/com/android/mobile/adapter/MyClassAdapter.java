@@ -12,16 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
 import com.android.mobile.activity_checkin;
-import com.android.mobile.models.Class;
+import com.android.mobile.models.ClassModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MyClassAdapter extends RecyclerView.Adapter<MyClassAdapter.ViewHolder>{
     Context context;
 
-    ArrayList<Class> classList = new ArrayList<>();
+    List<ClassModel> classList;
 
-    public MyClassAdapter(Context context, ArrayList<Class> classList) {
+    public MyClassAdapter(Context context, List<ClassModel> classList) {
         this.context = context;
         this.classList = classList;
     }
@@ -35,9 +35,9 @@ public class MyClassAdapter extends RecyclerView.Adapter<MyClassAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         String txtClassTitle = classList.get(i).getTen();
-        String txtTeacherName = classList.get(i).getTeacherName();
+        String txtClassTime = classList.get(i).getThoigian();
         viewHolder.txtClassTitle.setText(txtClassTitle);
-        viewHolder.txtTeacherName.setText(txtTeacherName);
+        viewHolder.txtClassTime.setText(txtClassTime);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,12 +54,12 @@ public class MyClassAdapter extends RecyclerView.Adapter<MyClassAdapter.ViewHold
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtClassTitle, txtTeacherName;
+        TextView txtClassTitle, txtClassTime;
 
         ViewHolder(View itemView) {
             super(itemView);
             txtClassTitle = itemView.findViewById(R.id.txtClassTitle);
-            txtTeacherName = itemView.findViewById(R.id.txtTeacherName);
+            txtClassTime = itemView.findViewById(R.id.txtClassTime);
         }
     }
 }

@@ -16,12 +16,14 @@ import com.android.mobile.activity_item_detail;
 import com.android.mobile.models.ProductModel;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
     Context context;
 
-    ProductModel[] ProductList;
+    List<ProductModel> ProductList;
 
-    public Item_adapter(Context context, ProductModel[] ProductList) {
+    public Item_adapter(Context context, List<ProductModel> ProductList) {
         this.context = context;
         this.ProductList = ProductList;
     }
@@ -35,22 +37,22 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        String txtItemName = ProductList[i].getProductName();
+        String txtItemName = ProductList.get(i).getProductName();
         viewHolder.txtProductName.setText(txtItemName);
 
-        String txtItemPrice = ProductList[i].getUnitPrice();
+        String txtItemPrice = ProductList.get(i).getUnitPrice();
         viewHolder.txtProductPrice.setText(txtItemPrice+ " VND");
 
-        int txtProductInStock = ProductList[i].getUnitsInStock();
+        int txtProductInStock = ProductList.get(i).getUnitsInStock();
         viewHolder.txtProductInStock.setText("Còn: "+txtProductInStock);
 
-        String image = ProductList[i].getImage_link();
+        String image = ProductList.get(i).getImage_link();
         if (image != null) {
             Picasso.get().load(image).placeholder(R.drawable.photo3x4).into(viewHolder.imgProductImage);
         }
 
-        int idProduct = ProductList[i].getProductID();
-        int idSupplier = ProductList[i].getSupplierID();
+        int idProduct = ProductList.get(i).getProductID();
+        int idSupplier = ProductList.get(i).getSupplierID();
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +68,7 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return ProductList.length;
+        return ProductList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
