@@ -273,4 +273,12 @@ public class ActivityDetailMember extends AppCompatActivity {
         String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
         return Uri.parse(path);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Fetch profile information mỗi khi Activity được hiển thị lại
+        fetchProfileInformation();
+    }
+
 }
