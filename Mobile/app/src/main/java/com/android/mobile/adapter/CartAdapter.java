@@ -1,8 +1,10 @@
 package com.android.mobile.adapter;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +17,33 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.CartActivity;
 import com.android.mobile.DetailClubActivity;
 import com.android.mobile.R;
+import com.android.mobile.models.CartItem;
 import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.CartApiService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     Context context;
     private List<ProductModel> productList;
+    private CartActivity cartActivity;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtNameProduct;
@@ -51,9 +68,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         }
     }
 
-    public CartAdapter(Context context, List<ProductModel> data) {
+    public CartAdapter(Context context, List<ProductModel> data, CartActivity cartActivity) {
         this.context = context;
         this.productList = data;
+        this.cartActivity = cartActivity;
     }
 
     @Override
@@ -63,7 +81,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(CartAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(CartAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.txtNameProduct.setText(productList.get(position).getProductName());
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedPrice = currencyFormat.format(Double.parseDouble(productList.get(position).getUnitPrice()));
@@ -74,14 +92,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.btnRemoveCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Remove " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                removeProduct(productList.get(position).getProductID());
+                Toast.makeText(context, "Xóa sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
             }
         });
 
         holder.btnIncreaseQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Increase " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                increaseQuantity(productList.get(position).getProductID());
+                Toast.makeText(context, "Tăng sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
             }
         });
         holder.btnDecreaseQuantity.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +112,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 //            holder.btnDecreaseQuantity.setBackgroundColor(ContextCompat.getColor(context, R.color.disabled_button));
                     Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "Decrease " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                    decreaseQuantity(productList.get(position).getProductID());
+                    Toast.makeText(context, "Giảm sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -107,5 +128,80 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         productList.clear();
         productList.addAll(newData);
         notifyDataSetChanged();
+    }
+
+    public void removeProduct(int productId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+//        String memberId = sharedPreferences.getString("member_id", null);
+        int memberId = 257;
+
+        CartApiService service = ApiServiceProvider.getCartApiService();
+        Call<JsonObject> call = service.removeProduct(new CartItem(memberId, productId));
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    cartActivity.loadProductCart();
+                } else {
+                    System.err.println("Response error: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void increaseQuantity(int productId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+//        String memberId = sharedPreferences.getString("member_id", null);
+        int memberId = 257;
+
+        CartApiService service = ApiServiceProvider.getCartApiService();
+        Call<JsonObject> call = service.increaseQuantity(new CartItem(memberId, productId));
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    cartActivity.loadProductCart();
+                } else {
+                    System.err.println("Response error: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void decreaseQuantity(int productId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+//        String memberId = sharedPreferences.getString("member_id", null);
+        int memberId = 257;
+
+        CartApiService service = ApiServiceProvider.getCartApiService();
+        Call<JsonObject> call = service.decreaseQuantity(new CartItem(memberId, productId));
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    cartActivity.loadProductCart();
+                } else {
+                    System.err.println("Response error: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }

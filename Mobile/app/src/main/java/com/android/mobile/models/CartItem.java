@@ -13,6 +13,11 @@ public class CartItem {
     public CartItem() {
     }
 
+    public CartItem(int member_id, int product_id) {
+        this.member_id = member_id;
+        this.product_id = product_id;
+    }
+
     public int getId() {
         return id;
     }

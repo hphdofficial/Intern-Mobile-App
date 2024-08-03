@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,11 +68,25 @@ public class CartActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
 
-        adapter = new CartAdapter(this, productList);
+        adapter = new CartAdapter(this, productList, this);
         recyclerView = findViewById(R.id.recycler_stored_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new SlideInLeftAnimator());
 
+        loadProductCart();
+
+        btnPayCart = findViewById(R.id.btn_thanhtoan);
+        btnPayCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartActivity.this, Purchase.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void loadProductCart(){
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
 //        String memberId = sharedPreferences.getString("member_id", null);
@@ -122,19 +137,6 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 t.printStackTrace();
-            }
-        });
-
-        btnPayCart = findViewById(R.id.btn_thanhtoan);
-        btnPayCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CartActivity.this, Purchase.class);
-                Bundle bundle = new Bundle();
-//                bundle.putString("id_club", clubList.get(position).getId_club());
-                intent.putExtras(bundle);
-                startActivity(intent);
-//                Toast.makeText(CartActivity.this, "Pressed button thanhtoan", Toast.LENGTH_SHORT).show();
             }
         });
     }
