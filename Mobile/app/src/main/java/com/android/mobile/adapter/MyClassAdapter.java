@@ -36,13 +36,15 @@ public class MyClassAdapter extends RecyclerView.Adapter<MyClassAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         String txtClassTitle = classList.get(i).getTen();
         String txtClassTime = classList.get(i).getThoigian();
+        int idClass = classList.get(i).getId();
         viewHolder.txtClassTitle.setText(txtClassTitle);
         viewHolder.txtClassTime.setText(txtClassTime);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, activity_checkin.class);
-                intent.putExtra("title", txtClassTitle);
+                intent.putExtra("id", idClass);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

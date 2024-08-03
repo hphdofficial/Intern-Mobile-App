@@ -70,21 +70,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:text="Đồng môn vui lòng đợi load clip từ server nhé. Nếu video nào không có logo liên đoàn thì là không có clip, anh em tự quay cho đồng môn tham khảo nhé. Sẽ cập nhật khi có clip liên đoàn."
                 android:textColor="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vidTheory" />
+                app:layout_constraintTop_toBottomOf="@+id/webView" />
 
-            <VideoView
-                android:id="@+id/vidTheory"
-                android:layout_width="360dp"
-                android:layout_height="283dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="24dp"
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="0dp"
+                android:layout_height="250sp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />

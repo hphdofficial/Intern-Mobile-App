@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
+        <activity
+            android:name=".activity_teacher_checkin"
+            android:exported="true" />
         <activity
             android:name=".FragmentWriteReviewActivity"
             android:exported="false" />
@@ -142,10 +145,9 @@
             android:exported="false" />
         <activity
             android:name=".MenuActivity"
-            android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".StartActivity"-->
-<!--            android:exported="true" />-->
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".StartActivity" -->
+        <!-- android:exported="true" /> -->
         <activity
             android:name=".ClassActivity"
             android:exported="true" />

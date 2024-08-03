@@ -87,14 +87,7 @@ public class activity_item_detail extends AppCompatActivity {
         int idProduct = intent.getIntExtra("id", -1);
         int idSupplier = intent.getIntExtra("IDSupplier", -1);
 
-//        txtItemSupplier.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent1 = new Intent(activity_item_detail.this, SupplierInfoActivity.class);
-//                intent.putExtra("IDSupplier", idSupplier);
-//                startActivity(intent1);
-//            }
-//        });
+
 
         btnMua.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +152,13 @@ public class activity_item_detail extends AppCompatActivity {
                 if(response.isSuccessful()){
                     SupplierModelOption supplier = response.body();
                     txtItemSupplier.setText(supplier.getSupplierName());
+
+                    // Thêm sự kiện onClickListener cho txtItemSupplier
+                    txtItemSupplier.setOnClickListener(view -> {
+                        Intent supplierIntent = new Intent(activity_item_detail.this, SupplierInfoActivity.class);
+                        supplierIntent.putExtra("SupplierID", idSupplier);
+                        startActivity(supplierIntent);
+                    });
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
