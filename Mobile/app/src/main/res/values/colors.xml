@@ -16,4 +16,9 @@
 
     <color name="background_light">#FFFFFF</color>
 
+    <color name="card_background">#FFFFFF</color> <!-- White -->
+    <color name="text_primary">#212121</color> <!-- Dark Gray -->
+    <color name="text_secondary">#757575</color> <!-- Medium Gray -->
+    <color name="text_price">#FF5722</color> <!-- Orange -->
+    <color name="item_border">#E0E0E0</color> <!-- Light Gray -->
 </resources>

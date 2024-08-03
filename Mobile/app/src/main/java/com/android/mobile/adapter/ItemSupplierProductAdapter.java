@@ -1,3 +1,4 @@
+// ItemSupplierProductAdapter.java
 package com.android.mobile.adapter;
 
 import android.content.Context;
@@ -13,17 +14,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
 import com.android.mobile.activity_item_detail;
-import com.android.mobile.models.Item;
+import com.android.mobile.models.ProductModel;
+import com.android.mobile.models.SupplierModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.SupplierApiService;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplierProductAdapter.ViewHolder> {
     Context context;
-    ArrayList<Item> itemList = new ArrayList<>();
+    List<ProductModel> productList;
 
-    public ItemSupplierProductAdapter(Context context, ArrayList<Item> itemList) {
+    public ItemSupplierProductAdapter(Context context, List<ProductModel> productList) {
         this.context = context;
-        this.itemList = itemList;
+        this.productList = productList;
     }
 
     @NonNull
@@ -35,39 +44,46 @@ public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplie
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        String txtItemName = itemList.get(i).getName();
-        viewHolder.txtItemName.setText(txtItemName);
+        ProductModel product = productList.get(i);
 
-        int txtItemPrice = itemList.get(i).getPrice();
-        System.out.println(txtItemPrice);
-        viewHolder.txtItemPrice.setText(txtItemPrice+ " VND");
+        viewHolder.txtItemName.setText(product.getProductName());
+        viewHolder.txtItemPrice.setText(product.getUnitPrice() + " VND");
 
-        String txtItemSupplier = itemList.get(i).getSupplier();
-        viewHolder.txtItemSupplier.setText(txtItemSupplier);
-
-        String txtItemDateProduct = itemList.get(i).getDateProduct();
-        String txtItemMaterial = itemList.get(i).getMaterial();
-        String txtItemUse = itemList.get(i).getUse();
-        String txtItemType = itemList.get(i).getType();
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        // Fetch supplier name
+        SupplierApiService apiService = ApiServiceProvider.getSupplierApiService();
+        apiService.getSupplier(product.getSupplierID()).enqueue(new Callback<SupplierModel>() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, activity_item_detail.class);
-                intent.putExtra("name", txtItemName);
-                intent.putExtra("price", txtItemPrice);
-                intent.putExtra("supplier", txtItemSupplier);
-                intent.putExtra("dateProduct", txtItemDateProduct);
-                intent.putExtra("material", txtItemMaterial);
-                intent.putExtra("use", txtItemUse);
-                intent.putExtra("type", txtItemType);
-                context.startActivity(intent);
+            public void onResponse(Call<SupplierModel> call, Response<SupplierModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    viewHolder.txtItemSupplier.setText(response.body().getSupplierName());
+                } else {
+                    viewHolder.txtItemSupplier.setText("Unknown Supplier");
+                }
             }
+
+            @Override
+            public void onFailure(Call<SupplierModel> call, Throwable t) {
+                viewHolder.txtItemSupplier.setText("Unknown Supplier");
+            }
+        });
+
+        if (product.getImage_link() != null && !product.getImage_link().isEmpty()) {
+            Picasso.get().load(product.getImage_link()).into(viewHolder.imgItem);
+        } else {
+            viewHolder.imgItem.setImageResource(R.drawable.product); // default placeholder image
+        }
+
+        viewHolder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, activity_item_detail.class);
+            intent.putExtra("id", product.getProductID());
+            intent.putExtra("IDSupplier", product.getSupplierID());
+            context.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return productList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -39,13 +39,14 @@ public class ActivityDetailMember extends AppCompatActivity {
 
     private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue, textViewChieucaoValue, textViewCannangValue;
     private ImageView imageViewAvatar;
-    private Button buttonEditPassword,buttonEditInfo;
+    private Button buttonEditPassword, buttonEditInfo;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
     private static final int REQUEST_CODE_GALLERY = 100;
     private static final int REQUEST_CODE_CAMERA = 101;
     private static final int REQUEST_CODE_SELECT_IMAGE = 102;
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 201;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +59,13 @@ public class ActivityDetailMember extends AppCompatActivity {
         myContentE.putString("title", "Thông tin User");
         myContentE.apply();
 
-        // chèn fragment
+        // Chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        // Thêm hoặc thay thế Fragment mới
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         // Initialize SharedPreferences
@@ -87,7 +87,6 @@ public class ActivityDetailMember extends AppCompatActivity {
         imageViewAvatar = findViewById(R.id.imageViewAvatar);
         buttonEditPassword = findViewById(R.id.button_edit_password);
         buttonEditInfo = findViewById(R.id.button_edit_info);
-
 
         imageViewAvatar.setOnClickListener(this::showPopupMenu);
 
@@ -131,8 +130,7 @@ public class ActivityDetailMember extends AppCompatActivity {
                 startActivity(viewIntent);
                 return true;
             } else if (itemId == R.id.menu_replace_gallery) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
+                requestStoragePermission();
                 return true;
             } else if (itemId == R.id.menu_replace_camera) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -155,6 +153,22 @@ public class ActivityDetailMember extends AppCompatActivity {
         startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
     }
 
+    private void requestStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
+        } else {
+            openGallery();
+        }
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -163,6 +177,12 @@ public class ActivityDetailMember extends AppCompatActivity {
                 openCamera();
             } else {
                 Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == REQUEST_CODE_STORAGE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                Toast.makeText(this, "Storage permission is required", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -243,7 +263,6 @@ public class ActivityDetailMember extends AppCompatActivity {
                     editor.putString("avatar_url_" + memberId, avatarUrl);
                     editor.apply();
                 }
-
             }
         }
     }
