@@ -185,7 +185,9 @@ public class activity_item_detail extends AppCompatActivity {
                     String image = product.getImage_link();
                     System.out.println("ABC" + image);
                     if (image != null) {
-                        Picasso.get().load(image).placeholder(R.drawable.photo3x4).into(imageItem);
+                        Picasso.get().load(image).placeholder(R.drawable.logo_vovinam).into(imageItem);
+                    }else{
+                        imageItem.setImageResource(R.drawable.logo_vovinam);
                     }
                 }else {
                     System.out.println("Active: Call onResponse");

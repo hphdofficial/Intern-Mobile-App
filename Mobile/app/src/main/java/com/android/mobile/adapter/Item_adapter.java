@@ -48,7 +48,9 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
 
         String image = ProductList.get(i).getImage_link();
         if (image != null) {
-            Picasso.get().load(image).placeholder(R.drawable.photo3x4).into(viewHolder.imgProductImage);
+            Picasso.get().load(image).placeholder(R.drawable.logo_vovinam).into(viewHolder.imgProductImage);
+        }else{
+            viewHolder.imgProductImage.setImageResource(R.drawable.logo_vovinam);
         }
 
         int idProduct = ProductList.get(i).getProductID();
