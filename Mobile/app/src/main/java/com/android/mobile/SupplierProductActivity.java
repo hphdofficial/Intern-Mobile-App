@@ -1,5 +1,6 @@
 package com.android.mobile;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -123,4 +124,12 @@ public class SupplierProductActivity extends AppCompatActivity {
         editor.putString(key, value);
         editor.apply();
     }
+
+    public void onCardClick(View view) {
+        Intent intent = new Intent(SupplierProductActivity.this, SupplierInfoActivity.class);
+        int supplierID = getIntent().getIntExtra("SupplierID", -1); // Ensure supplierID is retrieved
+        intent.putExtra("SupplierID", supplierID);
+        startActivity(intent);
+    }
+
 }
