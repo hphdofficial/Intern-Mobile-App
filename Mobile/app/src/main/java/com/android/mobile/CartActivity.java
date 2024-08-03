@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.mobile.adapter.CartAdapter;
 import com.android.mobile.models.CartItem;
@@ -47,6 +48,7 @@ public class CartActivity extends AppCompatActivity {
     private Button btnPayCart;
     private TextView txtSumQuantity;
     private TextView txtSumPrice;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,11 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new SlideInLeftAnimator());
 
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            loadProductCart();
+        });
+
         loadProductCart();
 
         btnPayCart = findViewById(R.id.btn_thanhtoan);
@@ -98,6 +105,7 @@ public class CartActivity extends AppCompatActivity {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     JsonObject jsonResponse = response.body();
                     Gson gson = new Gson();
@@ -136,6 +144,7 @@ public class CartActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
                 t.printStackTrace();
             }
         });

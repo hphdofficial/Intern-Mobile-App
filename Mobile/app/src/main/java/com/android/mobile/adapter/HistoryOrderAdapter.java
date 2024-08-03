@@ -1,30 +1,49 @@
 package com.android.mobile.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
 import com.android.mobile.models.OrderModel;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapter.ViewHolder> {
     Context context;
     private List<OrderModel> orderList;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public TextView textView2;
+        public TextView txtTransactionCode;
+        public TextView txtOrderCode;
+        public TextView txtBank;
+        public TextView txtTotal;
+        public TextView txtDate;
+        public Button btnViewProduct;
 
         public ViewHolder(View view) {
             super(view);
-            textView = view.findViewById(R.id.txt_name_purchase_history);
-            textView2 = view.findViewById(R.id.txt_price_product);
+            txtTransactionCode = view.findViewById(R.id.txt_transaction_code);
+            txtOrderCode = view.findViewById(R.id.txt_name_history_order);
+            txtBank = view.findViewById(R.id.txt_bank_code);
+            txtTotal = view.findViewById(R.id.txt_price_order);
+            txtDate = view.findViewById(R.id.txt_pay_date);
+            btnViewProduct = view.findViewById(R.id.btn_view_list_product);
         }
     }
 
@@ -41,8 +60,19 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
 
     @Override
     public void onBindViewHolder(HistoryOrderAdapter.ViewHolder holder, int position) {
-        holder.textView.setText(orderList.get(position).getOrder_info());
-        holder.textView2.setText(orderList.get(position).getAmount());
+        holder.txtTransactionCode.setText("Mã giao dịch " + orderList.get(position).getTransaction_no());
+        holder.txtOrderCode.setText("Đơn hàng " + orderList.get(position).getTxn_ref());
+        holder.txtBank.setText("Loại thanh toán: " + orderList.get(position).getBank_code());
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedPrice = currencyFormat.format(Double.parseDouble(orderList.get(position).getAmount()));
+        holder.txtTotal.setText(formattedPrice);
+        holder.txtDate.setText(convertDateFormat(orderList.get(position).getPay_date()));
+        holder.btnViewProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewListProduct();
+            }
+        });
     }
 
     @Override
@@ -54,5 +84,41 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         orderList.clear();
         orderList.addAll(newData);
         notifyDataSetChanged();
+    }
+
+    public static String convertDateFormat(String inputDate) {
+        String inputPattern = "yyyy-MM-dd HH:mm:ss";
+        String outputPattern = "HH:mm:ss dd-MM-yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String formattedDate = null;
+        try {
+            date = inputFormat.parse(inputDate);
+            formattedDate = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return formattedDate;
+    }
+
+    private void viewListProduct() {
+        Dialog productDialog = new Dialog(context);
+        productDialog.setContentView(R.layout.dialog_list_product);
+
+        ImageButton closeButton = productDialog.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                productDialog.dismiss();
+            }
+        });
+        productDialog.show();
+
+        HistoryOrderAdapter adapter = new HistoryOrderAdapter(context, orderList);
+        RecyclerView recyclerView = productDialog.findViewById(R.id.recycler_view_products);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(adapter);
     }
 }
