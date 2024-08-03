@@ -395,7 +395,7 @@ public class ClubActivity extends AppCompatActivity {
 
     public void showListCity() {
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<List<CityModel>> call = service.getListCity();
+        Call<List<CityModel>> call = service.getListCity(230);
 
         call.enqueue(new Callback<List<CityModel>>() {
             @Override

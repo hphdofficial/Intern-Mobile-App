@@ -15,5 +15,6 @@
     <color name="supplier_color">#FFD700</color>
 
     <color name="background_light">#FFFFFF</color>
+    <color name="disabled_button">#CBCCCCCC</color>
 
 </resources>

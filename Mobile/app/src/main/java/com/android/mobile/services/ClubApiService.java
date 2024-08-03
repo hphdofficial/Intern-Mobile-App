@@ -21,13 +21,10 @@ public interface ClubApiService {
     @GET("/api/countries")
     Call<List<CountryModel>> getListCountry();
 
-    @GET("/api/cities")
-    Call<List<CityModel>> getListCity();
-
-//    @GET("/api/cities")
-//    Call<List<CityModel>> getListCity(
-//            @Query("id_country") int countryId
-//    );
+    @GET("/api/cities/country/{id_country}")
+    Call<List<CityModel>> getListCity(
+            @Path("id_country") int countryId
+    );
 
     @GET("/api/map1")
     Call<JsonObject> getListClubMap1(

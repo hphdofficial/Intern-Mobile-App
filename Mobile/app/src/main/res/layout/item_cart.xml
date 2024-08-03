@@ -10,12 +10,15 @@
     tools:layout_editor_absoluteY="8dp">
 
     <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
+        android:id="@+id/txt_name_supplier"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Nhà cung cấp A >>"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="Nhà cung cấp A"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,17 +28,20 @@
         android:id="@+id/imageView4"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintStart_toEndOf="@+id/checkBox2"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_name_supplier"
         app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/txt_name_stored_item"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
         android:text="Sản phẩm A"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
@@ -46,11 +52,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:layout_marginTop="6dp"
         android:text="10,000 VND"
         android:textColor="#FF0000"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-        app:layout_constraintStart_toEndOf="@+id/imageView4" />
+        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/txt_category_product"
+        app:layout_constraintVertical_bias="1.0" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -62,10 +71,10 @@
 
         <ImageButton
             android:id="@+id/button_decrease"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="?attr/selectableItemBackground"
-            android:src="@drawable/baseline_arrow_back_ios_new_24" />
+            android:src="@drawable/icons8_subtract_20" />
 
         <TextView
             android:id="@+id/textview_quantity"
@@ -78,31 +87,33 @@
 
         <ImageButton
             android:id="@+id/button_increase"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="?attr/selectableItemBackground"
-            android:src="@drawable/baseline_arrow_forward_ios_24" />
+            android:src="@drawable/icons8_plus_20" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView13"
+    <Button
+        android:id="@+id/btn_remove_cart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="-15dp"
         android:text="Xóa"
         android:textColor="#FF0000"
         android:textSize="16sp"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
-        android:id="@+id/checkBox2"
+    <TextView
+        android:id="@+id/txt_category_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:text="Thể loại"
+        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/txt_name_stored_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

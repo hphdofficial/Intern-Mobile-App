@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:background="@drawable/background_blue1"
+        android:background="#660000FF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/header_title"

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,20 +20,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.CartAdapter;
-import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.models.CartItem;
-import com.android.mobile.models.Club;
-import com.android.mobile.models.Product;
+import com.android.mobile.models.ProductModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CartApiService;
-import com.android.mobile.services.ClubApiService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -43,8 +42,10 @@ import retrofit2.Response;
 public class CartActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CartAdapter adapter;
-    private List<Product> productList = new ArrayList<>();
-    private Button btnThanhToan;
+    private List<ProductModel> productList = new ArrayList<>();
+    private Button btnPayCart;
+    private TextView txtSumQuantity;
+    private TextView txtSumPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +72,13 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjQ3NTUyNiwiZXhwIjoxNzIyNTYxOTI2LCJuYmYiOjE3MjI0NzU1MjYsImp0aSI6IktKRVQxRldZMFJLWnJVb2MiLCJzdWIiOiIyNTciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNTcsInJvbGUiOjB9.DaR7nqpNZNDztXD31H48D2diLATO8qp4el5uWeiBpqE";
-
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-//                String token = sharedPreferences.getString("access_token", null);
+        String token = sharedPreferences.getString("access_token", null);
+//        String memberId = sharedPreferences.getString("member_id", null);
 
+        int memberId = 257;
         CartApiService service = ApiServiceProvider.getCartApiService();
-        Call<JsonObject> call = service.getCart("Bearer" + token, 257);
+        Call<JsonObject> call = service.getCart("Bearer" + token, memberId);
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -90,13 +91,29 @@ public class CartActivity extends AppCompatActivity {
                     Map<String, List<CartItem>> responseMap = gson.fromJson(jsonResponse, new TypeToken<Map<String, List<CartItem>>>() {
                     }.getType());
                     List<CartItem> cartItems = responseMap.get("cart");
-                    List<Product> products = new ArrayList<>();
+                    List<ProductModel> products = new ArrayList<>();
+
                     for (CartItem item : cartItems) {
-                        products.add(item.getProduct());
-                        Log.e("name", item.getProduct().getProductName());
+                        boolean found = false;
+                        for (ProductModel pro : products) {
+                            if (item.getProduct_id() == pro.getProductID()) {
+                                pro.setQuantity(pro.getQuantity() + item.getQuantity());
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            ProductModel product = item.getProduct();
+                            products.add(new ProductModel(product.getProductID(), product.getProductName(), product.getUnitPrice(), product.getImage_link(), product.getCategoryName(), product.getSupplierName(), item.getQuantity()));
+                        }
                     }
+
+                    txtSumQuantity = findViewById(R.id.txt_sum_quantity);
+                    txtSumPrice = findViewById(R.id.txt_sum_price);
+                    txtSumQuantity.setText("Số lượng: " + products.size() + " sản phẩm");
+                    updateTotalPrice(memberId);
+
                     adapter.setData(products);
-                    Toast.makeText(CartActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }
@@ -108,16 +125,43 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-        btnThanhToan = findViewById(R.id.btn_thanhtoan);
-        btnThanhToan.setOnClickListener(new View.OnClickListener() {
+        btnPayCart = findViewById(R.id.btn_thanhtoan);
+        btnPayCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(CartActivity.this, CartActivity.class);
-//                Bundle bundle = new Bundle();
+                Intent intent = new Intent(CartActivity.this, Purchase.class);
+                Bundle bundle = new Bundle();
 //                bundle.putString("id_club", clubList.get(position).getId_club());
-//                intent.putExtras(bundle);
-//                startActivity(intent);
-                Toast.makeText(CartActivity.this, "Pressed button thanhtoan", Toast.LENGTH_SHORT).show();
+                intent.putExtras(bundle);
+                startActivity(intent);
+//                Toast.makeText(CartActivity.this, "Pressed button thanhtoan", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void updateTotalPrice(int member_id) {
+        CartApiService service = ApiServiceProvider.getCartApiService();
+        Call<JsonObject> call = service.getTotalPrice(member_id);
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject jsonResponse = response.body();
+                    Gson gson = new Gson();
+                    int totalPrice = jsonResponse.get("total_price").getAsInt();
+                    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                    String formattedSumPrice = currencyFormat.format(totalPrice);
+                    txtSumPrice.setText("Tổng tiền: " + formattedSumPrice);
+                    Toast.makeText(CartActivity.this, "Cập nhật giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    System.err.println("Response error: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                t.printStackTrace();
             }
         });
     }

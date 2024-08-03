@@ -17,4 +17,9 @@ public interface CartApiService {
             @Header("Authorization") String token,
             @Query("member_id") int member_id
     );
+
+    @GET("/api/cart/total-price")
+    Call<JsonObject> getTotalPrice(
+            @Query("member_id") int member_id
+    );
 }
