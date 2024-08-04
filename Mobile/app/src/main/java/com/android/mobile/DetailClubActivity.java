@@ -30,7 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetailClubActivity extends AppCompatActivity {
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
     private TextView txtNameClub;
     private TextView txtDesClub;
     private TextView txtAddressClub;
@@ -94,7 +94,11 @@ public class DetailClubActivity extends AppCompatActivity {
         btnLeaveClub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                leaveClub();
+                if (sharedPreferences.getString("id_class_shared", null) == null) {
+                    leaveClub();
+                } else {
+                    Toast.makeText(DetailClubActivity.this, "Bạn đang tham gia lớp học của câu lạc bộ này nên chưa thể rời câu lạc bộ", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -229,7 +233,7 @@ public class DetailClubActivity extends AppCompatActivity {
     }
 
     public void directClub() {
-        if (sharedPreferences.getString("id_club_shared", null) != null){
+        if (sharedPreferences.getString("id_club_shared", null) != null) {
             Intent intent = new Intent(DetailClubActivity.this, DetailClubActivity.class);
             Bundle bundle = new Bundle();
             bundle.putString("id_club", sharedPreferences.getString("id_club_shared", null));
