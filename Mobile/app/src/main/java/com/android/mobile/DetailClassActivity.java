@@ -82,6 +82,13 @@ public class DetailClassActivity extends AppCompatActivity {
         if (sharedPreferences.getString("id_class_shared", null) == null) {
             btnRegisterClass.setVisibility(View.VISIBLE);
         }
+        if (idClass.equals(sharedPreferences.getString("id_class_shared", null))) {
+            btnLeaveClass.setVisibility(View.VISIBLE);
+            Toast.makeText(DetailClassActivity.this, "Bạn là thành viên của lớp học này", Toast.LENGTH_SHORT).show();
+        } else {
+            btnDirectClass.setVisibility(View.VISIBLE);
+            Toast.makeText(DetailClassActivity.this, "Bạn đã tham gia lớp học khác", Toast.LENGTH_SHORT).show();
+        }
 
         btnRegisterClass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,13 +116,11 @@ public class DetailClassActivity extends AppCompatActivity {
         });
 
         getDetailClass();
-
-        checkRegisterClass();
+//        getMyClass();
     }
 
     public void getDetailClass() {
-//                String token = sharedPreferences.getString("access_token", null);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjc0NjA5NywiZXhwIjoxNzIyODMyNDk3LCJuYmYiOjE3MjI3NDYwOTcsImp0aSI6IkJpY3lDVmxjV25yZVU5ZFkiLCJzdWIiOiIyNDciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNDcsInJvbGUiOjB9.civN02jfuOlFzcIYjBmzTntytMrLMdY_NsBhmPGPH4M";
+        String token = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<Class> call = service.getDetailClassofClub("Bearer" + token, Integer.parseInt(idClass));
@@ -142,35 +147,30 @@ public class DetailClassActivity extends AppCompatActivity {
         });
     }
 
-    public void checkRegisterClass() {
+//    public void getMyClass() {
 //        String token = sharedPreferences.getString("access_token", null);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjc0NjA5NywiZXhwIjoxNzIyODMyNDk3LCJuYmYiOjE3MjI3NDYwOTcsImp0aSI6IkJpY3lDVmxjV25yZVU5ZFkiLCJzdWIiOiIyNDciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNDcsInJvbGUiOjB9.civN02jfuOlFzcIYjBmzTntytMrLMdY_NsBhmPGPH4M";
-
-        ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<Class> call = service.getDetailClassMember("Bearer" + token);
-
-        call.enqueue(new Callback<Class>() {
-            @Override
-            public void onResponse(Call<Class> call, Response<Class> response) {
-                if (response.isSuccessful()) {
-                    Class classs = response.body();
-
-                    if (idClass.equals(String.valueOf(classs.getId()))) {
-                        btnLeaveClass.setVisibility(View.VISIBLE);
-                        Toast.makeText(DetailClassActivity.this, "Bạn là thành viên của lớp học này", Toast.LENGTH_SHORT).show();
-                    } else {
-                        btnDirectClass.setVisibility(View.VISIBLE);
-                        Toast.makeText(DetailClassActivity.this, "Bạn đã tham gia lớp học khác", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Class> call, Throwable t) {
-                Toast.makeText(DetailClassActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//
+//        ClassApiService service = ApiServiceProvider.getClassApiService();
+//        Call<Class> call = service.getDetailClassMember("Bearer" + token);
+//
+//        call.enqueue(new Callback<Class>() {
+//            @Override
+//            public void onResponse(Call<Class> call, Response<Class> response) {
+//                if (response.isSuccessful()) {
+//                    Class classs = response.body();
+//
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("id_class_shared", String.valueOf(classs != null ? classs.getId() : null));
+//                    editor.apply();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Class> call, Throwable t) {
+//                Toast.makeText(DetailClassActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     public void registerClass() {
         Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
@@ -181,8 +181,7 @@ public class DetailClassActivity extends AppCompatActivity {
     }
 
     public void leaveClass() {
-        //                String token = sharedPreferences.getString("access_token", null);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjc0NjA5NywiZXhwIjoxNzIyODMyNDk3LCJuYmYiOjE3MjI3NDYwOTcsImp0aSI6IkJpY3lDVmxjV25yZVU5ZFkiLCJzdWIiOiIyNDciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNDcsInJvbGUiOjB9.civN02jfuOlFzcIYjBmzTntytMrLMdY_NsBhmPGPH4M";
+        String token = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<ReponseModel> call = service.leaveClass("Bearer" + token, new Class(Integer.parseInt(idClass)));

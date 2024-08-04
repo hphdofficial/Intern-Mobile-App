@@ -64,13 +64,9 @@ public class ClassActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-//        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjY0MTE5NiwiZXhwIjoxNzIyNzI3NTk2LCJuYmYiOjE3MjI2NDExOTYsImp0aSI6ImhkV2p3OWZVWFRzYnkzdEciLCJzdWIiOiIyNTciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNTcsInJvbGUiOjB9.0KPLL12aL9IM4_K9Dp8CLAibwnzT-4QIbqNP8XYZK4c";
-
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("id_class_shared", null);
-//        editor.apply();
+
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<List<Class>> call = service.getClassofClub("Bearer" + token);
 

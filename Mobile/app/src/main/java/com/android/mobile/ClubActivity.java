@@ -358,7 +358,7 @@ public class ClubActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     List<CountryModel> countryList = response.body();
                     List<CountryModel> countries = new ArrayList<>();
-                    countries.add(new CountryModel(0, "Country"));
+                    countries.add(new CountryModel(0, "Quốc gia"));
                     for (CountryModel country : countryList) {
                         countries.add(new CountryModel(country.getId(), country.getTen()));
                     }
@@ -403,7 +403,7 @@ public class ClubActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     List<CityModel> cityList = response.body();
                     List<CityModel> cities = new ArrayList<>();
-                    cities.add(new CityModel(0, "City"));
+                    cities.add(new CityModel(0, "Thành phố"));
                     for (CityModel city : cityList) {
                         cities.add(new CityModel(city.getId(), city.getTen()));
                     }

@@ -83,6 +83,13 @@ public class DetailClubActivity extends AppCompatActivity {
         if (sharedPreferences.getString("id_club_shared", null) == null) {
             btnJoinClub.setVisibility(View.VISIBLE);
         }
+        if (idClub.equals(String.valueOf(sharedPreferences.getString("id_club_shared", null)))) {
+            btnLeaveClub.setVisibility(View.VISIBLE);
+            Toast.makeText(DetailClubActivity.this, "Bạn là thành viên của câu lạc bộ này", Toast.LENGTH_SHORT).show();
+        } else {
+            btnDirectClub.setVisibility(View.VISIBLE);
+            Toast.makeText(DetailClubActivity.this, "Bạn đã tham gia câu lạc bộ khác", Toast.LENGTH_SHORT).show();
+        }
 
         btnJoinClub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,8 +117,7 @@ public class DetailClubActivity extends AppCompatActivity {
         });
 
         getDetailClub();
-
-        checkJoinClub();
+//        getMyClub();
     }
 
     public void getDetailClub() {
@@ -140,39 +146,32 @@ public class DetailClubActivity extends AppCompatActivity {
         });
     }
 
-    public void checkJoinClub() {
+//    public void getMyClub() {
 //        String token = sharedPreferences.getString("access_token", null);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjczNDk5NiwiZXhwIjoxNzIyODIxMzk2LCJuYmYiOjE3MjI3MzQ5OTYsImp0aSI6Iks2dGhXd1Q5S21uNjFncGYiLCJzdWIiOiIyNDciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNDcsInJvbGUiOjB9.3CVQyi-i9zEpp00YXzBCSGQfdStmVTCT_QvT0iJYa1Q";
-
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<Club> call = service.getDetailClubMember("Bearer" + token);
-
-        call.enqueue(new Callback<Club>() {
-            @Override
-            public void onResponse(Call<Club> call, Response<Club> response) {
-                if (response.isSuccessful()) {
-                    Club clb = response.body();
-
-                    if (idClub.equals(String.valueOf(clb.getId()))) {
-                        btnLeaveClub.setVisibility(View.VISIBLE);
-                        Toast.makeText(DetailClubActivity.this, "Bạn là thành viên của câu lạc bộ này", Toast.LENGTH_SHORT).show();
-                    } else {
-                        btnDirectClub.setVisibility(View.VISIBLE);
-                        Toast.makeText(DetailClubActivity.this, "Bạn đã tham gia câu lạc bộ khác", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Club> call, Throwable t) {
-                Toast.makeText(DetailClubActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//
+//        ClubApiService service = ApiServiceProvider.getClubApiService();
+//        Call<Club> call = service.getDetailClubMember("Bearer" + token);
+//
+//        call.enqueue(new Callback<Club>() {
+//            @Override
+//            public void onResponse(Call<Club> call, Response<Club> response) {
+//                if (response.isSuccessful()) {
+//                    Club clb = response.body();
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("id_club_shared", clb != null ? clb.getId() : null);
+//                    editor.apply();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Club> call, Throwable t) {
+//                Toast.makeText(DetailClubActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     public void joinClub() {
-        //                String token = sharedPreferences.getString("access_token", null);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjczNDk5NiwiZXhwIjoxNzIyODIxMzk2LCJuYmYiOjE3MjI3MzQ5OTYsImp0aSI6Iks2dGhXd1Q5S21uNjFncGYiLCJzdWIiOiIyNDciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNDcsInJvbGUiOjB9.3CVQyi-i9zEpp00YXzBCSGQfdStmVTCT_QvT0iJYa1Q";
+        String token = sharedPreferences.getString("access_token", null);
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Club data = new Club(idClub);
@@ -191,8 +190,8 @@ public class DetailClubActivity extends AppCompatActivity {
 
                     Toast.makeText(DetailClubActivity.this, "Tham gia câu lạc bộ thành công", Toast.LENGTH_SHORT).show();
 
-//                            Intent intent = new Intent(DetailClubActivity.this, ClassActivity.class);
-//                            startActivity(intent);
+                    Intent intent = new Intent(DetailClubActivity.this, ClassActivity.class);
+                    startActivity(intent);
                 }
             }
 
@@ -204,8 +203,7 @@ public class DetailClubActivity extends AppCompatActivity {
     }
 
     public void leaveClub() {
-        //                String token = sharedPreferences.getString("access_token", null);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjczNDk5NiwiZXhwIjoxNzIyODIxMzk2LCJuYmYiOjE3MjI3MzQ5OTYsImp0aSI6Iks2dGhXd1Q5S21uNjFncGYiLCJzdWIiOiIyNDciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNDcsInJvbGUiOjB9.3CVQyi-i9zEpp00YXzBCSGQfdStmVTCT_QvT0iJYa1Q";
+        String token = sharedPreferences.getString("access_token", null);
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<ReponseModel> call = service.leaveClub("Bearer" + token);

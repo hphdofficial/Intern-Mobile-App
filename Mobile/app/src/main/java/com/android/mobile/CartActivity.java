@@ -97,10 +97,10 @@ public class CartActivity extends AppCompatActivity {
     public void loadProductCart(){
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
-        String memberId = sharedPreferences.getString("member_id", null);
+        int memberId = sharedPreferences.getInt("member_id", 0);
 
         CartApiService service = ApiServiceProvider.getCartApiService();
-        Call<JsonObject> call = service.getCart("Bearer" + token, Integer.parseInt(memberId));
+        Call<JsonObject> call = service.getCart("Bearer" + token, memberId);
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -134,7 +134,7 @@ public class CartActivity extends AppCompatActivity {
                     txtSumQuantity = findViewById(R.id.txt_sum_quantity);
                     txtSumPrice = findViewById(R.id.txt_sum_price);
                     txtSumQuantity.setText("Số lượng: " + products.size() + " sản phẩm");
-                    updateTotalPrice(Integer.parseInt(memberId));
+                    updateTotalPrice(memberId);
 
                     adapter.setData(products);
                 } else {
