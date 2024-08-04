@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.TheoryModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -32,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_item_chapter extends AppCompatActivity {
+public class activity_item_chapter extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

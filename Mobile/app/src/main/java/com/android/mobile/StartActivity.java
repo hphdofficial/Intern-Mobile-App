@@ -40,11 +40,12 @@ public class StartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("id_club_shared", null);
-        editor.putString("id_class_shared", null);
-        editor.apply();
+        // Reset id
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor edit = shared.edit();
+        edit.putString("id_club_shared", null);
+        edit.putString("id_class_shared", null);
+        edit.apply();
 
         // Kiểm tra trạng thái đăng nhập
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);

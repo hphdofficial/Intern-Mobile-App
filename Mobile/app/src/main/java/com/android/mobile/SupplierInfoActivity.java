@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.SupplierModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.SupplierApiService;
@@ -20,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SupplierInfoActivity extends AppCompatActivity {
+public class SupplierInfoActivity extends BaseActivity {
 
     private int supplierID;
 

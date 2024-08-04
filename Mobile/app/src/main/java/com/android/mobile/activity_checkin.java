@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Checkin_adapter;
 import com.android.mobile.adapter.MyClassAdapter;
 import com.android.mobile.models.AttendanceRequest;
@@ -47,7 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_checkin extends AppCompatActivity {
+public class activity_checkin extends BaseActivity {
 
     private Checkin_adapter checkinAdapter;
     @Override

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Item_adapter;
 import com.android.mobile.adapter.TheoryAdapter;
 import com.android.mobile.adapter.lesson_adapter;
@@ -40,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_lessons extends AppCompatActivity {
+public class activity_lessons extends BaseActivity {
     private List<TheoryModel> theoryList = new ArrayList<>();
     private List<TheoryModel> filteredTheoryList = new ArrayList<>();
     private TheoryAdapter theoryAdapter;

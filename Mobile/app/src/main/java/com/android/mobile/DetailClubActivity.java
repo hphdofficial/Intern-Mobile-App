@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.Club;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -29,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailClubActivity extends AppCompatActivity {
+public class DetailClubActivity extends BaseActivity {
     private SharedPreferences sharedPreferences;
     private TextView txtNameClub;
     private TextView txtDesClub;

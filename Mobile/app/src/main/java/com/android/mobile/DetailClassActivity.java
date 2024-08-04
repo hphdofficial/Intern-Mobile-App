@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailClassActivity extends AppCompatActivity {
+public class DetailClassActivity extends BaseActivity {
     private SharedPreferences sharedPreferences;
     private TextView txtNameClass;
     private TextView txtTeacherClass;

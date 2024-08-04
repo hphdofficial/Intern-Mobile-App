@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Checkin_adapter;
 import com.android.mobile.models.AttendanceTeacher;
 import com.android.mobile.models.CheckinMemberModel;
@@ -29,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_teacher_checkin extends AppCompatActivity {
+public class activity_teacher_checkin extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

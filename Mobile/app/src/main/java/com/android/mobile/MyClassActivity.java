@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.MyClassAdapter;
 import com.android.mobile.models.Class;
 import com.android.mobile.models.ClassModel;
@@ -39,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyClassActivity extends AppCompatActivity {
+public class MyClassActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
