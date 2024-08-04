@@ -1,5 +1,6 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.CartItem;
 import com.android.mobile.models.Club;
 import com.android.mobile.models.ReponseModel;
 import com.google.gson.JsonObject;
@@ -19,5 +20,23 @@ public interface CartApiService {
             @Query("member_id") int member_id
     );
 
+    @GET("/api/cart/total-price")
+    Call<JsonObject> getTotalPrice(
+            @Query("member_id") int member_id
+    );
 
+    @POST("/api/cart/remove")
+    Call<JsonObject> removeProduct(
+            @Body CartItem cartItem
+    );
+
+    @POST("/api/cart/increase-quantity")
+    Call<JsonObject> increaseQuantity(
+            @Body CartItem cartItem
+    );
+
+    @POST("/api/cart/decrease-quantity")
+    Call<JsonObject> decreaseQuantity(
+            @Body CartItem cartItem
+    );
 }

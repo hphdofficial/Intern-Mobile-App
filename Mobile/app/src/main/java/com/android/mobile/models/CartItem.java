@@ -8,9 +8,14 @@ public class CartItem {
     String created_at;
     String updated_at;
     String total_price;
-    Product product;
+    ProductModel product;
 
     public CartItem() {
+    }
+
+    public CartItem(int member_id, int product_id) {
+        this.member_id = member_id;
+        this.product_id = product_id;
     }
 
     public int getId() {
@@ -69,11 +74,11 @@ public class CartItem {
         this.total_price = total_price;
     }
 
-    public Product getProduct() {
+    public ProductModel getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(ProductModel product) {
         this.product = product;
     }
 }

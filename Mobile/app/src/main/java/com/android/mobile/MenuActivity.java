@@ -26,9 +26,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.models.Class;
+import com.android.mobile.models.Club;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.ClassApiService;
+import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
@@ -104,12 +108,60 @@ public class MenuActivity extends BaseActivity {
         //click image
         setEventClick();
 
-
+        // Get id_club_shared and id_class_shared
+        getMyClub();
+        getMyClass();
 
         // Gọi phương thức loadUserData để hiển thị thông tin người dùng
         loadUserData();
     }
 
+    public void getMyClub() {
+        String token = sharedPreferences.getString("access_token", null);
+
+        ClubApiService service = ApiServiceProvider.getClubApiService();
+        Call<Club> call = service.getDetailClubMember("Bearer" + token);
+
+        call.enqueue(new Callback<Club>() {
+            @Override
+            public void onResponse(Call<Club> call, Response<Club> response) {
+                if (response.isSuccessful()) {
+                    Club clb = response.body();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("id_club_shared", clb != null ? clb.getId() : null);
+                    editor.apply();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Club> call, Throwable t) {
+                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void getMyClass() {
+        String token = sharedPreferences.getString("access_token", null);
+
+        ClassApiService service = ApiServiceProvider.getClassApiService();
+        Call<Class> call = service.getDetailClassMember("Bearer" + token);
+
+        call.enqueue(new Callback<Class>() {
+            @Override
+            public void onResponse(Call<Class> call, Response<Class> response) {
+                Class classs = response.body();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id_class_shared", classs.getId() != 0 ? String.valueOf(classs.getId()) : null);
+                editor.apply();
+                Toast.makeText(MenuActivity.this, "id_class_shared" + sharedPreferences.getString("id_class_shared", null), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Class> call, Throwable t) {
+                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {

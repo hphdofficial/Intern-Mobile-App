@@ -11,8 +11,13 @@ public class Class {
     private String teacherName;
     private int id, giatien;
     private String thoigian, dienthoai, club, giangvien;
+    private int id_class;
 
     public Class() {
+    }
+
+    public Class(int id_class) {
+        this.id_class = id_class;
     }
 
     public Class(int hocPhi, Date ngayBatDau, Date ngayKetThuc, String ten, int thoiGian, String teacherName) {
@@ -118,5 +123,13 @@ public class Class {
 
     public void setGiangvien(String giangvien) {
         this.giangvien = giangvien;
+    }
+
+    public int getId_class() {
+        return id_class;
+    }
+
+    public void setId_class(int id_class) {
+        this.id_class = id_class;
     }
 }

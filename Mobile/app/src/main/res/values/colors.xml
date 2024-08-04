@@ -15,6 +15,7 @@
     <color name="supplier_color">#FFD700</color>
 
     <color name="background_light">#FFFFFF</color>
+    <color name="disabled_button">#CBCCCCCC</color>
 
     <color name="card_background">#FFFFFF</color> <!-- White -->
     <color name="text_primary">#212121</color> <!-- Dark Gray -->
