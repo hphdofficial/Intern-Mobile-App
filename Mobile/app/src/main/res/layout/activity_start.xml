@@ -5,10 +5,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity">
+    tools:context=".StartActivity"
+    android:background="#F6F8FB">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,12 +19,12 @@
 
         <ImageView
             android:id="@+id/imageViewLogo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="181dp"
+            android:layout_height="192dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
-            android:src="@drawable/logovovinam" />
+            android:layout_marginTop="12dp"
+            android:src="@drawable/logostartmain" />
 
         <TextView
             android:id="@+id/title"
@@ -31,45 +32,46 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/imageViewLogo"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:text="Login"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textSize="18pt"
+            android:textColor="#000000"
+            android:textSize="24sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="Login to continue using the app"
+            android:textColor="#808080"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_weight="1.4"
-                android:gravity="start"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:text="Emails"
-                android:textSize="9pt"
-                android:textStyle="bold" />
+            android:layout_below="@id/subtitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_edittext_background"
+            android:padding="8dp">
 
             <EditText
                 android:id="@+id/edit_email"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_edittext_background"
-                android:hint=""
+                android:background="@android:color/transparent"
+                android:hint="Enter your email"
                 android:inputType="textEmailAddress"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:textColor="@android:color/black"
+                android:padding="16dp"
+                android:textColor="#000000"
+                android:textColorHint="#808080"
                 android:textStyle="normal" />
         </LinearLayout>
 
@@ -78,36 +80,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/username"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1.4"
-                android:gravity="start"
-                android:text="Password"
-                android:textSize="9pt"
-                android:textStyle="bold" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_edittext_background"
+            android:padding="8dp">
 
             <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="4">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/edit_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_edittext_background"
-                    android:hint=""
+                    android:background="@android:color/transparent"
+                    android:hint="Enter password"
                     android:inputType="textPassword"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="40dp"
-                    android:paddingBottom="5dp"
-                    android:textColor="@android:color/black"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
                     android:textStyle="normal" />
 
                 <ImageView
@@ -116,65 +110,60 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="8dp"
                     android:src="@drawable/hide"
                     android:clickable="true"
                     android:focusable="true" />
             </RelativeLayout>
-
         </LinearLayout>
-
 
         <CheckBox
             android:id="@+id/checkbox_save_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/password"
-            android:layout_marginTop="0dp"
-            android:textSize="18dp"
-            android:text="Save password"
-            android:textStyle="italic" />
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="20dp"
+            android:text="Remember me"
+            android:textColor="#808080" />
 
         <TextView
             android:id="@+id/forgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/password"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:text="Forgot Password"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textStyle="italic" />
+            android:text="Forgot Password?"
+            android:textColor="#808080"
+            android:textStyle="bold" />
 
-
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/forgotPassword"
-            android:layout_marginTop="27dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkbox_save_password"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/purple_500"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:text="Login"
-                android:textSize="10pt" />
-
-            <Button
-                android:id="@+id/btn_register"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:text="Register"
-                android:textSize="10pt" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_login"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/purple_500"
+            android:text="Register"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

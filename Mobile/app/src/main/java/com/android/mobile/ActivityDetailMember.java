@@ -24,12 +24,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.models.ClassModelTest;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +39,7 @@ import retrofit2.Response;
 
 public class ActivityDetailMember extends AppCompatActivity {
 
-    private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue, textViewChieucaoValue, textViewCannangValue;
+    private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue, textViewChieucaoValue, textViewCannangValue, classInfo;
     private ImageView imageViewAvatar;
     private Button buttonEditPassword, buttonEditInfo;
     private SharedPreferences sharedPreferences;
@@ -88,6 +90,8 @@ public class ActivityDetailMember extends AppCompatActivity {
         buttonEditPassword = findViewById(R.id.button_edit_password);
         buttonEditInfo = findViewById(R.id.button_edit_info);
 
+        classInfo = findViewById(R.id.classInfo);
+
         imageViewAvatar.setOnClickListener(this::showPopupMenu);
 
         buttonEditPassword.setOnClickListener(v -> {
@@ -113,7 +117,46 @@ public class ActivityDetailMember extends AppCompatActivity {
 
         // Fetch profile information
         fetchProfileInformation();
+        // Fetch class information
     }
+
+    private void fetchClassInformation() {
+        String token = sharedPreferences.getString("access_token", null);
+        if (token != null) {
+            UserApiService apiService = ApiServiceProvider.getUserApiService();
+            Call<List<ClassModelTest>> call = apiService.getUserRegisteredClasses("Bearer " + token);
+            call.enqueue(new Callback<List<ClassModelTest>>() {
+                @Override
+                public void onResponse(Call<List<ClassModelTest>> call, Response<List<ClassModelTest>> response) {
+                    if (response.isSuccessful()) {
+                        List<ClassModelTest> classes = response.body();
+                        if (classes != null && !classes.isEmpty()) {
+                            ClassModelTest classModel = classes.get(0);
+                            String classDetails = "Tên: " + classModel.getTen() + "\n" +
+                                    "Thời gian: " + classModel.getThoigian() + "\n" +
+                                    "Giá tiền: " + classModel.getGiatien() + "\n" +
+                                    "Điện thoại: " + classModel.getDienthoai() + "\n" +
+                                    "CLB: " + classModel.getClub() + "\n" +
+                                    "Giảng viên: " + classModel.getGiangvien();
+                            classInfo.setText(classDetails);
+                        } else {
+                            classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+                        }
+                    } else {
+                        classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ClassModelTest>> call, Throwable t) {
+                    classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+                }
+            });
+        } else {
+            classInfo.setText("Chưa đăng nhập");
+        }
+    }
+
 
     private void showPopupMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
@@ -279,6 +322,7 @@ public class ActivityDetailMember extends AppCompatActivity {
         super.onResume();
         // Fetch profile information mỗi khi Activity được hiển thị lại
         fetchProfileInformation();
+        fetchClassInformation();
     }
 
 }

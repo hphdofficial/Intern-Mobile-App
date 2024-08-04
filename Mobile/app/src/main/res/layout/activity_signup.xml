@@ -4,6 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F6F8FB"
     tools:context=".SignupActivity">
 
     <ScrollView
@@ -18,180 +19,340 @@
             android:padding="16dp">
 
             <!-- Logo -->
-            <ImageView
-                android:id="@+id/image_view_logo"
-                android:layout_width="189dp"
-                android:layout_height="161dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/logovovinam" />
 
             <!-- Signup Text -->
+
+            <ImageView
+                android:id="@+id/image_view_logo"
+                android:layout_width="162dp"
+                android:layout_height="148dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/logostartmain" />
+
             <TextView
                 android:id="@+id/text_view_signup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Signup"
+                android:layout_marginTop="16dp"
+                android:text="Register"
                 android:textSize="24sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="8dp"/>
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_view_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:text="Enter Your Personal Information"
+                android:textSize="14sp"
+                android:textColor="#808080" />
 
             <!-- Email EditText -->
-            <EditText
-                android:id="@+id/edit_text_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:minHeight="48dp" />
-
-            <!-- Username EditText -->
-            <EditText
-                android:id="@+id/edit_text_username"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Username"
-                android:minHeight="48dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/edit_text_password"
+                    android:id="@+id/edit_text_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:minHeight="48dp"
-                    android:paddingEnd="40dp" />
+                    android:background="@android:color/transparent"
+                    android:hint="Enter your email"
+                    android:inputType="textEmailAddress"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/image_button_toggle_password_visibility"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Toggle password visibility"
-                    android:padding="8dp"
-                    android:src="@drawable/hide" />
-            </RelativeLayout>
-
-            <RelativeLayout
+            <!-- Username EditText -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/edit_text_confirm_password"
+                    android:id="@+id/edit_text_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Confirm Password"
-                    android:inputType="textPassword"
-                    android:minHeight="48dp"
-                    android:paddingEnd="40dp" />
+                    android:background="@android:color/transparent"
+                    android:hint="Enter user name"
+                    android:inputType="textPersonName"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/image_button_toggle_confirm_password_visibility"
-                    android:layout_width="wrap_content"
+            <!-- Password EditText -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edit_text_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:hint="Enter password"
+                        android:inputType="textPassword"
+                        android:padding="16dp"
+                        android:textColor="#000000"
+                        android:textColorHint="#808080"
+                        android:textStyle="normal" />
+
+                    <ImageButton
+                        android:id="@+id/image_button_toggle_password_visibility"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Toggle password visibility"
+                        android:padding="8dp"
+                        android:src="@drawable/hide" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- Confirm Password EditText -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edit_text_confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:hint="Enter confirm password"
+                        android:inputType="textPassword"
+                        android:padding="16dp"
+                        android:textColor="#000000"
+                        android:textColorHint="#808080"
+                        android:textStyle="normal" />
+
+                    <ImageButton
+                        android:id="@+id/image_button_toggle_confirm_password_visibility"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Toggle confirm password visibility"
+                        android:padding="8dp"
+                        android:src="@drawable/hide" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- Full Name EditText -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/edit_text_ten"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Toggle confirm password visibility"
-                    android:padding="8dp"
-                    android:src="@drawable/hide" />
-            </RelativeLayout>
+                    android:background="@android:color/transparent"
+                    android:hint="Enter your full name"
+                    android:inputType="textPersonName"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
 
-            <!-- Ten (Name) EditText -->
-            <EditText
-                android:id="@+id/edit_text_ten"
+            <!-- Height EditText -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Full Name"
-                android:minHeight="48dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
-            <!-- Chieucao (Height) EditText -->
-            <EditText
-                android:id="@+id/edit_text_chieucao"
+                <EditText
+                    android:id="@+id/edit_text_chieucao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter your height (cm)"
+                    android:inputType="number"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <!-- Weight EditText -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Height (cm)"
-                android:inputType="number"
-                android:minHeight="48dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
-            <!-- Cannang (Weight) EditText -->
-            <EditText
-                android:id="@+id/edit_text_cannang"
+                <EditText
+                    android:id="@+id/edit_text_cannang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter your weight (kg)"
+                    android:inputType="number"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <!-- Phone EditText -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Weight (kg)"
-                android:inputType="number"
-                android:minHeight="48dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
-            <!-- Dienthoai (Phone) EditText -->
-            <EditText
-                android:id="@+id/edit_text_dienthoai"
+                <EditText
+                    android:id="@+id/edit_text_dienthoai"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter your phone"
+                    android:inputType="phone"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <!-- Address EditText -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Phone"
-                android:inputType="phone"
-                android:minHeight="48dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
-            <!-- Diachi (Address) EditText -->
-            <EditText
-                android:id="@+id/edit_text_diachi"
+                <EditText
+                    android:id="@+id/edit_text_diachi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter your address"
+                    android:inputType="textPostalAddress"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <!-- Birthday EditText -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Address"
-                android:minHeight="48dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
-            <!-- Ngaysinh (Birthday) EditText -->
-            <EditText
-                android:id="@+id/edit_text_ngaysinh"
+                <EditText
+                    android:id="@+id/edit_text_ngaysinh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter your birthday (YYYY-MM-DD)"
+                    android:inputType="date"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <!-- Guardian Name EditText -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Birthday (YYYY-MM-DD)"
-                android:inputType="date"
-                android:minHeight="48dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
-            <!-- Hoten Giamho (Guardian Name) EditText -->
-            <EditText
-                android:id="@+id/edit_text_hoten_giamho"
+                <EditText
+                    android:id="@+id/edit_text_hoten_giamho"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter guardian name"
+                    android:inputType="textPersonName"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <!-- Guardian Phone EditText -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Guardian Name"
-                android:minHeight="48dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:orientation="vertical">
 
-            <!-- Dienthoai Giamho (Guardian Phone) EditText -->
-            <EditText
-                android:id="@+id/edit_text_dienthoai_giamho"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Guardian Phone"
-                android:inputType="phone"
-                android:minHeight="48dp" />
+                <EditText
+                    android:id="@+id/edit_text_dienthoai_giamho"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter guardian phone"
+                    android:inputType="phone"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textColorHint="#808080"
+                    android:textStyle="normal" />
+            </LinearLayout>
 
             <!-- Gender RadioGroup -->
             <RadioGroup
                 android:id="@+id/radio_group_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <!-- Male RadioButton -->
@@ -201,7 +362,8 @@
                     android:layout_height="wrap_content"
                     android:text="Nam"
                     android:checked="true"
-                    android:padding="16dp" />
+                    android:padding="16dp"
+                    android:textColor="#000000" />
 
                 <!-- Female RadioButton -->
                 <RadioButton
@@ -209,8 +371,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nữ"
-                    android:padding="16dp" />
-
+                    android:padding="16dp"
+                    android:textColor="#000000" />
             </RadioGroup>
 
             <!-- Sign Up Button -->
@@ -218,8 +380,12 @@
                 android:id="@+id/button_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Sign Up" />
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/purple_500"
+                android:text="Register"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

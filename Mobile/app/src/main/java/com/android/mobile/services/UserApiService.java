@@ -1,5 +1,6 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.ClassModelTest;
 import com.android.mobile.models.ForgotPasswordModel;
 import com.android.mobile.models.LoginModel;
 import com.android.mobile.models.ProfileModel;
@@ -70,6 +71,7 @@ public interface UserApiService {
             @Body UpdatePasswordModel request
     );
 
-
+    @GET("api/user/classes")
+    Call<List<ClassModelTest>> getUserRegisteredClasses(@Header("Authorization") String token);
 
 }

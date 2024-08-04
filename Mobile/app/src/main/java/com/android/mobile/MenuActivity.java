@@ -272,7 +272,22 @@ public class MenuActivity extends AppCompatActivity {
         eventAnimationImage();
     }
     private void logout() {
-        Intent intent = new Intent(MenuActivity.this, StartActivity.class); // Giả sử StartActivity là trang đăng nhập của bạn
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Kiểm tra nếu checkbox lưu mật khẩu không được chọn
+        if (!sharedPreferences.getBoolean("checkbox_save_password", false)) {
+            editor.clear(); // Xóa tất cả thông tin đăng nhập
+        } else {
+            editor.remove("access_token"); // Chỉ xóa token đăng nhập
+            editor.remove("token_type");
+            editor.remove("expires_in");
+            editor.remove("member_id");
+        }
+
+        editor.apply();
+
+        Intent intent = new Intent(MenuActivity.this, StartActivity.class); // Chuyển hướng về trang đăng nhập
         startActivity(intent);
         finish();
     }
