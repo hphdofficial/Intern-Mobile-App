@@ -52,4 +52,14 @@ public interface ClubApiService {
             @Header("Authorization") String token,
             @Body Club club
     );
+
+    @PUT("/api/clubs/outclub")
+    Call<ReponseModel> leaveClub(
+            @Header("Authorization") String token
+    );
+
+    @GET("/api/auth/clubs/getdetail/member")
+    Call<Club> getDetailClubMember(
+            @Header("Authorization") String token
+    );
 }
