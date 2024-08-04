@@ -27,18 +27,23 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.mobile.models.Class;
+import com.android.mobile.models.ClassModelT;
 import com.android.mobile.models.Club;
 import com.android.mobile.adapter.BaseActivity;
+import com.android.mobile.models.HistoryClassModel;
 import com.android.mobile.models.ProfileModel;
+import com.android.mobile.network.APIServicePayment;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ClassApiService;
 import com.android.mobile.services.ClubApiService;
+import com.android.mobile.services.PaymentAPI;
 import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Method;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -214,6 +219,7 @@ public class MenuActivity extends BaseActivity {
     private LinearLayout btn_class;
     private LinearLayout btn_new;
     private LinearLayout btn_logout;
+    private LinearLayout btn_historyclass1;
     private LinearLayout btn_product;
     private ImageView img_avatar_menu;
     private ImageView test;
@@ -260,6 +266,8 @@ public class MenuActivity extends BaseActivity {
         });
 
         img_avatar_menu = findViewById(R.id.img_avatar_menu);
+
+        btn_historyclass1 = findViewById(R.id.btn_historyclass1);
         img_avatar_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -288,9 +296,47 @@ public class MenuActivity extends BaseActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String token = sharedPreferences.getString("access_token", null);
+
+                PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+                Call<List<ClassModelT>> call = apiService.GetClass("Bearer" + token);
+
+                call.enqueue(new Callback<List<ClassModelT>>() {
+                    @Override
+                    public void onResponse(Call<List<ClassModelT>> call, Response<List<ClassModelT>> response) {
+                        if(response.isSuccessful()){
 
 
-               // startActivity(new Intent(getApplicationContext(), RegisterClass.class));
+                            List<ClassModelT> cl = response.body();
+
+                            if(cl.size() > 0){
+                                Intent i =  new Intent(getApplicationContext(),DetailClassActivity.class);
+                                i.putExtra("id_class",cl.get(0).getId());
+                                startActivity( i);
+                            }else {
+                                startActivity(new Intent(getApplicationContext(), ClassActivity.class));
+                            }
+                        }else {
+                            Toast.makeText(getApplicationContext(),"Fail",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<ClassModelT>> call, Throwable t) {
+
+                    }
+                });
+
+
+             //   startActivity(new Intent(getApplicationContext(), HistoryRegisterClass.class));
+            }
+        });
+        btn_historyclass1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                startActivity(new Intent(getApplicationContext(), HistoryRegisterClass.class));
             }
         });
         btn_new.setOnClickListener(new View.OnClickListener() {

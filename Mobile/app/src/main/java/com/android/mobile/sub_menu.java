@@ -139,6 +139,10 @@ public class sub_menu extends Fragment {
                 if(id == R.id.btn_home){
                     startActivity(new Intent(getContext(), MenuActivity.class));
                 }
+
+                if(id == R.id.btn_register_up){
+                    startActivity(new Intent(getContext(), Register_belt.class));
+                }
                 if(id == R.id.btn_self){
                     startActivity(new Intent(getContext(), ActivityDetailMember.class));
                 }

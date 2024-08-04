@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/item_belt"
+    android:layout_marginBottom="10dp"
+
+    android:background="#D2B48C">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+        <TextView
+           android:padding="10dp"
+            android:textColor="#FF0000"
+            android:id="@+id/id"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hóa đơn số">
+
+        </TextView>
+        <TextView
+            android:textColor="#ADD8E6"
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ngày tạo">
+        </TextView>
+        <TextView
+            android:textColor="#ADD8E6"
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số tiền">
+        </TextView>
+
+        <TextView
+            android:textColor="#ADD8E6"
+            android:id="@+id/nameclass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên lớp">
+
+
+
+        </TextView>
+        <TextView
+            android:textColor="#FFFF00"
+            android:id="@+id/current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trạng thái thanh toán">
+        </TextView>
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
