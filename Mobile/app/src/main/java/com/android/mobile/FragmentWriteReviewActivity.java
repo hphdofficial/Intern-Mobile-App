@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import androidx.fragment.app.DialogFragment;
 import com.android.mobile.models.ReviewModel;
 import com.android.mobile.network.ApiServiceProvider;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -92,35 +94,51 @@ public class FragmentWriteReviewActivity extends DialogFragment {
         // Lấy thông tin người dùng từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
-        String userName = sharedPreferences.getString("ten", "User");
-        String avatarUrl = sharedPreferences.getString("avatar_url", ""); // Lấy avatar URL
+        int memberId = sharedPreferences.getInt("member_id", -1);
+        if (token == null || memberId == -1) {
+            Toast.makeText(getContext(), "Bạn cần đăng nhập để gửi đánh giá", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String reviewDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
         ReviewModel review = new ReviewModel();
-        review.setProductID(productId);
-        review.setRatingValue(String.valueOf(ratingValue));
+        review.setProductID(productId);  // Đảm bảo rằng ProductID được đặt đúng cách
+        review.setRatingValue(String.valueOf(Math.round(ratingValue)));  // Đặt RatingValue dưới dạng chuỗi
         review.setReviewContent(reviewContent);
-        review.setUserName(userName);
         review.setReviewDate(reviewDate);
-        review.setAvatarUrl(avatarUrl); // Lưu avatar URL vào ReviewModel
+        review.setId_atg_members(memberId);
+        review.setRatingCount(1);  // Đặt giá trị RatingCount
 
-        ApiServiceProvider.getProductApiService().addReview("Bearer " + token, review).enqueue(new Callback<Void>() {
+        ApiServiceProvider.getProductApiService().addReview("Bearer " + token, productId, review).enqueue(new Callback<ReviewModel>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<ReviewModel> call, Response<ReviewModel> response) {
                 if (response.isSuccessful()) {
+                    ReviewModel createdReview = response.body();
                     Toast.makeText(getContext(), "Đánh giá đã được gửi", Toast.LENGTH_SHORT).show();
+                    if (createdReview != null) {
+                        Log.i("ReviewSubmit", "Created ReviewID: " + createdReview.getReviewID());
+                    }
                     if (listener != null) {
                         listener.onReviewSubmitted();
                     }
                     dismiss();
                 } else {
-                    Toast.makeText(getContext(), "Lỗi khi gửi đánh giá", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Lỗi khi gửi đánh giá: " + response.message(), Toast.LENGTH_SHORT).show();
+                    // Thêm log để kiểm tra lỗi chi tiết hơn
+                    Log.e("ReviewSubmit", "Error response code: " + response.code() + " - " + response.message());
+                    try {
+                        Log.e("ReviewSubmit", "Error body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi khi gửi đánh giá", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<ReviewModel> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi khi gửi đánh giá: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("ReviewSubmit", "Error: ", t);
             }
         });
     }

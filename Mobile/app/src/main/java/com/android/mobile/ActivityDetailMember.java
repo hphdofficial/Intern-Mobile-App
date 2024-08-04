@@ -24,29 +24,31 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.android.mobile.adapter.BaseActivity;
+import com.android.mobile.models.ClassModelTest;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ActivityDetailMember extends BaseActivity {
+public class ActivityDetailMember extends AppCompatActivity {
 
-    private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue, textViewChieucaoValue, textViewCannangValue;
+    private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue, textViewChieucaoValue, textViewCannangValue, classInfo;
     private ImageView imageViewAvatar;
-    private Button buttonEditPassword,buttonEditInfo;
+    private Button buttonEditPassword, buttonEditInfo;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
     private static final int REQUEST_CODE_GALLERY = 100;
     private static final int REQUEST_CODE_CAMERA = 101;
     private static final int REQUEST_CODE_SELECT_IMAGE = 102;
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 201;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,7 @@ public class ActivityDetailMember extends BaseActivity {
         myContentE.putString("title", "Thông tin User");
         myContentE.apply();
 
-        // chèn fragment
+        // Chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         // Thêm hoặc thay thế Fragment mới
@@ -89,6 +91,7 @@ public class ActivityDetailMember extends BaseActivity {
         buttonEditPassword = findViewById(R.id.button_edit_password);
         buttonEditInfo = findViewById(R.id.button_edit_info);
 
+        classInfo = findViewById(R.id.classInfo);
 
         imageViewAvatar.setOnClickListener(this::showPopupMenu);
 
@@ -115,7 +118,46 @@ public class ActivityDetailMember extends BaseActivity {
 
         // Fetch profile information
         fetchProfileInformation();
+        // Fetch class information
     }
+
+    private void fetchClassInformation() {
+        String token = sharedPreferences.getString("access_token", null);
+        if (token != null) {
+            UserApiService apiService = ApiServiceProvider.getUserApiService();
+            Call<List<ClassModelTest>> call = apiService.getUserRegisteredClasses("Bearer " + token);
+            call.enqueue(new Callback<List<ClassModelTest>>() {
+                @Override
+                public void onResponse(Call<List<ClassModelTest>> call, Response<List<ClassModelTest>> response) {
+                    if (response.isSuccessful()) {
+                        List<ClassModelTest> classes = response.body();
+                        if (classes != null && !classes.isEmpty()) {
+                            ClassModelTest classModel = classes.get(0);
+                            String classDetails = "Tên: " + classModel.getTen() + "\n" +
+                                    "Thời gian: " + classModel.getThoigian() + "\n" +
+                                    "Giá tiền: " + classModel.getGiatien() + "\n" +
+                                    "Điện thoại: " + classModel.getDienthoai() + "\n" +
+                                    "CLB: " + classModel.getClub() + "\n" +
+                                    "Giảng viên: " + classModel.getGiangvien();
+                            classInfo.setText(classDetails);
+                        } else {
+                            classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+                        }
+                    } else {
+                        classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ClassModelTest>> call, Throwable t) {
+                    classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+                }
+            });
+        } else {
+            classInfo.setText("Chưa đăng nhập");
+        }
+    }
+
 
     private void showPopupMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
@@ -132,8 +174,7 @@ public class ActivityDetailMember extends BaseActivity {
                 startActivity(viewIntent);
                 return true;
             } else if (itemId == R.id.menu_replace_gallery) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
+                requestStoragePermission();
                 return true;
             } else if (itemId == R.id.menu_replace_camera) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -156,6 +197,22 @@ public class ActivityDetailMember extends BaseActivity {
         startActivityForResult(cameraIntent, REQUEST_CODE_CAMERA);
     }
 
+    private void requestStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
+        } else {
+            openGallery();
+        }
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, REQUEST_CODE_GALLERY);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -164,6 +221,12 @@ public class ActivityDetailMember extends BaseActivity {
                 openCamera();
             } else {
                 Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == REQUEST_CODE_STORAGE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                Toast.makeText(this, "Storage permission is required", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -244,7 +307,6 @@ public class ActivityDetailMember extends BaseActivity {
                     editor.putString("avatar_url_" + memberId, avatarUrl);
                     editor.apply();
                 }
-
             }
         }
     }
@@ -255,4 +317,13 @@ public class ActivityDetailMember extends BaseActivity {
         String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
         return Uri.parse(path);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Fetch profile information mỗi khi Activity được hiển thị lại
+        fetchProfileInformation();
+        fetchClassInformation();
+    }
+
 }

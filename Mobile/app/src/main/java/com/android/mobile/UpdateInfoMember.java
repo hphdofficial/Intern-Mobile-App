@@ -150,6 +150,10 @@ public class UpdateInfoMember extends BaseActivity {
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                            // Chuyển hướng về ActivityDetailMember và load lại thông tin
+                            Intent intent = new Intent(UpdateInfoMember.this, ActivityDetailMember.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                             finish();
                         } else {
                             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();

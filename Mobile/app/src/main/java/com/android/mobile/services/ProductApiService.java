@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -29,7 +30,10 @@ public interface ProductApiService {
     Call<ProductModel[]> getByCategory(@Path("CategoryID") String CategoryID);
 
     @POST("api/reviews")
-    Call<Void> addReview(@Header("Authorization") String token, @Body ReviewModel review);
+    @Headers("Accept: application/json")
+    Call<ReviewModel> addReview(@Header("Authorization") String token, @Query("ProductID") int productId, @Body ReviewModel review);
+
+
 
     @GET("api/products/search/{name}")
     Call<ProductModel[]> search(@Path("name") String name);

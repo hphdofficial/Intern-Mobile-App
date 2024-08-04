@@ -67,6 +67,7 @@ public class ImageSelectActivity extends BaseActivity {
         startActivityForResult(intent, PICK_IMAGE);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -77,6 +78,7 @@ public class ImageSelectActivity extends BaseActivity {
             }
         }
     }
+
 
     private String getRealPathFromUri(Uri uri) {
         String[] projection = { MediaStore.Images.Media.DATA };
@@ -90,6 +92,7 @@ public class ImageSelectActivity extends BaseActivity {
         }
         return null;
     }
+
 
     private void uploadImage(Uri imageUri) {
         String token = sharedPreferences.getString("access_token", null);
@@ -113,10 +116,8 @@ public class ImageSelectActivity extends BaseActivity {
                             editor.putString("avatar_url_" + memberId, avatarUrl);
                             editor.apply();
 
-                            // Cập nhật giao diện với URL mới
                             Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(selectedImageView);
 
-                            // Truyền URL về ActivityDetailMember
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("avatarUrl", avatarUrl);
                             setResult(Activity.RESULT_OK, resultIntent);

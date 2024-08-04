@@ -74,8 +74,8 @@ public class NewsDetailActivity extends BaseActivity {
         // Load the image using Glide
         Glide.with(this)
                 .load(imageUrl)
-                .placeholder(R.drawable.ic_launcher_background) // Placeholder image
-                .error(R.drawable.ic_launcher_foreground) // Error image
+                .placeholder(R.drawable.ic_launcher_foreground) // Placeholder image
+                .error(R.drawable.newsvovietdao) // Error image
                 .into(newsImage);
     }
 }
