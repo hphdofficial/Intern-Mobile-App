@@ -33,7 +33,7 @@
             android:layout_below="@id/imageViewLogo"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="Login"
+            android:text="Đăng nhập"
             android:textColor="#000000"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -45,7 +45,7 @@
             android:layout_below="@id/title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:text="Login to continue using the app"
+            android:text="Đăng nhập để tiếp tục sử dụng ứng dụng"
             android:textColor="#808080"
             android:textSize="14sp" />
 
@@ -123,7 +123,7 @@
             android:layout_below="@id/password"
             android:layout_marginTop="8dp"
             android:layout_marginStart="20dp"
-            android:text="Remember me"
+            android:text="Lưu mật khẩu"
             android:textColor="#808080" />
 
         <TextView
@@ -134,7 +134,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="20dp"
             android:layout_alignParentEnd="true"
-            android:text="Forgot Password?"
+            android:text="Quên mật khẩu?"
             android:textColor="#808080"
             android:textStyle="bold" />
 
@@ -147,7 +147,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="@color/purple_500"
-            android:text="Login"
+            android:text="Đăng nhập"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
@@ -161,7 +161,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="@color/purple_500"
-            android:text="Register"
+            android:text="Đăng ký"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="16sp" />

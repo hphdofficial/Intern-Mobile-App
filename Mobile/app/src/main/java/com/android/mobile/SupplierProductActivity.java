@@ -1,5 +1,6 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -45,6 +46,12 @@ public class SupplierProductActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_supplier_product);
+
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Các sản phẩm của nhà cung cấp");
+        myContentE.apply();
 
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
