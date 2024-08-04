@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ReviewAdapter;
 import com.android.mobile.models.ReviewModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -26,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ReviewActivity extends AppCompatActivity implements FragmentWriteReviewActivity.OnReviewSubmittedListener {
+public class ReviewActivity extends BaseActivity implements FragmentWriteReviewActivity.OnReviewSubmittedListener {
 
     private RecyclerView reviewsRecyclerView;
     private ReviewAdapter reviewAdapter;

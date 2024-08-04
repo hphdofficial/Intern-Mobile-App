@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class ActivityReplaceCamera extends AppCompatActivity {
+import com.android.mobile.adapter.BaseActivity;
+
+public class ActivityReplaceCamera extends BaseActivity {
     private static final int REQUEST_PERMISSIONS = 200;
     private static final int CAPTURE_IMAGE = 201;
     private ImageView capturedImageView;

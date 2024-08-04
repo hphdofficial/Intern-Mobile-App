@@ -12,7 +12,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class SupplierInfoActivity extends AppCompatActivity {
+import com.android.mobile.adapter.BaseActivity;
+
+public class SupplierInfoActivity extends BaseActivity {
 
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "myContent";

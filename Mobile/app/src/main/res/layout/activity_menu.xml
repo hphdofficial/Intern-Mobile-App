@@ -236,7 +236,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="Đăng ký học">
+                    android:text="Lớp học">
 
                 </TextView>
             </LinearLayout>

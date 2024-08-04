@@ -10,7 +10,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class AboutActivity extends AppCompatActivity {
+import com.android.mobile.adapter.BaseActivity;
+
+public class AboutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

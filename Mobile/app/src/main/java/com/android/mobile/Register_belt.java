@@ -16,13 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.Adapter_Register_belt;
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Chapter_adapter;
 import com.android.mobile.models.Belt;
 import com.android.mobile.models.Chapter;
 
 import java.util.ArrayList;
 
-public class Register_belt extends AppCompatActivity {
+public class Register_belt extends BaseActivity {
 
 
     ArrayList<Belt> chapters = new ArrayList<>();

@@ -13,13 +13,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Checked_adapter;
 import com.android.mobile.models.Checkin;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class activity_member_checkin extends AppCompatActivity {
+public class activity_member_checkin extends BaseActivity {
     private int count = 0;
     Date today = new Date();
     Checkin checkin = new Checkin(true, today);

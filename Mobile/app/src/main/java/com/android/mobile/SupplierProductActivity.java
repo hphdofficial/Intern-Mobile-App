@@ -16,13 +16,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ItemSupplierProductAdapter;
 import com.android.mobile.models.Item;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 
-public class SupplierProductActivity extends AppCompatActivity {
+public class SupplierProductActivity extends BaseActivity {
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "myContent";
     private static final String KEY_TITLE = "title";

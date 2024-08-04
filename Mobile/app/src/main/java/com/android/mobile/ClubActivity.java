@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.models.Club;
 import com.android.mobile.network.ApiServiceProvider;
@@ -32,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ClubActivity extends AppCompatActivity {
+public class ClubActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private ClubAdapter adapter;
     private List<Club> clubList = new ArrayList<>();

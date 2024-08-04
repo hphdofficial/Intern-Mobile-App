@@ -167,6 +167,9 @@ public class sub_menu extends Fragment {
                 if(id == R.id.btn_logout){
                     startActivity(new Intent(getContext(), StartActivity.class));
                 }
+                if(id == R.id.btn_register_up){
+                    startActivity(new Intent(getContext(), Register_belt.class));
+                }
 
                 if(id == R.id.btn_language){
                 }
@@ -238,7 +241,6 @@ public class sub_menu extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }*/
-
     private void loadUserData() {
         String token = sharedPreferences.getString("access_token", null);
         int memberId = sharedPreferences.getInt("member_id", -1);

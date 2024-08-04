@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.VerifyOtpModel;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -20,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EnterOtpActivity extends AppCompatActivity {
+public class EnterOtpActivity extends BaseActivity {
 
     private EditText inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
     private String email;

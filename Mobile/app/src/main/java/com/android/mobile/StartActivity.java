@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.LoginModel;
 import com.android.mobile.models.TokenModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -24,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends BaseActivity {
 
     private Button btn_login;
     private Button btn_register;

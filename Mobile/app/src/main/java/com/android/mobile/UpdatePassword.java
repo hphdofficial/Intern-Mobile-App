@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.models.UpdatePasswordModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -21,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UpdatePassword extends AppCompatActivity {
+public class UpdatePassword extends BaseActivity {
 
     private EditText editTextEmail, editTextCurrentPassword, editTextPassword, editTextPasswordConfirmation;
     private Button buttonUpdatePassword;

@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class activity_item_chapter extends AppCompatActivity {
+import com.android.mobile.adapter.BaseActivity;
+
+public class activity_item_chapter extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

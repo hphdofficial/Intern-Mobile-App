@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.SupplierModelOption;
 import com.android.mobile.network.ApiServiceProvider;
@@ -27,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_item_detail extends AppCompatActivity {
+public class activity_item_detail extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

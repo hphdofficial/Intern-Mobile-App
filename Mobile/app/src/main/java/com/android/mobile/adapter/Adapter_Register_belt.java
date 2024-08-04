@@ -56,7 +56,6 @@ public class Adapter_Register_belt extends RecyclerView.Adapter<Adapter_Register
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, Belt_Payment.class);
-
                 context.startActivity(intent);
             }
         });

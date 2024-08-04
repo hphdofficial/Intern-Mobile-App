@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.adapter.HistoryOrderAdapter;
 import com.android.mobile.models.Club;
@@ -32,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HistoryOrderActivity extends AppCompatActivity {
+public class HistoryOrderActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private HistoryOrderAdapter adapter;
     private List<OrderModel> orderList = new ArrayList<>();

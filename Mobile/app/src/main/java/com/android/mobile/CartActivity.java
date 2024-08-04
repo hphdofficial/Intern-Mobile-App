@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.CartAdapter;
 import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.models.CartItem;
@@ -39,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private CartAdapter adapter;
     private List<Product> productList = new ArrayList<>();

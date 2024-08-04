@@ -6,9 +6,10 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.squareup.picasso.Picasso;
 
-public class ViewImageActivity extends AppCompatActivity {
+public class ViewImageActivity extends BaseActivity {
 
     private ImageView imageView;
 

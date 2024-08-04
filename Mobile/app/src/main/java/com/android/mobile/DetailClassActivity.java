@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.Class;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ClassApiService;
@@ -24,13 +25,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailClassActivity extends AppCompatActivity {
+public class DetailClassActivity extends BaseActivity {
     private TextView txtNameClass;
     private TextView txtTeacherClass;
     private TextView txtTimeLearn;
     private TextView txtAddressClass;
     private TextView txtInfoClass;
     private Button btnRegisterClass;
+    private String name = "";
+    private String nameClass = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,15 +77,19 @@ public class DetailClassActivity extends AppCompatActivity {
                 Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("id_class", finalIdClass);
+
+                intent.putExtra("name",name);
+                intent.putExtra("nameClass",nameClass);
+                intent.putExtra("idClass",finalIdClass);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-//                String token = sharedPreferences.getString("access_token", null);
+                String token = sharedPreferences.getString("access_token", null);
 
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjQ1MDczOSwiZXhwIjoxNzIyNTM3MTM5LCJuYmYiOjE3MjI0NTA3MzksImp0aSI6ImR0NnhJem9WRXgyOG96UG8iLCJzdWIiOiIyNTciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNTcsInJvbGUiOjB9.Thyr4ure0t6UQiGvKh5N4DrQVJiD51m6Ah8kWbHZQWE";
+      //  String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjQ1MDczOSwiZXhwIjoxNzIyNTM3MTM5LCJuYmYiOjE3MjI0NTA3MzksImp0aSI6ImR0NnhJem9WRXgyOG96UG8iLCJzdWIiOiIyNTciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNTcsInJvbGUiOjB9.Thyr4ure0t6UQiGvKh5N4DrQVJiD51m6Ah8kWbHZQWE";
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<Class> call = service.getDetailClassofClub("Bearer" + token, Integer.parseInt(idClass));
@@ -92,6 +99,8 @@ public class DetailClassActivity extends AppCompatActivity {
             public void onResponse(Call<Class> call, Response<Class> response) {
                 if (response.isSuccessful()) {
                     Class dataClass = response.body();
+                    nameClass = dataClass.getTen();
+                    name = dataClass.getGiangvien();
                     txtNameClass.setText(dataClass.getTen());
                     txtTeacherClass.setText(dataClass.getGiangvien());
                     txtAddressClass.setText(dataClass.getClub());

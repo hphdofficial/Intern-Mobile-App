@@ -12,11 +12,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ShippingOrderAdapter;
 
 import java.util.ArrayList;
 
-public class ShippingOrderActivity extends AppCompatActivity {
+public class ShippingOrderActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

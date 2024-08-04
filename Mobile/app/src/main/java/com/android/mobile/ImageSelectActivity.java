@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
@@ -28,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ImageSelectActivity extends AppCompatActivity {
+public class ImageSelectActivity extends BaseActivity {
     private static final int PICK_IMAGE = 101;
     private ImageView selectedImageView;
     private Uri selectedImageUri;

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.RegisterModel;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -24,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
 
     private EditText editTextUsername, editTextPassword, editTextEmail, editTextTen, editTextChieucao, editTextCannang, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotenGiamho, editTextDienthoaiGiamho;
     private RadioGroup radioGroupGender;

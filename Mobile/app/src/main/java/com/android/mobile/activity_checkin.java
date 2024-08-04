@@ -16,12 +16,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Checkin_adapter;
 import com.android.mobile.models.Member;
 
 import java.util.ArrayList;
 
-public class activity_checkin extends AppCompatActivity {
+public class activity_checkin extends BaseActivity {
     Member member1 = new Member("Lam cấp", "000", "Thuy");
     Member member2 = new Member("Lam cấp", "001", "Thuy 1");
     Member member3 = new Member("Lam cấp", "002", "Thuy 2");

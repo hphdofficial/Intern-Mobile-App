@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Checkin_adapter;
 import com.android.mobile.adapter.Item_adapter;
 import com.android.mobile.adapter.OptionCheckBoxAdapter;
@@ -44,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_items extends AppCompatActivity {
+public class activity_items extends BaseActivity {
     private SearchView searchView;
     private EditText editMinPrice;
     private EditText editMaxPrice;

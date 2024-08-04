@@ -26,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
@@ -39,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MenuActivity extends AppCompatActivity {
+public class MenuActivity extends BaseActivity {
 
     private int placeholderResourceId = R.drawable.photo3x4;
 
@@ -234,7 +235,9 @@ public class MenuActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RegisterClass.class));
+
+
+               // startActivity(new Intent(getApplicationContext(), RegisterClass.class));
             }
         });
         btn_new.setOnClickListener(new View.OnClickListener() {
@@ -335,7 +338,8 @@ public class MenuActivity extends AppCompatActivity {
                             Calendar calendar = Calendar.getInstance();
                             int year = calendar.get(Calendar.YEAR);
                             String date[] = profile.getNgaysinh().split("-");
-
+                            myContentE.putString("birthday",profile.getNgaysinh());
+                            myContentE.putString("phone",profile.getDienthoai());
                             myContentE.putInt("age", year-Integer.parseInt(date[0]));
 
 

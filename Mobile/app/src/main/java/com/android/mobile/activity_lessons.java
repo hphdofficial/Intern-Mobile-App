@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.lesson_adapter;
 import com.android.mobile.models.Class;
 import com.android.mobile.models.Lesson;
@@ -25,7 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_lessons extends AppCompatActivity {
+public class activity_lessons extends BaseActivity {
 
     Lesson lesson1 = new Lesson("Tự vệ", "Võ sinh", "Đai màu võ phục Vovinam", "3 tháng");
     Lesson lesson2 = new Lesson("Nhập môn", "Võ sinh", "Đai màu võ phục Vovinam", "3 tháng");

@@ -10,7 +10,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class Belt_Payment extends AppCompatActivity {
+import com.android.mobile.adapter.BaseActivity;
+
+public class Belt_Payment extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
