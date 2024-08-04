@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     Context context;
     private List<ProductModel> productList;
     private CartActivity cartActivity;
+    private Boolean isViewMode = false;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtNameProduct;
@@ -72,6 +74,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         this.context = context;
         this.productList = data;
         this.cartActivity = cartActivity;
+    }
+
+    public CartAdapter(Context context, List<ProductModel> data, Boolean viewMode) {
+        this.context = context;
+        this.productList = data;
+        this.isViewMode = viewMode;
     }
 
     @Override
@@ -117,6 +125,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 }
             }
         });
+        if (isViewMode) {
+            holder.btnRemoveCart.setVisibility(View.GONE);
+            holder.btnIncreaseQuantity.setVisibility(View.GONE);
+            holder.btnDecreaseQuantity.setVisibility(View.GONE);
+            holder.txtQuantityProduct.setText("x" + productList.get(position).getQuantity());
+            int widthInDp = 150;
+            int widthInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, widthInDp, holder.itemView.getResources().getDisplayMetrics());
+            ViewGroup.LayoutParams layoutParams = holder.txtNameProduct.getLayoutParams();
+            layoutParams.width = widthInPx;
+            holder.txtNameProduct.setLayoutParams(layoutParams);
+        }
     }
 
     @Override
@@ -130,13 +149,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void removeProduct(int productId){
+    public void removeProduct(int productId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-//        String memberId = sharedPreferences.getString("member_id", null);
-        int memberId = 257;
+        String memberId = sharedPreferences.getString("member_id", null);
 
         CartApiService service = ApiServiceProvider.getCartApiService();
-        Call<JsonObject> call = service.removeProduct(new CartItem(memberId, productId));
+        Call<JsonObject> call = service.removeProduct(new CartItem(Integer.parseInt(memberId), productId));
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -155,7 +173,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         });
     }
 
-    public void increaseQuantity(int productId){
+    public void increaseQuantity(int productId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
 //        String memberId = sharedPreferences.getString("member_id", null);
         int memberId = 257;
@@ -180,13 +198,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         });
     }
 
-    public void decreaseQuantity(int productId){
+    public void decreaseQuantity(int productId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-//        String memberId = sharedPreferences.getString("member_id", null);
-        int memberId = 257;
+        String memberId = sharedPreferences.getString("member_id", null);
 
         CartApiService service = ApiServiceProvider.getCartApiService();
-        Call<JsonObject> call = service.decreaseQuantity(new CartItem(memberId, productId));
+        Call<JsonObject> call = service.decreaseQuantity(new CartItem(Integer.parseInt(memberId), productId));
 
         call.enqueue(new Callback<JsonObject>() {
             @Override

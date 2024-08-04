@@ -2,6 +2,8 @@ package com.android.mobile.services;
 
 import com.android.mobile.models.Class;
 import com.android.mobile.models.OrderModel;
+import com.android.mobile.models.Product;
+import com.android.mobile.models.ProductModel;
 
 import java.util.List;
 
@@ -14,5 +16,10 @@ public interface OrderApiService {
     @GET("/api/hoadon")
     Call<List<OrderModel>> getHistoryOrder(
             @Header("Authorization") String token
+    );
+
+    @GET("/api/chitiethoadon")
+    Call<List<ProductModel>> getListProductOrder(
+            @Query("id_order") int orderId
     );
 }

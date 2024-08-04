@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.mobile.adapter.CartAdapter;
 import com.android.mobile.models.CartItem;
+import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CartApiService;
@@ -96,11 +97,10 @@ public class CartActivity extends AppCompatActivity {
     public void loadProductCart(){
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
-//        String memberId = sharedPreferences.getString("member_id", null);
+        String memberId = sharedPreferences.getString("member_id", null);
 
-        int memberId = 257;
         CartApiService service = ApiServiceProvider.getCartApiService();
-        Call<JsonObject> call = service.getCart("Bearer" + token, memberId);
+        Call<JsonObject> call = service.getCart("Bearer" + token, Integer.parseInt(memberId));
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -134,7 +134,7 @@ public class CartActivity extends AppCompatActivity {
                     txtSumQuantity = findViewById(R.id.txt_sum_quantity);
                     txtSumPrice = findViewById(R.id.txt_sum_price);
                     txtSumQuantity.setText("Số lượng: " + products.size() + " sản phẩm");
-                    updateTotalPrice(memberId);
+                    updateTotalPrice(Integer.parseInt(memberId));
 
                     adapter.setData(products);
                 } else {

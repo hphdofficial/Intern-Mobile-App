@@ -81,8 +81,7 @@ public class HistoryOrderActivity extends AppCompatActivity {
 
     private void fetchOrderHistory() {
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-//        String token = sharedPreferences.getString("access_token", null);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjY3NjE5NywiZXhwIjoxNzIyNzYyNTk3LCJuYmYiOjE3MjI2NzYxOTcsImp0aSI6IjB0eGNnTVR5elc4TmhwMVEiLCJzdWIiOiIyNDciLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNDcsInJvbGUiOjB9.i51diIVbGiarc3FbApPfqx1W4knyQqpa22nszO4pCPw";
+        String token = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<List<OrderModel>> call = service.getHistoryOrder("Bearer " + token);

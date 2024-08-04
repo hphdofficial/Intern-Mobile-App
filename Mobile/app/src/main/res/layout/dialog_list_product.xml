@@ -16,14 +16,16 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="#2196F3"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_products"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="0dp"
+        android:paddingBottom="10dp"
         android:background="#E6E6E6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

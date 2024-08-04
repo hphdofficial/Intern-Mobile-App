@@ -3,7 +3,7 @@ package com.android.mobile.models;
 import java.time.LocalDateTime;
 
 public class OrderModel {
-    private int id_cart;
+    private int id;
     private int member_id;
     private String txn_ref;
     private String amount;
@@ -19,12 +19,13 @@ public class OrderModel {
     public OrderModel() {
     }
 
-    public int getId_cart() {
-        return id_cart;
+
+    public int getId() {
+        return id;
     }
 
-    public void setId_cart(int id_cart) {
-        this.id_cart = id_cart;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getMember_id() {

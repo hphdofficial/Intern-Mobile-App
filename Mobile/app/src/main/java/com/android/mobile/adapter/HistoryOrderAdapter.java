@@ -1,7 +1,9 @@
 package com.android.mobile.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,13 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.HistoryOrderActivity;
 import com.android.mobile.R;
 import com.android.mobile.models.OrderModel;
+import com.android.mobile.models.Product;
+import com.android.mobile.models.ProductModel;
+import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.OrderApiService;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -23,6 +30,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapter.ViewHolder> {
     Context context;
@@ -59,7 +70,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
     }
 
     @Override
-    public void onBindViewHolder(HistoryOrderAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(HistoryOrderAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.txtTransactionCode.setText("Mã giao dịch " + orderList.get(position).getTransaction_no());
         holder.txtOrderCode.setText("Đơn hàng " + orderList.get(position).getTxn_ref());
         holder.txtBank.setText("Loại thanh toán: " + orderList.get(position).getBank_code());
@@ -70,7 +81,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         holder.btnViewProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewListProduct();
+                viewListProduct(orderList.get(position).getId());
             }
         });
     }
@@ -103,7 +114,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         return formattedDate;
     }
 
-    private void viewListProduct() {
+    private void viewListProduct(int orderId) {
         Dialog productDialog = new Dialog(context);
         productDialog.setContentView(R.layout.dialog_list_product);
 
@@ -116,9 +127,31 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         });
         productDialog.show();
 
-        HistoryOrderAdapter adapter = new HistoryOrderAdapter(context, orderList);
+        List<ProductModel> productList = new ArrayList<>();
+        CartAdapter adapter = new CartAdapter(context, productList, true);
         RecyclerView recyclerView = productDialog.findViewById(R.id.recycler_view_products);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
+
+        OrderApiService service = ApiServiceProvider.getOrderApiService();
+        Call<List<ProductModel>> call = service.getListProductOrder(orderId);
+
+        call.enqueue(new Callback<List<ProductModel>>() {
+            @Override
+            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                if (response.isSuccessful()) {
+                    List<ProductModel> products = response.body();
+                    adapter.setData(products);
+                    Toast.makeText(context, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    System.err.println("Response error: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }
