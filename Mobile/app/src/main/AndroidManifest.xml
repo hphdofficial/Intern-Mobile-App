@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -28,6 +27,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
+        <activity
+            android:name=".activity_teacher_checkin"
+            android:exported="true" />
         <activity
             android:name=".FragmentWriteReviewActivity"
             android:exported="false" />

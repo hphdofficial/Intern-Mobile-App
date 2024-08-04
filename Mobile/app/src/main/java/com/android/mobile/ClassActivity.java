@@ -1,6 +1,5 @@
 package com.android.mobile;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -35,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ClassActivity extends BaseActivity {
+public class ClassActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ClassAdapter adapter;
     private List<Class> classList = new ArrayList<>();

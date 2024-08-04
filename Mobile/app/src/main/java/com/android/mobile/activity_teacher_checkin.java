@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,21 +17,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.mobile.adapter.MyClassAdapter;
-import com.android.mobile.models.Class;
-import com.android.mobile.models.ClassModel;
-import com.android.mobile.models.Club;
-import com.android.mobile.models.ProductModel;
+import com.android.mobile.adapter.Checkin_adapter;
+import com.android.mobile.models.AttendanceTeacher;
+import com.android.mobile.models.CheckinMemberModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CheckinApiService;
-import com.android.mobile.services.ProductApiService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -39,27 +36,30 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyClassActivity extends AppCompatActivity {
+public class activity_teacher_checkin extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_my_class);
-
-        Intent intent = getIntent();
-        String title = intent.getStringExtra("title");
-
+        setContentView(R.layout.activity_teacher_checkin);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = currentDate.format(formatter);
+
+        Intent intent = getIntent();
+        int idClass = intent.getIntExtra("id", -1);
+
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Những lớp đang dạy");
+        myContentE.putString("title", "Giao diện lịch sử điểm danh");
         myContentE.apply();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -72,34 +72,26 @@ public class MyClassActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
-        FetchClassesForTeacher();
-    }
-
-    private void FetchClassesForTeacher(){
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
+
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-        apiService.getTeacherClasses("Bearer "+token).enqueue(new Callback<JsonObject>() {
+        apiService.teacherViewCheckin("Bearer "+token, "2023-11-01", formattedDate).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.isSuccessful()){
                     JsonObject jsonObject = response.body();
                     Gson gson = new Gson();
-                    Type classListType = new TypeToken<List<ClassModel>>() {}.getType();
-                    List<ClassModel> classes = gson.fromJson(jsonObject.get("data"), classListType);
-                    for (ClassModel classSample : classes){
-                        Log.e("PostData", "Success: " + classSample.getTen());
-                    }
-                    MyClassAdapter classAdapter = new MyClassAdapter(getApplicationContext(), classes);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_class);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    recyclerView.setAdapter(classAdapter);
+
+                    JsonObject dataObject = jsonObject.getAsJsonObject("data");
+                    Type checkinMemberListType = new TypeToken<Map<String, List<AttendanceTeacher>>>() {}.getType();
+
+                    Map<String, List<AttendanceTeacher>> attendanceMap = gson.fromJson(dataObject.get("attendance"), checkinMemberListType);
+
+                    displayData(dataObject, attendanceMap);
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
-                    Toast.makeText(MyClassActivity.this, "Đang chuyển qua lớp học cho học viên", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), activity_member_checkin.class));
-
                 }
             }
 
@@ -109,5 +101,25 @@ public class MyClassActivity extends AppCompatActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+    }
+
+    private void displayData(JsonObject dataObject, Map<String, List<AttendanceTeacher>> attendanceMap) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Class Name: ").append(dataObject.get("class_name").getAsString()).append("\n");
+        sb.append("Begin Date: ").append(dataObject.get("begin_date").getAsString()).append("\n\n");
+
+        for (Map.Entry<String, List<AttendanceTeacher>> entry : attendanceMap.entrySet()) {
+            String date = entry.getKey();
+            List<AttendanceTeacher> attendanceList = entry.getValue();
+
+            sb.append("Date: ").append(date).append("\n");
+            for (AttendanceTeacher attendance : attendanceList) {
+                sb.append("Member ID: ").append(attendance.getMember_id()).append("\n");
+                sb.append("Member Name: ").append(attendance.getMember_name()).append("\n");
+                sb.append("Day of Week: ").append(attendance.getDay_of_week()).append("\n");
+                sb.append("In: ").append(attendance.getIn()).append("\n");
+                sb.append("Out: ").append(attendance.getOut()).append("\n\n");
+            }
+        }
     }
 }
