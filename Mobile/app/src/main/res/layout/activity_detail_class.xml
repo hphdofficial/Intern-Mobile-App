@@ -127,16 +127,44 @@
         </TableLayout>
 
         <Button
-            android:id="@+id/btn_registerclass"
+            android:id="@+id/btn_register_class"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_marginBottom="32dp"
-            android:backgroundTint="#14C814"
-            android:text="Đăng ký"
+            android:backgroundTint="#03A9F4"
+            android:text="Đăng ký lớp học"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_leave_class"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="#FF9800"
+            android:text="Rời lớp học"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_direct_class"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="#4CAF50"
+            android:text="Đến lớp học đã đăng ký"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

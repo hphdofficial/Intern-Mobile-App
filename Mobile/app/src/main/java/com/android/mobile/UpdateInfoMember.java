@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.models.UpdateInfoModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -30,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UpdateInfoMember extends AppCompatActivity {
+public class UpdateInfoMember extends BaseActivity {
 
     private EditText editTextUsername, editTextEmail, editTextTen, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotengiamho, editTextDienthoaigiamho, editTextChieucao, editTextCannang;
     private RadioGroup radioGroupGioitinh;
@@ -149,6 +150,10 @@ public class UpdateInfoMember extends AppCompatActivity {
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                            // Chuyển hướng về ActivityDetailMember và load lại thông tin
+                            Intent intent = new Intent(UpdateInfoMember.this, ActivityDetailMember.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                             finish();
                         } else {
                             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();

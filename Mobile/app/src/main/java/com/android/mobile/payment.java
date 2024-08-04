@@ -2,13 +2,17 @@ package com.android.mobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -19,12 +23,39 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class payment extends AppCompatActivity {
-    private FrameLayout frameLayout;
+import com.android.mobile.adapter.BaseActivity;
+import com.android.mobile.adapter.ProductAdapter;
+import com.android.mobile.models.CartModel;
+import com.android.mobile.models.CartResponse;
+import com.android.mobile.models.Product;
+import com.android.mobile.models.ProductModel;
+import com.android.mobile.network.APIServicePayment;
+import com.android.mobile.services.PaymentAPI;
+
+import java.io.IOException;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class payment extends BaseActivity {
+/*    private FrameLayout frameLayout;
     private ImageView imageView;
-    private View borderView;
+    private View borderView;*/
     private Button payment;
     private ImageView sub_menu;
+
+    private TextView textViewFullName;
+    private TextView textViewPhoneNumber;
+    private TextView textViewDOB;
+    private TextView textViewFeeAmount;
+    private TextView textViewHealthStatus;
+    private TextView textViewClass;
+    private TextView textViewInstructorName;
+
+    private String link = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +67,109 @@ public class payment extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        frameLayout = findViewById(R.id.frameLayout);
+
+/*        frameLayout = findViewById(R.id.frameLayout);
         imageView = findViewById(R.id.payment_momo);
-        borderView = findViewById(R.id.borderView);
+        borderView = findViewById(R.id.borderView);*/
         payment = findViewById(R.id.payment);
-        onImageViewClicked(imageView);
+        textViewFullName = findViewById(R.id.textViewFullName);
+        textViewPhoneNumber = findViewById(R.id.textViewPhoneNumber);
+        textViewDOB = findViewById(R.id.textViewDOB);
+        textViewFeeAmount = findViewById(R.id.textViewFeeAmount);
+        textViewHealthStatus = findViewById(R.id.textViewHealthStatus);
+        textViewClass = findViewById(R.id.textViewClass);
+        textViewInstructorName = findViewById(R.id.textViewInstructorName);
+
+
+        SharedPreferences infor = getSharedPreferences("infor", Context.MODE_PRIVATE);
+
+        textViewFullName.setText(infor.getString("name","null"));
+        textViewPhoneNumber.setText(infor.getString("phone","null"));
+        textViewDOB.setText(infor.getString("birthday","null"));
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        String total = "";
+
+        if (extras != null) {
+            // Lấy dữ liệu từ Bundle
+            String className = extras.getString("className");
+            String teacherName = extras.getString("teacherName");
+            Double money = extras.getDouble("money");
+            String note =  extras.getString("note");
+
+            textViewHealthStatus.setText(note);
+            textViewClass.setText("Lớp học: \n"+className);
+            textViewInstructorName.setText(teacherName);
+            textViewFeeAmount.setText(money.toString()+" VND");
+            total = money.toString();
+        }
+
+/*        onImageViewClicked(imageView);*/
         payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),PaymentQR.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+                SharedPreferences sharedPreferences;
+                sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("access_token", null);
+                Double money = 0.0;
+                String id_class = null;
+                if (extras != null) {
+
+
+                   money = extras.getDouble("money");
+                   id_class = extras.getString("idClass");
+
+                }
+
+
+
+
+                PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+                Call<ResponseBody> call = apiService.RegisterClass("Bearer" + token,id_class + "",money);
+
+
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if(response.isSuccessful()){
+                            assert response.body() != null;
+
+                            try {
+                               link = response.body().string();
+
+                                if(link != null){
+
+
+                                    String url = link;
+
+                                    // Tạo một Intent với action ACTION_VIEW và URL dưới dạng Uri
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse(url));
+
+                                    // Bắt đầu Activity với Intent
+                                    startActivity(intent);
+                                }
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+
+
+                        }else {
+                            Toast.makeText(getApplicationContext(),"Loi",Toast.LENGTH_SHORT).show();
+                            Log.e("errorTo",response.message());
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(),"fails",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         });
 
@@ -60,7 +184,7 @@ public class payment extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
     }
-    public void onImageViewClicked(ImageView view) {
+/*    public void onImageViewClicked(ImageView view) {
         // Kiểm tra nếu imageView đã có border thì loại bỏ, ngược lại thêm border
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +196,7 @@ public class payment extends AppCompatActivity {
                 }
             }
         });
-    }
+    }*/
 /*    public void GetEventFrament(){
         titleFragment myFragment = (titleFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         sub_menu = myFragment.getView().findViewById(R.id.img_menu);

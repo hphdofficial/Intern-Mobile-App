@@ -20,9 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.android.mobile.adapter.BaseActivity;
+
 import java.io.IOException;
 
-public class profiletest extends AppCompatActivity {
+public class profiletest extends BaseActivity {
 
     private static final int REQUEST_CODE_GALLERY = 100;
     private static final int REQUEST_CODE_CAMERA = 101;

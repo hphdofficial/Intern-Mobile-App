@@ -4,22 +4,26 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
+import com.android.mobile.models.CheckinMemberModel;
 import com.android.mobile.models.Member;
+import com.android.mobile.models.OptionCategory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Checkin_adapter extends RecyclerView.Adapter<Checkin_adapter.ViewHolder>{
     Context context;
 
-    ArrayList<Member> memberList = new ArrayList<>();
+    List<CheckinMemberModel> memberList = new ArrayList<>();
 
-    public Checkin_adapter(Context context, ArrayList<Member> memberList) {
+    public Checkin_adapter(Context context, List<CheckinMemberModel> memberList) {
         this.context = context;
         this.memberList = memberList;
     }
@@ -32,10 +36,15 @@ public class Checkin_adapter extends RecyclerView.Adapter<Checkin_adapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        CheckinMemberModel checkinMemberModel = memberList.get(i);
         String txtMemberName = memberList.get(i).getTen();
         viewHolder.txtMemberName.setText(txtMemberName);
-        String txtMemberID = memberList.get(i).getMaHocVien();
-        viewHolder.txtMemberID.setText(txtMemberID);
+        int txtMemberID = memberList.get(i).getId();
+        viewHolder.txtMemberID.setText(txtMemberID+"");
+
+        viewHolder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            checkinMemberModel.setChecked(isChecked);
+        });
     }
 
     @Override
@@ -43,14 +52,20 @@ public class Checkin_adapter extends RecyclerView.Adapter<Checkin_adapter.ViewHo
         return memberList.size();
     }
 
+    public List<CheckinMemberModel> getCheckinList() {
+        return memberList;
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtMemberName;
         TextView txtMemberID;
+        CheckBox checkBox;
 
         ViewHolder(View itemView) {
             super(itemView);
             txtMemberName = itemView.findViewById(R.id.txtMemberName);
             txtMemberID = itemView.findViewById(R.id.txtMemberID);
+            checkBox = itemView.findViewById(R.id.checkBox);
         }
     }
 }

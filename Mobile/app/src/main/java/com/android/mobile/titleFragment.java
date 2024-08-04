@@ -69,7 +69,9 @@ public class titleFragment extends Fragment {
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                 sub_menu fragmentB = (sub_menu) fragmentManager.findFragmentByTag("FRAGMENT_B_TAG");
                 if (fragmentB != null) {
-                    fragmentTransaction.show(fragmentB);
+                    fragmentTransaction.remove(fragmentB);
+                    fragmentB = new sub_menu();
+                    fragmentTransaction.add(R.id.fragment_container, fragmentB, "FRAGMENT_B_TAG");
                 } else {
                     fragmentB = new sub_menu();
                     fragmentTransaction.add(R.id.fragment_container, fragmentB, "FRAGMENT_B_TAG");

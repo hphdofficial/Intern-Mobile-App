@@ -3,6 +3,7 @@ package com.android.mobile.models;
 public class Club {
     private String ten, mota, diachi, dienthoai, nguoiquanly;
     private String id_club, name, address;
+    private String id;
 
     public Club() {
     }
@@ -73,5 +74,13 @@ public class Club {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

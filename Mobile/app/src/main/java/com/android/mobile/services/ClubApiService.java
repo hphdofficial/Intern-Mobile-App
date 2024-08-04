@@ -1,6 +1,8 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.CityModel;
 import com.android.mobile.models.Club;
+import com.android.mobile.models.CountryModel;
 import com.android.mobile.models.ReponseModel;
 import com.google.gson.JsonObject;
 
@@ -16,6 +18,14 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ClubApiService {
+    @GET("/api/countries")
+    Call<List<CountryModel>> getListCountry();
+
+    @GET("/api/cities/country/{id_country}")
+    Call<List<CityModel>> getListCity(
+            @Path("id_country") int countryId
+    );
+
     @GET("/api/map1")
     Call<JsonObject> getListClubMap1(
             @Query("id_country") int countryId
@@ -31,7 +41,7 @@ public interface ClubApiService {
     Call<JsonObject> getListClubMap3(
             @Query("id_country") int countryId,
             @Query("id_city") int cityId,
-            @Query("address") int address
+            @Query("address") String address
     );
 
     @GET("/api/clubs/getdetail")
@@ -41,5 +51,15 @@ public interface ClubApiService {
     Call<ReponseModel> joinClub(
             @Header("Authorization") String token,
             @Body Club club
+    );
+
+    @PUT("/api/clubs/outclub")
+    Call<ReponseModel> leaveClub(
+            @Header("Authorization") String token
+    );
+
+    @GET("/api/auth/clubs/getdetail/member")
+    Call<Club> getDetailClubMember(
+            @Header("Authorization") String token
     );
 }

@@ -19,7 +19,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class ActivityDetailTeacher extends AppCompatActivity {
+import com.android.mobile.adapter.BaseActivity;
+
+public class ActivityDetailTeacher extends BaseActivity {
 
     private static final int REQUEST_CODE_GALLERY = 100;
     private static final int REQUEST_CODE_CAMERA = 101;

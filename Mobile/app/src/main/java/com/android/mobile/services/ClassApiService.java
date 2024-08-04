@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
@@ -23,5 +24,16 @@ public interface ClassApiService {
     Call<Class> getDetailClassofClub(
             @Header("Authorization") String token,
             @Query("id_class") int classId
+    );
+
+    @GET("/api/user/classes")
+    Call<Class> getDetailClassMember(
+            @Header("Authorization") String token
+    );
+
+    @POST("/api/roi-khoi-lop-hoc")
+    Call<ReponseModel> leaveClass(
+            @Header("Authorization") String token,
+            @Body Class classs
     );
 }

@@ -1,6 +1,9 @@
 package com.android.mobile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.adapter.HistoryOrderAdapter;
 import com.android.mobile.models.Club;
@@ -32,10 +36,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HistoryOrderActivity extends AppCompatActivity {
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.button.MaterialButton;
+
+public class HistoryOrderActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private HistoryOrderAdapter adapter;
     private List<OrderModel> orderList = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +57,14 @@ public class HistoryOrderActivity extends AppCompatActivity {
             return insets;
         });
 
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Lịch sử mua hàng");
+        myContentE.apply();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        titleFragment newFragment = new titleFragment();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-        fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
 
         adapter = new HistoryOrderAdapter(this, orderList);
@@ -61,16 +72,29 @@ public class HistoryOrderActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            fetchOrderHistory();
+        });
+
+        fetchOrderHistory();
+    }
+
+    private void fetchOrderHistory() {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        String token = sharedPreferences.getString("access_token", null);
+
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderModel>> call = service.getHistoryOrder(101);
+        Call<List<OrderModel>> call = service.getHistoryOrder("Bearer " + token);
 
         call.enqueue(new Callback<List<OrderModel>>() {
             @Override
             public void onResponse(Call<List<OrderModel>> call, Response<List<OrderModel>> response) {
+                swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     List<OrderModel> orders = response.body();
                     adapter.setData(orders);
-                    Toast.makeText(HistoryOrderActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HistoryOrderActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }
@@ -78,6 +102,7 @@ public class HistoryOrderActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<OrderModel>> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
                 t.printStackTrace();
             }
         });

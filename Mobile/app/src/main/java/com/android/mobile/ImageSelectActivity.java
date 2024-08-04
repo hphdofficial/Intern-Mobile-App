@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
@@ -28,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ImageSelectActivity extends AppCompatActivity {
+public class ImageSelectActivity extends BaseActivity {
     private static final int PICK_IMAGE = 101;
     private ImageView selectedImageView;
     private Uri selectedImageUri;
@@ -66,6 +67,7 @@ public class ImageSelectActivity extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -76,6 +78,7 @@ public class ImageSelectActivity extends AppCompatActivity {
             }
         }
     }
+
 
     private String getRealPathFromUri(Uri uri) {
         String[] projection = { MediaStore.Images.Media.DATA };
@@ -89,6 +92,7 @@ public class ImageSelectActivity extends AppCompatActivity {
         }
         return null;
     }
+
 
     private void uploadImage(Uri imageUri) {
         String token = sharedPreferences.getString("access_token", null);
@@ -112,10 +116,8 @@ public class ImageSelectActivity extends AppCompatActivity {
                             editor.putString("avatar_url_" + memberId, avatarUrl);
                             editor.apply();
 
-                            // Cập nhật giao diện với URL mới
                             Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(selectedImageView);
 
-                            // Truyền URL về ActivityDetailMember
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("avatarUrl", avatarUrl);
                             setResult(Activity.RESULT_OK, resultIntent);

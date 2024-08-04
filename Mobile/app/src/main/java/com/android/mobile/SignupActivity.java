@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.RegisterModel;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -24,9 +25,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
 
-    private EditText editTextUsername, editTextPassword, editTextEmail, editTextTen, editTextChieucao, editTextCannang, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotenGiamho, editTextDienthoaiGiamho;
+    private EditText editTextUsername, editTextPassword, editTextEmail, editTextTen, editTextChieucao, editTextCannang, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotenGiamho, editTextDienthoaiGiamho, edit_text_confirm_password;
     private RadioGroup radioGroupGender;
     private Button buttonSignUp;
 
@@ -37,6 +38,9 @@ public class SignupActivity extends AppCompatActivity {
 
         editTextUsername = findViewById(R.id.edit_text_username);
         editTextPassword = findViewById(R.id.edit_text_password);
+
+        edit_text_confirm_password = findViewById(R.id.edit_text_confirm_password);
+
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextTen = findViewById(R.id.edit_text_ten);
         editTextChieucao = findViewById(R.id.edit_text_chieucao);
@@ -107,9 +111,24 @@ public class SignupActivity extends AppCompatActivity {
         String hoten_giamho = editTextHotenGiamho.getText().toString();
         String dienthoai_giamho = editTextDienthoaiGiamho.getText().toString();
 
+        String confirmPasswordEditText = edit_text_confirm_password.getText().toString();
+
+
         int selectedGenderId = radioGroupGender.getCheckedRadioButtonId();
         RadioButton selectedGenderButton = findViewById(selectedGenderId);
         String gioitinh = selectedGenderButton.getText().toString();
+
+        // Check if password is at least 6 characters
+        if (password.length() < 6) {
+            Toast.makeText(SignupActivity.this, "Mật khẩu phải có ít nhất 6 ký tự.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check if passwords match
+        if (!password.equals(confirmPasswordEditText)) {
+            Toast.makeText(SignupActivity.this, "Mật khẩu xác nhận không khớp.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // Check if user is under 18
         Calendar birthDate = Calendar.getInstance();

@@ -1,5 +1,6 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.ClassModelTest;
 import com.android.mobile.models.ForgotPasswordModel;
 import com.android.mobile.models.LoginModel;
 import com.android.mobile.models.ProfileModel;
@@ -24,6 +25,8 @@ import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface UserApiService {
     @POST("api/auth/register")
@@ -35,6 +38,8 @@ public interface UserApiService {
     @GET("api/auth/profile")
     Call<ProfileModel> getProfile(@Header("Authorization") String token);
 
+    @GET("api/auth/profile/viaId")
+    Call<ProfileModel> getProfileViaId(@Header("Authorization") String token, @Query("id_atg_members") int memberId);
 
     @Multipart
     @POST("api/upload/avatar")
@@ -66,6 +71,7 @@ public interface UserApiService {
             @Body UpdatePasswordModel request
     );
 
-
+    @GET("api/user/classes")
+    Call<List<ClassModelTest>> getUserRegisteredClasses(@Header("Authorization") String token);
 
 }

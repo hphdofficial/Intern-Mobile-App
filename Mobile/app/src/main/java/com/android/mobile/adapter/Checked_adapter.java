@@ -10,19 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
+import com.android.mobile.models.AttendanceModel;
 import com.android.mobile.models.Checkin;
 import com.android.mobile.models.Member;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Checked_adapter extends RecyclerView.Adapter<Checked_adapter.ViewHolder>{
 
     Context context;
 
-    ArrayList<Checkin> checkinList = new ArrayList<>();
+    List<AttendanceModel.Attendance> checkinList = new ArrayList<>();
 
-    public Checked_adapter(ArrayList<Checkin> checkinList, Context context) {
+    public Checked_adapter(List<AttendanceModel.Attendance> checkinList, Context context) {
         this.checkinList = checkinList;
         this.context = context;
     }
@@ -36,14 +38,13 @@ public class Checked_adapter extends RecyclerView.Adapter<Checked_adapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Date txtDate = checkinList.get(i).getNgayDiemDanh();
-        viewHolder.txtDate.setText(txtDate.toString());
-        Boolean txtChecked = checkinList.get(i).isHienDien();
-        if(txtChecked){
-            viewHolder.txtChecked.setText("Có mặt");
-        }else{
-            viewHolder.txtChecked.setText("Vắng");
-        }
+        String txtDate = checkinList.get(i).getDate();
+        String txtDateOfWeek = checkinList.get(i).getDay_of_week();
+        viewHolder.txtDate.setText(txtDateOfWeek +" Ngày "+txtDate);
+        String txtTimeIn = checkinList.get(i).getIn();
+        viewHolder.txtTimeIn.setText(txtTimeIn);
+        viewHolder.txtChecked.setText("Có mặt");
+
 
     }
 
@@ -55,11 +56,13 @@ public class Checked_adapter extends RecyclerView.Adapter<Checked_adapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtDate;
         TextView txtChecked;
+        TextView txtTimeIn;
 
         ViewHolder(View itemView) {
             super(itemView);
             txtDate = itemView.findViewById(R.id.txtDate);
             txtChecked = itemView.findViewById(R.id.txtChecked);
+            txtTimeIn = itemView.findViewById(R.id.txtTimeIn);
         }
     }
 }

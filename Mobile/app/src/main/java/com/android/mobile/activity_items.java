@@ -1,9 +1,14 @@
 package com.android.mobile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,37 +25,45 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Checkin_adapter;
 import com.android.mobile.adapter.Item_adapter;
 import com.android.mobile.adapter.OptionCheckBoxAdapter;
 import com.android.mobile.adapter.OptionCheckBoxAdapter2;
+import com.android.mobile.adapter.TheoryAdapter;
 import com.android.mobile.models.CatagoryModel;
 import com.android.mobile.models.Item;
 import com.android.mobile.models.OptionCategory;
 import com.android.mobile.models.OptionSupplier;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.SupplierModelOption;
+import com.android.mobile.models.TheoryModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CatagoryApiService;
 import com.android.mobile.services.ProductApiService;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_items extends AppCompatActivity {
-    private SearchView searchView;
+public class activity_items extends BaseActivity {
+    private EditText searchView;
     private EditText editMinPrice;
     private EditText editMaxPrice;
     private Button btnFilterActive;
     private OptionCheckBoxAdapter optionAdapter;
     private OptionCheckBoxAdapter2 optionAdapter2;
+    private List<ProductModel> productList = new ArrayList<>();
+    private List<ProductModel> filteredProductList = new ArrayList<>();
+    private Item_adapter itemAdapter;
     private int min_price;
     private int max_price;
 
@@ -66,9 +79,13 @@ public class activity_items extends AppCompatActivity {
             return insets;
         });
 
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Danh sách dụng cụ");
+        myContentE.apply();
+
         ImageButton btnFilter = findViewById(R.id.btnFilter);
-
-
 
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +101,6 @@ public class activity_items extends AppCompatActivity {
 
                 editMinPrice = filterDialog.findViewById(R.id.editMinPrice);
                 editMaxPrice = filterDialog.findViewById(R.id.editMaxPrice);
-
 
                 //Fetch Category
 
@@ -157,17 +173,45 @@ public class activity_items extends AppCompatActivity {
             }
         });
 
-        searchView = findViewById(R.id.search_item);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView = findViewById(R.id.search_edit_text);
+        ImageButton btnSearch = findViewById(R.id.search_button);
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                SearchProductsByName(s);
+            public void onClick(View view) {
+                FetchProducts();
+            }
+        });
+
+        searchView.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                SearchProductsByName(searchView.getText().toString());
                 return true;
+            }
+            return false;
+        });
+
+        itemAdapter = new Item_adapter(getApplicationContext(), filteredProductList);
+        RecyclerView recyclerView = findViewById(R.id.recycler_item);
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        recyclerView.setAdapter(itemAdapter);
+
+        FetchProducts();
+
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filterProduct(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
@@ -181,13 +225,14 @@ public class activity_items extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
-        FetchProducts();
+
     }
 
     private void performSearch() {
 
         String min_price_str = editMinPrice.getText().toString().trim();
         String max_price_str = editMaxPrice.getText().toString().trim();
+        List<ProductModel> productList = new ArrayList<>();
         List<OptionCategory> selectedOptions = optionAdapter.getOptionList().stream()
                 .filter(OptionCategory::isChecked)
                 .collect(Collectors.toList());
@@ -196,84 +241,23 @@ public class activity_items extends AppCompatActivity {
                 .filter(OptionSupplier::isChecked)
                 .collect(Collectors.toList());
         System.out.println(selectedOptions);
-        if(selectedOptions != null){
-            String CategoryID = "";
-            for (OptionCategory option : selectedOptions) {
-                CategoryID = option.getCategoryID();
-            }
-            ProductApiService apiService = ApiServiceProvider.getProductApiService();
-            apiService.getByCategory(CategoryID).enqueue(new Callback<ProductModel[]>() {
-                @Override
-                public void onResponse(Call<ProductModel[]> call, Response<ProductModel[]> response) {
-                    if(response.isSuccessful()){
-                        ProductModel[] productList = response.body();
-                        for (ProductModel product : productList){
-                            Log.e("PostData", "Success: " + product.getProductName());
-                        }
-                        Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
-                        RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                        recyclerView.setAdapter(itemAdapter);
-                    }else {
-                        System.out.println("Active: Call onResponse");
-                        Log.e("PostData", "Error: " + response.message());
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<ProductModel[]> call, Throwable throwable) {
-                    System.out.println("Active: Call Onfail");
-                    Log.e("PostData", "Failure: " + throwable.getMessage());
-                }
-            });
+
+        String CategoryName = "";
+        for (OptionCategory option : selectedOptions) {
+            CategoryName = option.getCategoryName();
         }
-        if(selectedOptions2 != null && !min_price_str.isEmpty() && !max_price_str.isEmpty()){
-
-            min_price = Integer.parseInt(min_price_str);
-            max_price = Integer.parseInt(max_price_str);
-            int SupplierID = 0;
-            for (OptionSupplier option : selectedOptions2) {
-                SupplierID = option.getSupplierID();
-            }
-            ProductApiService apiService = ApiServiceProvider.getProductApiService();
-            apiService.getFilter(SupplierID, min_price, max_price).enqueue(new Callback<ProductModel[]>() {
-                @Override
-                public void onResponse(Call<ProductModel[]> call, Response<ProductModel[]> response) {
-                    if(response.isSuccessful()){
-                        ProductModel[] productList = response.body();
-                        for (ProductModel product : productList){
-                            Log.e("PostData", "Success: " + product.getProductName());
-                        }
-                        Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
-                        RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                        recyclerView.setAdapter(itemAdapter);
-                    }else {
-                        System.out.println("Active: Call onResponse");
-                        Log.e("PostData", "Error: " + response.message());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ProductModel[]> call, Throwable throwable) {
-                    System.out.println("Active: Call Onfail");
-                    Log.e("PostData", "Failure: " + throwable.getMessage());
-                }
-            });
-        }
-    }
-
-    private void FetchProducts(){
         ProductApiService apiService = ApiServiceProvider.getProductApiService();
-        apiService.getProducts().enqueue(new Callback<ProductModel[]>() {
+        apiService.getByCategory(CategoryName).enqueue(new Callback<List<ProductModel>>() {
             @Override
-            public void onResponse(Call<ProductModel[]> call, Response<ProductModel[]> response) {
+            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
                 if(response.isSuccessful()){
-                    ProductModel[] productList = response.body();
-                    for (ProductModel product : productList){
+                    List<ProductModel> productListByCategory = response.body();
+                    for (ProductModel product : productListByCategory){
                         Log.e("PostData", "Success: " + product.getProductName());
+                        productList.add(product);
                     }
-                    Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
+                    itemAdapter = new Item_adapter(getApplicationContext(), productList);
                     RecyclerView recyclerView = findViewById(R.id.recycler_item);
                     recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                     recyclerView.setAdapter(itemAdapter);
@@ -284,7 +268,101 @@ public class activity_items extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ProductModel[]> call, Throwable throwable) {
+            public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
+
+
+
+
+
+
+        if(!min_price_str.isEmpty() && !max_price_str.isEmpty()){
+            min_price = Integer.parseInt(min_price_str);
+            max_price = Integer.parseInt(max_price_str);
+            apiService.getFilterByPrice(min_price, max_price).enqueue(new Callback<List<ProductModel>>() {
+                @Override
+                public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                    if(response.isSuccessful()){
+                        List<ProductModel> productListByPrice = response.body();
+                        for (ProductModel product : productListByPrice){
+                            Log.e("PostData", "Success: " + product.getProductName());
+                            productList.add(product);
+
+                        }
+                        itemAdapter = new Item_adapter(getApplicationContext(), productList);
+                        RecyclerView recyclerView = findViewById(R.id.recycler_item);
+                        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                        recyclerView.setAdapter(itemAdapter);
+
+                    }else {
+                        System.out.println("Active: Call onResponse");
+                        Log.e("PostData", "Error: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                    System.out.println("Active: Call Onfail");
+                    Log.e("PostData", "Failure: " + throwable.getMessage());
+                }
+            });
+        }
+
+        int SupplierID = 0;
+        for (OptionSupplier option : selectedOptions2) {
+            SupplierID = option.getSupplierID();
+        }
+
+        apiService.getFilterBySupplier(SupplierID).enqueue(new Callback<List<ProductModel>>() {
+            @Override
+            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                if(response.isSuccessful()){
+                    List<ProductModel> productListBySupplier = response.body();
+                    for (ProductModel product : productListBySupplier){
+                        Log.e("PostData", "Success: " + product.getProductName());
+                        productList.add(product);
+
+                    }
+                    itemAdapter = new Item_adapter(getApplicationContext(), productList);
+                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                    recyclerView.setAdapter(itemAdapter);
+
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
+
+    }
+
+    private void FetchProducts(){
+        ProductApiService apiService = ApiServiceProvider.getProductApiService();
+        apiService.getProducts().enqueue(new Callback<List<ProductModel>>() {
+            @Override
+            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                if(response.isSuccessful()){
+                    productList.clear(); // Clear existing data
+                    productList.addAll(response.body());
+                    filterProduct(searchView.getText().toString());
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
@@ -292,30 +370,53 @@ public class activity_items extends AppCompatActivity {
     }
 
     private void SearchProductsByName(String name){
-        ProductApiService apiService = ApiServiceProvider.getProductApiService();
-        apiService.search(name).enqueue(new Callback<ProductModel[]>() {
-            @Override
-            public void onResponse(Call<ProductModel[]> call, Response<ProductModel[]> response) {
-                if(response.isSuccessful()){
-                    ProductModel[] productList = response.body();
-                    for (ProductModel product : productList){
-                        Log.e("PostData", "Success: " + product.getProductName());
+        if(name.isEmpty()){
+            FetchProducts();
+        }else{
+            ProductApiService apiService = ApiServiceProvider.getProductApiService();
+            apiService.search(name).enqueue(new Callback<List<ProductModel>>() {
+                @Override
+                public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                    if(response.isSuccessful()){
+                        List<ProductModel> productList = response.body();
+                        productList.clear(); // Clear existing data
+                        productList.addAll(response.body());
+                        filterProduct(name);
+                    }else {
+                        System.out.println("Active: Call onResponse");
+                        Log.e("PostData", "Error: " + response.message());
                     }
-                    Item_adapter itemAdapter = new Item_adapter(getApplicationContext(), productList);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                    recyclerView.setAdapter(itemAdapter);
-                }else {
-                    System.out.println("Active: Call onResponse");
-                    Log.e("PostData", "Error: " + response.message());
+                }
+
+                @Override
+                public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                    System.out.println("Active: Call Onfail");
+                    Log.e("PostData", "Failure: " + throwable.getMessage());
+                }
+            });
+        }
+
+    }
+
+    private void filterProduct(String query) {
+        filteredProductList.clear();
+        String normalizedQuery = removeDiacritics(query.toLowerCase());
+        if (normalizedQuery.isEmpty()) {
+            filteredProductList.addAll(productList);
+        } else {
+            for (ProductModel product : productList) {
+                if (removeDiacritics(product.getProductName().toLowerCase()).contains(normalizedQuery) ||
+                        removeDiacritics(product.getUnitPrice().toLowerCase()).contains(normalizedQuery)) {
+                    filteredProductList.add(product);
                 }
             }
+        }
+        itemAdapter.notifyDataSetChanged();
+    }
 
-            @Override
-            public void onFailure(Call<ProductModel[]> call, Throwable throwable) {
-                System.out.println("Active: Call Onfail");
-                Log.e("PostData", "Failure: " + throwable.getMessage());
-            }
-        });
+    private String removeDiacritics(String input) {
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("");
     }
 }

@@ -26,8 +26,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.models.Class;
+import com.android.mobile.models.Club;
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.ClassApiService;
+import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
@@ -39,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MenuActivity extends AppCompatActivity {
+public class MenuActivity extends BaseActivity {
 
     private int placeholderResourceId = R.drawable.photo3x4;
 
@@ -103,12 +108,60 @@ public class MenuActivity extends AppCompatActivity {
         //click image
         setEventClick();
 
-
+        // Get id_club_shared and id_class_shared
+        getMyClub();
+        getMyClass();
 
         // Gọi phương thức loadUserData để hiển thị thông tin người dùng
         loadUserData();
     }
 
+    public void getMyClub() {
+        String token = sharedPreferences.getString("access_token", null);
+
+        ClubApiService service = ApiServiceProvider.getClubApiService();
+        Call<Club> call = service.getDetailClubMember("Bearer" + token);
+
+        call.enqueue(new Callback<Club>() {
+            @Override
+            public void onResponse(Call<Club> call, Response<Club> response) {
+                if (response.isSuccessful()) {
+                    Club clb = response.body();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("id_club_shared", clb != null ? clb.getId() : null);
+                    editor.apply();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Club> call, Throwable t) {
+                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void getMyClass() {
+        String token = sharedPreferences.getString("access_token", null);
+
+        ClassApiService service = ApiServiceProvider.getClassApiService();
+        Call<Class> call = service.getDetailClassMember("Bearer" + token);
+
+        call.enqueue(new Callback<Class>() {
+            @Override
+            public void onResponse(Call<Class> call, Response<Class> response) {
+                Class classs = response.body();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id_class_shared", classs.getId() != 0 ? String.valueOf(classs.getId()) : null);
+                editor.apply();
+                Toast.makeText(MenuActivity.this, "id_class_shared" + sharedPreferences.getString("id_class_shared", null), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Class> call, Throwable t) {
+                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
@@ -198,6 +251,7 @@ public class MenuActivity extends AppCompatActivity {
         });
 
 
+
         btn_cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -234,7 +288,9 @@ public class MenuActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RegisterClass.class));
+
+
+               // startActivity(new Intent(getApplicationContext(), RegisterClass.class));
             }
         });
         btn_new.setOnClickListener(new View.OnClickListener() {
@@ -271,7 +327,22 @@ public class MenuActivity extends AppCompatActivity {
         eventAnimationImage();
     }
     private void logout() {
-        Intent intent = new Intent(MenuActivity.this, StartActivity.class); // Giả sử StartActivity là trang đăng nhập của bạn
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Kiểm tra nếu checkbox lưu mật khẩu không được chọn
+        if (!sharedPreferences.getBoolean("checkbox_save_password", false)) {
+            editor.clear(); // Xóa tất cả thông tin đăng nhập
+        } else {
+            editor.remove("access_token"); // Chỉ xóa token đăng nhập
+            editor.remove("token_type");
+            editor.remove("expires_in");
+            editor.remove("member_id");
+        }
+
+        editor.apply();
+
+        Intent intent = new Intent(MenuActivity.this, StartActivity.class); // Chuyển hướng về trang đăng nhập
         startActivity(intent);
         finish();
     }
@@ -335,7 +406,8 @@ public class MenuActivity extends AppCompatActivity {
                             Calendar calendar = Calendar.getInstance();
                             int year = calendar.get(Calendar.YEAR);
                             String date[] = profile.getNgaysinh().split("-");
-
+                            myContentE.putString("birthday",profile.getNgaysinh());
+                            myContentE.putString("phone",profile.getDienthoai());
                             myContentE.putInt("age", year-Integer.parseInt(date[0]));
 
 

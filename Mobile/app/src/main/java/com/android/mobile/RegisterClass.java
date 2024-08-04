@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -22,9 +24,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
+
 import java.util.Calendar;
 
-public class RegisterClass extends AppCompatActivity {
+public class RegisterClass extends BaseActivity {
     private EditText editTextDateOfBirth;
 
     private TextView money;
@@ -33,7 +37,8 @@ public class RegisterClass extends AppCompatActivity {
     private TextView name_class;
     private  RadioGroup note;
     private String noteText = "";
-    private int classId = 1;
+    private String classId = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,15 @@ public class RegisterClass extends AppCompatActivity {
         money = findViewById(R.id.total);
         note = findViewById(R.id.radioGroup);
         date_learn = findViewById(R.id.radio_group_gender);
+
+        CheckBox checkBoxOption1 = findViewById(R.id.checkBoxOption1);
+        CheckBox checkBoxOption3 = findViewById(R.id.checkBoxOption3);
+        CheckBox checkBoxOption4 = findViewById(R.id.checkBoxOption4);
+        CheckBox checkBoxOption2 = findViewById(R.id.checkBoxOption2);
+
+        CheckBox[] checkbox = {checkBoxOption1,checkBoxOption2,checkBoxOption3,checkBoxOption4};
+
+
        // editTextDateOfBirth = findViewById(R.id.editTextDateOfBirth);
        // eventDate();
         buttonRegister.setOnClickListener(new View.OnClickListener() {
@@ -66,31 +80,49 @@ public class RegisterClass extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+
+        if (extras != null) {
+            // Lấy dữ liệu từ Bundle
+            String name = extras.getString("name");
+            String className = extras.getString("nameClass");
+            classId = extras.getString("idClass");
+            name_class.setText(name+" - " + className);
+        }
+
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // gửi thông tin qua activity
-                Intent itent = new Intent(getApplicationContext(), PaymentQR.class);
+                Intent itent = new Intent(getApplicationContext(), payment.class);
                 itent.putExtra("title","registerclass");
-                itent.putExtra("idclass",classId);
+                itent.putExtra("idClass",classId);
+                if (extras != null) {
+                    // Lấy dữ liệu từ Bundle
+                    String name = extras.getString("name");
+                    String className = extras.getString("nameClass");
+                    itent.putExtra("teacherName",name);
+                    itent.putExtra("className",className);
+
+                }
                 double total = Double.parseDouble(money.getText().toString().replace("đ","").replace(".",""));
 
                 itent.putExtra("money",total);
+
                 String s = "";
 
 
-
-                for (int i = 0; i < note.getChildCount(); i++) {
-                    View child = note.getChildAt(i);
-                    if (child instanceof RadioButton) {
-                        RadioButton radioButton = (RadioButton) child;
-                        // Làm gì đó với radioButton
-                        String buttonText = radioButton.getText().toString();
-                        s += buttonText +"\n"+ "-";
+                noteText = "";
+                for (CheckBox checkBox : checkbox) {
+                    if(checkBox.isChecked()){
+                            String selectedText = checkBox.getText().toString();
+                            noteText = noteText + selectedText + "\n";
                     }
                 }
-                itent.putExtra("note",s);
+                itent.putExtra("note",noteText);
                 if(total >0 )
                 startActivity(itent);
                 else {
@@ -106,6 +138,8 @@ public class RegisterClass extends AppCompatActivity {
 
 
     public void eventClickRadio(){
+
+
 
         date_learn.clearCheck();
         date_learn.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

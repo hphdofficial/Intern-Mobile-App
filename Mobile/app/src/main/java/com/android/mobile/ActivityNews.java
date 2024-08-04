@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.NewsAdapter;
 import com.android.mobile.models.NewsModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -36,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ActivityNews extends AppCompatActivity implements NewsAdapter.OnNewsClickListener {
+public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClickListener {
 
     private SharedPreferences sharedPreferences;
     private List<NewsModel> newsList = new ArrayList<>();

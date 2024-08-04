@@ -1,9 +1,11 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.AttendanceRequest;
 import com.android.mobile.models.CheckinMemberModel;
 import com.android.mobile.models.CheckinTeacherModel;
 import com.android.mobile.models.Class;
 import com.android.mobile.models.TheoryModel;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.Map;
@@ -11,21 +13,30 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface CheckinApiService {
     @GET("api/member/view-checkin")
-    Call<CheckinMemberModel> memberViewCheckin(@Body CheckinMemberModel request);
+    Call<JsonObject> memberViewCheckin(@Header("Authorization") String token,
+                                               @Query("start_date") String start,
+                                               @Query("end_date") String end);
 
     @GET("api/teacher/view-checkin")
-    Call<CheckinMemberModel> teacherViewCheckin(@Body CheckinMemberModel request);
+    Call<JsonObject> teacherViewCheckin(@Header("Authorization") String token,
+                                                @Query("start_date") String start,
+                                                @Query("end_date") String end);
 
     @POST("api/teacher/checkin")
-    Call<CheckinTeacherModel> teacherCheckin(@Body CheckinTeacherModel request);
+    Call<Void> teacherCheckin(@Header("Authorization") String token,
+                              @Body AttendanceRequest request);
 
     @GET("api/teacher/classes/getall")
-    Call<List<Class>> getTeacherClasses();
+    Call<JsonObject> getTeacherClasses(@Header("Authorization") String token);
 
     @GET("api/teacher/classes/getdetail")
-    Call<Class> getClassMembers(@Body int idClass);
+    Call<JsonObject> getClassMembers(@Header("Authorization") String token,
+                                     @Query("id_class") int idClass);
 }

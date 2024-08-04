@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.LoginModel;
 import com.android.mobile.models.TokenModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -24,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends BaseActivity {
 
     private Button btn_login;
     private Button btn_register;
@@ -38,6 +39,44 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        // Reset id
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor edit = shared.edit();
+        edit.putString("id_club_shared", null);
+        edit.putString("id_class_shared", null);
+        edit.apply();
+
+        // Kiểm tra trạng thái đăng nhập
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString("access_token", null);
+        long expiryTime = sharedPreferences.getLong("expiry_time", 0);
+        long currentTime = System.currentTimeMillis();
+        boolean isPasswordSaved = sharedPreferences.getBoolean("checkbox_save_password", false);
+
+        if (accessToken != null && currentTime < expiryTime) {
+            // Người dùng đã đăng nhập và token còn hiệu lực, chuyển hướng đến MenuActivity
+            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+            finish();
+            return;
+        } else if (accessToken != null && currentTime >= expiryTime) {
+            // Token hết hạn, thông báo cho người dùng và xóa thông tin đăng nhập
+            Toast.makeText(this, "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.", Toast.LENGTH_LONG).show();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            // Nếu không lưu mật khẩu, xóa tất cả thông tin đăng nhập
+            if (!isPasswordSaved) {
+                editor.clear();
+            } else {
+                // Chỉ xóa token và thông tin liên quan
+                editor.remove("access_token");
+                editor.remove("token_type");
+                editor.remove("expires_in");
+                editor.remove("expiry_time");
+            }
+
+            editor.apply();
+        }
 
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
@@ -112,12 +151,17 @@ public class StartActivity extends AppCompatActivity {
                         saveLoginDetails(tokenResponse);
                         if (checkboxSavePassword.isChecked()) {
                             saveCredentials(email, password);
+                            saveCheckboxState(true); // Lưu trạng thái của checkbox
                         } else {
                             clearCredentials();
+                            saveCheckboxState(false); // Lưu trạng thái của checkbox
                         }
                         Toast.makeText(StartActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                        finish(); // Đóng StartActivity để người dùng không quay lại trang đăng nhập
                     }
+
+
                 } else {
                     Toast.makeText(StartActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
@@ -137,8 +181,20 @@ public class StartActivity extends AppCompatActivity {
         editor.putString("token_type", tokenResponse.getToken_type());
         editor.putInt("expires_in", tokenResponse.getExpires_in());
         editor.putInt("member_id", tokenResponse.getMember_id());
+
+        long expiryTime = System.currentTimeMillis() + (tokenResponse.getExpires_in() * 1000); // thời gian hết hạn tính bằng milliseconds
+        editor.putLong("expiry_time", expiryTime);
         editor.apply();
     }
+
+
+    private void saveCheckboxState(boolean isChecked) {
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("checkbox_save_password", isChecked);
+        editor.apply();
+    }
+
 
     private void saveCredentials(String email, String password) {
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);

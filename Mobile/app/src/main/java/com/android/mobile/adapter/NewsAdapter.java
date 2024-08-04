@@ -49,9 +49,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         // Load image using Glide with fitCenter
         Glide.with(holder.itemView.getContext())
                 .load(imageUrl)
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.ic_launcher_foreground)
                 .fitCenter()
-                .error(R.drawable.ic_launcher_foreground) // Set an error image in case the URL is wrong
+                .error(R.drawable.newsvovietdao) // Set an error image in case the URL is wrong
                 .into(holder.newsImage);
 
         holder.itemView.setOnClickListener(v -> {

@@ -1,8 +1,11 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,13 +17,20 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.MyClassAdapter;
 import com.android.mobile.models.Class;
+import com.android.mobile.models.ClassModel;
+import com.android.mobile.models.Club;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CheckinApiService;
 import com.android.mobile.services.ProductApiService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,13 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyClassActivity extends AppCompatActivity {
-    Date today = new Date();
-    Class class1 = new Class(400000, today, today, "Tự vệ", 3, "Hữu lợi");
-    Class class2 = new Class(400000, today, today, "Tự vệ 1", 3, "Hữu lợi");
-    Class class3 = new Class(400000, today, today, "Tự vệ 2", 6, "Hữu lợi");
-    Class class4 = new Class(400000, today, today, "Tự vệ 3", 6, "Hữu lợi");
-    ArrayList<Class> classes = new ArrayList<>();
+public class MyClassActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +48,20 @@ public class MyClassActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_my_class);
 
-        classes.add(class1);
-        classes.add(class2);
-        classes.add(class3);
-        classes.add(class4);
-
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
-
-        MyClassAdapter classAdapter = new MyClassAdapter(this, classes);
-        RecyclerView recyclerView = findViewById(R.id.recycler_class);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(classAdapter);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Những lớp đang dạy");
+        myContentE.apply();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -77,23 +77,35 @@ public class MyClassActivity extends AppCompatActivity {
     }
 
     private void FetchClassesForTeacher(){
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("access_token", null);
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-        apiService.getTeacherClasses().enqueue(new Callback<List<Class>>() {
+        apiService.getTeacherClasses("Bearer "+token).enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.isSuccessful()){
-                    List<Class> classList = response.body();
-                    for (Class product : classList){
-                        Log.e("PostData", "Success: " + product.getTen());
+                    JsonObject jsonObject = response.body();
+                    Gson gson = new Gson();
+                    Type classListType = new TypeToken<List<ClassModel>>() {}.getType();
+                    List<ClassModel> classes = gson.fromJson(jsonObject.get("data"), classListType);
+                    for (ClassModel classSample : classes){
+                        Log.e("PostData", "Success: " + classSample.getTen());
                     }
+                    MyClassAdapter classAdapter = new MyClassAdapter(getApplicationContext(), classes);
+                    RecyclerView recyclerView = findViewById(R.id.recycler_class);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setAdapter(classAdapter);
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
+                    Toast.makeText(MyClassActivity.this, "Đang chuyển qua lớp học cho học viên", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), activity_member_checkin.class));
+
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Class>> call, Throwable throwable) {
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }

@@ -13,12 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Chapter_adapter;
 import com.android.mobile.models.Chapter;
 
 import java.util.ArrayList;
 
-public class activity_chapters extends AppCompatActivity {
+public class activity_chapters extends BaseActivity {
     Chapter chapter1 = new Chapter("Khởi quyền", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
     Chapter chapter2 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
     Chapter chapter3 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");

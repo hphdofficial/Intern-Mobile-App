@@ -1,57 +1,62 @@
 package com.android.mobile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.android.mobile.adapter.BaseActivity;
+import com.android.mobile.adapter.Item_adapter;
+import com.android.mobile.adapter.TheoryAdapter;
 import com.android.mobile.adapter.lesson_adapter;
 import com.android.mobile.models.Class;
 import com.android.mobile.models.Lesson;
+import com.android.mobile.models.NewsModel;
+import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.TheoryModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CheckinApiService;
+import com.android.mobile.services.ProductApiService;
 import com.android.mobile.services.TheoryApiService;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class activity_lessons extends AppCompatActivity {
-
-    Lesson lesson1 = new Lesson("Tự vệ", "Võ sinh", "Đai màu võ phục Vovinam", "3 tháng");
-    Lesson lesson2 = new Lesson("Nhập môn", "Võ sinh", "Đai màu võ phục Vovinam", "3 tháng");
-    Lesson lesson3 = new Lesson("Lam đai đệ nhất cấp", "Võ sinh", "Đai màu võ phục Vovinam", "3 tháng");
-    Lesson lesson4 = new Lesson("Lam đai đệ nhị cấp", "Môn sinh", "Đai màu võ phục Vovinam", "3 tháng");
-    Lesson lesson5 = new Lesson("Lam đai đệ tam cấp", "Võ sinh", "Đai màu võ phục Vovinam", "6 tháng");
-    ArrayList<Lesson> lessons = new ArrayList<>();
-
+public class activity_lessons extends BaseActivity {
+    private List<TheoryModel> theoryList = new ArrayList<>();
+    private List<TheoryModel> filteredTheoryList = new ArrayList<>();
+    private TheoryAdapter theoryAdapter;
+    private EditText search_edit_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lessons);
 
-
-        lessons.add(lesson1);
-        lessons.add(lesson2);
-        lessons.add(lesson3);
-        lessons.add(lesson4);
-        lessons.add(lesson5);
-
-
-        lesson_adapter lesson_adapter = new lesson_adapter(this, lessons);
-        RecyclerView recyclerView = findViewById(R.id.lesson_recycleview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(lesson_adapter);
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Lý thuyết võ thuật");
+        myContentE.apply();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -63,7 +68,43 @@ public class activity_lessons extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
+        search_edit_text = findViewById(R.id.search_edit_text);
+        ImageButton search_button = findViewById(R.id.search_button);
+
+        search_edit_text.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                SearchTheoryByName(search_edit_text.getText().toString());
+                return true;
+            }
+            return false;
+        });
+
+        theoryAdapter = new TheoryAdapter(getApplicationContext(), filteredTheoryList);
+        RecyclerView recyclerView = findViewById(R.id.lesson_recycleview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setAdapter(theoryAdapter);
+
         FetchTheory();
+
+        search_button.setOnClickListener(v -> SearchTheoryByName(search_edit_text.getText().toString()));
+
+        // Listen for text changes to filter the list
+        search_edit_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterTheory(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+
     }
 
     private void FetchTheory(){
@@ -72,10 +113,9 @@ public class activity_lessons extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<TheoryModel>> call, Response<List<TheoryModel>> response) {
                 if(response.isSuccessful()){
-                    List<TheoryModel> theoryList = response.body();
-                    for (TheoryModel theory : theoryList){
-                        Log.e("PostData", "Success: " + theory.getTitle());
-                    }
+                    theoryList.clear(); // Clear existing data
+                    theoryList.addAll(response.body());
+                    filterTheory(search_edit_text.getText().toString());
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
@@ -88,5 +128,56 @@ public class activity_lessons extends AppCompatActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+    }
+
+    private void SearchTheoryByName(String query){
+        if (query.isEmpty()) {
+            FetchTheory(); // Fetch all theory if query is empty
+        }else{
+            TheoryApiService apiService = ApiServiceProvider.getTheoryApiService();
+            apiService.searchMartialArtsTheory(query).enqueue(new Callback<List<TheoryModel>>() {
+                @Override
+                public void onResponse(Call<List<TheoryModel>> call, Response<List<TheoryModel>> response) {
+                    if(response.isSuccessful()){
+                        List<TheoryModel> theoryList = response.body();
+                        theoryList.clear(); // Clear existing data
+                        theoryList.addAll(response.body());
+                        filterTheory(query);
+                    }else {
+                        System.out.println("Active: Call onResponse");
+                        Log.e("PostData", "Error: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
+                    System.out.println("Active: Call Onfail");
+                    Log.e("PostData", "Failure: " + throwable.getMessage());
+                }
+            });
+        }
+
+    }
+
+    private void filterTheory(String query) {
+        filteredTheoryList.clear();
+        String normalizedQuery = removeDiacritics(query.toLowerCase());
+        if (normalizedQuery.isEmpty()) {
+            filteredTheoryList.addAll(theoryList);
+        } else {
+            for (TheoryModel theory : theoryList) {
+                if (removeDiacritics(theory.getTenvi().toLowerCase()).contains(normalizedQuery) ||
+                        removeDiacritics(theory.getNoidungvi().toLowerCase()).contains(normalizedQuery)) {
+                    filteredTheoryList.add(theory);
+                }
+            }
+        }
+        theoryAdapter.notifyDataSetChanged();
+    }
+
+    private String removeDiacritics(String input) {
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("");
     }
 }

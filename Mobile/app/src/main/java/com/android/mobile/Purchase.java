@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ProductAdapter;
 import com.android.mobile.models.CartModel;
 import com.android.mobile.models.CartResponse;
@@ -49,7 +50,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Purchase extends AppCompatActivity {
+public class Purchase extends BaseActivity {
 
     private RecyclerView recyclerView;
     private ProductAdapter itemAdapter;

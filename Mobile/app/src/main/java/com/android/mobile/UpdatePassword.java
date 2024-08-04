@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.content.Intent;
 
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.models.UpdatePasswordModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -21,10 +22,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UpdatePassword extends AppCompatActivity {
+public class UpdatePassword extends BaseActivity {
 
     private EditText editTextEmail, editTextCurrentPassword, editTextPassword, editTextPasswordConfirmation;
     private Button buttonUpdatePassword;
+
+    private ImageButton buttonToggleCurrentPasswordVisibility, buttonToggleNewPasswordVisibility, buttonTogglePasswordConfirmationVisibility;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
 
@@ -49,6 +52,10 @@ public class UpdatePassword extends AppCompatActivity {
         editTextPasswordConfirmation = findViewById(R.id.edit_text_password_confirmation);
         buttonUpdatePassword = findViewById(R.id.button_update_info);
 
+        buttonToggleCurrentPasswordVisibility = findViewById(R.id.button_toggle_current_password_visibility);
+        buttonToggleNewPasswordVisibility = findViewById(R.id.button_toggle_new_password_visibility);
+        buttonTogglePasswordConfirmationVisibility = findViewById(R.id.button_toggle_password_confirmation_visibility);
+
         // Nhận dữ liệu từ ActivityDetailMember
         Intent intent = getIntent();
         editTextEmail.setText(intent.getStringExtra("email"));
@@ -57,16 +64,45 @@ public class UpdatePassword extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
 
         buttonUpdatePassword.setOnClickListener(v -> updatePassword());
+
+        buttonToggleCurrentPasswordVisibility.setOnClickListener(v -> togglePasswordVisibility(editTextCurrentPassword, buttonToggleCurrentPasswordVisibility));
+        buttonToggleNewPasswordVisibility.setOnClickListener(v -> togglePasswordVisibility(editTextPassword, buttonToggleNewPasswordVisibility));
+        buttonTogglePasswordConfirmationVisibility.setOnClickListener(v -> togglePasswordVisibility(editTextPasswordConfirmation, buttonTogglePasswordConfirmationVisibility));
+    }
+
+    private void togglePasswordVisibility(EditText editText, ImageButton imageButton) {
+        if (editText.getInputType() == (android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+            editText.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            imageButton.setImageResource(R.drawable.view);
+        } else {
+            editText.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            imageButton.setImageResource(R.drawable.hide);
+        }
+        editText.setSelection(editText.getText().length());
     }
 
     private void updatePassword() {
+        String currentPassword = editTextCurrentPassword.getText().toString();
+        String newPassword = editTextPassword.getText().toString();
+        String confirmPassword = editTextPasswordConfirmation.getText().toString();
+
+        if (newPassword.length() < 6) {
+            Toast.makeText(this, "Mật khẩu mới phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            Toast.makeText(this, "Mật khẩu mới và xác nhận mật khẩu không khớp", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String token = sharedPreferences.getString("access_token", null);
         if (token != null) {
             UpdatePasswordModel updatePasswordModel = new UpdatePasswordModel();
             updatePasswordModel.setEmail(editTextEmail.getText().toString());
-            updatePasswordModel.setCurrent_pass(editTextCurrentPassword.getText().toString());
-            updatePasswordModel.setNew_pass(editTextPassword.getText().toString());
-            updatePasswordModel.setNew_pass_confirmation(editTextPasswordConfirmation.getText().toString());
+            updatePasswordModel.setCurrent_pass(currentPassword);
+            updatePasswordModel.setNew_pass(newPassword);
+            updatePasswordModel.setNew_pass_confirmation(confirmPassword);
 
             UserApiService apiService = ApiServiceProvider.getUserApiService();
             Call<ReponseModel> call = apiService.updatePassword("Bearer " + token, updatePasswordModel);

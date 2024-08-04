@@ -14,9 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.bumptech.glide.Glide;
 
-public class NewsDetailActivity extends AppCompatActivity {
+public class NewsDetailActivity extends BaseActivity {
 
     private TextView newsTitle;
     private WebView newsContent;
@@ -73,8 +74,8 @@ public class NewsDetailActivity extends AppCompatActivity {
         // Load the image using Glide
         Glide.with(this)
                 .load(imageUrl)
-                .placeholder(R.drawable.ic_launcher_background) // Placeholder image
-                .error(R.drawable.ic_launcher_foreground) // Error image
+                .placeholder(R.drawable.ic_launcher_foreground) // Placeholder image
+                .error(R.drawable.newsvovietdao) // Error image
                 .into(newsImage);
     }
 }

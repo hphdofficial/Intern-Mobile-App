@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.SupplierAdapter;
 import com.android.mobile.models.SupplierModel;
 import com.android.mobile.network.ApiServiceProvider;
@@ -22,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SupplierActivity extends AppCompatActivity implements SupplierAdapter.OnSupplierClickListener {
+public class SupplierActivity extends BaseActivity implements SupplierAdapter.OnSupplierClickListener {
 
     private RecyclerView recyclerView;
     private SupplierAdapter adapter;

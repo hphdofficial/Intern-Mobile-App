@@ -13,12 +13,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-public class PaymentQR extends AppCompatActivity {
+public class PaymentQR extends BaseActivity {
 
 
     private ImageView imageViewQRCode;
