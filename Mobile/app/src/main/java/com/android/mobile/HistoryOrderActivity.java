@@ -1,5 +1,7 @@
 package com.android.mobile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -48,6 +50,11 @@ public class HistoryOrderActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Lịch sử mua hàng");
+        myContentE.apply();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

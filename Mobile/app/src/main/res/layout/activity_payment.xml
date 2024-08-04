@@ -184,16 +184,18 @@
 -->
 
     </LinearLayout>
-
     <Button
         android:id="@+id/payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Thanh toán"
 
-        android:layout_below="@+id/linearLayout">
-
+        android:layout_below="@+id/relativeLayout2">
     </Button>
+
+
+
+
 
     <FrameLayout
         android:id="@+id/fragment_container"

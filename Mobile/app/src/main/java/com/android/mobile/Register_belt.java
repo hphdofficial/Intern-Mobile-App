@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,22 +21,83 @@ import com.android.mobile.adapter.Adapter_Register_belt;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Chapter_adapter;
 import com.android.mobile.models.Belt;
+import com.android.mobile.models.BeltModel;
+import com.android.mobile.models.CartResponse;
 import com.android.mobile.models.Chapter;
+import com.android.mobile.network.APIServicePayment;
+import com.android.mobile.services.PaymentAPI;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Register_belt extends BaseActivity {
 
 
-    ArrayList<Belt> chapters = new ArrayList<>();
-
+    private  List<Belt> chapters = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private  Adapter_Register_belt chapterAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapters);
 
-        chapters.add(new Belt("Đai trắng","Đã học"));
-        chapters.add(new Belt("Đai đen","Đã học"));
+
+        chapterAdapter = new Adapter_Register_belt(this, chapters);
+        recyclerView = findViewById(R.id.chapter_recycleview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        SharedPreferences sharedPreferences;
+        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("access_token", null);
+
+
+
+        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+
+        Call<BeltModel> callBell = apiService.GetBelt("Bearer" + token);
+
+        callBell.enqueue(new Callback<BeltModel>() {
+            @Override
+            public void onResponse(Call<BeltModel> call, Response<BeltModel> response) {
+               if(response.isSuccessful()){
+                   BeltModel b = response.body();
+
+
+                   chapterAdapter.loadBelt(b);
+
+               }else {
+                   Toast.makeText(getApplicationContext(),"fails nn",Toast.LENGTH_SHORT).show();
+               }
+            }
+
+            @Override
+            public void onFailure(Call<BeltModel> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"fails",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Call<List<Belt>> call = apiService.getAllBelt();
+        call.enqueue(new Callback<List<Belt>>() {
+            @Override
+            public void onResponse(Call<List<Belt>> call, Response<List<Belt>> response) {
+                chapters = response.body();
+                chapterAdapter.loadList(chapters);
+                recyclerView.setAdapter(chapterAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Belt>> call, Throwable t) {
+
+            }
+        });
+
+       /* chapters.add(new Belt("Đai trắng","Đã học"));
+        chapters.add(new Belt("Đai đen","Đã học"));*/
 
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
@@ -42,10 +105,7 @@ public class Register_belt extends BaseActivity {
 
 
 
-        Adapter_Register_belt chapterAdapter = new Adapter_Register_belt(this, chapters);
-        RecyclerView recyclerView = findViewById(R.id.chapter_recycleview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(chapterAdapter);
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
