@@ -39,6 +39,12 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("id_club_shared", null);
+        editor.putString("id_class_shared", null);
+        editor.apply();
+
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
         editEmail = findViewById(R.id.edit_email);

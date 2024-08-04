@@ -81,8 +81,7 @@ public class DetailClassActivity extends AppCompatActivity {
 
         if (sharedPreferences.getString("id_class_shared", null) == null) {
             btnRegisterClass.setVisibility(View.VISIBLE);
-        }
-        if (idClass.equals(sharedPreferences.getString("id_class_shared", null))) {
+        } else if (idClass.equals(sharedPreferences.getString("id_class_shared", null))) {
             btnLeaveClass.setVisibility(View.VISIBLE);
             Toast.makeText(DetailClassActivity.this, "Bạn là thành viên của lớp học này", Toast.LENGTH_SHORT).show();
         } else {

@@ -148,13 +148,11 @@ public class MenuActivity extends AppCompatActivity {
         call.enqueue(new Callback<Class>() {
             @Override
             public void onResponse(Call<Class> call, Response<Class> response) {
-                if (response.isSuccessful()) {
-                    Class classs = response.body();
-
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("id_class_shared", String.valueOf(classs != null ? classs.getId() : null));
-                    editor.apply();
-                }
+                Class classs = response.body();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id_class_shared", classs.getId() != 0 ? String.valueOf(classs.getId()) : null);
+                editor.apply();
+                Toast.makeText(MenuActivity.this, "id_class_shared" + sharedPreferences.getString("id_class_shared", null), Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -82,8 +82,7 @@ public class DetailClubActivity extends AppCompatActivity {
 
         if (sharedPreferences.getString("id_club_shared", null) == null) {
             btnJoinClub.setVisibility(View.VISIBLE);
-        }
-        if (idClub.equals(String.valueOf(sharedPreferences.getString("id_club_shared", null)))) {
+        } else if (idClub.equals(String.valueOf(sharedPreferences.getString("id_club_shared", null)))) {
             btnLeaveClub.setVisibility(View.VISIBLE);
             Toast.makeText(DetailClubActivity.this, "Bạn là thành viên của câu lạc bộ này", Toast.LENGTH_SHORT).show();
         } else {
@@ -104,6 +103,11 @@ public class DetailClubActivity extends AppCompatActivity {
                 if (sharedPreferences.getString("id_class_shared", null) == null) {
                     leaveClub();
                 } else {
+                    Intent intent = new Intent(DetailClubActivity.this, DetailClassActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id_class", sharedPreferences.getString("id_class_shared", null));
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     Toast.makeText(DetailClubActivity.this, "Bạn đang tham gia lớp học của câu lạc bộ này nên chưa thể rời câu lạc bộ", Toast.LENGTH_SHORT).show();
                 }
             }
