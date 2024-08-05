@@ -27,7 +27,7 @@ public interface ClassApiService {
     );
 
     @GET("/api/user/classes")
-    Call<Class> getDetailClassMember(
+    Call<List<Class>> getDetailClassMember(
             @Header("Authorization") String token
     );
 

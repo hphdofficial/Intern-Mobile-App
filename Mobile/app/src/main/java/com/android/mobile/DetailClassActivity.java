@@ -40,6 +40,8 @@ public class DetailClassActivity extends BaseActivity {
     private Button btnLeaveClass;
     private Button btnDirectClass;
     private String idClass = null;
+    private String name = "";
+    private String nameClass = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +132,8 @@ public class DetailClassActivity extends BaseActivity {
             public void onResponse(Call<Class> call, Response<Class> response) {
                 if (response.isSuccessful()) {
                     Class dataClass = response.body();
+                    nameClass = dataClass.getTen();
+                    name = dataClass.getGiangvien();
                     txtNameClass.setText(dataClass.getTen());
                     txtTeacherClass.setText(dataClass.getGiangvien());
                     txtAddressClass.setText(dataClass.getClub());
@@ -176,6 +180,9 @@ public class DetailClassActivity extends BaseActivity {
         Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
         Bundle bundle = new Bundle();
         bundle.putString("id_class", idClass);
+        intent.putExtra("name",name);
+        intent.putExtra("nameClass",nameClass);
+        intent.putExtra("idClass",idClass);
         intent.putExtras(bundle);
         startActivity(intent);
     }

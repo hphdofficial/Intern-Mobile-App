@@ -39,6 +39,7 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Method;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -144,20 +145,20 @@ public class MenuActivity extends BaseActivity {
         String token = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<Class> call = service.getDetailClassMember("Bearer" + token);
+        Call<List<Class>> call = service.getDetailClassMember("Bearer" + token);
 
-        call.enqueue(new Callback<Class>() {
+        call.enqueue(new Callback<List<Class>>() {
             @Override
-            public void onResponse(Call<Class> call, Response<Class> response) {
-                Class classs = response.body();
+            public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                List<Class> classs = response.body();
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("id_class_shared", classs.getId() != 0 ? String.valueOf(classs.getId()) : null);
+                editor.putString("id_class_shared", classs.get(0).getId() != 0 ? String.valueOf(classs.get(0).getId()) : null);
                 editor.apply();
-                Toast.makeText(MenuActivity.this, "id_class_shared" + sharedPreferences.getString("id_class_shared", null), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MenuActivity.this, "id_class_shared " + sharedPreferences.getString("id_class_shared", null), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<Class> call, Throwable t) {
+            public void onFailure(Call<List<Class>> call, Throwable t) {
                 Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
