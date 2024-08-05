@@ -9,6 +9,8 @@ import com.android.mobile.models.ClassModelT;
 import com.android.mobile.models.DetailsBelt;
 import com.android.mobile.models.HistoryClassModel;
 import com.android.mobile.models.ProfileModel;
+import com.android.mobile.models.StatusOrther;
+import com.android.mobile.models.StatusRegister;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,9 @@ public interface PaymentAPI {
     Call<List<Belt>> getAllBelt();
 
     @GET("paymentss/getlink")
-    Call<ResponseBody> getLink(@Query("member_id") String member_id);
+    Call<ResponseBody> getLink(
+            @Header("Authorization") String token,
+            @Query("member_id") String member_id);
 
     @GET("pay_clb/getlink")
     Call<ResponseBody> RegisterClass(
@@ -54,4 +58,11 @@ public interface PaymentAPI {
 
     @GET("api/education-grades/belt-info")
     Call<List<DetailsBelt>> getBeltInfo(@Query ("id") int id);
+
+    @GET("status_order")
+    Call<StatusOrther> GetStatusOrder(@Query ("id") int id);
+
+    @GET("status_payingclass")
+    Call<StatusRegister> GetStatusRegister(@Query ("id") int id);
+
 }

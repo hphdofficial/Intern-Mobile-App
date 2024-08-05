@@ -221,6 +221,7 @@ public class MenuActivity extends BaseActivity {
     private LinearLayout btn_logout;
     private LinearLayout btn_historyclass1;
     private LinearLayout btn_product;
+    private LinearLayout btn_sup;
     private ImageView img_avatar_menu;
     private ImageView test;
     private ImageView test1;
@@ -246,6 +247,7 @@ public class MenuActivity extends BaseActivity {
         test3 = findViewById(R.id.test3);
         test4 = findViewById(R.id.test4);
         test5 = findViewById(R.id.test5);
+        btn_sup = findViewById(R.id.btn_sup);
         btn_cart = findViewById(R.id.btn_cart);
         btn_history = findViewById(R.id.btn_history);
 
@@ -262,6 +264,13 @@ public class MenuActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(),CartActivity.class));
+            }
+        });
+
+        btn_sup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),SupplierActivity.class));
             }
         });
 
@@ -334,8 +343,6 @@ public class MenuActivity extends BaseActivity {
         btn_historyclass1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 startActivity(new Intent(getApplicationContext(), HistoryRegisterClass.class));
             }
         });
