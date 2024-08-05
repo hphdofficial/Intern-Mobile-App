@@ -191,6 +191,7 @@ public class activity_checkin extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable throwable) {
+                        hideLoading();
                         System.out.println("Active: Call Onfail");
                         Log.e("PostData", "Failure: " + throwable.getMessage());
                         Toast.makeText(activity_checkin.this, "Điểm danh thất bại do lỗi mạng", Toast.LENGTH_SHORT).show();
@@ -233,6 +234,7 @@ public class activity_checkin extends BaseActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                hideLoading();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
