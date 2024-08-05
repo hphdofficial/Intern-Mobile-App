@@ -123,6 +123,7 @@ public class activity_items extends BaseActivity {
                             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
                             recyclerView.setAdapter(optionAdapter);
                         }else {
+                            hideLoading();
                             System.out.println("Active: Call onResponse");
                             Log.e("PostData", "Error: " + response.message());
                         }
@@ -130,6 +131,7 @@ public class activity_items extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<List<CatagoryModel>> call, Throwable throwable) {
+                        hideLoading();
                         System.out.println("Active: Call Onfail");
                         Log.e("PostData", "Failure: " + throwable.getMessage());
                     }
@@ -268,6 +270,7 @@ public class activity_items extends BaseActivity {
                     recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                     recyclerView.setAdapter(itemAdapterFilter);
                 }else {
+                    hideLoading();
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
                 }
@@ -275,6 +278,7 @@ public class activity_items extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                hideLoading();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
@@ -304,6 +308,7 @@ public class activity_items extends BaseActivity {
                         recyclerView.setAdapter(itemAdapterFilter);
 
                     }else {
+                        hideLoading();
                         System.out.println("Active: Call onResponse");
                         Log.e("PostData", "Error: " + response.message());
                     }
@@ -311,6 +316,7 @@ public class activity_items extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                    hideLoading();
                     System.out.println("Active: Call Onfail");
                     Log.e("PostData", "Failure: " + throwable.getMessage());
                 }
@@ -346,6 +352,7 @@ public class activity_items extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                hideLoading();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
@@ -375,6 +382,7 @@ public class activity_items extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                hideLoading();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
