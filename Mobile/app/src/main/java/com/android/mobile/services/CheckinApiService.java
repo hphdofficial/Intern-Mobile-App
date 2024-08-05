@@ -27,7 +27,8 @@ public interface CheckinApiService {
     @GET("api/teacher/view-checkin")
     Call<JsonObject> teacherViewCheckin(@Header("Authorization") String token,
                                                 @Query("start_date") String start,
-                                                @Query("end_date") String end);
+                                                @Query("end_date") String end,
+                                        @Query("id_class") int id);
 
     @POST("api/teacher/checkin")
     Call<Void> teacherCheckin(@Header("Authorization") String token,

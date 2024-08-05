@@ -55,7 +55,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2"
+                    android:text="Bài tập gồm bộ: abc"
                     android:textAlignment="textStart"
                     android:textColor="#000000"
                     android:textStyle="bold"

@@ -43,6 +43,7 @@ import retrofit2.Response;
 
 public class activity_member_checkin extends BaseActivity {
     private Checked_adapter checkedAdapter;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,8 @@ public class activity_member_checkin extends BaseActivity {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = currentDate.format(formatter);
 
+        showLoading();
+
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
         apiService.memberViewCheckin("Bearer "+token, "2023-11-01", formattedDate).enqueue(new Callback<JsonObject>() {
             @Override
@@ -107,7 +110,10 @@ public class activity_member_checkin extends BaseActivity {
                     }
 
                     txtSoNgayHienDien.setText(checkedAdapter.getItemCount() + " Ngày");
+
+                    hideLoading();
                 }else {
+                    hideLoading();
                     Toast.makeText(activity_member_checkin.this, "Bạn chưa đăng ký lớp học, vui lòng đăng ký và quay lại sau", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -118,5 +124,16 @@ public class activity_member_checkin extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

@@ -6,6 +6,7 @@ public class AttendanceTeacher {
     private String in;
     private String out;
     private String day_of_week;
+    private String date;
 
     public String getDay_of_week() {
         return day_of_week;
@@ -45,5 +46,13 @@ public class AttendanceTeacher {
 
     public void setOut(String out) {
         this.out = out;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

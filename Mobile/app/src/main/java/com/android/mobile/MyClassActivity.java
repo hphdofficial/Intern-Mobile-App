@@ -42,6 +42,7 @@ import retrofit2.Response;
 
 public class MyClassActivity extends BaseActivity {
 
+    private BlankFragment loadingFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +78,7 @@ public class MyClassActivity extends BaseActivity {
     }
 
     private void FetchClassesForTeacher(){
+        showLoading();
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
@@ -95,12 +97,14 @@ public class MyClassActivity extends BaseActivity {
                     RecyclerView recyclerView = findViewById(R.id.recycler_class);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     recyclerView.setAdapter(classAdapter);
+
+                    hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
+                    hideLoading();
                     Toast.makeText(MyClassActivity.this, "Đang chuyển qua lớp học cho học viên", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), activity_member_checkin.class));
-
                 }
             }
 
@@ -110,5 +114,16 @@ public class MyClassActivity extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }
