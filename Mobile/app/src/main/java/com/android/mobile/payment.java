@@ -128,7 +128,7 @@ public class payment extends BaseActivity {
 
 
 
-                     id_class = "1";
+//                     id_class = "1";
                 PaymentAPI apiService = APIServicePayment.getPaymentApiService();
                 Call<ResponseBody> call = apiService.RegisterClass("Bearer" + token,id_class + "",money);
 
