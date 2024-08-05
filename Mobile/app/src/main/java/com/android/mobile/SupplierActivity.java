@@ -1,6 +1,8 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -33,6 +35,13 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier);
+
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Danh sách nhà cung cấp");
+        myContentE.apply();
+
         // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

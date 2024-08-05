@@ -5,7 +5,7 @@
         android:title="Xem ảnh" />
     <item
         android:id="@+id/menu_replace_gallery"
-        android:title="Thay thế hin ảnh bằng thư viện" />
+        android:title="Thay thế hình ảnh bằng thư viện" />
     <item
         android:id="@+id/menu_replace_camera"
         android:title="Thay thế hình ảnh bẳng camera" />

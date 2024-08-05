@@ -1,6 +1,8 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,6 +36,12 @@ public class SupplierInfoActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Lưu tên trang vào SharedPreferences
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Thông tin nhà cung cấp");
+        myContentE.apply();
 
         // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();

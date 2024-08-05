@@ -87,6 +87,15 @@ public class activity_item_detail extends BaseActivity {
         Intent intent = getIntent();
         int idProduct = intent.getIntExtra("id", -1);
         int idSupplier = intent.getIntExtra("IDSupplier", -1);
+        btnDanhGia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
+                intent.putExtra("productId", idProduct);
+                startActivity(intent);
+            }
+        });
+
 
 
 
@@ -121,15 +130,6 @@ public class activity_item_detail extends BaseActivity {
                 }
 
 
-            }
-        });
-
-
-        btnDanhGia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
-                startActivity(intent);
             }
         });
 
