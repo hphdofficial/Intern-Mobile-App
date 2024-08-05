@@ -109,7 +109,7 @@ public class activity_item_detail extends BaseActivity {
                                 Intent intent1 = new Intent(activity_item_detail.this, CartActivity.class);
                                 startActivity(intent1);
                             }else {
-                                hideLoading();
+
                                 System.out.println("On Response Fail");
                                 Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
                             }
@@ -122,6 +122,7 @@ public class activity_item_detail extends BaseActivity {
                         }
                     });
                 }else{
+                    hideLoading();
                     Toast.makeText(activity_item_detail.this, "Quá số hàng trong kho, không thể thêm", Toast.LENGTH_SHORT).show();
                 }
 
