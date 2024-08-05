@@ -4,12 +4,26 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:background="@drawable/item_background"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:elevation="4dp"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:id="@+id/supplierLogo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/supplier"
+        android:contentDescription="@string/supplier"
+        android:layout_marginEnd="16dp"
+        android:scaleType="centerInside" />
 
     <TextView
         android:id="@+id/supplierName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/supplierLogo"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@android:color/black" />
@@ -19,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/supplierName"
+        android:layout_toEndOf="@id/supplierLogo"
         android:layout_marginTop="8dp"
         android:textSize="14sp"
         android:textColor="@android:color/darker_gray" />
