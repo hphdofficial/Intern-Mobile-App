@@ -140,7 +140,7 @@ public class MenuActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<Club> call, Throwable t) {
-                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -163,7 +163,7 @@ public class MenuActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<Class>> call, Throwable t) {
-                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -221,6 +221,7 @@ public class MenuActivity extends BaseActivity {
     private LinearLayout btn_logout;
     private LinearLayout btn_historyclass1;
     private LinearLayout btn_product;
+    private LinearLayout btn_sup;
     private ImageView img_avatar_menu;
     private ImageView test;
     private ImageView test1;
@@ -246,6 +247,7 @@ public class MenuActivity extends BaseActivity {
         test3 = findViewById(R.id.test3);
         test4 = findViewById(R.id.test4);
         test5 = findViewById(R.id.test5);
+        btn_sup = findViewById(R.id.btn_sup);
         btn_cart = findViewById(R.id.btn_cart);
         btn_history = findViewById(R.id.btn_history);
 
@@ -262,6 +264,13 @@ public class MenuActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(),CartActivity.class));
+            }
+        });
+
+        btn_sup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),SupplierActivity.class));
             }
         });
 
@@ -296,46 +305,56 @@ public class MenuActivity extends BaseActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String token = sharedPreferences.getString("access_token", null);
-
-                PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-                Call<List<ClassModelT>> call = apiService.GetClass("Bearer" + token);
-
-                call.enqueue(new Callback<List<ClassModelT>>() {
-                    @Override
-                    public void onResponse(Call<List<ClassModelT>> call, Response<List<ClassModelT>> response) {
-                        if(response.isSuccessful()){
-
-
-                            List<ClassModelT> cl = response.body();
-
-                            if(cl.size() > 0){
-                                Intent i =  new Intent(getApplicationContext(),DetailClassActivity.class);
-                                i.putExtra("id_class",cl.get(0).getId());
-                                startActivity( i);
-                            }else {
-                                startActivity(new Intent(getApplicationContext(), ClassActivity.class));
-                            }
-                        }else {
-                            Toast.makeText(getApplicationContext(),"Fail",Toast.LENGTH_SHORT).show();
-                        }
+                if (sharedPreferences.getString("id_class_shared", null) != null) {
+                    Intent intent = new Intent(getApplicationContext(), DetailClassActivity.class);
+                    intent.putExtra("id_class", sharedPreferences.getString("id_class_shared", null));
+                    startActivity(intent);
+                } else {
+                    if (sharedPreferences.getString("id_club_shared", null) != null) {
+                        Toast.makeText(MenuActivity.this, "Bạn chưa đăng ký lớp học nào", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), ClassActivity.class));
+                    } else {
+                        Toast.makeText(MenuActivity.this, "Bạn phải tham gia câu lạc bộ trước tiên", Toast.LENGTH_SHORT).show();
                     }
-
-                    @Override
-                    public void onFailure(Call<List<ClassModelT>> call, Throwable t) {
-
-                    }
-                });
-
-
-             //   startActivity(new Intent(getApplicationContext(), HistoryRegisterClass.class));
+                }
+//                String token = sharedPreferences.getString("access_token", null);
+//
+//                PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+//                Call<List<ClassModelT>> call = apiService.GetClass("Bearer" + token);
+//
+//                call.enqueue(new Callback<List<ClassModelT>>() {
+//                    @Override
+//                    public void onResponse(Call<List<ClassModelT>> call, Response<List<ClassModelT>> response) {
+//                        if(response.isSuccessful()){
+//
+//
+//                            List<ClassModelT> cl = response.body();
+//
+//                            if(cl.size() > 0){
+//                                Intent i =  new Intent(getApplicationContext(),DetailClassActivity.class);
+//                                i.putExtra("id_class",cl.get(0).getId());
+//                                startActivity( i);
+//                            }else {
+//                                startActivity(new Intent(getApplicationContext(), ClassActivity.class));
+//                            }
+//                        }else {
+//                            Toast.makeText(getApplicationContext(),"Fail",Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<List<ClassModelT>> call, Throwable t) {
+//
+//                    }
+//                });
+//
+//
+//             //   startActivity(new Intent(getApplicationContext(), HistoryRegisterClass.class));
             }
         });
         btn_historyclass1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 startActivity(new Intent(getApplicationContext(), HistoryRegisterClass.class));
             }
         });

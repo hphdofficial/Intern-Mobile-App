@@ -59,7 +59,7 @@ public class ActivityDetailMember extends BaseActivity {
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Thông tin User");
+        myContentE.putString("title", "Thông tin thành viên");
         myContentE.apply();
 
         // Chèn fragment

@@ -32,6 +32,7 @@ import com.android.mobile.models.CartResponse;
 import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.ProfileModel;
+import com.android.mobile.models.StatusRegister;
 import com.android.mobile.network.APIServicePayment;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.PaymentAPI;
@@ -154,9 +155,39 @@ public class Purchase extends BaseActivity {
         CreateItem();
       //  EventVoucher();
         EventPayment();
+        GetStatus();
 
 
 
+    }
+
+    public void GetStatus(){
+        if(link != null){
+            String s = link.replace("https://vovinammoi-4bedb6dd1c05.herokuapp.com/orders/show?id=","");
+            String arr[] = s.split("&");
+            PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+            Call<StatusRegister> call = apiService.GetStatusRegister(Integer.parseInt(arr[0]));
+            call.enqueue(new Callback<StatusRegister>() {
+                @Override
+                public void onResponse(Call<StatusRegister> call, Response<StatusRegister> response) {
+                    if(response.isSuccessful()){
+                        StatusRegister status = response.body();
+                        if(status.getStatus().contains("thành công")){
+                            Toast.makeText(getApplicationContext(),"Thanh toán thành công, mã hóa đơn " +arr[0],Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),MenuActivity.class));
+                        }else {
+                            Toast.makeText(getApplicationContext(),"Thanh toán thát bại",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    Toast.makeText(getApplicationContext(),"fail",Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onFailure(Call<StatusRegister> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(),"fail nn",Toast.LENGTH_SHORT).show();
+                }
+            });
+                Log.e("stats",link);
+        }
     }
 
 
@@ -164,22 +195,12 @@ public class Purchase extends BaseActivity {
         btn_payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(itemList.size()> 0)
                 {
 
+                    getLink();
 
-                    if(link != null){
-
-
-                        String url = link;
-
-                        // Tạo một Intent với action ACTION_VIEW và URL dưới dạng Uri
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse(url));
-
-                        // Bắt đầu Activity với Intent
-                        startActivity(intent);
-                    }
 
                 }
             }
@@ -222,7 +243,7 @@ public class Purchase extends BaseActivity {
                            DiscountMoney();
                            Transport();
                            TotalMoney();
-                            getLink();
+
 
                        }
                    }
@@ -245,9 +266,10 @@ public class Purchase extends BaseActivity {
     }
     public void getLink(){
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("access_token", null);
         int memberId = sharedPreferences.getInt("member_id", -1);
         PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-        Call<ResponseBody> call = apiService.getLink(memberId+"");
+        Call<ResponseBody> call = apiService.getLink("Bearer " + token,memberId+"");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -256,17 +278,24 @@ public class Purchase extends BaseActivity {
 
                     try {
                         link = response.body().string();
+                        String url = link;
+
+                        // Tạo một Intent với action ACTION_VIEW và URL dưới dạng Uri
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+
+                        // Bắt đầu Activity với Intent
+                        startActivity(intent);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-
-
                 }
+
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Toast.makeText(getApplicationContext(),"fails",Toast.LENGTH_SHORT).show();
             }
         });
     }

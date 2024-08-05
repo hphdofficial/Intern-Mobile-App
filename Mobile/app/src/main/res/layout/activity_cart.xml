@@ -61,7 +61,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="12dp"
-        android:text="Tổng tiền: đ 0"
+        android:text="Tổng tiền: 0 đ"
         android:textColor="@color/beautiful_color"
         android:textSize="18sp"
         android:textStyle="bold" />

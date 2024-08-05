@@ -50,12 +50,11 @@ public class SupplierProductActivity extends BaseActivity {
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Các sản phẩm của nhà cung cấp");
+        myContentE.putString("title", "Sản phẩm nhà cung cấp ");
         myContentE.apply();
 
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
-        saveToSharedPreferences(KEY_TITLE, VALUE_INFO);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

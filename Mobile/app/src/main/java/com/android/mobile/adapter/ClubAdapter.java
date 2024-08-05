@@ -47,13 +47,29 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ClubAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.textView.setText(clubList.get(position).getName());
+        String name = clubList.get(position).getName();
+        String ten = clubList.get(position).getTen();
+        if (name != null && !name.isEmpty()) {
+            holder.textView.setText(name);
+        } else if (ten != null && !ten.isEmpty()) {
+            holder.textView.setText(ten);
+        } else {
+            holder.textView.setText("Không có");
+        }
         holder.btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailClubActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("id_club", clubList.get(position).getId_club());
+                String idClub = clubList.get(position).getId_club();
+                String id = clubList.get(position).getId();
+                if (idClub != null && !idClub.isEmpty()) {
+                    bundle.putString("id_club", idClub);
+                } else if (id != null && !id.isEmpty()) {
+                    bundle.putString("id_club", id);
+                } else {
+                    bundle.putString("id_club", null);
+                }
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }

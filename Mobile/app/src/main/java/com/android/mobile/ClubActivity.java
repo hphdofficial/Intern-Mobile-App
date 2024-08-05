@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,9 +34,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.models.CityModel;
+import com.android.mobile.models.Class;
 import com.android.mobile.models.Club;
 import com.android.mobile.models.CountryModel;
 import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.ClassApiService;
 import com.android.mobile.services.ClubApiService;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -68,6 +71,7 @@ public class ClubActivity extends BaseActivity {
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +98,21 @@ public class ClubActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        searchView = findViewById(R.id.search_location);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchClub(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//                searchClub(newText);
+                return false;
+            }
+        });
+
         Button btnLocation = findViewById(R.id.btn_current_location);
         btnLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +136,30 @@ public class ClubActivity extends BaseActivity {
         loadListClubDefault();
         showListCountry();
         showListCity();
+    }
+
+    public void searchClub(String text){
+        ClubApiService service = ApiServiceProvider.getClubApiService();
+        Call<List<Club>> call = service.searchClub(text);
+
+        call.enqueue(new Callback<List<Club>>() {
+            @Override
+            public void onResponse(Call<List<Club>> call, Response<List<Club>> response) {
+                if (response.isSuccessful()) {
+                    List<Club> clubs = response.body();
+                    adapter.setData(clubs);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    System.err.println("Response error: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Club>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private void getCurrentLocation() {
@@ -212,7 +255,7 @@ public class ClubActivity extends BaseActivity {
                 getCurrentLocation();
             } else {
                 // User chose not to make required location settings changes.
-                Toast.makeText(this, "Location settings are not adequate, and cannot be fixed here. Fix in Settings.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -243,7 +286,7 @@ public class ClubActivity extends BaseActivity {
                     }.getType();
                     List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
                     adapter.setData(clubs);
-                    Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                     }

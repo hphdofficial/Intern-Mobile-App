@@ -56,7 +56,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Tin Tức");
+        myContentE.putString("title", "Tin tức và thông báo");
         myContentE.apply();
 
         RecyclerView recyclerView = findViewById(R.id.itemNews);

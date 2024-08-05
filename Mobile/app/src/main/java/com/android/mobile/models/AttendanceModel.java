@@ -37,6 +37,18 @@ public class AttendanceModel {
         private String day_of_week;
         private String in;
         private String out;
+        private String hienDien;
+
+        public Attendance(String date, String day_of_week, String hienDien, String in, String out) {
+            this.date = date;
+            this.day_of_week = day_of_week;
+            this.hienDien = hienDien;
+            this.in = in;
+            this.out = out;
+        }
+
+        public Attendance() {
+        }
 
         public String getDate() {
             return date;
@@ -68,6 +80,14 @@ public class AttendanceModel {
 
         public void setOut(String out) {
             this.out = out;
+        }
+
+        public String getHienDien() {
+            return hienDien;
+        }
+
+        public void setHienDien(String hienDien) {
+            this.hienDien = hienDien;
         }
     }
 }

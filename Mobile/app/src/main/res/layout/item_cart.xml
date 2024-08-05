@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/txt_name_supplier"
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -56,10 +56,8 @@
         android:text="10,000 VND"
         android:textColor="#FF0000"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/txt_category_product"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_category_product" />
 
     <LinearLayout
         android:layout_width="wrap_content"

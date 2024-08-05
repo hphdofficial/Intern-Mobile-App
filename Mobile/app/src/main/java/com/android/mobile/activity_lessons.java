@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -46,6 +47,7 @@ public class activity_lessons extends BaseActivity {
     private List<TheoryModel> filteredTheoryList = new ArrayList<>();
     private TheoryAdapter theoryAdapter;
     private EditText search_edit_text;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +110,7 @@ public class activity_lessons extends BaseActivity {
     }
 
     private void FetchTheory(){
+        showLoading();
         TheoryApiService apiService = ApiServiceProvider.getTheoryApiService();
         apiService.getMartialArtsTheory().enqueue(new Callback<List<TheoryModel>>() {
             @Override
@@ -116,7 +119,10 @@ public class activity_lessons extends BaseActivity {
                     theoryList.clear(); // Clear existing data
                     theoryList.addAll(response.body());
                     filterTheory(search_edit_text.getText().toString());
+                    hideLoading();
                 }else {
+                    hideLoading();
+                    Toast.makeText(activity_lessons.this, "Lỗi lấy danh sách lý thuyết, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
                 }
@@ -124,6 +130,7 @@ public class activity_lessons extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
+                hideLoading();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
@@ -151,6 +158,7 @@ public class activity_lessons extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
+                    hideLoading();
                     System.out.println("Active: Call Onfail");
                     Log.e("PostData", "Failure: " + throwable.getMessage());
                 }
@@ -179,5 +187,16 @@ public class activity_lessons extends BaseActivity {
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("");
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

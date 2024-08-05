@@ -153,7 +153,12 @@ public class sub_menu extends Fragment {
                     startActivity(new Intent(getContext(), ClubActivity.class));
                 }
                 if(id == R.id.btn_registerclass){
-                    startActivity(new Intent(getContext(), ClassActivity.class));
+                    if (sharedPreferences.getString("id_class_shared", null) == null) {
+                        startActivity(new Intent(getContext(), ClassActivity.class));
+                    } else {
+                        Toast.makeText(getActivity(), "Bạn đã đăng ký lớp học rồi", Toast.LENGTH_SHORT).show();
+                    }
+//                    startActivity(new Intent(getContext(), ClassActivity.class));
                 }
 
                 if(id == R.id.btn_infor){

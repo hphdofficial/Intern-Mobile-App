@@ -3,6 +3,7 @@ package com.android.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -39,6 +40,7 @@ public class ClassActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private ClassAdapter adapter;
     private List<Class> classList = new ArrayList<>();
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,21 @@ public class ClassActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        searchView = findViewById(R.id.search_class);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchClass(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//                searchClass(newText);
+                return false;
+            }
+        });
+
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
 
@@ -77,7 +94,31 @@ public class ClassActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<Class> classes = response.body();
                     adapter.setData(classes);
-                    Toast.makeText(ClassActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    System.err.println("Response error: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Class>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void searchClass(String text) {
+        ClassApiService service = ApiServiceProvider.getClassApiService();
+        Call<List<Class>> call = service.searchClass(text);
+
+        call.enqueue(new Callback<List<Class>>() {
+            @Override
+            public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                if (response.isSuccessful()) {
+                    List<Class> classes = response.body();
+                    adapter.setData(classes);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(ClassActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }

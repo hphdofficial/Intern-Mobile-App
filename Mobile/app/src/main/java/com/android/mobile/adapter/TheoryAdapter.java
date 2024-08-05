@@ -39,6 +39,7 @@ public class TheoryAdapter extends RecyclerView.Adapter<TheoryAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         String txtTitle = theoryModelList.get(i).getTenvi();
         viewHolder.txtTitle.setText(txtTitle);
+        viewHolder.txtTitle.setTextSize(16);
 
         String imgTheory = theoryModelList.get(i).getPhoto();
         if (imgTheory != null) {

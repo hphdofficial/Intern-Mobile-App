@@ -163,7 +163,11 @@ public class StartActivity extends BaseActivity {
 
 
                 } else {
-                    Toast.makeText(StartActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    if (response.code() == 401) {
+                        Toast.makeText(StartActivity.this, "Sai thông tin email hoặc mật khẩu", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(StartActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 

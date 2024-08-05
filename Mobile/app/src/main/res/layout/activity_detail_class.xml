@@ -130,41 +130,44 @@
             android:id="@+id/btn_register_class"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="30dp"
             android:backgroundTint="#03A9F4"
             android:text="Đăng ký lớp học"
+            android:visibility="visible"
+            app:cornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btn_leave_class"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="30dp"
             android:backgroundTint="#FF9800"
             android:text="Rời lớp học"
             android:textColor="@color/black"
+            android:visibility="gone"
+            app:cornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btn_direct_class"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="30dp"
             android:backgroundTint="#4CAF50"
             android:text="Đến lớp học đã đăng ký"
+            android:visibility="gone"
+            app:cornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -195,8 +195,8 @@ public class DetailClubActivity extends BaseActivity {
 
                     Toast.makeText(DetailClubActivity.this, "Tham gia câu lạc bộ thành công", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(DetailClubActivity.this, ClassActivity.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(DetailClubActivity.this, ClassActivity.class);
+//                    startActivity(intent);
                 }
             }
 
