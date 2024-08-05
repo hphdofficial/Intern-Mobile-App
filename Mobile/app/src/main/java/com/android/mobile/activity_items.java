@@ -64,8 +64,10 @@ public class activity_items extends BaseActivity {
     private List<ProductModel> productList = new ArrayList<>();
     private List<ProductModel> filteredProductList = new ArrayList<>();
     private Item_adapter itemAdapter;
+    private Item_adapter itemAdapterFilter;
     private int min_price;
     private int max_price;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,7 @@ public class activity_items extends BaseActivity {
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showLoading();
                 View filterDialogView = LayoutInflater.from(activity_items.this).inflate(R.layout.bottom_sheet_dialog_filter, null);
 
                 btnFilterActive = filterDialogView.findViewById(R.id.btnFilter);
@@ -148,9 +151,12 @@ public class activity_items extends BaseActivity {
                             RecyclerView recyclerView = filterDialogView.findViewById(R.id.recycle_option_supplier);
                             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
                             recyclerView.setAdapter(optionAdapter2);
+
+                            hideLoading();
                         }else {
                             System.out.println("Active: Call onResponse");
                             Log.e("PostData", "Error: " + response.message());
+                            hideLoading();
                         }
                     }
 
@@ -229,6 +235,7 @@ public class activity_items extends BaseActivity {
     }
 
     private void performSearch() {
+        showLoading();
 
         String min_price_str = editMinPrice.getText().toString().trim();
         String max_price_str = editMaxPrice.getText().toString().trim();
@@ -257,10 +264,10 @@ public class activity_items extends BaseActivity {
                         Log.e("PostData", "Success: " + product.getProductName());
                         productList.add(product);
                     }
-                    itemAdapter = new Item_adapter(getApplicationContext(), productList);
+                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
                     RecyclerView recyclerView = findViewById(R.id.recycler_item);
                     recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                    recyclerView.setAdapter(itemAdapter);
+                    recyclerView.setAdapter(itemAdapterFilter);
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
@@ -292,10 +299,10 @@ public class activity_items extends BaseActivity {
                             productList.add(product);
 
                         }
-                        itemAdapter = new Item_adapter(getApplicationContext(), productList);
+                        itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
                         RecyclerView recyclerView = findViewById(R.id.recycler_item);
                         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                        recyclerView.setAdapter(itemAdapter);
+                        recyclerView.setAdapter(itemAdapterFilter);
 
                     }else {
                         System.out.println("Active: Call onResponse");
@@ -326,14 +333,15 @@ public class activity_items extends BaseActivity {
                         productList.add(product);
 
                     }
-                    itemAdapter = new Item_adapter(getApplicationContext(), productList);
+                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
                     RecyclerView recyclerView = findViewById(R.id.recycler_item);
                     recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                    recyclerView.setAdapter(itemAdapter);
-
+                    recyclerView.setAdapter(itemAdapterFilter);
+                    hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
+                    hideLoading();
                 }
             }
 
@@ -347,6 +355,7 @@ public class activity_items extends BaseActivity {
     }
 
     private void FetchProducts(){
+        showLoading();
         ProductApiService apiService = ApiServiceProvider.getProductApiService();
         apiService.getProducts().enqueue(new Callback<List<ProductModel>>() {
             @Override
@@ -355,9 +364,13 @@ public class activity_items extends BaseActivity {
                     productList.clear(); // Clear existing data
                     productList.addAll(response.body());
                     filterProduct(searchView.getText().toString());
+
+                    hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
+
+                    hideLoading();
                 }
             }
 
@@ -382,6 +395,7 @@ public class activity_items extends BaseActivity {
                         productList.clear(); // Clear existing data
                         productList.addAll(response.body());
                         filterProduct(name);
+
                     }else {
                         System.out.println("Active: Call onResponse");
                         Log.e("PostData", "Error: " + response.message());
@@ -418,5 +432,16 @@ public class activity_items extends BaseActivity {
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("");
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

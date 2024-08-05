@@ -3,6 +3,7 @@ package com.android.mobile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +53,8 @@ import retrofit2.Response;
 public class activity_checkin extends BaseActivity {
 
     private Checkin_adapter checkinAdapter;
+    private BlankFragment loadingFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +67,11 @@ public class activity_checkin extends BaseActivity {
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = currentDate.format(formatter);
-
         TextView txtDate = findViewById(R.id.txtDate);
         txtDate.setText("Ngày: "+formattedDate);
+
+
+
 
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
@@ -95,39 +100,70 @@ public class activity_checkin extends BaseActivity {
 
         fetchMemberForCheckin(idClass,"Bearer "+token);
 
+        Button btnHistory = findViewById(R.id.btnHistory);
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(activity_checkin.this, activity_teacher_checkin.class);
+                intent1.putExtra("id", idClass);
+                startActivity(intent1);
+            }
+        });
+
         Button btnDiemDanh = findViewById(R.id.btnDiemDanh);
+        String finalFormattedDate = formattedDate;
         btnDiemDanh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showLoading();
                 List<CheckinMemberModel> checkinOptions = checkinAdapter.getCheckinList().stream()
                         .filter(CheckinMemberModel::isChecked)
                         .collect(Collectors.toList());
 
                 // Lấy thời gian hiện tại
-                LocalTime currentTime = LocalTime.now();
+                LocalTime currentTime = null;
 
-                // Định dạng thời gian theo kiểu 24 giờ
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                String formattedTime = "";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    currentTime = LocalTime.now();
+                    // Định dạng thời gian theo kiểu 24 giờ
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-                // Chuyển đổi thời gian hiện tại sang chuỗi theo định dạng đã cho
-                String formattedTime = currentTime.format(formatter);
+                    // Chuyển đổi thời gian hiện tại sang chuỗi theo định dạng đã cho
+                    formattedTime = currentTime.format(formatter);
+                }
+
+
 
                 AttendanceRequest attendanceRequest = new AttendanceRequest();
                 attendanceRequest.setId_class(idClass);
-                attendanceRequest.setDate(formattedDate);
-//                attendanceRequest.setDate("2024-08-05");
+
+                LocalDate currentTodayDate = null;
+                String todayDate = "";
+                currentTodayDate = LocalDate.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                todayDate = currentTodayDate.format(formatter);
+
+                attendanceRequest.setDate(todayDate);
+
+//                attendanceRequest.setDate("2024-07-29");
+
                 List<AttendanceRequest.Attendee> attendees = new ArrayList<>();
-                AttendanceRequest.Attendee attendee = new AttendanceRequest.Attendee();
+
 
 
 
                 for (CheckinMemberModel checkin : checkinOptions) {
+                    AttendanceRequest.Attendee attendee = new AttendanceRequest.Attendee();
                     attendee.setId_atg_member(checkin.getId());
+                    System.out.println(checkin.getId());
                     attendee.setIn(formattedTime);
+//                    attendee.setIn("18:08");
                     attendee.setOut("19:30");
+                    attendees.add(attendee);
                 }
 
-                attendees.add(attendee);
+
 
                 attendanceRequest.setAttendees(attendees);
 
@@ -136,8 +172,19 @@ public class activity_checkin extends BaseActivity {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if(response.isSuccessful()){
+
+                            hideLoading();
+
+                            //Chuyển qua lịch sử điểm danh
+                            Intent intent1 = new Intent(activity_checkin.this, activity_teacher_checkin.class);
+                            intent1.putExtra("id", idClass);
+                            startActivity(intent1);
+
                             Toast.makeText(activity_checkin.this, "Điểm danh thành công", Toast.LENGTH_SHORT).show();
                         }else {
+
+                            hideLoading();
+
                             Toast.makeText(activity_checkin.this, "Điểm danh thất bại do chưa đúng thời gian điểm danh lớp học", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -155,6 +202,7 @@ public class activity_checkin extends BaseActivity {
     }
 
     private void fetchMemberForCheckin(int idClass, String token){
+        showLoading();
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
         apiService.getClassMembers(token, idClass).enqueue(new Callback<JsonObject>() {
             @Override
@@ -171,9 +219,15 @@ public class activity_checkin extends BaseActivity {
                     RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     recyclerView.setAdapter(checkinAdapter);
+                    if(checkinMembers == null){
+                        Toast.makeText(activity_checkin.this, "Lớp chưa có thành viên", Toast.LENGTH_SHORT).show();
+                    }
+                    hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
+                    Toast.makeText(activity_checkin.this, "Lỗi lấy dữ liệu vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                    hideLoading();
                 }
             }
 
@@ -183,5 +237,16 @@ public class activity_checkin extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

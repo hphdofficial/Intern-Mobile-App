@@ -34,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class activity_item_detail extends BaseActivity {
-
+    private BlankFragment loadingFragment;
     EditText editQuantity;
     int quantityInStock;
     @Override
@@ -47,6 +47,8 @@ public class activity_item_detail extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        showLoading();
 
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
@@ -93,6 +95,7 @@ public class activity_item_detail extends BaseActivity {
         btnMua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showLoading();
                 String currentTextQuantity = editQuantity.getText().toString();
                 int currentNumberQuantity = Integer.parseInt(currentTextQuantity);
                 if(quantityInStock > currentNumberQuantity){
@@ -101,10 +104,12 @@ public class activity_item_detail extends BaseActivity {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(response.isSuccessful()){
+                                hideLoading();
                                 Toast.makeText(activity_item_detail.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
                                 Intent intent1 = new Intent(activity_item_detail.this, CartActivity.class);
                                 startActivity(intent1);
                             }else {
+                                hideLoading();
                                 System.out.println("On Response Fail");
                                 Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
                             }
@@ -190,9 +195,12 @@ public class activity_item_detail extends BaseActivity {
                     }else{
                         imageItem.setImageResource(R.drawable.logo_vovinam);
                     }
+
+                    hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
+                    hideLoading();
                 }
             }
 
@@ -221,6 +229,17 @@ public class activity_item_detail extends BaseActivity {
             editQuantity.setText(String.valueOf(currentNumber));
         } else {
             Toast.makeText(this, "Số lượng không bé hơn 1", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
         }
     }
 }

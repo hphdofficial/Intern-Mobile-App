@@ -22,7 +22,7 @@ public class Checked_Teacher_adapter extends RecyclerView.Adapter<Checked_Teache
 
     List<AttendanceTeacher> checkinList = new ArrayList<>();
 
-    public Checked_Teacher_adapter(List<AttendanceTeacher> checkinList, Context context) {
+    public Checked_Teacher_adapter(Context context, List<AttendanceTeacher> checkinList) {
         this.checkinList = checkinList;
         this.context = context;
     }
@@ -36,7 +36,8 @@ public class Checked_Teacher_adapter extends RecyclerView.Adapter<Checked_Teache
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         String txtDateOfWeek = checkinList.get(i).getDay_of_week();
-        viewHolder.txtDate.setText(txtDateOfWeek);
+        String txtDate = checkinList.get(i).getDate();
+        viewHolder.txtDate.setText(txtDate + " "+ txtDateOfWeek);
 
         String txtName = checkinList.get(i).getMember_name();
         viewHolder.txtName.setText(txtName);
