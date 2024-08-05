@@ -51,7 +51,9 @@ public class activity_member_checkin extends BaseActivity {
     private String timeClass;
     private List<AttendanceModel.Attendance> attendanceModelAll = new ArrayList<>();
 
+
     private int[] days;
+    private TextView txtClassName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,7 @@ public class activity_member_checkin extends BaseActivity {
             return insets;
         });
 
-        TextView txtClassName = findViewById(R.id.txtClassName);
+        txtClassName = findViewById(R.id.txtClassName);
         TextView txtSoNgayHienDien = findViewById(R.id.txtCheckin);
 
 
@@ -96,45 +98,6 @@ public class activity_member_checkin extends BaseActivity {
 
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
 
-        apiService.memberViewClass("Bearer "+token).enqueue(new Callback<ClassModel[]>() {
-            @Override
-            public void onResponse(Call<ClassModel[]> call, Response<ClassModel[]> response) {
-                if(response.isSuccessful()){
-                    ClassModel[] classModels = response.body();
-                    for (ClassModel classModel : classModels){
-                        timeClass = classModel.getThoigian();
-                        String[] dates = parseSchedule(timeClass);
-                        days = new int[dates.length];
-                        for (int i = 0; i < dates.length; i++) {
-                            days[i] = Integer.parseInt(dates[i]);
-                        }
-
-                        ArrayList<String> dayToCheck = showAllDayCheckin(transDateToCalendar(transDate("2024-07-20")), transDateToCalendar(transDate(formattedDate)), days);
-                        for(String string : dayToCheck){
-                            AttendanceModel.Attendance attendance = new AttendanceModel.Attendance();
-                            attendance.setHienDien("Vắng");
-                            attendance.setDate(string);
-                            attendance.setIn("00:00");
-                            attendance.setOut("00:00");
-                            attendance.setDay_of_week("T2");
-                            attendanceModelAll.add(attendance);
-                            System.out.println("Get some date"+string);
-                        }
-                    }
-                }else {
-                    Toast.makeText(activity_member_checkin.this, "Lấy data fail", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ClassModel[]> call, Throwable throwable) {
-                hideLoading();
-                System.out.println("Active: Call Onfail");
-                Log.e("PostData", "Failure: " + throwable.getMessage());
-            }
-        });
-
-
         apiService.memberViewCheckin("Bearer "+token, "2024-07-20", formattedDate).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -145,21 +108,70 @@ public class activity_member_checkin extends BaseActivity {
                     JsonObject dataObject = jsonObject.getAsJsonObject("data");
 
                     txtClassName.setText(dataObject.get("class_name").getAsString());
+
+                    String dateJoin = dataObject.get("begin_date").getAsString();
+
                     Type AttendanceModelListType = new TypeToken<List<AttendanceModel.Attendance>>() {}.getType();
                     List<AttendanceModel.Attendance> attendanceModels = gson.fromJson(dataObject.get("attendance"), AttendanceModelListType);
 
+                    //Fecth all day
+                    apiService.memberViewClass("Bearer "+token).enqueue(new Callback<ClassModel[]>() {
+                        @Override
+                        public void onResponse(Call<ClassModel[]> call, Response<ClassModel[]> response) {
+                            if(response.isSuccessful()){
+                                ClassModel[] classModels = response.body();
+                                for (ClassModel classModel : classModels){
+                                    timeClass = classModel.getThoigian();
+                                    String[] dates = parseSchedule(timeClass);
+                                    days = new int[dates.length];
+                                    for (int i = 0; i < dates.length; i++) {
+                                        days[i] = Integer.parseInt(dates[i]);
+                                    }
 
-                    checkedAdapter = new Checked_adapter(attendanceModels, getApplicationContext());
-                    RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    recyclerView.setAdapter(checkedAdapter);
+                                    ArrayList<String> dayToCheck = showAllDayCheckin(transDateToCalendar(transDate(dateJoin)), transDateToCalendar(transDate(formattedDate)), days);
+                                    for(String string : dayToCheck){
+                                        AttendanceModel.Attendance attendance = new AttendanceModel.Attendance();
+                                        attendance.setHienDien("Vắng");
+                                        attendance.setDate(string);
+                                        attendance.setIn("00:00");
+                                        attendance.setOut("00:00");
+                                        attendance.setDay_of_week("T2");
+                                        attendanceModelAll.add(attendance);
+                                        System.out.println("Get some date"+string);
+                                    }
 
-                    for (AttendanceModel.Attendance attendanceModel : attendanceModels){
-                        System.out.println("GET:"+ attendanceModel.getDay_of_week());
-                    }
+                                    for(AttendanceModel.Attendance a : attendanceModelAll){
+                                        for(AttendanceModel.Attendance b : attendanceModels){
+                                            if(b.getDate().equals(a.getDate())){
+                                                a.setIn(b.getIn());
+                                            }
+                                        }
+                                    }
 
-                    txtSoNgayHienDien.setText(checkedAdapter.getItemCount() + " Ngày");
+//                                    attendanceModels.addAll(attendanceModelAll);
 
+                                    checkedAdapter = new Checked_adapter(attendanceModelAll, getApplicationContext());
+                                    RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                    recyclerView.setAdapter(checkedAdapter);
+
+                                    txtSoNgayHienDien.setText(checkedAdapter.getItemCount() + " Ngày");
+                                    hideLoading();
+                                }
+                            }else {
+                                hideLoading();
+                                Toast.makeText(activity_member_checkin.this, "Lấy data fail", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ClassModel[]> call, Throwable throwable) {
+                            hideLoading();
+                            System.out.println("Active: Call Onfail");
+                            Log.e("PostData", "Failure: " + throwable.getMessage());
+                            Toast.makeText(activity_member_checkin.this, "Lấy data fail", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     hideLoading();
                 }else {
                     hideLoading();
@@ -174,6 +186,7 @@ public class activity_member_checkin extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+
     }
 
     private void showLoading() {
