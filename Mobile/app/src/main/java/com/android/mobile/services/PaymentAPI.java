@@ -1,10 +1,13 @@
 package com.android.mobile.services;
 
+import com.android.mobile.HistoryRegisterClass;
 import com.android.mobile.models.Belt;
 import com.android.mobile.models.BeltModel;
 import com.android.mobile.models.CartModel;
 import com.android.mobile.models.CartResponse;
+import com.android.mobile.models.ClassModelT;
 import com.android.mobile.models.DetailsBelt;
+import com.android.mobile.models.HistoryClassModel;
 import com.android.mobile.models.ProfileModel;
 
 import java.util.ArrayList;
@@ -39,6 +42,16 @@ public interface PaymentAPI {
     Call<BeltModel> GetBelt(
             @Header("Authorization") String token
             );
+
+    @GET("api/payment-history")
+    Call<List<HistoryClassModel>> GetHistoryClass(
+            @Header("Authorization") String token
+    );
+    @GET("api/user/classes")
+    Call<List<ClassModelT>> GetClass(
+            @Header("Authorization") String token
+    );
+
     @GET("api/education-grades/belt-info")
     Call<List<DetailsBelt>> getBeltInfo(@Query ("id") int id);
 }

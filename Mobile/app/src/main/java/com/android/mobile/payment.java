@@ -121,7 +121,6 @@ public class payment extends BaseActivity {
 
                    money = extras.getDouble("money");
                    id_class = extras.getString("idClass");
-
                 }
 
 
