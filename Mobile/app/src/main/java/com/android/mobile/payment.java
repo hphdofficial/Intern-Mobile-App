@@ -27,8 +27,10 @@ import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ProductAdapter;
 import com.android.mobile.models.CartModel;
 import com.android.mobile.models.CartResponse;
+import com.android.mobile.models.HistoryClassModel;
 import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
+import com.android.mobile.models.StatusRegister;
 import com.android.mobile.network.APIServicePayment;
 import com.android.mobile.services.PaymentAPI;
 
@@ -54,7 +56,7 @@ public class payment extends BaseActivity {
     private TextView textViewHealthStatus;
     private TextView textViewClass;
     private TextView textViewInstructorName;
-
+    String id_class = null;
     private String link = null;
 
     @Override
@@ -115,17 +117,18 @@ public class payment extends BaseActivity {
                 sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
                 String token = sharedPreferences.getString("access_token", null);
                 Double money = 0.0;
-                String id_class = null;
+
                 if (extras != null) {
 
 
                    money = extras.getDouble("money");
+
                    id_class = extras.getString("idClass");
                 }
 
 
 
-
+                     id_class = "1";
                 PaymentAPI apiService = APIServicePayment.getPaymentApiService();
                 Call<ResponseBody> call = apiService.RegisterClass("Bearer" + token,id_class + "",money);
 
@@ -207,4 +210,38 @@ public class payment extends BaseActivity {
         });
     }*/
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GetStatus();
+    }
+    public void GetStatus(){
+            if(link != null){
+                String s = link.replace("https://vovinammoi-4bedb6dd1c05.herokuapp.com/pay_clb/show?id=","");
+                String arr[] = s.split("&");
+                PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+                Call<StatusRegister> call = apiService.GetStatusRegister(Integer.parseInt(arr[0]));
+                call.enqueue(new Callback<StatusRegister>() {
+                    @Override
+                    public void onResponse(Call<StatusRegister> call, Response<StatusRegister> response) {
+                        if(response.isSuccessful()){
+                            StatusRegister status = response.body();
+                            if(status.getStatus().contains("thành công")){
+                                Toast.makeText(getApplicationContext(),"Thanh toán thành công, mã hóa đơn " +arr[0],Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(),MenuActivity.class));
+                            }else {
+                                Toast.makeText(getApplicationContext(),"Thanh toán thát bại",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        Toast.makeText(getApplicationContext(),"fail",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<StatusRegister> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(),"fail nn",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+    }
 }

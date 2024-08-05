@@ -1,6 +1,8 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -51,6 +53,7 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
         recyclerView.setAdapter(adapter);
 
         fetchSuppliers();
+        NamePage();
     }
 
     private void fetchSuppliers() {
@@ -83,5 +86,12 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
         intent.putExtra("Phone", supplier.getPhone());
         intent.putExtra("Email", supplier.getEmail());
         startActivity(intent);
+    }
+
+    public void NamePage(){
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Nhà cung cấp");
+        myContentE.apply();
     }
 }
