@@ -64,6 +64,8 @@ public class activity_teacher_checkin extends BaseActivity {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = currentDate.format(formatter);
 
+        TextView txtClassName = findViewById(R.id.txtClassName);
+
         Intent intent = getIntent();
         int idClass = intent.getIntExtra("id", -1);
 
@@ -101,7 +103,9 @@ public class activity_teacher_checkin extends BaseActivity {
                         if (apiResponse != null && "Thành công".equals(apiResponse.getSuccess())) {
                             List<ClassData> classDataList = apiResponse.getData();
                             for (ClassData classData : classDataList) {
-                                Log.d(TAG, "Class Name: " + classData.getClassName());
+                                //Tên lớp
+                                txtClassName.setText(classData.getClassName());
+
                                 for (Map.Entry<String, List<AttendanceTeacher>> entry : classData.getAttendance().entrySet()) {
                                     String date = entry.getKey();
                                     List<AttendanceTeacher> attendanceList = entry.getValue();
