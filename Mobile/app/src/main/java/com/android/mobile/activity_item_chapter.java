@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class activity_item_chapter extends BaseActivity {
-
+    private BlankFragment loadingFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,10 @@ public class activity_item_chapter extends BaseActivity {
         TextView txtTheoryContent = findViewById(R.id.txtTheoryContent);
         WebView webView = findViewById(R.id.webView);
 
+
+
         //Fetch thông tin lý thuyết
+        showLoading();
         TheoryApiService apiService = ApiServiceProvider.getTheoryApiService();
         apiService.getMartialArtsTheoryDetail(idTheory).enqueue(new Callback<TheoryModel>() {
             @Override
@@ -67,8 +71,10 @@ public class activity_item_chapter extends BaseActivity {
                     webView.getSettings().setJavaScriptEnabled(true);
                     webView.setWebChromeClient(new WebChromeClient());
 
-                    System.out.println("ABC" + videoPath);
+                    hideLoading();
                 }else {
+                    hideLoading();
+                    Toast.makeText(activity_item_chapter.this, "Lý thuyết hiện không khả dụng", Toast.LENGTH_SHORT).show();
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
                 }
@@ -97,5 +103,16 @@ public class activity_item_chapter extends BaseActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }
