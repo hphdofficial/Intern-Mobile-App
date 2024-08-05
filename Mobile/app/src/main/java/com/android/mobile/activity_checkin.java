@@ -39,6 +39,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +103,15 @@ public class activity_checkin extends BaseActivity {
                         .filter(CheckinMemberModel::isChecked)
                         .collect(Collectors.toList());
 
+                // Lấy thời gian hiện tại
+                LocalTime currentTime = LocalTime.now();
+
+                // Định dạng thời gian theo kiểu 24 giờ
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+                // Chuyển đổi thời gian hiện tại sang chuỗi theo định dạng đã cho
+                String formattedTime = currentTime.format(formatter);
+
                 AttendanceRequest attendanceRequest = new AttendanceRequest();
                 attendanceRequest.setId_class(idClass);
                 attendanceRequest.setDate(formattedDate);
@@ -109,9 +119,11 @@ public class activity_checkin extends BaseActivity {
                 List<AttendanceRequest.Attendee> attendees = new ArrayList<>();
                 AttendanceRequest.Attendee attendee = new AttendanceRequest.Attendee();
 
+
+
                 for (CheckinMemberModel checkin : checkinOptions) {
                     attendee.setId_atg_member(checkin.getId());
-                    attendee.setIn("18:00");
+                    attendee.setIn(formattedTime);
                     attendee.setOut("19:30");
                 }
 
@@ -126,7 +138,7 @@ public class activity_checkin extends BaseActivity {
                         if(response.isSuccessful()){
                             Toast.makeText(activity_checkin.this, "Điểm danh thành công", Toast.LENGTH_SHORT).show();
                         }else {
-                            Toast.makeText(activity_checkin.this, "Điểm danh thất bại", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity_checkin.this, "Điểm danh thất bại do chưa đúng thời gian điểm danh lớp học", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -134,6 +146,7 @@ public class activity_checkin extends BaseActivity {
                     public void onFailure(Call<Void> call, Throwable throwable) {
                         System.out.println("Active: Call Onfail");
                         Log.e("PostData", "Failure: " + throwable.getMessage());
+                        Toast.makeText(activity_checkin.this, "Điểm danh thất bại do lỗi mạng", Toast.LENGTH_SHORT).show();
                     }
                 });
 
