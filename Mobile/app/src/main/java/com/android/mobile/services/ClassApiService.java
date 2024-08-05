@@ -36,4 +36,9 @@ public interface ClassApiService {
             @Header("Authorization") String token,
             @Body Class classs
     );
+
+    @GET("/api/classes/search_name")
+    Call<List<Class>> searchClass(
+            @Query("keyword") String name
+    );
 }

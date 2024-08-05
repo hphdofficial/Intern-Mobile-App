@@ -62,4 +62,9 @@ public interface ClubApiService {
     Call<Club> getDetailClubMember(
             @Header("Authorization") String token
     );
+
+    @GET("/api/clubs/search_name")
+    Call<List<Club>> searchClub(
+            @Query("keyword") String name
+    );
 }
