@@ -40,10 +40,16 @@ public class Checked_adapter extends RecyclerView.Adapter<Checked_adapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         String txtDate = checkinList.get(i).getDate();
         String txtDateOfWeek = checkinList.get(i).getDay_of_week();
-        viewHolder.txtDate.setText(txtDateOfWeek +" Ngày "+txtDate);
+        viewHolder.txtDate.setText(txtDate);
         String txtTimeIn = checkinList.get(i).getIn();
         viewHolder.txtTimeIn.setText(txtTimeIn);
-        viewHolder.txtChecked.setText("Có mặt");
+        String txtHienDien = checkinList.get(i).getHienDien();
+        if (txtTimeIn.equals("00:00")){
+            viewHolder.txtChecked.setText(txtHienDien);
+        }else{
+            viewHolder.txtChecked.setText("Có mặt");
+        }
+
 
 
     }
