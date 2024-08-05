@@ -7,15 +7,19 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.mobile.adapter.BaseActivity;
+import com.android.mobile.models.ForgotPasswordModel;
 import com.android.mobile.models.VerifyOtpModel;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,6 +30,8 @@ public class EnterOtpActivity extends BaseActivity {
     private EditText inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6;
     private String email;
     private ImageView img_back;
+
+    private TextView tvResendOTP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,8 @@ public class EnterOtpActivity extends BaseActivity {
 
         img_back = findViewById(R.id.img_back);
 
+        tvResendOTP = findViewById(R.id.tvResendOTP);
+
         setupEditTextListeners();
 
         findViewById(R.id.btnVerify).setOnClickListener(new View.OnClickListener() {
@@ -57,6 +65,12 @@ public class EnterOtpActivity extends BaseActivity {
                 Intent intent = new Intent(EnterOtpActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+        tvResendOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resendOtp();
             }
         });
     }
@@ -118,13 +132,43 @@ public class EnterOtpActivity extends BaseActivity {
                     intent.putExtra("otp", otp);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(EnterOtpActivity.this, "Xác thực OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    if (response.code() == 400) {
+                        Toast.makeText(EnterOtpActivity.this, "Mã OTP không chính xác", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EnterOtpActivity.this, "Xác thực OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
                 Toast.makeText(EnterOtpActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void resendOtp() {
+        ForgotPasswordModel request = new ForgotPasswordModel(email);
+        UserApiService apiService = ApiServiceProvider.getUserApiService();
+        Call<ReponseModel> call = apiService.sendOtp(request);
+        call.enqueue(new Callback<ReponseModel>() {
+            @Override
+            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(EnterOtpActivity.this, "OTP đã được gửi lại đến email của bạn", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(EnterOtpActivity.this, "Gửi lại OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReponseModel> call, Throwable t) {
+                if (t instanceof IOException) {
+                    Toast.makeText(EnterOtpActivity.this, "Email không tồn tại trong hệ thống", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(EnterOtpActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
