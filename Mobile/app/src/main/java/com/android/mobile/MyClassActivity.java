@@ -110,8 +110,10 @@ public class MyClassActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                hideLoading();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
+                Toast.makeText(MyClassActivity.this, "Lỗi lấy dữ liệu lớp học", Toast.LENGTH_SHORT).show();
             }
         });
     }
