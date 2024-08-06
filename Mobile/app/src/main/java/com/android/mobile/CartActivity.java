@@ -90,6 +90,7 @@ public class CartActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CartActivity.this, Purchase.class);
+                intent.putParcelableArrayListExtra("product_list", new ArrayList<>(productList));
                 startActivity(intent);
             }
         });
@@ -137,6 +138,7 @@ public class CartActivity extends BaseActivity {
                     txtSumQuantity.setText("Số lượng: " + products.size() + " sản phẩm");
                     updateTotalPrice(memberId);
 
+                    productList = new ArrayList<>(products);
                     adapter.setData(products);
                 } else {
                     System.err.println("Response error: " + response.errorBody());

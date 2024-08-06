@@ -68,6 +68,7 @@ public class Purchase extends BaseActivity {
     private TextView discount;
     private TextView transport;
     private TextView total;
+    List<ProductModel> productList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,8 @@ public class Purchase extends BaseActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
+        Intent intent = getIntent();
+        productList = intent.getParcelableArrayListExtra("product_list");
 
         // tạo recyclerview
         recyclerView = findViewById(R.id.recyclerView);
@@ -113,8 +116,8 @@ public class Purchase extends BaseActivity {
 
     public void Summoney(){
         float sum = 0;
-        for (Product value : itemList){
-            sum += value.getPrice()*value.getQuantity();
+        for (ProductModel value : productList) {
+            sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
         }
 
 
@@ -137,8 +140,8 @@ public class Purchase extends BaseActivity {
     }
     public void TotalMoney(){
         float sum = 0;
-        for (Product value : itemList){
-            sum += value.getPrice()*value.getQuantity();
+        for (ProductModel value : productList) {
+            sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
         }
         float dis = Float.parseFloat(discount.getText().toString().replace("đ","").replace(".",""));
 
@@ -208,61 +211,67 @@ public class Purchase extends BaseActivity {
     }
 
     public  void CreateItem(){
-
-            itemList = new ArrayList<>();
-
-        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-        int memberId = sharedPreferences.getInt("member_id", -1);
-            PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-            Call<CartResponse> call = apiService.getCart(memberId+"");
-            call.enqueue(new Callback<CartResponse>() {
-                @Override
-                public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
-                   if(response.isSuccessful()){
-                       CartResponse cartResponse = response.body();
-                       List<CartModel> cartItems = cartResponse.getCart();
-                        Double count = 0.0;
-                       if(cartItems.size()>0){
-                            for (CartModel value : cartItems){
-
-                                    count+= Double.parseDouble(value.getTotalPrice());
-                                ProductModel p = value.getProduct();
-
-
-                                Product pr = new Product();
-                                pr.setName(p.getProductName());
-                                pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
-                                pr.setQuantity(value.getQuantity());
-                                pr.setSupplier(p.getSupplierID()+"");
-                                pr.setLinkImage("null");
-                                itemList.add(pr);
-                            }
-                           itemAdapter = new ProductAdapter(itemList);
-                           recyclerView.setAdapter(itemAdapter);
-                           Summoney();
-                           DiscountMoney();
-                           Transport();
-                           TotalMoney();
-
-
-                       }
-                   }
-                }
-
-                @Override
-                public void onFailure(Call<CartResponse> call, Throwable t) {
-
-                }
-            });
-
-
-
-
-
-
-
-
-
+        itemAdapter = new ProductAdapter(productList);
+        recyclerView.setAdapter(itemAdapter);
+        Summoney();
+        DiscountMoney();
+        Transport();
+        TotalMoney();
+//
+//        itemList = new ArrayList<>();
+//
+//        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+//        int memberId = sharedPreferences.getInt("member_id", -1);
+//        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+//        Call<CartResponse> call = apiService.getCart(memberId + "");
+//        call.enqueue(new Callback<CartResponse>() {
+//            @Override
+//            public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
+//                if (response.isSuccessful()) {
+//                    CartResponse cartResponse = response.body();
+//                    List<CartModel> cartItems = cartResponse.getCart();
+//                    Double count = 0.0;
+//                    if (cartItems.size() > 0) {
+//                        for (CartModel value : cartItems) {
+//
+//                            count += Double.parseDouble(value.getTotalPrice());
+//                            ProductModel p = value.getProduct();
+//
+//
+//                            Product pr = new Product();
+//                            pr.setName(p.getProductName());
+//                            pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
+//                            pr.setQuantity(value.getQuantity());
+//                            pr.setSupplier(p.getSupplierID() + "");
+//                            pr.setLinkImage("null");
+//                            itemList.add(pr);
+//                        }
+//                        itemAdapter = new ProductAdapter(itemList);
+//                        recyclerView.setAdapter(itemAdapter);
+//                        Summoney();
+//                        DiscountMoney();
+//                        Transport();
+//                        TotalMoney();
+//
+//
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<CartResponse> call, Throwable t) {
+//
+//            }
+//        });
+//
+//
+//
+//
+//
+//
+//
+//
+//
     }
     public void getLink(){
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
