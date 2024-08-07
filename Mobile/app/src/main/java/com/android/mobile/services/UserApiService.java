@@ -19,6 +19,7 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.PUT;
 
 import retrofit2.http.Header;
@@ -49,6 +50,7 @@ public interface UserApiService {
     );
 
     @POST("api/forgotpassword/request")
+    @Headers("Accept: application/json")
     Call<ReponseModel> sendOtp(@Body ForgotPasswordModel request);
 
     @POST("api/forgotpassword/reset")

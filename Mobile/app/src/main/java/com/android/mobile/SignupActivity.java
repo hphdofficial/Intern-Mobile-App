@@ -31,6 +31,9 @@ public class SignupActivity extends BaseActivity {
     private RadioGroup radioGroupGender;
     private Button buttonSignUp;
 
+    private BlankFragment loadingFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +89,21 @@ public class SignupActivity extends BaseActivity {
             togglePasswordVisibility(confirmPasswordEditText, toggleConfirmPasswordVisibility);
         });
     }
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
 
     private void togglePasswordVisibility(EditText editText, ImageButton toggleButton) {
         if (editText.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
@@ -164,11 +182,13 @@ public class SignupActivity extends BaseActivity {
             request.setDienthoai_giamho(null);
         }
 
+        showLoading();
         UserApiService apiService = ApiServiceProvider.getUserApiService();
         Call<ReponseModel> call = apiService.registerUser(request);
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
                 if (response.isSuccessful()) {
                     Toast.makeText(SignupActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SignupActivity.this,StartActivity.class);
@@ -181,6 +201,7 @@ public class SignupActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading();
                 Toast.makeText(SignupActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

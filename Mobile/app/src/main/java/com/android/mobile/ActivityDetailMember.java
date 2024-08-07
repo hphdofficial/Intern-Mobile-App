@@ -51,6 +51,8 @@ public class ActivityDetailMember extends BaseActivity {
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 201;
 
+    private BlankFragment loadingFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -233,6 +235,7 @@ public class ActivityDetailMember extends BaseActivity {
     }
 
     private void fetchProfileInformation() {
+        showLoading();
         String token = sharedPreferences.getString("access_token", null);
         int memberId = sharedPreferences.getInt("member_id", -1);
         if (token != null && memberId != -1) {
@@ -241,6 +244,7 @@ public class ActivityDetailMember extends BaseActivity {
             call.enqueue(new Callback<ProfileModel>() {
                 @Override
                 public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+                    hideLoading();
                     if (response.isSuccessful()) {
                         ProfileModel profile = response.body();
                         if (profile != null) {
@@ -271,10 +275,12 @@ public class ActivityDetailMember extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<ProfileModel> call, Throwable t) {
+                    hideLoading();
                     Toast.makeText(ActivityDetailMember.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
+            hideLoading();
             Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
         }
     }
@@ -307,10 +313,12 @@ public class ActivityDetailMember extends BaseActivity {
                     int memberId = sharedPreferences.getInt("member_id", -1);
                     editor.putString("avatar_url_" + memberId, avatarUrl);
                     editor.apply();
+                    hideLoading(); // Ensure loading is hidden after image selection
                 }
             }
         }
     }
+
 
     private Uri getImageUriFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -326,5 +334,21 @@ public class ActivityDetailMember extends BaseActivity {
         fetchProfileInformation();
         fetchClassInformation();
     }
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null && !isFinishing() && !isDestroyed()) {
+            loadingFragment.dismissAllowingStateLoss();
+            loadingFragment = null;
+        }
+    }
+
+
 
 }
