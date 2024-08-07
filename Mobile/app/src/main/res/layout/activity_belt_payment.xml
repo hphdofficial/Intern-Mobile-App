@@ -196,12 +196,26 @@ android:textAlignment="center"
 
            </LinearLayout>
            <Button
+               
                android:id="@+id/buttonRegister"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_below="@id/linear"
                android:layout_marginTop="16dp"
-               android:text="Đăng ký" />
+               android:text="Quét qr để thanh toán phí đăng ký" />
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:layout_below="@id/buttonRegister"
+              android:layout_height="wrap_content">
+              <ImageView
+                  android:id="@+id/qrcode"
+                  android:layout_width="80dp"
+                  android:layout_height="80dp"
+
+                  ></ImageView>
+          </LinearLayout>
        </LinearLayout>
 
     </RelativeLayout>

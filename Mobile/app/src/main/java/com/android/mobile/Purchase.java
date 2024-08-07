@@ -68,6 +68,7 @@ public class Purchase extends BaseActivity {
     private TextView discount;
     private TextView transport;
     private TextView total;
+    private String textPayment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +139,7 @@ public class Purchase extends BaseActivity {
     public void TotalMoney(){
         float sum = 0;
         for (Product value : itemList){
+            textPayment += value.getName() + "va";
             sum += value.getPrice()*value.getQuantity();
         }
         float dis = Float.parseFloat(discount.getText().toString().replace("đ","").replace(".",""));
@@ -198,9 +200,28 @@ public class Purchase extends BaseActivity {
 
                 if(itemList.size()> 0)
                 {
+                    String selectedValue = paymentSpinner.getSelectedItem().toString();
+                    if(selectedValue.contains("Qr")){
 
-                    getLink();
+                        float sum = 0;
+                        for (Product value : itemList){
+                            sum += value.getPrice()*value.getQuantity();
+                        }
+                        float dis = Float.parseFloat(discount.getText().toString().replace("đ","").replace(".",""));
 
+                        float tran = Float.parseFloat(transport.getText().toString().replace("đ","").replace(".",""));
+
+                        float to = sum - dis + tran;
+                        Intent inten = new Intent(getApplicationContext(),PaymentQR.class);
+                        inten.putExtra("amount",to);
+                        inten.putExtra("textPayment",textPayment);
+                        startActivity(inten);
+                    }else if(selectedValue.contains("thẻ"))
+                        getLink();
+                    else {
+                        Toast.makeText(getApplicationContext(),"Đặt hàng thành công",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),MenuActivity.class));
+                    }
 
                 }
             }
@@ -227,8 +248,6 @@ public class Purchase extends BaseActivity {
 
                                     count+= Double.parseDouble(value.getTotalPrice());
                                 ProductModel p = value.getProduct();
-
-
                                 Product pr = new Product();
                                 pr.setName(p.getProductName());
                                 pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
@@ -304,8 +323,8 @@ public class Purchase extends BaseActivity {
         paymentList = new ArrayList<>();
         // Thêm dữ liệu mẫu vào danh sách voucher
         paymentList.add("Thanh toán trực tiếp");
-        paymentList.add("Thanh toán Momo");
-        paymentList.add("Thay toán ...");
+        paymentList.add("Thanh toán thẻ");
+        paymentList.add("Thanh toán Qr");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.layout_textviewsize, paymentList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         paymentSpinner.setAdapter(adapter);

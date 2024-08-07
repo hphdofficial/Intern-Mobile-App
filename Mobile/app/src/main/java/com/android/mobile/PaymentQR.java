@@ -1,8 +1,12 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -14,16 +18,39 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.android.mobile.adapter.BaseActivity;
+import com.android.mobile.models.PaymentRequest;
+import com.android.mobile.models.PaymentResponse;
+import com.android.mobile.network.ApiClient;
+import com.android.mobile.services.VNPayRequest;
+import com.android.mobile.services.VNPaySDK;
+import com.android.mobile.services.VietQRService;
+import com.bumptech.glide.Glide;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class PaymentQR extends BaseActivity {
 
 
     private ImageView imageViewQRCode;
     private Button buttonGenerateQRCode;
+    private Float total = 0f;
+    private String textPayment;
+
+    private VietQRService vietQRService;
+    private String baseUrl = "https://api.vietqr.vn/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +62,10 @@ public class PaymentQR extends BaseActivity {
             return insets;
         });
 
+
+
+
+
         imageViewQRCode = findViewById(R.id.imageViewQRCode);
         buttonGenerateQRCode = findViewById(R.id.buttonGenerateQRCode);
 
@@ -44,11 +75,51 @@ public class PaymentQR extends BaseActivity {
         if (extras != null) {
             // Lấy dữ liệu từ Bundle
             String title = extras.getString("title");
-            if(title.contains("registerclass")){
+            total = extras.getFloat("amount");
+            textPayment = extras.getString("textPayment","infonull");
+           /* if(title.contains("registerclass")){
                 Toast.makeText(getApplicationContext(),extras.getDouble("money")+"",Toast.LENGTH_SHORT).show();
-            }
+            }*/
         }
 
+   /*     Retrofit retrofit = ApiClient.getClient(baseUrl);
+        vietQRService = retrofit.create(VietQRService.class);*/
+
+        // Tạo yêu cầu thanh toán khi Activity được tạo
+       // createPaymentRequest();
+        displayQRCode("https://api.vietqr.io/image/970425-0937759311-cG4PADy.jpg&amount=" + total+
+
+                "&addInfo=" + textPayment);
+
+
+    }
+    private void createPaymentRequest() {
+        String amount = "10000"; // Số tiền thanh toán
+        String orderId = "1"; // Mã đơn hàng của bạn
+        String orderInfo = "Thanh toán đơn hàng 1";
+        String ipAddr = getDeviceIpAddress();
+
+        PaymentRequest paymentRequest = new PaymentRequest(amount, orderId, orderInfo, ipAddr);
+
+        Call<PaymentResponse> call = vietQRService.createPayment(paymentRequest);
+        call.enqueue(new Callback<PaymentResponse>() {
+            @Override
+            public void onResponse(Call<PaymentResponse> call, Response<PaymentResponse> response) {
+                if (response.isSuccessful()) {
+                    PaymentResponse paymentResponse = response.body();
+                    if (paymentResponse != null) {
+                        displayQRCode(paymentResponse.getQrCodeUrl());
+                    }
+                } else {
+                    Log.e("VietQR", "Error: " + response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PaymentResponse> call, Throwable t) {
+                Log.e("VietQR", "Failure: " + t.getMessage());
+            }
+        });
     }
     private void generateQRCode(String content) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
@@ -68,5 +139,53 @@ public class PaymentQR extends BaseActivity {
 
         imageViewQRCode.setImageBitmap(bitmap);
 
+    }
+    private String getDeviceIpAddress() {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface networkInterface : interfaces) {
+                List<InetAddress> addresses = Collections.list(networkInterface.getInetAddresses());
+                for (InetAddress address : addresses) {
+                    if (!address.isLoopbackAddress() && address instanceof Inet4Address) {
+                        return address.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "127.0.0.1"; // Trả về IP mặc định nếu không thể lấy địa chỉ IP
+    }
+
+    public void displayQRCode(String qrCodeUrl) {
+        ImageView qrCodeImageView = findViewById(R.id.imageViewQRCode);
+        Glide.with(this)
+                .load(qrCodeUrl)
+                .into(qrCodeImageView);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkPaymentStatus("1");
+    }
+
+    public void checkPaymentStatus(String orderId) {
+        VNPaySDK vnPaySDK = VNPaySDK.getInstance();
+
+        vnPaySDK.checkPaymentStatus(orderId, new VNPaySDK.VNPayCallback() {
+            @Override
+            public void onSuccess(String paymentStatus) {
+                // Xử lý trạng thái thanh toán
+                Log.d("VNPay", "Payment Status: " + paymentStatus);
+            }
+
+            @Override
+            public void onFailure(String errorCode, String errorMessage) {
+                // Xử lý lỗi
+                Log.e("VNPay", "Error: " + errorMessage);
+            }
+        });
     }
 }

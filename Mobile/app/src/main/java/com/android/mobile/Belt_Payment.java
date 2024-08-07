@@ -25,6 +25,7 @@ import com.android.mobile.models.BeltModel;
 import com.android.mobile.models.DetailsBelt;
 import com.android.mobile.network.APIServicePayment;
 import com.android.mobile.services.PaymentAPI;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -50,6 +51,7 @@ public class Belt_Payment extends BaseActivity {
     private Button buttonRegister;
     private LinearLayout linear;
     private  TextView date_learn;
+    private ImageView qrcode;
     private LinearLayout linear1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class Belt_Payment extends BaseActivity {
         linear = findViewById(R.id.linear);
         linear1 = findViewById(R.id.linear1);
         date_learn = findViewById(R.id.date_learn);
+        qrcode = findViewById(R.id.qrcode);
 
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
@@ -126,10 +129,15 @@ public class Belt_Payment extends BaseActivity {
                         linear1.setVisibility(View.VISIBLE);
 
                         money.setText(idBelt*200000+ "VND");
+                        String total = idBelt*200000 + "";
+                        displayQRCode("https://api.vietqr.io/image/970425-0937759311-cG4PADy.jpg&amount=" + total+
+
+                                "&addInfo=" + "Dang ky dai");
                         date.setText(" chờ thông báo về email");
                         date_learn.setText("Tình trạng: chưa thi");
 
                     }
+
                     status_class.setText(de.getMoTa());
                     danhxung.setText("Danh xưng:\t " + de.getDanhXung());
                     color.setText("Màu đai:\t " + de.getColer());
@@ -150,5 +158,11 @@ public class Belt_Payment extends BaseActivity {
         });
 
 
+    }
+    public void displayQRCode(String qrCodeUrl) {
+        ImageView qrCodeImageView = findViewById(R.id.qrcode);
+        Glide.with(this)
+                .load(qrCodeUrl)
+                .into(qrCodeImageView);
     }
 }

@@ -29,7 +29,7 @@ public interface PaymentAPI {
     Call<CartResponse> getCart(@Query("member_id") String member_id);
 
 
-    @GET("api/alldai")
+    @GET("api/all-belts")
     Call<List<Belt>> getAllBelt();
 
     @GET("paymentss/getlink")
@@ -42,7 +42,7 @@ public interface PaymentAPI {
             @Header("Authorization") String token,
             @Query("id_class") String id_class, @Query("amount") Double amount);
 
-    @GET("api/members/capdai")
+    @GET("api/members/belt-level")
     Call<BeltModel> GetBelt(
             @Header("Authorization") String token
             );
@@ -64,5 +64,6 @@ public interface PaymentAPI {
 
     @GET("status_payingclass")
     Call<StatusRegister> GetStatusRegister(@Query ("id") int id);
+
 
 }

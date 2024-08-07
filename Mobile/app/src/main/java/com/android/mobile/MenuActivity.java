@@ -254,7 +254,7 @@ public class MenuActivity extends BaseActivity {
         btn_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HistoryOrderActivity.class));
+                startActivity(new Intent(getApplicationContext(), HistoryRegisterClass.class));
             }
         });
 
@@ -416,12 +416,12 @@ public class MenuActivity extends BaseActivity {
 
 
     public void eventAnimationImage(){
-        eventMenuItem(test);
+/*        eventMenuItem(test);
         eventMenuItem(test1);
         eventMenuItem(test2);
         eventMenuItem(test3);
         eventMenuItem(test4);
-        eventMenuItem(test5);
+        eventMenuItem(test5);*/
     }
 
     public void eventMenuItem(ImageView imageView){
