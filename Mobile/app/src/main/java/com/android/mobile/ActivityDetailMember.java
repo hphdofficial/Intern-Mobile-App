@@ -122,6 +122,7 @@ public class ActivityDetailMember extends BaseActivity {
         // Fetch profile information
         fetchProfileInformation();
         // Fetch class information
+        fetchClassInformation();
     }
 
     private void fetchClassInformation() {
@@ -327,13 +328,13 @@ public class ActivityDetailMember extends BaseActivity {
         return Uri.parse(path);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Fetch profile information mỗi khi Activity được hiển thị lại
-        fetchProfileInformation();
-        fetchClassInformation();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // Fetch profile information mỗi khi Activity được hiển thị lại
+//        fetchProfileInformation();
+//        fetchClassInformation();
+//    }
 
     private void showLoading() {
         if (loadingFragment == null) {
