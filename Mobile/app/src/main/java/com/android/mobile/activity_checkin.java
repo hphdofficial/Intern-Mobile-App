@@ -216,6 +216,7 @@ public class activity_checkin extends BaseActivity {
                     for (CheckinMemberModel memberSample : checkinMembers){
                         Log.e("PostData", "Success: " + memberSample.getTen());
                     }
+
                     checkinAdapter = new Checkin_adapter(getApplicationContext(), checkinMembers);
                     RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

@@ -67,72 +67,68 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnBuy" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="0dp"
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="vertical"
-                android:weightSum="5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView16">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView17"
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Nhà cung cấp:"
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/txtItemSupplier"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="8"
-                        android:text="TextView"
-                        android:textColor="#006DFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                app:layout_constraintTop_toBottomOf="@+id/textView16"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp">
+                <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    android:orientation="horizontal">
-
+                    android:background="@drawable/table_row_border">
                     <TextView
-                        android:id="@+id/textView26"
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:id="@+id/textView20"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Nhà cung cấp:"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/table_row_border"/>
+                    <TextView
+                        android:id="@+id/txtItemSupplier"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Loading"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#006DFF"
+                        android:background="@drawable/table_row_border"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/table_row_border">
+                    <TextView
+                        android:id="@+id/textView21"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
                         android:text="Số lượng hàng còn:"
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
-
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/table_row_border"/>
                     <TextView
                         android:id="@+id/txtItemInStock"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="8"
-                        android:text="TextView"
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-            </LinearLayout>
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Loading"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/table_row_border"/>
+                </TableRow>
+            </TableLayout>
 
             <ImageView
                 android:id="@+id/imageItem"
@@ -151,7 +147,7 @@
                 android:text="Đánh giá sản phẩm"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+                app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
 
             <EditText
                 android:id="@+id/editQuantity"

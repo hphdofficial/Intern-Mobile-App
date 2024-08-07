@@ -1,44 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp">
+    android:stretchColumns="1,2,3">
 
-    <TableLayout
-        android:layout_width="0dp"
+    <TableRow
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/table_row_border">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/txtMemberID"
+            android:text="TextView"
+            android:layout_column="1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="8dp"/>
 
-            <TextView
-                android:id="@+id/txtMemberID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="TextView" />
+        <TextView
+            android:id="@+id/txtMemberName"
+            android:text="TextView"
+            android:layout_column="1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="8dp"/>
 
-            <TextView
-                android:id="@+id/txtMemberName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:text="TextView" />
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="0dp"
+            android:layout_column="1"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="8dp" />
+    </TableRow>
 
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </TableRow>
-
-    </TableLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</TableLayout>
