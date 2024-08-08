@@ -1,6 +1,7 @@
     package com.android.mobile.adapter;
 
     import android.content.Context;
+    import android.content.Intent;
     import android.graphics.Color;
     import android.view.LayoutInflater;
     import android.view.View;
@@ -18,6 +19,7 @@
     import com.android.mobile.BlankFragment;
     import com.android.mobile.OrderDetailsDialogFragment;
     import com.android.mobile.R;
+    import com.android.mobile.SupplierInfoActivity;
     import com.android.mobile.models.OrderStatusModel;
     import com.android.mobile.network.ApiServiceProvider;
     import com.android.mobile.services.UserApiService;
@@ -74,6 +76,16 @@
             if (!order.getDetail_carts().isEmpty()) {
                 holder.textViewSupplier.setText(order.getDetail_carts().get(0).getProduct().getSupplierName());
             }
+
+            // Add click listener for supplier name
+            holder.textViewSupplier.setOnClickListener(v -> {
+                if (!order.getDetail_carts().isEmpty()) {
+                    int supplierId = order.getDetail_carts().get(0).getProduct().getSupplierID();
+                    Intent intent = new Intent(context, SupplierInfoActivity.class);
+                    intent.putExtra("SupplierID", supplierId);
+                    context.startActivity(intent);
+                }
+            });
 
             // Setup product list
             holder.recyclerProductList.setLayoutManager(new LinearLayoutManager(context));
