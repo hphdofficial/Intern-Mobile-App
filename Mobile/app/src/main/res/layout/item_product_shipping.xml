@@ -42,15 +42,6 @@
                 android:text="10,000 VND"
                 android:textColor="#FF0000"
                 android:textSize="16sp" />
-
-            <!-- Shipping Text -->
-            <TextView
-                android:id="@+id/txt_shipping_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Shipping info here"
-                android:textSize="14sp"
-                android:textColor="#888888"/>
         </LinearLayout>
 
         <!-- Quantity -->

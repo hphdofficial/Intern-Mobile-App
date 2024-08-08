@@ -24,7 +24,6 @@ public class ProductShippingAdapter extends RecyclerView.Adapter<ProductShipping
         public TextView textViewAmount;
         public ImageView imageViewProduct;
         public TextView textViewQuantity;
-        public TextView textViewShipping;
 
         public ViewHolder(View view) {
             super(view);
@@ -32,7 +31,6 @@ public class ProductShippingAdapter extends RecyclerView.Adapter<ProductShipping
             textViewAmount = view.findViewById(R.id.txt_price_product);
             imageViewProduct = view.findViewById(R.id.imageView4);
             textViewQuantity = view.findViewById(R.id.txt_quantity_shipping_item);
-            textViewShipping = view.findViewById(R.id.txt_shipping_info);
         }
     }
 
@@ -54,13 +52,11 @@ public class ProductShippingAdapter extends RecyclerView.Adapter<ProductShipping
         holder.textViewAmount.setText(String.format("%,.0f VND", product.getProduct().getUnitPrice()));
         holder.textViewQuantity.setText("x " + product.getQuantity());
 
-        // Load product image using Glide
+        /// Load product image using Glide
         Glide.with(context)
                 .load(product.getProduct().getLink_image())
+                .error(R.drawable.product) // Replace 'default_image' with your drawable resource
                 .into(holder.imageViewProduct);
-
-        // Set shipping info
-        holder.textViewShipping.setText("Shipping info for product ID: " + product.getProduct().getProductID());
     }
 
     @Override

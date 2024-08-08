@@ -43,12 +43,15 @@ public class OrderDetailsDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_order_details, container, false);
 
         // Initialize views and display order details
+        TextView orderId = view.findViewById(R.id.order_id);
         TextView orderInfo = view.findViewById(R.id.order_info);
         TextView orderAmount = view.findViewById(R.id.order_amount);
         TextView orderStatus = view.findViewById(R.id.order_status);
         TextView orderPayDate = view.findViewById(R.id.order_pay_date);
         Button buttonClose = view.findViewById(R.id.button_close);
 
+        // Set order details
+        orderId.setText(String.format("%d", order.getId()));
         orderInfo.setText(order.getOrder_info());
         orderAmount.setText(String.format("%,.0f VND", order.getAmount()));
         orderStatus.setText(order.getStatus());
