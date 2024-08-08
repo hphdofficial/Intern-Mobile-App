@@ -3,6 +3,9 @@ package com.android.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +34,7 @@ import retrofit2.Response;
 public class ShippingOrderActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
+    private TextView noOrdersTextView;
     private ShippingOrderAdapter shippingItemAdapter;
     private List<OrderStatusModel> orderList;
     private UserApiService apiService;
@@ -58,6 +62,7 @@ public class ShippingOrderActivity extends BaseActivity {
         fragmentTransaction.commit();
 
         recyclerView = findViewById(R.id.recycler_shipping_item);
+        noOrdersTextView = findViewById(R.id.no_orders_text);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize API service
@@ -81,7 +86,6 @@ public class ShippingOrderActivity extends BaseActivity {
         }
     }
 
-
     private void fetchAllOrders() {
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
@@ -93,7 +97,7 @@ public class ShippingOrderActivity extends BaseActivity {
                 hideLoading(); // Ẩn loading
                 if (response.isSuccessful()) {
                     orderList = response.body();
-                    if (orderList != null) {
+                    if (orderList != null && !orderList.isEmpty()) {
                         // Sort orders by pay_date in descending order
                         Collections.sort(orderList, new Comparator<OrderStatusModel>() {
                             @Override
@@ -101,18 +105,25 @@ public class ShippingOrderActivity extends BaseActivity {
                                 return o2.getPay_date().compareTo(o1.getPay_date());
                             }
                         });
+                        noOrdersTextView.setVisibility(View.GONE); // Ẩn TextView nếu có đơn hàng
+                        shippingItemAdapter = new ShippingOrderAdapter(ShippingOrderActivity.this, orderList);
+                        recyclerView.setAdapter(shippingItemAdapter);
+                    } else {
+                        // Hiển thị thông báo TextView khi không có hóa đơn nào
+                        noOrdersTextView.setVisibility(View.VISIBLE);
                     }
-                    shippingItemAdapter = new ShippingOrderAdapter(ShippingOrderActivity.this, orderList);
-                    recyclerView.setAdapter(shippingItemAdapter);
                 } else {
-                    // Handle error
+                    noOrdersTextView.setVisibility(View.VISIBLE);
+                    // Xử lý lỗi khi phản hồi không thành công
+                    // Toast.makeText(ShippingOrderActivity.this, "Bạn chưa có hóa đơn nào", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<OrderStatusModel>> call, Throwable t) {
                 hideLoading(); // Ẩn loading khi có lỗi xảy ra
-                // Handle failure
+                // Xử lý lỗi khi có lỗi xảy ra trong quá trình gọi API
+                Toast.makeText(ShippingOrderActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
