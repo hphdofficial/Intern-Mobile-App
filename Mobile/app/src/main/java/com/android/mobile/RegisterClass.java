@@ -38,7 +38,7 @@ public class RegisterClass extends BaseActivity {
     private  RadioGroup note;
     private String noteText = "";
     private String classId = null;
-
+    private BlankFragment loadingFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,5 +190,15 @@ public class RegisterClass extends BaseActivity {
 
         // Hiển thị DatePickerDialog
         datePickerDialog.show();
+    }
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

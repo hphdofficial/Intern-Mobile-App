@@ -57,7 +57,7 @@ public class MenuActivity extends BaseActivity {
     private TextView textViewName;
     private SharedPreferences sharedPreferences;
     private TextView textViewBirthday;
-
+    private BlankFragment loadingFragment;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,11 +254,11 @@ public class MenuActivity extends BaseActivity {
         btn_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HistoryRegisterClass.class));
+                startActivity(new Intent(getApplicationContext(), HistoryOrderActivity.class));
             }
         });
 
-
+        showLoading();
 
         btn_cart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -390,6 +390,7 @@ public class MenuActivity extends BaseActivity {
             }
         });
         eventAnimationImage();
+
     }
     private void logout() {
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
@@ -492,9 +493,11 @@ public class MenuActivity extends BaseActivity {
                             } else {
                                 imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
                             }
+                            hideLoading();
 
                         }
                     } else {
+                        hideLoading();
                         Toast.makeText(MenuActivity.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -518,5 +521,15 @@ public class MenuActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         loadUserData();
+    }
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

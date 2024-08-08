@@ -48,7 +48,7 @@ public class PaymentQR extends BaseActivity {
     private Button buttonGenerateQRCode;
     private Float total = 0f;
     private String textPayment;
-
+    private BlankFragment loadingFragment;
     private VietQRService vietQRService;
     private String baseUrl = "https://api.vietqr.vn/";
     @Override
@@ -187,5 +187,15 @@ public class PaymentQR extends BaseActivity {
                 Log.e("VNPay", "Error: " + errorMessage);
             }
         });
+    }
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

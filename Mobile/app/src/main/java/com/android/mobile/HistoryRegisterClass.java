@@ -31,7 +31,7 @@ import retrofit2.Response;
 
 public class HistoryRegisterClass extends BaseActivity {
 
-
+    private BlankFragment loadingFragment;
     private List<HistoryClassModel> chapters = new ArrayList<>();
     private RecyclerView recyclerView;
     private HistoryClassAdapter chapterAdapter;
@@ -53,7 +53,7 @@ public class HistoryRegisterClass extends BaseActivity {
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
 
-
+        showLoading();
 
         PaymentAPI apiService = APIServicePayment.getPaymentApiService();
         Call<List<HistoryClassModel>> call = apiService.GetHistoryClass("Bearer" + token);
@@ -65,6 +65,9 @@ public class HistoryRegisterClass extends BaseActivity {
                     chapters = response.body();
                     chapterAdapter.loadList(chapters);
                     recyclerView.setAdapter(chapterAdapter);
+                    hideLoading();
+                }else {
+                    hideLoading();
                 }
             }
 
@@ -90,5 +93,15 @@ public class HistoryRegisterClass extends BaseActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+    }
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

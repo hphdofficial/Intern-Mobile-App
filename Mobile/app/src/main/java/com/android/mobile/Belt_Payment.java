@@ -53,6 +53,17 @@ public class Belt_Payment extends BaseActivity {
     private  TextView date_learn;
     private ImageView qrcode;
     private LinearLayout linear1;
+    private BlankFragment loadingFragment;
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +87,7 @@ public class Belt_Payment extends BaseActivity {
         linear1 = findViewById(R.id.linear1);
         date_learn = findViewById(R.id.date_learn);
         qrcode = findViewById(R.id.qrcode);
-
+        showLoading();
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Thông tin đai");
@@ -144,10 +155,10 @@ public class Belt_Payment extends BaseActivity {
                     change_class.setText("Thông tin đai " + de.getTen());
                     Picasso.get().load(de.getLink()).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(image);
 
-
+                    hideLoading();
                 }else {
                     Toast.makeText(getApplicationContext(),"fail nn",Toast.LENGTH_SHORT).show();
-
+                    hideLoading();
                 }
             }
 

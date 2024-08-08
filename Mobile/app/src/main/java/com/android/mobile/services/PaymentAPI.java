@@ -42,6 +42,11 @@ public interface PaymentAPI {
             @Header("Authorization") String token,
             @Query("id_class") String id_class, @Query("amount") Double amount);
 
+    @GET("getlink_nopay")
+    Call<ResponseBody> OrderBill(
+            @Header("Authorization") String token
+            );
+
     @GET("api/members/belt-level")
     Call<BeltModel> GetBelt(
             @Header("Authorization") String token
