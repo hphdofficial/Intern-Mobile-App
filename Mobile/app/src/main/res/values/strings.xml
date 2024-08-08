@@ -9,4 +9,8 @@
     <string name="supplier">supplier</string>
     <string name="logo_desc">logo_desc</string>
 
+    <string-array name="view_options">
+        <item>Hiển thị bản đồ</item>
+        <item>Hiển thị danh sách</item>
+    </string-array>
 </resources>

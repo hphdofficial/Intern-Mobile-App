@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -28,17 +28,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.BaseActivity;
-import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.models.CityModel;
-import com.android.mobile.models.Class;
 import com.android.mobile.models.Club;
 import com.android.mobile.models.CountryModel;
 import com.android.mobile.network.ApiServiceProvider;
-import com.android.mobile.services.ClassApiService;
 import com.android.mobile.services.ClubApiService;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -65,13 +60,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ClubActivity extends BaseActivity {
-    private RecyclerView recyclerView;
-    private ClubAdapter adapter;
-    private List<Club> clubList = new ArrayList<>();
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private SearchView searchView;
+    private ClubListFragment clubListFragment;
+    private MapsFragment mapsFragment;
+    private Spinner viewOptionsSpinner;
+    private Spinner spinnerCountry;
+    private Spinner spinnerCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +85,11 @@ public class ClubActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách câu lạc bộ");
         myContentE.apply();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
-
-        adapter = new ClubAdapter(this, clubList);
-        recyclerView = findViewById(R.id.recycler_club);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
 
         searchView = findViewById(R.id.search_location);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -108,7 +101,6 @@ public class ClubActivity extends BaseActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                searchClub(newText);
                 return false;
             }
         });
@@ -119,26 +111,57 @@ public class ClubActivity extends BaseActivity {
             public void onClick(View v) {
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ClubActivity.this);
 
-                if (ContextCompat.checkSelfPermission(
-                        getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(
-                            ClubActivity.this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            REQUEST_CODE_LOCATION_PERMISSION
-                    );
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ClubActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
                 } else {
                     checkLocationSettings();
                 }
+
+                spinnerCountry.setSelection(0);
+                spinnerCity.setSelection(0);
             }
         });
+
+        clubListFragment = new ClubListFragment();
+        mapsFragment = new MapsFragment();
+
+        FragmentTransaction fragmentTransactionClubList = getSupportFragmentManager().beginTransaction();
+        fragmentTransactionClubList.replace(R.id.fragment_container_club, mapsFragment);
+        fragmentTransactionClubList.commit();
+
+        viewOptionsSpinner = findViewById(R.id.spinner_view_options);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.view_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        viewOptionsSpinner.setAdapter(adapter);
+        viewOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                switch (position) {
+                    case 0:
+                        transaction.replace(R.id.fragment_container_club, mapsFragment);
+                        break;
+                    case 1:
+                        transaction.replace(R.id.fragment_container_club, clubListFragment);
+                        break;
+                }
+                transaction.commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spinnerCountry = findViewById(R.id.spinner_country);
+        spinnerCity = findViewById(R.id.spinner_city);
 
         loadListClubDefault();
         showListCountry();
         showListCity();
     }
 
-    public void searchClub(String text){
+    public void searchClub(String text) {
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<List<Club>> call = service.searchClub(text);
 
@@ -147,8 +170,7 @@ public class ClubActivity extends BaseActivity {
             public void onResponse(Call<List<Club>> call, Response<List<Club>> response) {
                 if (response.isSuccessful()) {
                     List<Club> clubs = response.body();
-                    adapter.setData(clubs);
-                    adapter.notifyDataSetChanged();
+                    clubListFragment.setData(clubs);
                     Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     System.err.println("Response error: " + response.errorBody());
@@ -163,15 +185,9 @@ public class ClubActivity extends BaseActivity {
     }
 
     private void getCurrentLocation() {
-        if (ContextCompat.checkSelfPermission(
-                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             try {
-                LocationRequest locationRequest = LocationRequest.create()
-                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                        .setNumUpdates(1)
-                        .setInterval(10000)
-                        .setFastestInterval(5000);
+                LocationRequest locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setNumUpdates(1).setInterval(10000).setFastestInterval(5000);
 
                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
                     @Override
@@ -198,19 +214,13 @@ public class ClubActivity extends BaseActivity {
                 Toast.makeText(this, "SecurityException: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {
-            ActivityCompat.requestPermissions(
-                    ClubActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_LOCATION_PERMISSION
-            );
+            ActivityCompat.requestPermissions(ClubActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
         }
     }
 
     private void checkLocationSettings() {
-        LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
+        LocationRequest locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
 
         Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
 
@@ -219,26 +229,18 @@ public class ClubActivity extends BaseActivity {
             public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
-                    // All location settings are satisfied. The client can initialize location
-                    // requests here.
                     getCurrentLocation();
                 } catch (ApiException exception) {
                     switch (exception.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location settings are not satisfied, but this can be fixed
-                            // by showing the user a dialog.
                             try {
                                 ResolvableApiException resolvable = (ResolvableApiException) exception;
                                 resolvable.startResolutionForResult(ClubActivity.this, REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException e) {
-                                // Ignore the error.
                             } catch (ClassCastException e) {
-                                // Ignore, should be an impossible error.
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have no way
-                            // to fix the settings so we won't show the dialog.
                             break;
                     }
                 }
@@ -251,10 +253,8 @@ public class ClubActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CHECK_SETTINGS) {
             if (resultCode == RESULT_OK) {
-                // User agreed to make required location settings changes.
                 getCurrentLocation();
             } else {
-                // User chose not to make required location settings changes.
                 Toast.makeText(this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
             }
         }
@@ -285,7 +285,7 @@ public class ClubActivity extends BaseActivity {
                     Type clubListType = new TypeToken<List<Club>>() {
                     }.getType();
                     List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
-                    adapter.setData(clubs);
+                    clubListFragment.setData(clubs);
                     Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
@@ -315,7 +315,7 @@ public class ClubActivity extends BaseActivity {
                     Type clubListType = new TypeToken<List<Club>>() {
                     }.getType();
                     List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
-                    adapter.setData(clubs);
+                    clubListFragment.setData(clubs);
                     Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
@@ -345,7 +345,7 @@ public class ClubActivity extends BaseActivity {
                     Type clubListType = new TypeToken<List<Club>>() {
                     }.getType();
                     List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
-                    adapter.setData(clubs);
+                    clubListFragment.setData(clubs);
                     Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
@@ -375,7 +375,7 @@ public class ClubActivity extends BaseActivity {
                     Type clubListType = new TypeToken<List<Club>>() {
                     }.getType();
                     List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
-                    adapter.setData(clubs);
+                    clubListFragment.setData(clubs);
                     Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
@@ -406,7 +406,6 @@ public class ClubActivity extends BaseActivity {
                     for (CountryModel country : countryList) {
                         countries.add(new CountryModel(country.getId(), country.getTen()));
                     }
-                    Spinner spinnerCountry = findViewById(R.id.spinner_country);
                     ArrayAdapter<CountryModel> adapter = new ArrayAdapter<>(ClubActivity.this, android.R.layout.simple_spinner_item, countries);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerCountry.setAdapter(adapter);
@@ -451,7 +450,6 @@ public class ClubActivity extends BaseActivity {
                     for (CityModel city : cityList) {
                         cities.add(new CityModel(city.getId(), city.getTen()));
                     }
-                    Spinner spinnerCity = findViewById(R.id.spinner_city);
                     ArrayAdapter<CityModel> adapter = new ArrayAdapter<>(ClubActivity.this, android.R.layout.simple_spinner_item, cities);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerCity.setAdapter(adapter);

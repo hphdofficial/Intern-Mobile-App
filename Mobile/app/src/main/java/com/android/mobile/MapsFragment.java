@@ -7,13 +7,17 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
 import com.android.mobile.models.Club;
 import com.android.mobile.models.MapsClubItem;
@@ -49,26 +53,27 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsActivity extends AppCompatActivity {
+public class MapsFragment extends Fragment {
     private MapView map;
     private Handler handler = new Handler();
-    private Runnable mapUpdater;
     private GeoPoint lastCenterPoint;
     private Marker currentMarker;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_maps);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        map = rootView.findViewById(R.id.map);
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootView.findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
-        File basePath = new File(getCacheDir().getAbsolutePath(), "osmdroid");
+        File basePath = new File(requireContext().getCacheDir().getAbsolutePath(), "osmdroid");
         if (!basePath.exists()) {
             basePath.mkdirs();
         }
@@ -79,7 +84,6 @@ public class MapsActivity extends AppCompatActivity {
         Configuration.getInstance().setOsmdroidBasePath(basePath);
         Configuration.getInstance().setOsmdroidTileCache(tileCache);
 
-        map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
@@ -89,7 +93,7 @@ public class MapsActivity extends AppCompatActivity {
         map.getController().setCenter(startPoint);
         lastCenterPoint = startPoint;
 
-        CompassOverlay compassOverlay = new CompassOverlay(this, new InternalCompassOrientationProvider(this), map);
+        CompassOverlay compassOverlay = new CompassOverlay(requireContext(), new InternalCompassOrientationProvider(requireContext()), map);
         compassOverlay.enableCompass();
         map.getOverlays().add(compassOverlay);
 
@@ -150,6 +154,8 @@ public class MapsActivity extends AppCompatActivity {
         });
 
         fetchClubData();
+
+        return rootView;
     }
 
     private void fetchMapData(GeoPoint center) {
@@ -188,7 +194,7 @@ public class MapsActivity extends AppCompatActivity {
                             map.getOverlays().add(marker);
                         }
                     }
-                    CompassOverlay compassOverlay = new CompassOverlay(MapsActivity.this, new InternalCompassOrientationProvider(MapsActivity.this), map);
+                    CompassOverlay compassOverlay = new CompassOverlay(requireContext(), new InternalCompassOrientationProvider(requireContext()), map);
                     compassOverlay.enableCompass();
                     map.getOverlays().add(compassOverlay);
                     map.invalidate();
@@ -222,9 +228,9 @@ public class MapsActivity extends AppCompatActivity {
                     }
                     Drawable marker = resizeDrawable(getResources().getDrawable(R.drawable.ic_marker_vovinam), 60, 80);
                     displayClubsOnMap(clubItems, marker);
-                    Toast.makeText(MapsActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
-                        Toast.makeText(MapsActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.e("Response error", response.errorBody().toString());
@@ -254,7 +260,7 @@ public class MapsActivity extends AppCompatActivity {
                 return true;
             }
         };
-        ItemizedIconOverlay<MapsClubItem> overlay = new ItemizedIconOverlay<>(pList, pDefaultMarker, gestureListener, this);
+        ItemizedIconOverlay<MapsClubItem> overlay = new ItemizedIconOverlay<>(pList, pDefaultMarker, gestureListener, requireContext());
         map.getOverlays().add(overlay);
 
         for (MapsClubItem item : pList) {
