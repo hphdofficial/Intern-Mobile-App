@@ -304,7 +304,7 @@ public class ClubActivity extends BaseActivity {
 
     public void loadClubListByLocation(double latitude, double longitude) {
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<JsonObject> call = service.getListClubMap3(230, 50, latitude + ", " + longitude);
+        Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
 
         call.enqueue(new Callback<JsonObject>() {
             @Override

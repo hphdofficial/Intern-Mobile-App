@@ -3,6 +3,7 @@ package com.android.mobile.services;
 import com.android.mobile.models.CityModel;
 import com.android.mobile.models.Club;
 import com.android.mobile.models.CountryModel;
+import com.android.mobile.models.MapsResponse;
 import com.android.mobile.models.ReponseModel;
 import com.google.gson.JsonObject;
 
@@ -12,7 +13,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -39,8 +39,6 @@ public interface ClubApiService {
 
     @GET("/api/map3")
     Call<JsonObject> getListClubMap3(
-            @Query("id_country") int countryId,
-            @Query("id_city") int cityId,
             @Query("address") String address
     );
 
@@ -67,4 +65,7 @@ public interface ClubApiService {
     Call<List<Club>> searchClub(
             @Query("keyword") String name
     );
+
+    @GET("api/interpreter")
+    Call<MapsResponse> getMapData(@Query("data") String data);
 }

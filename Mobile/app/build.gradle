@@ -57,6 +57,12 @@ dependencies {
     // Animator
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
 
+    // Maps
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
+    implementation 'org.osmdroid:osmdroid-android:6.1.11'
+    implementation 'org.osmdroid:osmdroid-wms:6.1.11'
+    implementation 'org.osmdroid:osmdroid-mapsforge:6.1.11'
+
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation libs.core

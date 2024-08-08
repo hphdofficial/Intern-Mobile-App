@@ -31,7 +31,7 @@ public interface ClassApiService {
             @Header("Authorization") String token
     );
 
-    @POST("/api/roi-khoi-lop-hoc")
+    @POST("/api/leave-class")
     Call<ReponseModel> leaveClass(
             @Header("Authorization") String token,
             @Body Class classs

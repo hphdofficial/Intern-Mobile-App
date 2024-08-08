@@ -4,8 +4,8 @@ public class Club {
     private String ten, mota, diachi, dienthoai, nguoiquanly;
     private String id_club, name, address;
     private String id;
-    private String latitude;
-    private String longitude;
+    private String map_lat;
+    private String map_long;
 
     public Club() {
     }
@@ -86,19 +86,19 @@ public class Club {
         this.id = id;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getMap_lat() {
+        return map_lat;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setMap_lat(String map_lat) {
+        this.map_lat = map_lat;
     }
 
-    public String getLongitude() {
-        return longitude;
+    public String getMap_long() {
+        return map_long;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setMap_long(String map_long) {
+        this.map_long = map_long;
     }
 }
