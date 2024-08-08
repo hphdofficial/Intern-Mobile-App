@@ -90,21 +90,37 @@ public class MyClassActivity extends BaseActivity {
                     Gson gson = new Gson();
                     Type classListType = new TypeToken<List<ClassModel>>() {}.getType();
                     List<ClassModel> classes = gson.fromJson(jsonObject.get("data"), classListType);
-                    for (ClassModel classSample : classes){
-                        Log.e("PostData", "Success: " + classSample.getTen());
-                    }
-                    MyClassAdapter classAdapter = new MyClassAdapter(getApplicationContext(), classes);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_class);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    recyclerView.setAdapter(classAdapter);
+                    if(classes == null){
+                        Toast.makeText(MyClassActivity.this, "Không có lớp học vào thời điểm hiện tại", Toast.LENGTH_SHORT).show();
+                        hideLoading();
+                    }else{
+                        for (ClassModel classSample : classes){
+                            Log.e("PostData", "Success: " + classSample.getTen());
+                        }
+                        MyClassAdapter classAdapter = new MyClassAdapter(getApplicationContext(), classes);
+                        RecyclerView recyclerView = findViewById(R.id.recycler_class);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        recyclerView.setAdapter(classAdapter);
 
-                    hideLoading();
+                        hideLoading();
+                    }
+
+
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
-                    hideLoading();
-                    Toast.makeText(MyClassActivity.this, "Đang chuyển qua lớp học cho học viên", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), activity_member_checkin.class));
+                    if(response.code() == 403){
+                        hideLoading();
+                        Toast.makeText(MyClassActivity.this, "Bạn không phải giảng viên." +
+                                " Đang chuyển qua lớp học cho học viên", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), activity_member_checkin.class));
+
+                    }else{
+                        Toast.makeText(MyClassActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                        hideLoading();
+                    }
+
+
                 }
             }
 

@@ -35,7 +35,7 @@ import retrofit2.Response;
 
 public class activity_item_detail extends BaseActivity {
     private BlankFragment loadingFragment;
-    EditText editQuantity;
+    TextView editQuantity;
     int quantityInStock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
