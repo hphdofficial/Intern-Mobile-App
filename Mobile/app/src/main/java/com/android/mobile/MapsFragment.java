@@ -1,5 +1,7 @@
 package com.android.mobile;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +28,6 @@ import com.android.mobile.models.MapsElement;
 import com.android.mobile.models.MapsResponse;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ClubApiService;
-import com.caverock.androidsvg.BuildConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -35,6 +37,7 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
+import org.osmdroid.mapsforge.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -43,6 +46,7 @@ import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -54,10 +58,37 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MapsFragment extends Fragment {
+    private static final String ARG_LATITUDE = "latitude";
+    private static final String ARG_LONGITUDE = "longitude";
     private MapView map;
     private Handler handler = new Handler();
     private GeoPoint lastCenterPoint;
     private Marker currentMarker;
+    private double latitude;
+    private double longitude;
+    private static boolean isCurrent = false;
+
+    public static MapsFragment newInstance(double latitude, double longitude, boolean current) {
+        MapsFragment fragment = new MapsFragment();
+        Bundle args = new Bundle();
+        args.putDouble(ARG_LATITUDE, latitude);
+        args.putDouble(ARG_LONGITUDE, longitude);
+        fragment.setArguments(args);
+        isCurrent = current;
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            latitude = getArguments().getDouble(ARG_LATITUDE);
+            longitude = getArguments().getDouble(ARG_LONGITUDE);
+        } else {
+            latitude = 10.76833026;
+            longitude = 106.67583063;
+        }
+    }
 
     @Nullable
     @Override
@@ -88,7 +119,7 @@ public class MapsFragment extends Fragment {
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
 
-        GeoPoint startPoint = new GeoPoint(10.854366, 106.7113995);
+        GeoPoint startPoint = new GeoPoint(latitude, longitude);
         map.getController().setZoom(15.0);
         map.getController().setCenter(startPoint);
         lastCenterPoint = startPoint;
@@ -97,25 +128,28 @@ public class MapsFragment extends Fragment {
         compassOverlay.enableCompass();
         map.getOverlays().add(compassOverlay);
 
-        Marker startMarker = new Marker(map);
-        startMarker.setPosition(startPoint);
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        startMarker.setIcon(resizeDrawable(getResources().getDrawable(R.drawable.icons8_marker_48), 60, 80));
-        startMarker.setTitle("Vị trí hiện tại của bạn");
+        if (isCurrent)
+        {
+            Marker startMarker = new Marker(map);
+            startMarker.setPosition(startPoint);
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setIcon(resizeDrawable(getResources().getDrawable(R.drawable.icons8_marker_48), 60, 80));
+            startMarker.setTitle("Vị trí hiện tại của bạn");
 
-        CustomInfoWindow infoWindow = new CustomInfoWindow(map);
-        startMarker.setInfoWindow(infoWindow);
+            CustomInfoWindow infoWindow = new CustomInfoWindow(map);
+            startMarker.setInfoWindow(infoWindow);
 
-        startMarker.setOnMarkerClickListener((marker, mapView) -> {
-            if (currentMarker != null) {
-                currentMarker.closeInfoWindow();
-            }
-            marker.showInfoWindow();
-            currentMarker = marker;
-            mapView.getController().animateTo(marker.getPosition());
-            return true;
-        });
-        map.getOverlays().add(startMarker);
+            startMarker.setOnMarkerClickListener((marker, mapView) -> {
+                if (currentMarker != null) {
+                    currentMarker.closeInfoWindow();
+                }
+                marker.showInfoWindow();
+                currentMarker = marker;
+                mapView.getController().animateTo(marker.getPosition());
+                return true;
+            });
+            map.getOverlays().add(startMarker);
+        }
 
         fetchMapData(startPoint);
 
@@ -210,7 +244,7 @@ public class MapsFragment extends Fragment {
 
     private void fetchClubData() {
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<JsonObject> call = service.getListClubMap3(10.854366 + ", " + 106.7113995);
+        Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -270,7 +304,7 @@ public class MapsFragment extends Fragment {
             marker.setIcon(pDefaultMarker);
             marker.setTitle("Tên câu lạc bộ: " + item.getTitle() + "\n" + "Địa chỉ: " + item.getSnippet());
 
-            CustomInfoWindow infoWindow = new CustomInfoWindow(map);
+            CustomInfoWindow infoWindow = new CustomInfoWindow(map, item.getUid());
             marker.setInfoWindow(infoWindow);
 
             marker.setOnMarkerClickListener((m, mapView) -> {

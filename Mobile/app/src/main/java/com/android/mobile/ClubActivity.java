@@ -273,6 +273,8 @@ public class ClubActivity extends BaseActivity {
     }
 
     public void loadListClubDefault() {
+//        switchToMapsFragment(10.76833026, 106.67583063);
+
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<JsonObject> call = service.getListClubMap2(230, 50);
 
@@ -303,6 +305,8 @@ public class ClubActivity extends BaseActivity {
     }
 
     public void loadClubListByLocation(double latitude, double longitude) {
+        switchToMapsFragment(latitude, longitude, true);
+
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
 
@@ -332,7 +336,9 @@ public class ClubActivity extends BaseActivity {
         });
     }
 
-    public void loadClubListByCountry(int countryId) {
+    public void loadClubListByCountry(int countryId, String latitude, String longitude) {
+        switchToMapsFragment(Double.parseDouble(latitude), Double.parseDouble(longitude), false);
+
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<JsonObject> call = service.getListClubMap1(countryId);
 
@@ -362,7 +368,9 @@ public class ClubActivity extends BaseActivity {
         });
     }
 
-    public void loadClubListByCity(int cityId) {
+    public void loadClubListByCity(int cityId, String latitude, String longitude) {
+        switchToMapsFragment(Double.parseDouble(latitude), Double.parseDouble(longitude), false);
+
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<JsonObject> call = service.getListClubMap2(230, cityId);
 
@@ -402,9 +410,9 @@ public class ClubActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<CountryModel> countryList = response.body();
                     List<CountryModel> countries = new ArrayList<>();
-                    countries.add(new CountryModel(0, "Quốc gia"));
+                    countries.add(new CountryModel(0, "Quốc gia", "0", "0"));
                     for (CountryModel country : countryList) {
-                        countries.add(new CountryModel(country.getId(), country.getTen()));
+                        countries.add(new CountryModel(country.getId(), country.getTen(), country.getMap_lat(), country.getMap_long()));
                     }
                     ArrayAdapter<CountryModel> adapter = new ArrayAdapter<>(ClubActivity.this, android.R.layout.simple_spinner_item, countries);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -414,9 +422,11 @@ public class ClubActivity extends BaseActivity {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             CountryModel selectedCountry = (CountryModel) parent.getItemAtPosition(position);
                             int countryId = selectedCountry.getId();
+                            String latitude = selectedCountry.getMap_lat();
+                            String longitude = selectedCountry.getMap_long();
                             if (position > 0) {
                                 Toast.makeText(ClubActivity.this, "Selected: " + selectedCountry.getTen(), Toast.LENGTH_SHORT).show();
-                                loadClubListByCountry(countryId);
+                                loadClubListByCountry(countryId, latitude, longitude);
                             }
                         }
 
@@ -446,9 +456,9 @@ public class ClubActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<CityModel> cityList = response.body();
                     List<CityModel> cities = new ArrayList<>();
-                    cities.add(new CityModel(0, "Thành phố"));
+                    cities.add(new CityModel(0, "Thành phố", "0", "0"));
                     for (CityModel city : cityList) {
-                        cities.add(new CityModel(city.getId(), city.getTen()));
+                        cities.add(new CityModel(city.getId(), city.getTen(), city.getMap_lat(), city.getMap_long()));
                     }
                     ArrayAdapter<CityModel> adapter = new ArrayAdapter<>(ClubActivity.this, android.R.layout.simple_spinner_item, cities);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -458,9 +468,11 @@ public class ClubActivity extends BaseActivity {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             CityModel selectedCity = (CityModel) parent.getItemAtPosition(position);
                             int cityId = selectedCity.getId();
+                            String latitude = selectedCity.getMap_lat();
+                            String longitude = selectedCity.getMap_long();
                             if (position > 0) {
                                 Toast.makeText(ClubActivity.this, "Selected: " + selectedCity.getTen(), Toast.LENGTH_SHORT).show();
-                                loadClubListByCity(cityId);
+                                loadClubListByCity(cityId, latitude, longitude);
                             }
                         }
 
@@ -478,5 +490,12 @@ public class ClubActivity extends BaseActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    private void switchToMapsFragment(double latitude, double longitude, boolean current) {
+        MapsFragment mapsFragment = MapsFragment.newInstance(latitude, longitude, current);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container_club, mapsFragment);
+        transaction.commit();
     }
 }
