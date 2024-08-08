@@ -33,8 +33,7 @@ public interface ClassApiService {
 
     @POST("/api/leave-class")
     Call<ReponseModel> leaveClass(
-            @Header("Authorization") String token,
-            @Body Class classs
+            @Header("Authorization") String token
     );
 
     @GET("/api/classes/search_name")

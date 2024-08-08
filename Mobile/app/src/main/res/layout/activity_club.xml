@@ -13,31 +13,37 @@
         android:layout_below="@id/fragment_container"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_height="wrap_content">
 
-            <SearchView
-                android:id="@+id/search_location"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/label_view_options"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_searchview"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:iconifiedByDefault="false"
-                android:queryHint="Tìm kiếm..." />
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Dạng xem:"
+                android:paddingStart="16dp"
+                android:paddingEnd="8dp" />
 
             <Spinner
                 android:id="@+id/spinner_view_options"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="10dp"
-                android:layout_weight="1" />
-        </LinearLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_toEndOf="@id/label_view_options"
+                android:layout_centerVertical="true" />
+
+            <ImageButton
+                android:id="@+id/btn_search_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/search" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

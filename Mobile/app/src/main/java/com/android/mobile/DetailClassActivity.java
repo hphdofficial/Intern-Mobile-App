@@ -191,7 +191,7 @@ public class DetailClassActivity extends BaseActivity {
         String token = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<ReponseModel> call = service.leaveClass("Bearer" + token, new Class(Integer.parseInt(idClass)));
+        Call<ReponseModel> call = service.leaveClass("Bearer" + token);
 
         call.enqueue(new Callback<ReponseModel>() {
             @Override

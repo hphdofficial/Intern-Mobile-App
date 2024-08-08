@@ -10,7 +10,7 @@
     <string name="logo_desc">logo_desc</string>
 
     <string-array name="view_options">
-        <item>Hiển thị bản đồ</item>
-        <item>Hiển thị danh sách</item>
+        <item>Bản đồ</item>
+        <item>Danh sách</item>
     </string-array>
 </resources>

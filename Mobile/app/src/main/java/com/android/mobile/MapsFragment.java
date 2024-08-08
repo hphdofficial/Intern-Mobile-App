@@ -128,15 +128,14 @@ public class MapsFragment extends Fragment {
         compassOverlay.enableCompass();
         map.getOverlays().add(compassOverlay);
 
-        if (isCurrent)
-        {
+        if (isCurrent) {
             Marker startMarker = new Marker(map);
             startMarker.setPosition(startPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             startMarker.setIcon(resizeDrawable(getResources().getDrawable(R.drawable.icons8_marker_48), 60, 80));
             startMarker.setTitle("Vị trí hiện tại của bạn");
 
-            CustomInfoWindow infoWindow = new CustomInfoWindow(map);
+            CustomInfoWindow infoWindow = new CustomInfoWindow(map, "current");
             startMarker.setInfoWindow(infoWindow);
 
             startMarker.setOnMarkerClickListener((marker, mapView) -> {
@@ -316,10 +315,8 @@ public class MapsFragment extends Fragment {
                 mapView.getController().animateTo(m.getPosition());
                 return true;
             });
-
             map.getOverlays().add(marker);
         }
-
         map.invalidate();
     }
 

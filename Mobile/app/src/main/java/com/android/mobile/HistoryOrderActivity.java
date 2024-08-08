@@ -93,8 +93,14 @@ public class HistoryOrderActivity extends BaseActivity {
                 swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     List<OrderModel> orders = response.body();
-                    adapter.setData(orders);
-                    Toast.makeText(HistoryOrderActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    List<OrderModel> orderList = new ArrayList<>();
+                    for (OrderModel order: orders) {
+                        if (order.getStatus().equals("thành công") && order.getGiao_hang().equals("đã giao hàng")){
+                            orderList.add(order);
+                        }
+                    }
+                    adapter.setData(orderList);
+                    Toast.makeText(HistoryOrderActivity.this, "Tải dữ liệu thành công" + orderList.size(), Toast.LENGTH_SHORT).show();
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }

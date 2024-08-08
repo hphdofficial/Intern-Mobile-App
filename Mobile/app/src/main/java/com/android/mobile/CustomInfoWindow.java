@@ -52,6 +52,9 @@ public class CustomInfoWindow extends InfoWindow {
         mView.setOnClickListener(v -> marker.closeInfoWindow());
 
         Button btnDetailClubMaps = mView.findViewById(R.id.btnDetailClubMaps);
+        if (idClub.equals("current")) {
+            btnDetailClubMaps.setVisibility(View.GONE);
+        }
 
         title.setText(marker.getTitle());
         snippet.setText(marker.getSnippet());

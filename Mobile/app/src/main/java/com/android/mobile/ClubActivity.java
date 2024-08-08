@@ -1,6 +1,7 @@
 package com.android.mobile;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -14,13 +15,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -63,12 +65,13 @@ public class ClubActivity extends BaseActivity {
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private SearchView searchView;
+    private ImageButton btnSearchView;
     private ClubListFragment clubListFragment;
     private MapsFragment mapsFragment;
     private Spinner viewOptionsSpinner;
     private Spinner spinnerCountry;
     private Spinner spinnerCity;
+    private boolean mapsView = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,17 +94,11 @@ public class ClubActivity extends BaseActivity {
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
 
-        searchView = findViewById(R.id.search_location);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        btnSearchView = findViewById(R.id.btn_search_view);
+        btnSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchClub(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public void onClick(View v) {
+                showSearchDialog();
             }
         });
 
@@ -136,13 +133,28 @@ public class ClubActivity extends BaseActivity {
         viewOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                String tag = null;
+
                 switch (position) {
                     case 0:
-                        transaction.replace(R.id.fragment_container_club, mapsFragment);
+                        tag = MapsFragment.class.getSimpleName();
+                        if (fragmentManager.findFragmentByTag(tag) == null) {
+                            transaction.replace(R.id.fragment_container_club, mapsFragment, tag);
+                            mapsView = true;
+                            spinnerCountry.setSelection(0);
+                            spinnerCity.setSelection(0);
+                        }
                         break;
                     case 1:
-                        transaction.replace(R.id.fragment_container_club, clubListFragment);
+                        tag = ClubListFragment.class.getSimpleName();
+                        if (fragmentManager.findFragmentByTag(tag) == null) {
+                            transaction.replace(R.id.fragment_container_club, clubListFragment, tag);
+                            mapsView = false;
+                            spinnerCountry.setSelection(0);
+                            spinnerCity.setSelection(0);
+                        }
                         break;
                 }
                 transaction.commit();
@@ -153,12 +165,36 @@ public class ClubActivity extends BaseActivity {
             }
         });
 
+
         spinnerCountry = findViewById(R.id.spinner_country);
         spinnerCity = findViewById(R.id.spinner_city);
 
         loadListClubDefault();
         showListCountry();
         showListCity();
+    }
+
+    private void showSearchDialog() {
+        final Dialog dialog = new Dialog(ClubActivity.this);
+        dialog.setContentView(R.layout.dialog_search);
+
+        dialog.setCanceledOnTouchOutside(false);
+
+        final EditText editTextSearch = dialog.findViewById(R.id.edit_text_search);
+        Button buttonOk = dialog.findViewById(R.id.button_ok);
+
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String query = editTextSearch.getText().toString().trim();
+                if (!query.isEmpty()) {
+                    searchClub(query);
+                }
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public void searchClub(String text) {
@@ -305,99 +341,105 @@ public class ClubActivity extends BaseActivity {
     }
 
     public void loadClubListByLocation(double latitude, double longitude) {
-        switchToMapsFragment(latitude, longitude, true);
+        if (mapsView) {
+            switchToMapsFragment(latitude, longitude, true);
+        } else {
+            ClubApiService service = ApiServiceProvider.getClubApiService();
+            Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
 
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
-
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject = response.body();
-                    Gson gson = new Gson();
-                    Type clubListType = new TypeToken<List<Club>>() {
-                    }.getType();
-                    List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
-                    clubListFragment.setData(clubs);
-                    Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
-                    if (clubs.isEmpty()) {
-                        Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+            call.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        Gson gson = new Gson();
+                        Type clubListType = new TypeToken<List<Club>>() {
+                        }.getType();
+                        List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
+                        clubListFragment.setData(clubs);
+                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+                        if (clubs.isEmpty()) {
+                            Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        System.err.println("Response error: " + response.errorBody());
                     }
-                } else {
-                    System.err.println("Response error: " + response.errorBody());
                 }
-            }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
     }
 
     public void loadClubListByCountry(int countryId, String latitude, String longitude) {
-        switchToMapsFragment(Double.parseDouble(latitude), Double.parseDouble(longitude), false);
+        if (mapsView) {
+            switchToMapsFragment(Double.parseDouble(latitude), Double.parseDouble(longitude), false);
+        } else {
+            ClubApiService service = ApiServiceProvider.getClubApiService();
+            Call<JsonObject> call = service.getListClubMap1(countryId);
 
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<JsonObject> call = service.getListClubMap1(countryId);
-
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject = response.body();
-                    Gson gson = new Gson();
-                    Type clubListType = new TypeToken<List<Club>>() {
-                    }.getType();
-                    List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
-                    clubListFragment.setData(clubs);
-                    Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
-                    if (clubs.isEmpty()) {
-                        Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+            call.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        Gson gson = new Gson();
+                        Type clubListType = new TypeToken<List<Club>>() {
+                        }.getType();
+                        List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
+                        clubListFragment.setData(clubs);
+                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+                        if (clubs.isEmpty()) {
+                            Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        System.err.println("Response error: " + response.errorBody());
                     }
-                } else {
-                    System.err.println("Response error: " + response.errorBody());
                 }
-            }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
     }
 
     public void loadClubListByCity(int cityId, String latitude, String longitude) {
-        switchToMapsFragment(Double.parseDouble(latitude), Double.parseDouble(longitude), false);
+        if (mapsView) {
+            switchToMapsFragment(Double.parseDouble(latitude), Double.parseDouble(longitude), false);
+        } else {
+            ClubApiService service = ApiServiceProvider.getClubApiService();
+            Call<JsonObject> call = service.getListClubMap2(230, cityId);
 
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<JsonObject> call = service.getListClubMap2(230, cityId);
-
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject = response.body();
-                    Gson gson = new Gson();
-                    Type clubListType = new TypeToken<List<Club>>() {
-                    }.getType();
-                    List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
-                    clubListFragment.setData(clubs);
-                    Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
-                    if (clubs.isEmpty()) {
-                        Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+            call.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()) {
+                        JsonObject jsonObject = response.body();
+                        Gson gson = new Gson();
+                        Type clubListType = new TypeToken<List<Club>>() {
+                        }.getType();
+                        List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
+                        clubListFragment.setData(clubs);
+                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+                        if (clubs.isEmpty()) {
+                            Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        System.err.println("Response error: " + response.errorBody());
                     }
-                } else {
-                    System.err.println("Response error: " + response.errorBody());
                 }
-            }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
     }
 
     public void showListCountry() {
@@ -427,6 +469,7 @@ public class ClubActivity extends BaseActivity {
                             if (position > 0) {
                                 Toast.makeText(ClubActivity.this, "Selected: " + selectedCountry.getTen(), Toast.LENGTH_SHORT).show();
                                 loadClubListByCountry(countryId, latitude, longitude);
+                                spinnerCity.setSelection(0);
                             }
                         }
 
@@ -473,6 +516,7 @@ public class ClubActivity extends BaseActivity {
                             if (position > 0) {
                                 Toast.makeText(ClubActivity.this, "Selected: " + selectedCity.getTen(), Toast.LENGTH_SHORT).show();
                                 loadClubListByCity(cityId, latitude, longitude);
+                                spinnerCountry.setSelection(0);
                             }
                         }
 
