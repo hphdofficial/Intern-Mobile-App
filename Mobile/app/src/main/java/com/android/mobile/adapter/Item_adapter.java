@@ -31,7 +31,7 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_supplier_product, viewGroup, false);
         return new Item_adapter.ViewHolder(view);
     }
 
@@ -83,6 +83,8 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
             super(itemView);
             txtProductName = itemView.findViewById(R.id.txtItemName);
             txtProductPrice = itemView.findViewById(R.id.txtItemPrice);
+
+            //Text hàng tồn
             txtProductInStock = itemView.findViewById(R.id.txtItemSupplier);
             imgProductImage = itemView.findViewById(R.id.imgItem);
         }

@@ -213,17 +213,22 @@ public class activity_checkin extends BaseActivity {
                     Gson gson = new Gson();
                     Type checkinMemberListType = new TypeToken<List<CheckinMemberModel>>() {}.getType();
                     List<CheckinMemberModel> checkinMembers = gson.fromJson(jsonObject.get("data"), checkinMemberListType);
-                    for (CheckinMemberModel memberSample : checkinMembers){
-                        Log.e("PostData", "Success: " + memberSample.getTen());
-                    }
-                    checkinAdapter = new Checkin_adapter(getApplicationContext(), checkinMembers);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    recyclerView.setAdapter(checkinAdapter);
                     if(checkinMembers == null){
                         Toast.makeText(activity_checkin.this, "Lớp chưa có thành viên", Toast.LENGTH_SHORT).show();
+                        hideLoading();
+                    }else{
+                        for (CheckinMemberModel memberSample : checkinMembers){
+                            Log.e("PostData", "Success: " + memberSample.getTen());
+                        }
+
+                        checkinAdapter = new Checkin_adapter(getApplicationContext(), checkinMembers);
+                        RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        recyclerView.setAdapter(checkinAdapter);
+
+                        hideLoading();
                     }
-                    hideLoading();
+
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());

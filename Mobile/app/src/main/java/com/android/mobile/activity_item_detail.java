@@ -35,7 +35,7 @@ import retrofit2.Response;
 
 public class activity_item_detail extends BaseActivity {
     private BlankFragment loadingFragment;
-    EditText editQuantity;
+    TextView editQuantity;
     int quantityInStock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +167,9 @@ public class activity_item_detail extends BaseActivity {
                         supplierIntent.putExtra("SupplierID", idSupplier);
                         startActivity(supplierIntent);
                     });
+                    hideLoading();
                 }else {
+                    hideLoading();
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
                 }
@@ -175,7 +177,7 @@ public class activity_item_detail extends BaseActivity {
 
             @Override
             public void onFailure(Call<SupplierModelOption> call, Throwable throwable) {
-
+                hideLoading();
             }
         });
 

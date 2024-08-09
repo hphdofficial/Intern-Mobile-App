@@ -160,7 +160,7 @@ public class activity_member_checkin extends BaseActivity {
                                 }
                             }else {
                                 hideLoading();
-                                Toast.makeText(activity_member_checkin.this, "Lấy data fail", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity_member_checkin.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -169,7 +169,7 @@ public class activity_member_checkin extends BaseActivity {
                             hideLoading();
                             System.out.println("Active: Call Onfail");
                             Log.e("PostData", "Failure: " + throwable.getMessage());
-                            Toast.makeText(activity_member_checkin.this, "Lấy data fail", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity_member_checkin.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                         }
                     });
                     hideLoading();
@@ -182,6 +182,7 @@ public class activity_member_checkin extends BaseActivity {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
                 hideLoading();
+                Toast.makeText(activity_member_checkin.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
@@ -199,6 +200,8 @@ public class activity_member_checkin extends BaseActivity {
             loadingFragment = null;
         }
     }
+
+    //Các chức năng hiển thị ngày vắng
 
     private ArrayList<String> getDesiredDays(Calendar startDate, Calendar endDate, int[] desiredDays) {
         ArrayList<String> resultDates = new ArrayList<>();

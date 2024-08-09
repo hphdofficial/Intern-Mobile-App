@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -375,7 +376,7 @@ public class activity_items extends BaseActivity {
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
-
+                    Toast.makeText(activity_items.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                     hideLoading();
                 }
             }
@@ -383,6 +384,7 @@ public class activity_items extends BaseActivity {
             @Override
             public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
                 hideLoading();
+                Toast.makeText(activity_items.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }

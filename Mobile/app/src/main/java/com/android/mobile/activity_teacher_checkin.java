@@ -101,23 +101,24 @@ public class activity_teacher_checkin extends BaseActivity {
                         ApiResponse apiResponse = gson.fromJson(jsonObject, apiResponseType);
 
                         if (apiResponse != null && "Thành công".equals(apiResponse.getSuccess())) {
+                            List<String> stringList = new ArrayList<>();
                             List<ClassData> classDataList = apiResponse.getData();
                             for (ClassData classData : classDataList) {
                                 //Tên lớp
                                 txtClassName.setText(classData.getClassName());
 
                                 for (Map.Entry<String, List<AttendanceTeacher>> entry : classData.getAttendance().entrySet()) {
+
                                     String date = entry.getKey();
+                                    stringList.add(date);
                                     List<AttendanceTeacher> attendanceList = entry.getValue();
                                     for (AttendanceTeacher attendance : attendanceList) {
                                         attendance.setDate(date);
-                                        Log.d(TAG, "Date: " + date);
-                                        Log.d(TAG, "Member Name: " + attendance.getMember_name());
-                                        Log.d(TAG, "In Time: " + attendance.getIn());
-                                        Log.d(TAG, "Out Time: " + attendance.getOut());
-                                        Log.d(TAG, "Day of Week: " + attendance.getDay_of_week());
                                         listChecked.add(attendance);
                                     }
+                                }
+                                for (String s : stringList){
+                                    System.out.println("Date: "+ s);
                                 }
                             }
                             Checked_Teacher_adapter checkedTeacherAdapter = new Checked_Teacher_adapter(getApplicationContext(), listChecked);
