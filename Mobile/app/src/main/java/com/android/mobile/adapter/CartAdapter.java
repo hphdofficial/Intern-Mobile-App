@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CartApiService;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -58,9 +60,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         public Button btnRemoveCart;
         public ImageButton btnIncreaseQuantity;
         public ImageButton btnDecreaseQuantity;
+        public ImageView imageViewProduct;
 
         public ViewHolder(View view) {
             super(view);
+            imageViewProduct = view.findViewById(R.id.imageViewProductCart);
             txtNameProduct = view.findViewById(R.id.txt_name_stored_item);
             txtPriceProduct = view.findViewById(R.id.txt_price_product);
             txtQuantityProduct = view.findViewById(R.id.textview_quantity);
@@ -92,6 +96,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(CartAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Glide.with(context)
+                .load(productList.get(position).getImage_link())
+                .error(R.drawable.product)
+                .into(holder.imageViewProduct);
         holder.txtNameProduct.setText(productList.get(position).getProductName());
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedPrice = currencyFormat.format(Double.parseDouble(productList.get(position).getUnitPrice()));

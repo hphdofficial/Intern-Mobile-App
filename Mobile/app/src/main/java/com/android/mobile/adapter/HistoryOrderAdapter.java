@@ -71,9 +71,17 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
 
     @Override
     public void onBindViewHolder(HistoryOrderAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.txtTransactionCode.setText("Mã giao dịch " + orderList.get(position).getTransaction_no());
+        if (orderList.get(position).getTransaction_no() != null) {
+            holder.txtTransactionCode.setText("Mã giao dịch " + orderList.get(position).getTransaction_no());
+        } else {
+            holder.txtTransactionCode.setText("Mã giao dịch " + orderList.get(position).getTxn_ref());
+        }
         holder.txtOrderCode.setText("Đơn hàng " + orderList.get(position).getTxn_ref());
-        holder.txtBank.setText("Loại thanh toán: " + orderList.get(position).getBank_code());
+        if (orderList.get(position).getBank_code() != null) {
+            holder.txtBank.setText("Loại thanh toán: " + orderList.get(position).getBank_code());
+        } else {
+            holder.txtBank.setText("Loại thanh toán: Trực tiếp");
+        }
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedPrice = currencyFormat.format(Double.parseDouble(orderList.get(position).getAmount()));
         holder.txtTotal.setText(formattedPrice);
@@ -82,6 +90,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
             @Override
             public void onClick(View v) {
                 viewListProduct(orderList.get(position).getId());
+                Toast.makeText(context, "Đang tải...", Toast.LENGTH_SHORT).show();
             }
         });
     }

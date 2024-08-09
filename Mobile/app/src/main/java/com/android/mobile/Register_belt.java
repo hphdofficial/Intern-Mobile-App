@@ -71,6 +71,22 @@ public class Register_belt extends BaseActivity {
 
                    chapterAdapter.loadBelt(b);
 
+                   Call<List<Belt>> callb = apiService.getAllBelt();
+                   callb.enqueue(new Callback<List<Belt>>() {
+                       @Override
+                       public void onResponse(Call<List<Belt>> call, Response<List<Belt>> response) {
+                           chapters = response.body();
+                           chapterAdapter.loadList(chapters);
+                           recyclerView.setAdapter(chapterAdapter);
+                           hideLoading();
+                       }
+
+                       @Override
+                       public void onFailure(Call<List<Belt>> call, Throwable t) {
+
+                       }
+                   });
+
                }else {
                    Toast.makeText(getApplicationContext(),"fails nn",Toast.LENGTH_SHORT).show();
                }
@@ -82,21 +98,7 @@ public class Register_belt extends BaseActivity {
             }
         });
 
-        Call<List<Belt>> call = apiService.getAllBelt();
-        call.enqueue(new Callback<List<Belt>>() {
-            @Override
-            public void onResponse(Call<List<Belt>> call, Response<List<Belt>> response) {
-                chapters = response.body();
-                chapterAdapter.loadList(chapters);
-                recyclerView.setAdapter(chapterAdapter);
-                hideLoading();
-            }
 
-            @Override
-            public void onFailure(Call<List<Belt>> call, Throwable t) {
-
-            }
-        });
 
        /* chapters.add(new Belt("Đai trắng","Đã học"));
         chapters.add(new Belt("Đai đen","Đã học"));*/
