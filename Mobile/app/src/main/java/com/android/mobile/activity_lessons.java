@@ -67,7 +67,7 @@ public class activity_lessons extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
         search_edit_text = findViewById(R.id.search_edit_text);
@@ -131,6 +131,7 @@ public class activity_lessons extends BaseActivity {
             @Override
             public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
                 hideLoading();
+                Toast.makeText(activity_lessons.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
@@ -158,7 +159,6 @@ public class activity_lessons extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
-                    hideLoading();
                     System.out.println("Active: Call Onfail");
                     Log.e("PostData", "Failure: " + throwable.getMessage());
                 }

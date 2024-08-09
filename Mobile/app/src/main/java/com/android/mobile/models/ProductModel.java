@@ -1,8 +1,13 @@
 package com.android.mobile.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
-public class ProductModel {
+public class ProductModel implements Parcelable {
     @SerializedName("ProductID")
     private int productID;
 
@@ -48,6 +53,31 @@ public class ProductModel {
         this.CategoryName = categoryName;
         this.SupplierName = supplierName;
     }
+
+    protected ProductModel(Parcel in) {
+        productID = in.readInt();
+        productName = in.readString();
+        supplierID = in.readInt();
+        unitPrice = in.readString();
+        unitsInStock = in.readInt();
+        categoryID = in.readString();
+        image_link = in.readString();
+        quantity = in.readInt();
+        CategoryName = in.readString();
+        SupplierName = in.readString();
+    }
+
+    public static final Creator<ProductModel> CREATOR = new Creator<ProductModel>() {
+        @Override
+        public ProductModel createFromParcel(Parcel in) {
+            return new ProductModel(in);
+        }
+
+        @Override
+        public ProductModel[] newArray(int size) {
+            return new ProductModel[size];
+        }
+    };
 
     public String getImage_link() {
         return image_link;
@@ -126,5 +156,24 @@ public class ProductModel {
 
     public void setSupplierName(String supplierName) {
         SupplierName = supplierName;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(productID);
+        dest.writeString(productName);
+        dest.writeInt(supplierID);
+        dest.writeString(unitPrice);
+        dest.writeInt(unitsInStock);
+        dest.writeString(categoryID);
+        dest.writeString(image_link);
+        dest.writeInt(quantity);
+        dest.writeString(CategoryName);
+        dest.writeString(SupplierName);
     }
 }

@@ -54,7 +54,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-      // TextView textViewItem;
+        // TextView textViewItem;
         ImageView image_product;
         TextView name_product;
         TextView type_product;
@@ -63,7 +63,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
         TextView quantity_product;
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-           // textViewItem = itemView.findViewById(R.id.textViewItem);
+            // textViewItem = itemView.findViewById(R.id.textViewItem);
             image_product = itemView.findViewById(R.id.image_product);
             name_product = itemView.findViewById(R.id.name_product);
             type_product = itemView.findViewById(R.id.type_product);

@@ -33,6 +33,8 @@ public class EnterOtpActivity extends BaseActivity {
 
     private TextView tvResendOTP;
 
+    private BlankFragment loadingFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,21 @@ public class EnterOtpActivity extends BaseActivity {
         });
     }
 
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
+
     private void setupEditTextListeners() {
         inputCode1.addTextChangedListener(new FocusTextWatcher(inputCode1, inputCode2));
         inputCode2.addTextChangedListener(new FocusTextWatcher(inputCode2, inputCode3));
@@ -109,6 +126,17 @@ public class EnterOtpActivity extends BaseActivity {
         }
     }
 
+    private void resetOtpInputs() {
+        inputCode1.setText("");
+        inputCode2.setText("");
+        inputCode3.setText("");
+        inputCode4.setText("");
+        inputCode5.setText("");
+        inputCode6.setText("");
+        inputCode1.requestFocus();
+    }
+
+
     private void verifyOtp() {
         String otp = inputCode1.getText().toString() + inputCode2.getText().toString() +
                 inputCode3.getText().toString() + inputCode4.getText().toString() +
@@ -121,10 +149,12 @@ public class EnterOtpActivity extends BaseActivity {
 
         VerifyOtpModel request = new VerifyOtpModel(email, otp);
         UserApiService apiService = ApiServiceProvider.getUserApiService();
+        showLoading(); // Hiển thị loading trước khi thực hiện gọi API
         Call<ReponseModel> call = apiService.verifyOtp(request);
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(EnterOtpActivity.this, "OTP đã được xác thực", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EnterOtpActivity.this, ResetPasswordActivity.class);
@@ -142,6 +172,7 @@ public class EnterOtpActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading();
                 Toast.makeText(EnterOtpActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -151,10 +182,13 @@ public class EnterOtpActivity extends BaseActivity {
     private void resendOtp() {
         ForgotPasswordModel request = new ForgotPasswordModel(email);
         UserApiService apiService = ApiServiceProvider.getUserApiService();
+        showLoading();
         Call<ReponseModel> call = apiService.sendOtp(request);
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
+                resetOtpInputs();
                 if (response.isSuccessful()) {
                     Toast.makeText(EnterOtpActivity.this, "OTP đã được gửi lại đến email của bạn", Toast.LENGTH_SHORT).show();
                 } else {
@@ -164,6 +198,8 @@ public class EnterOtpActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading();
+                resetOtpInputs();
                 if (t instanceof IOException) {
                     Toast.makeText(EnterOtpActivity.this, "Email không tồn tại trong hệ thống", Toast.LENGTH_SHORT).show();
                 } else {

@@ -27,166 +27,251 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
+
+        <uses-library
+            android:name="org.osmdroid"
+            android:required="false" />
+
+        <meta-data
+            android:name="vn.merchant_id"
+            android:value="YOUR_MERCHANT_ID" />
+        <meta-data
+            android:name="vn.secret_key"
+            android:value="YOUR_SECRET_KEY" />
+        <meta-data
+            android:name="vn.terminal_id"
+            android:value="YOUR_TERMINAL_ID" />
+
+        <activity
+            android:name=".MapsFragment"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddressP"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".adapter.ProductShippingAdapter"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OrderDetailsDialogFragment"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HistoryRegisterClass"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
+<!--        <activity-->
+<!--            android:name=".MainActivity2"-->
+<!--            android:exported="false"-->
+<!--            android:screenOrientation="portrait" />-->
         <activity
             android:name=".activity_teacher_checkin"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FragmentWriteReviewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".NewsDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UpdateInfoMember"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UpdatePassword"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".adapter.SupplierAdapter"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SupplierActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ResetPasswordActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ForgotPasswordActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Belt_Payment"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Register_belt"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Purchase"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".adapter.ItemSupplierProductAdapter"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SupplierProductActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".adapter.ArticleAdapter"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".adapter.ReviewAdapter"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ReviewActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SupplierInfoActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity_item_detail"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity_items"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HistoryOrderActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ShippingOrderActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CartActivity"
-            android:exported="true" /> <!-- <activity -->
-        <!-- android:name=".LaguageLayout" -->
-        <!-- android:exported="false" /> -->
+            android:exported="true"
+            android:screenOrientation="portrait" />
+<!--        <activity-->
+<!--            android:name=".LaguageLayout"-->
+<!--            android:exported="false"-->
+<!--            android:screenOrientation="portrait" />-->
         <activity
             android:name=".EnterOtpActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SignupActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity_member_checkin"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActivityDetailTeacher"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActivityDetailMember"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ViewImageActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActivityReplaceCamera"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ImageSelectActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".profiletest"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActivityNews"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PaymentQR"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".payment"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegisterClass"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MenuActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+<!--        <activity-->
+<!--            android:name=".StartActivity"-->
+<!--            android:exported="true" />-->
+        <activity
+            android:name=".ClassActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DetailClassActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DetailClubActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AboutActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ClubActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity_checkin"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MyClassActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity_item_chapter"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity_chapters"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity_lessons"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".StartActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity_member_checkin"
-            android:exported="true" />
-        <activity
-            android:name=".ActivityDetailTeacher"
-            android:exported="true" />
-        <activity
-            android:name=".ActivityDetailMember"
-            android:exported="true" />
-        <activity
-            android:name=".ViewImageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityReplaceCamera"
-            android:exported="false" />
-        <activity
-            android:name=".ImageSelectActivity"
-            android:exported="false" />
-        <activity
-            android:name=".profiletest"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityNews"
-            android:exported="true" />
-        <activity
-            android:name=".PaymentQR"
-            android:exported="false" />
-        <activity
-            android:name=".payment"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterClass"
-            android:exported="false" />
-        <activity
-            android:name=".MenuActivity"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".StartActivity" -->
-        <!-- android:exported="true" /> -->
-        <activity
-            android:name=".ClassActivity"
-            android:exported="true" />
-        <activity
-            android:name=".DetailClassActivity"
-            android:exported="true" />
-        <activity
-            android:name=".DetailClubActivity"
-            android:exported="true" />
-        <activity
-            android:name=".AboutActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ClubActivity"
-            android:exported="true" />
-        <activity
-            android:name=".activity_checkin"
-            android:exported="true" />
-        <activity
-            android:name=".MyClassActivity"
-            android:exported="true" />
-        <activity
-            android:name=".activity_item_chapter"
-            android:exported="true" />
-        <activity
-            android:name=".activity_chapters"
-            android:exported="true" />
-        <activity
-            android:name=".activity_lessons"
-            android:exported="true" />
+
     </application>
 
 </manifest>

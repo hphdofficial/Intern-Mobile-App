@@ -41,6 +41,7 @@ public class DetailClubActivity extends BaseActivity {
     private Button btnLeaveClub;
     private Button btnDirectClub;
     private String idClub = null;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,12 +127,16 @@ public class DetailClubActivity extends BaseActivity {
     }
 
     public void getDetailClub() {
+        showLoading();
+
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<Club> call = service.getDetailClub(Integer.parseInt(idClub));
 
         call.enqueue(new Callback<Club>() {
             @Override
             public void onResponse(Call<Club> call, Response<Club> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     Club clb = response.body();
                     txtNameClub.setText(clb.getTen());
@@ -146,6 +151,8 @@ public class DetailClubActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<Club> call, Throwable t) {
+                hideLoading();
+
                 Toast.makeText(DetailClubActivity.this, "Loi " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -176,6 +183,8 @@ public class DetailClubActivity extends BaseActivity {
 //    }
 
     public void joinClub() {
+        showLoading();
+
         String token = sharedPreferences.getString("access_token", null);
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
@@ -185,6 +194,8 @@ public class DetailClubActivity extends BaseActivity {
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("id_club_shared", idClub);
@@ -202,12 +213,16 @@ public class DetailClubActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading();
+
                 Toast.makeText(DetailClubActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void leaveClub() {
+        showLoading();
+
         String token = sharedPreferences.getString("access_token", null);
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
@@ -216,6 +231,7 @@ public class DetailClubActivity extends BaseActivity {
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
                 if (response.isSuccessful()) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("id_club_shared", null);
@@ -230,6 +246,8 @@ public class DetailClubActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading();
+
                 Toast.makeText(DetailClubActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -246,6 +264,18 @@ public class DetailClubActivity extends BaseActivity {
             btnDirectClub.setVisibility(View.GONE);
             btnJoinClub.setVisibility(View.VISIBLE);
             Toast.makeText(DetailClubActivity.this, "Bạn chưa tham gia câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
         }
     }
 }

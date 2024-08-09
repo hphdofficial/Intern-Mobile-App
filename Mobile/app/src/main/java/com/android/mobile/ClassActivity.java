@@ -41,6 +41,7 @@ public class ClassActivity extends BaseActivity {
     private ClassAdapter adapter;
     private List<Class> classList = new ArrayList<>();
     private SearchView searchView;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,7 @@ public class ClassActivity extends BaseActivity {
                 return false;
             }
         });
+        showLoading();
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
@@ -91,29 +93,42 @@ public class ClassActivity extends BaseActivity {
         call.enqueue(new Callback<List<Class>>() {
             @Override
             public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     List<Class> classes = response.body();
                     adapter.setData(classes);
-                    Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    if (!classes.isEmpty()) {
+                        Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
+                    Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
                     System.err.println("Response error: " + response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<List<Class>> call, Throwable t) {
+                hideLoading();
+
                 t.printStackTrace();
             }
         });
     }
 
     public void searchClass(String text) {
+        showLoading();
+
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<List<Class>> call = service.searchClass(text);
 
         call.enqueue(new Callback<List<Class>>() {
             @Override
             public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     List<Class> classes = response.body();
                     adapter.setData(classes);
@@ -126,8 +141,22 @@ public class ClassActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<Class>> call, Throwable t) {
+                hideLoading();
+
                 t.printStackTrace();
             }
         });
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

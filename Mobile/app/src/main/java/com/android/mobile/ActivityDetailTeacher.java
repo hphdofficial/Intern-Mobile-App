@@ -58,7 +58,7 @@ public class ActivityDetailTeacher extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
     }
 

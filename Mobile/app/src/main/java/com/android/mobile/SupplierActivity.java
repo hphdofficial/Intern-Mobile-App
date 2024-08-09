@@ -30,6 +30,7 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
     private RecyclerView recyclerView;
     private SupplierAdapter adapter;
     private List<SupplierModel> supplierList;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -63,12 +64,28 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
         NamePage();
     }
 
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
+
+
     private void fetchSuppliers() {
+        showLoading();
         SupplierApiService apiService = ApiServiceProvider.getSupplierApiService();
         Call<List<SupplierModel>> call = apiService.getSuppliers();
         call.enqueue(new Callback<List<SupplierModel>>() {
             @Override
             public void onResponse(Call<List<SupplierModel>> call, Response<List<SupplierModel>> response) {
+                hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     supplierList.addAll(response.body());
                     adapter.notifyDataSetChanged();
@@ -79,6 +96,7 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
 
             @Override
             public void onFailure(Call<List<SupplierModel>> call, Throwable t) {
+                hideLoading();
                 Toast.makeText(SupplierActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

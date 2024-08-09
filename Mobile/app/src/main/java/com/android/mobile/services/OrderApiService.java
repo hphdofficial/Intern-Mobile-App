@@ -13,7 +13,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Query;
 
 public interface OrderApiService {
-    @GET("/api/hoadon")
+    @GET("/api/orders/All")
     Call<List<OrderModel>> getHistoryOrder(
             @Header("Authorization") String token
     );

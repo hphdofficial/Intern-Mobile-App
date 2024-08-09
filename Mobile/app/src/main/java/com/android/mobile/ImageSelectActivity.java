@@ -35,7 +35,7 @@ public class ImageSelectActivity extends BaseActivity {
     private Uri selectedImageUri;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
-
+    private BlankFragment loadingFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +93,21 @@ public class ImageSelectActivity extends BaseActivity {
         return null;
     }
 
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
+
 
     private void uploadImage(Uri imageUri) {
         String token = sharedPreferences.getString("access_token", null);
@@ -104,11 +119,15 @@ public class ImageSelectActivity extends BaseActivity {
                 RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(imageUri)), file);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
 
+                showLoading();
                 UserApiService apiService = ApiServiceProvider.getUserApiService();
                 Call<ReponseModel> call = apiService.uploadAvatar("Bearer " + token, body);
                 call.enqueue(new Callback<ReponseModel>() {
                     @Override
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+
+
+                        hideLoading();
                         if (response.isSuccessful()) {
                             Toast.makeText(ImageSelectActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
                             String avatarUrl = response.body().getAvatar();
@@ -129,6 +148,7 @@ public class ImageSelectActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<ReponseModel> call, Throwable t) {
+                        hideLoading();
                         Toast.makeText(ImageSelectActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });

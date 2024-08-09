@@ -40,6 +40,9 @@ public class UpdateInfoMember extends BaseActivity {
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
 
+    private BlankFragment loadingFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +61,7 @@ public class UpdateInfoMember extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
         // Khởi tạo các view
@@ -144,10 +147,12 @@ public class UpdateInfoMember extends BaseActivity {
                 Log.d("UpdateInfo", "Gioitinh: " + updateInfoModel.getGioitinh());
 
                 UserApiService apiService = ApiServiceProvider.getUserApiService();
+                showLoading();
                 Call<ReponseModel> call = apiService.updateInfo("Bearer " + token, updateInfoModel);
                 call.enqueue(new Callback<ReponseModel>() {
                     @Override
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                        hideLoading();
                         if (response.isSuccessful() && response.body() != null) {
                             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
                             // Chuyển hướng về ActivityDetailMember và load lại thông tin
@@ -162,6 +167,7 @@ public class UpdateInfoMember extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<ReponseModel> call, Throwable t) {
+                        hideLoading();
                         Toast.makeText(UpdateInfoMember.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -203,4 +209,19 @@ public class UpdateInfoMember extends BaseActivity {
             return 0;
         }
     }
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
 }

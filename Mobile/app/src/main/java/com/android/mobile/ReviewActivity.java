@@ -43,6 +43,9 @@ public class ReviewActivity extends BaseActivity implements FragmentWriteReviewA
     private TextView filterAll, filter5Star, filter4Star, filter3Star, filter2Star, filter1Star;
     private TextView[] filterButtons;
 
+    private BlankFragment loadingFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +65,7 @@ public class ReviewActivity extends BaseActivity implements FragmentWriteReviewA
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -121,21 +124,40 @@ public class ReviewActivity extends BaseActivity implements FragmentWriteReviewA
         });
     }
 
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
     private void loadReviews() {
+        showLoading();
         ApiServiceProvider.getProductApiService().getProductReviews(productId).enqueue(new Callback<List<ReviewModel>>() {
             @Override
             public void onResponse(Call<List<ReviewModel>> call, Response<List<ReviewModel>> response) {
+                hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     allReviews = response.body();
                     Collections.reverse(allReviews);
                     loadUserProfiles();
                 } else {
+                    hideLoading();
                     Toast.makeText(ReviewActivity.this, "Không có đánh giá nào.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<ReviewModel>> call, Throwable t) {
+                hideLoading();
                 Toast.makeText(ReviewActivity.this, "Lỗi khi lấy đánh giá.", Toast.LENGTH_SHORT).show();
             }
         });

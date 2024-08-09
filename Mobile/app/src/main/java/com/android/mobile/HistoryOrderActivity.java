@@ -45,7 +45,17 @@ public class HistoryOrderActivity extends BaseActivity {
     private HistoryOrderAdapter adapter;
     private List<OrderModel> orderList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private BlankFragment loadingFragment;
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +66,7 @@ public class HistoryOrderActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+showLoading();
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Lịch sử mua hàng");
@@ -93,9 +103,17 @@ public class HistoryOrderActivity extends BaseActivity {
                 swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     List<OrderModel> orders = response.body();
-                    adapter.setData(orders);
+                    List<OrderModel> orderList = new ArrayList<>();
+                    for (OrderModel order: orders) {
+                        if (order.getStatus().equals("thành công") && order.getGiao_hang().equals("đã giao hàng")){
+                            orderList.add(order);
+                        }
+                    }
+                    adapter.setData(orderList);
                     Toast.makeText(HistoryOrderActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    hideLoading();
                 } else {
+                    hideLoading();
                     System.err.println("Response error: " + response.errorBody());
                 }
             }

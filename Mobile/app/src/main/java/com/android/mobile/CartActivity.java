@@ -51,6 +51,7 @@ public class CartActivity extends BaseActivity {
     private TextView txtSumQuantity;
     private TextView txtSumPrice;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +91,15 @@ public class CartActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CartActivity.this, Purchase.class);
+                intent.putParcelableArrayListExtra("product_list", new ArrayList<>(productList));
                 startActivity(intent);
             }
         });
     }
 
-    public void loadProductCart(){
+    public void loadProductCart() {
+        showLoading();
+
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
         int memberId = sharedPreferences.getInt("member_id", 0);
@@ -137,6 +141,7 @@ public class CartActivity extends BaseActivity {
                     txtSumQuantity.setText("Số lượng: " + products.size() + " sản phẩm");
                     updateTotalPrice(memberId);
 
+                    productList = new ArrayList<>(products);
                     adapter.setData(products);
                 } else {
                     System.err.println("Response error: " + response.errorBody());
@@ -145,6 +150,8 @@ public class CartActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                hideLoading();
+
                 swipeRefreshLayout.setRefreshing(false);
                 t.printStackTrace();
             }
@@ -158,6 +165,8 @@ public class CartActivity extends BaseActivity {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     JsonObject jsonResponse = response.body();
                     Gson gson = new Gson();
@@ -173,8 +182,22 @@ public class CartActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                hideLoading();
+
                 t.printStackTrace();
             }
         });
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

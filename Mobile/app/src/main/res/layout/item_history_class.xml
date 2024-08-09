@@ -7,11 +7,12 @@
     android:id="@+id/item_belt"
     android:layout_marginBottom="10dp"
 
-    android:background="#D3D3D3">
+    android:background="#fff">
 
 
 
     <LinearLayout
+        android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_marginStart="16dp"
         android:layout_height="wrap_content"
@@ -20,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="vertical">
         <TextView
-           android:padding="10dp"
+           android:paddingTop="10dp"
             android:textColor="#FF0000"
             android:id="@+id/id"
             android:textAlignment="center"
@@ -29,38 +30,47 @@
             android:text="Hóa đơn số">
 
         </TextView>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:gravity="center"
+           android:layout_height="wrap_content">
+           <TextView
+               android:textColor="#ADD8E6"
+               android:id="@+id/current"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Trạng thái thanh toán">
+           </TextView>
+       </LinearLayout>
         <TextView
-            android:textColor="#ADD8E6"
+            android:textAlignment="center"
+            android:textColor="#000"
             android:id="@+id/date"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Ngày tạo">
         </TextView>
         <TextView
-            android:textColor="#ADD8E6"
+            android:textAlignment="center"
+            android:textColor="#000"
             android:id="@+id/price"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Số tiền">
         </TextView>
 
         <TextView
-            android:textColor="#ADD8E6"
+            android:textAlignment="center"
+            android:textColor="#000"
             android:id="@+id/nameclass"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tên lớp">
 
 
 
         </TextView>
-        <TextView
-            android:textColor="#FFFF00"
-            android:id="@+id/current"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Trạng thái thanh toán">
-        </TextView>
+
 
 
     </LinearLayout>

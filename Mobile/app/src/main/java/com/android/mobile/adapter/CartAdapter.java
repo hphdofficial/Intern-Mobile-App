@@ -1,6 +1,8 @@
 package com.android.mobile.adapter;
 
 
+import static android.app.ProgressDialog.show;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -151,10 +153,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public void removeProduct(int productId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-        String memberId = sharedPreferences.getString("member_id", null);
+        int memberId = sharedPreferences.getInt("member_id", 0);
 
         CartApiService service = ApiServiceProvider.getCartApiService();
-        Call<JsonObject> call = service.removeProduct(new CartItem(Integer.parseInt(memberId), productId));
+        Call<JsonObject> call = service.removeProduct(new CartItem(memberId, productId));
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -175,9 +177,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public void increaseQuantity(int productId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-//        String memberId = sharedPreferences.getString("member_id", null);
-        int memberId = 257;
-
+        int memberId = sharedPreferences.getInt("member_id", 0);
         CartApiService service = ApiServiceProvider.getCartApiService();
         Call<JsonObject> call = service.increaseQuantity(new CartItem(memberId, productId));
 
@@ -200,10 +200,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public void decreaseQuantity(int productId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-        String memberId = sharedPreferences.getString("member_id", null);
+        int memberId = sharedPreferences.getInt("member_id", 0);
 
         CartApiService service = ApiServiceProvider.getCartApiService();
-        Call<JsonObject> call = service.decreaseQuantity(new CartItem(Integer.parseInt(memberId), productId));
+        Call<JsonObject> call = service.decreaseQuantity(new CartItem(memberId, productId));
 
         call.enqueue(new Callback<JsonObject>() {
             @Override

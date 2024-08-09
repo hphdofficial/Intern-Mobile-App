@@ -82,6 +82,8 @@ public class activity_item_chapter extends BaseActivity {
 
             @Override
             public void onFailure(Call<TheoryModel> call, Throwable throwable) {
+                hideLoading();
+                Toast.makeText(activity_item_chapter.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
@@ -101,7 +103,7 @@ public class activity_item_chapter extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
     }
 

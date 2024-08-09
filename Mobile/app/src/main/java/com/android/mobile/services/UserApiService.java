@@ -3,6 +3,8 @@ package com.android.mobile.services;
 import com.android.mobile.models.ClassModelTest;
 import com.android.mobile.models.ForgotPasswordModel;
 import com.android.mobile.models.LoginModel;
+import com.android.mobile.models.OrderModel;
+import com.android.mobile.models.OrderStatusModel;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.models.RegisterModel;
 import com.android.mobile.models.ReponseModel;
@@ -19,6 +21,7 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.PUT;
 
 import retrofit2.http.Header;
@@ -49,6 +52,7 @@ public interface UserApiService {
     );
 
     @POST("api/forgotpassword/request")
+    @Headers("Accept: application/json")
     Call<ReponseModel> sendOtp(@Body ForgotPasswordModel request);
 
     @POST("api/forgotpassword/reset")
@@ -73,5 +77,19 @@ public interface UserApiService {
 
     @GET("api/user/classes")
     Call<List<ClassModelTest>> getUserRegisteredClasses(@Header("Authorization") String token);
+
+    @GET("api/orders/undelivered")
+    Call<List<OrderModel>> getUndeliveredOrders(@Header("Authorization") String token);
+
+    // API kiểm tra trạng thái đơn hàng sử dụng txn_ref
+    @GET("search_order")
+    Call<OrderStatusModel> searchOrder(@Query("id") String txnRef);
+
+    // API cập nhật trạng thái giao hàng sử dụng txn_ref
+    @GET("delivery_update")
+    Call<Void> updateDeliveryStatus(@Query("id") String txnRef);
+
+    @GET("api/orders/All")
+    Call<List<OrderStatusModel>> getAllOrders(@Header("Authorization") String token);
 
 }

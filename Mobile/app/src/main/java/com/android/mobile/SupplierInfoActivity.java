@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -26,6 +27,7 @@ import retrofit2.Response;
 public class SupplierInfoActivity extends BaseActivity {
 
     private int supplierID;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class SupplierInfoActivity extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
         Intent intent = getIntent();
@@ -59,25 +61,46 @@ public class SupplierInfoActivity extends BaseActivity {
         fetchSupplierInfo(supplierID);
     }
 
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
+
     private void fetchSupplierInfo(int supplierID) {
+        showLoading();
         SupplierApiService apiService = ApiServiceProvider.getSupplierApiService();
         apiService.getSupplier(supplierID).enqueue(new Callback<SupplierModel>() {
             @Override
             public void onResponse(Call<SupplierModel> call, Response<SupplierModel> response) {
+                hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     SupplierModel supplier = response.body();
                     displaySupplierInfo(supplier);
                 } else {
                     // Handle error
+                    Toast.makeText(SupplierInfoActivity.this, "Có lỗi xảy ra, vui lòng thử lại.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<SupplierModel> call, Throwable t) {
+                hideLoading();
                 // Handle failure
+                Toast.makeText(SupplierInfoActivity.this, "Không thể kết nối, vui lòng thử lại.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
+
 
     private void displaySupplierInfo(SupplierModel supplier) {
         TextView supplierNameTextView = findViewById(R.id.supplierName);
@@ -96,5 +119,6 @@ public class SupplierInfoActivity extends BaseActivity {
             productIntent.putExtra("SupplierID", supplierID); // Pass the SupplierID to the next activity
             startActivity(productIntent);
         });
+
     }
 }

@@ -57,7 +57,7 @@ public class MenuActivity extends BaseActivity {
     private TextView textViewName;
     private SharedPreferences sharedPreferences;
     private TextView textViewBirthday;
-
+    private BlankFragment loadingFragment;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,6 +222,7 @@ public class MenuActivity extends BaseActivity {
     private LinearLayout btn_historyclass1;
     private LinearLayout btn_product;
     private LinearLayout btn_sup;
+    private LinearLayout btn_order_status;
     private ImageView img_avatar_menu;
     private ImageView test;
     private ImageView test1;
@@ -240,6 +241,7 @@ public class MenuActivity extends BaseActivity {
         btn_new = findViewById(R.id.btn_infor);
         btn_logout = findViewById(R.id.btn_logout);
         btn_product = findViewById(R.id.btn_product);
+        btn_order_status = findViewById(R.id.btn_order_status);
         user = findViewById(R.id.user);
         test = findViewById(R.id.test);
         test1 = findViewById(R.id.test1);
@@ -258,7 +260,7 @@ public class MenuActivity extends BaseActivity {
             }
         });
 
-
+        showLoading();
 
         btn_cart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,6 +379,13 @@ public class MenuActivity extends BaseActivity {
                 startActivity(new Intent(getApplicationContext(), activity_items.class));
             }
         });
+
+        btn_order_status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ShippingOrderActivity.class));
+            }
+        });
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -389,7 +398,9 @@ public class MenuActivity extends BaseActivity {
                 logout();
             }
         });
+
         eventAnimationImage();
+
     }
     private void logout() {
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
@@ -416,12 +427,12 @@ public class MenuActivity extends BaseActivity {
 
 
     public void eventAnimationImage(){
-        eventMenuItem(test);
+/*        eventMenuItem(test);
         eventMenuItem(test1);
         eventMenuItem(test2);
         eventMenuItem(test3);
         eventMenuItem(test4);
-        eventMenuItem(test5);
+        eventMenuItem(test5);*/
     }
 
     public void eventMenuItem(ImageView imageView){
@@ -492,9 +503,11 @@ public class MenuActivity extends BaseActivity {
                             } else {
                                 imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
                             }
+                            hideLoading();
 
                         }
                     } else {
+                        hideLoading();
                         Toast.makeText(MenuActivity.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -518,5 +531,15 @@ public class MenuActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         loadUserData();
+    }
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }
