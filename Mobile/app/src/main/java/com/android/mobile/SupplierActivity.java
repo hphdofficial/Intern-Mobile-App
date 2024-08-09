@@ -50,7 +50,7 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         recyclerView = findViewById(R.id.recyclerView);

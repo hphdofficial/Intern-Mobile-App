@@ -73,7 +73,6 @@ public class Purchase extends BaseActivity {
     private TextView discount;
     private TextView transport;
     private TextView total;
-    List<ProductModel> productList;
     private String textPayment;
     private  TextView address;
     private BlankFragment loadingFragment;
@@ -112,8 +111,6 @@ public class Purchase extends BaseActivity {
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
-        Intent intent = getIntent();
-        productList = intent.getParcelableArrayListExtra("product_list");
 
         // tạo recyclerview
         recyclerView = findViewById(R.id.recyclerView);
@@ -147,8 +144,8 @@ public class Purchase extends BaseActivity {
 
     public void Summoney(){
         float sum = 0;
-        for (ProductModel value : productList) {
-            sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
+        for (Product value : itemList){
+            sum += value.getPrice()*value.getQuantity();
         }
 
 
@@ -173,10 +170,7 @@ public class Purchase extends BaseActivity {
         float sum = 0;
         for (Product value : itemList){
             textPayment += value.getName() + "va";
-        }
-
-        for (ProductModel value : productList) {
-            sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
+            sum += value.getPrice()*value.getQuantity();
         }
         float dis = Float.parseFloat(discount.getText().toString().replace("đ","").replace(".",""));
 
@@ -191,7 +185,7 @@ public class Purchase extends BaseActivity {
     protected void onResume() {
         super.onResume();
         CreateItem();
-      //  EventVoucher();
+        //  EventVoucher();
         EventPayment();
         GetStatus();
         changeAddress();
@@ -241,11 +235,11 @@ public class Purchase extends BaseActivity {
                     Toast.makeText(getApplicationContext(),"fail nn",Toast.LENGTH_SHORT).show();
                 }
             });
-                Log.e("stats",link);
+            Log.e("stats",link);
         }
     }
 
-private LinearLayout layout1;
+    private LinearLayout layout1;
     public void EventPayment(){
         btn_payment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -327,54 +321,54 @@ private LinearLayout layout1;
 
     public  void CreateItem(){
 
-            itemList = new ArrayList<>();
+        itemList = new ArrayList<>();
 
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         int memberId = sharedPreferences.getInt("member_id", -1);
 
-            PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-            Call<CartResponse> call = apiService.getCart(memberId+"");
-            call.enqueue(new Callback<CartResponse>() {
-                @Override
-                public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
-                   if(response.isSuccessful()){
-                       CartResponse cartResponse = response.body();
-                       List<CartModel> cartItems = cartResponse.getCart();
-                        Double count = 0.0;
-                       if(cartItems.size()>0){
-                            itemList.clear();
-                            for (CartModel value : cartItems){
+        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+        Call<CartResponse> call = apiService.getCart(memberId+"");
+        call.enqueue(new Callback<CartResponse>() {
+            @Override
+            public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
+                if(response.isSuccessful()){
+                    CartResponse cartResponse = response.body();
+                    List<CartModel> cartItems = cartResponse.getCart();
+                    Double count = 0.0;
+                    if(cartItems.size()>0){
+                        itemList.clear();
+                        for (CartModel value : cartItems){
 
-                                    count+= Double.parseDouble(value.getTotalPrice());
-                                ProductModel p = value.getProduct();
-                                Product pr = new Product();
-                                pr.setName(p.getProductName());
-                                pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
-                                pr.setQuantity(value.getQuantity());
-                                pr.setSupplier(p.getSupplierID()+"");
-                                pr.setLinkImage("null");
-                                itemList.add(pr);
-                            }
-                           itemAdapter = new ProductAdapter(itemList);
-                           recyclerView.setAdapter(itemAdapter);
-                           Summoney();
-                           DiscountMoney();
-                           Transport();
-                           TotalMoney();
-                           hideLoading();
+                            count+= Double.parseDouble(value.getTotalPrice());
+                            ProductModel p = value.getProduct();
+                            Product pr = new Product();
+                            pr.setName(p.getProductName());
+                            pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
+                            pr.setQuantity(value.getQuantity());
+                            pr.setSupplier(p.getSupplierID()+"");
+                            pr.setLinkImage("null");
+                            itemList.add(pr);
+                        }
+                        itemAdapter = new ProductAdapter(itemList);
+                        recyclerView.setAdapter(itemAdapter);
+                        Summoney();
+                        DiscountMoney();
+                        Transport();
+                        TotalMoney();
+                        hideLoading();
 
-                       }
-                   }else {
-                       hideLoading();
-
-                   }
-                }
-
-                @Override
-                public void onFailure(Call<CartResponse> call, Throwable t) {
+                    }
+                }else {
+                    hideLoading();
 
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(Call<CartResponse> call, Throwable t) {
+
+            }
+        });
 
 
 

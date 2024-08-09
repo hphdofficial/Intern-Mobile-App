@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.R;
 import com.android.mobile.models.Product;
-import com.android.mobile.models.ProductModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,8 +19,8 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemViewHolder> {
 
-    private List<ProductModel> list ;
-    public ProductAdapter(List<ProductModel> list ){
+    private List<Product> list ;
+    public ProductAdapter(List<Product> list ){
         this.list = list;
     }
     @NonNull
@@ -33,13 +32,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
     private int placeholderResourceId = R.drawable.avatar_anime;
     @Override
     public void onBindViewHolder(@NonNull ProductAdapter.ItemViewHolder holder, int position) {
-        ProductModel item = list.get(position);
+        Product item = list.get(position);
 
-        holder.name_product.setText(item.getProductName());
-        holder.type_product.setText("Loại: " + item.getCategoryName());
-        holder.supplier_product.setText("Nhà cung cấp: " + item.getSupplierName());
-        holder.price_product.setText("Giá tiền: " + item.getUnitPrice() + "");
-        holder.quantity_product.setText("x" + item.getQuantity());
+        holder.name_product.setText(item.getName());
+        holder.type_product.setText(item.getType());
+        holder.supplier_product.setText(item.getSupplier());
+        holder.price_product.setText("Giá tiền: "+item.getPrice()+"");
+        holder.quantity_product.setText("x"+item.getQuantity()+"");
 
 
         /*Picasso.get()
@@ -55,7 +54,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-      // TextView textViewItem;
+        // TextView textViewItem;
         ImageView image_product;
         TextView name_product;
         TextView type_product;
@@ -64,7 +63,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
         TextView quantity_product;
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-           // textViewItem = itemView.findViewById(R.id.textViewItem);
+            // textViewItem = itemView.findViewById(R.id.textViewItem);
             image_product = itemView.findViewById(R.id.image_product);
             name_product = itemView.findViewById(R.id.name_product);
             type_product = itemView.findViewById(R.id.type_product);

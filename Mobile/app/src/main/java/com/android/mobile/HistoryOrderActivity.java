@@ -110,7 +110,7 @@ showLoading();
                         }
                     }
                     adapter.setData(orderList);
-                    Toast.makeText(HistoryOrderActivity.this, "Tải dữ liệu thành công" + orderList.size(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HistoryOrderActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
                     hideLoading();
                 } else {
                     hideLoading();

@@ -98,8 +98,13 @@ public class ClassActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<Class> classes = response.body();
                     adapter.setData(classes);
-                    Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    if (!classes.isEmpty()) {
+                        Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
+                    Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
                     System.err.println("Response error: " + response.errorBody());
                 }
             }

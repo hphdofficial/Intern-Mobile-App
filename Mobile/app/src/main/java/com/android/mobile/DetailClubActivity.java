@@ -221,6 +221,8 @@ public class DetailClubActivity extends BaseActivity {
     }
 
     public void leaveClub() {
+        showLoading();
+
         String token = sharedPreferences.getString("access_token", null);
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
@@ -229,6 +231,7 @@ public class DetailClubActivity extends BaseActivity {
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
                 if (response.isSuccessful()) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("id_club_shared", null);
@@ -243,6 +246,8 @@ public class DetailClubActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading();
+
                 Toast.makeText(DetailClubActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
