@@ -6,8 +6,8 @@
     <!-- Màu nền -->
     <solid android:color="#FFFFFF" />
 
-    <!-- Đường viền -->
+    <!-- Đường viền màu trắng -->
     <stroke
         android:width="2dp"
-        android:color="#FF6200EE" />
+        android:color="#FFFFFF" />
 </shape>

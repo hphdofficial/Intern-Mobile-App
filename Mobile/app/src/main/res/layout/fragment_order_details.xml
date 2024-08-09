@@ -153,7 +153,7 @@
                     android:id="@+id/textView_order_pay_date_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ngày thanh toán:"
+                    android:text="Ngày đặt hàng:"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:layout_marginEnd="8dp" />

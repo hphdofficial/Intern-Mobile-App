@@ -474,8 +474,6 @@ public class MenuActivity extends BaseActivity {
                     if (response.isSuccessful()) {
                         ProfileModel profile = response.body();
                         if (profile != null) {
-
-
                             SharedPreferences infor = getSharedPreferences("infor", Context.MODE_PRIVATE);
                             SharedPreferences.Editor myContentE = infor.edit();
                             myContentE.putString("name", profile.getUsername());
@@ -485,10 +483,6 @@ public class MenuActivity extends BaseActivity {
                             myContentE.putString("birthday",profile.getNgaysinh());
                             myContentE.putString("phone",profile.getDienthoai());
                             myContentE.putInt("age", year-Integer.parseInt(date[0]));
-
-
-
-
                             textViewName.setText(profile.getTen());
                             textViewBirthday.setText(profile.getNgaysinh());
 
