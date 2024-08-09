@@ -20,11 +20,15 @@ import com.android.mobile.BlankFragment;
 import com.android.mobile.OrderDetailsDialogFragment;
 import com.android.mobile.R;
 import com.android.mobile.SupplierInfoActivity;
+import com.android.mobile.ThankYouDialogFragment;
 import com.android.mobile.models.OrderStatusModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,24 +76,26 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         OrderStatusModel order = data.get(position);
         holder.textViewStatus.setText(order.getGiao_hang());
 
-        // Set supplier name
-        if (!order.getDetail_carts().isEmpty()) {
-            holder.textViewSupplier.setText(order.getDetail_carts().get(0).getProduct().getSupplierName());
+        // Group products by supplier
+        Map<String, List<OrderStatusModel.DetailCart>> supplierProductMap = new LinkedHashMap<>();
+        for (OrderStatusModel.DetailCart detailCart : order.getDetail_carts()) {
+            String supplierName = detailCart.getProduct().getSupplierName();
+            if (!supplierProductMap.containsKey(supplierName)) {
+                supplierProductMap.put(supplierName, new ArrayList<>());
+            }
+            supplierProductMap.get(supplierName).add(detailCart);
         }
 
-        // Add click listener for supplier name
-        holder.textViewSupplier.setOnClickListener(v -> {
-            if (!order.getDetail_carts().isEmpty()) {
-                int supplierId = order.getDetail_carts().get(0).getProduct().getSupplierID();
-                Intent intent = new Intent(context, SupplierInfoActivity.class);
-                intent.putExtra("SupplierID", supplierId);
-                context.startActivity(intent);
-            }
-        });
+        // Create a list of items including supplier names and their products
+        List<Object> items = new ArrayList<>();
+        for (Map.Entry<String, List<OrderStatusModel.DetailCart>> entry : supplierProductMap.entrySet()) {
+            items.add(entry.getKey()); // Add supplier name as a header
+            items.addAll(entry.getValue()); // Add products of the supplier
+        }
 
-        // Setup product list
+        // Setup product list with grouped items
         holder.recyclerProductList.setLayoutManager(new LinearLayoutManager(context));
-        holder.recyclerProductList.setAdapter(new ProductShippingAdapter(context, order.getDetail_carts()));
+        holder.recyclerProductList.setAdapter(new ProductShippingAdapter(context, items));
 
         // Calculate total price
         double totalPrice = 0;
@@ -114,75 +120,49 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
                 int adapterPosition = holder.getAdapterPosition();
                 String txnRef = order.getTxn_ref(); // Lấy txn_ref từ order
 
-                // Log txnRef and order ID for debugging
-                System.out.println("txnRef: " + txnRef);
-                System.out.println("Order ID: " + order.getId());
-
                 showLoading(); // Hiển thị loading
+                apiService.updateDeliveryStatus(txnRef).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            // After updating the delivery status, check the order status again
+                            apiService.searchOrder(txnRef).enqueue(new Callback<OrderStatusModel>() { // sử dụng txnRef
+                                @Override
+                                public void onResponse(Call<OrderStatusModel> call, Response<OrderStatusModel> response) {
+                                    hideLoading(); // Ẩn loading
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        OrderStatusModel updatedOrder = response.body();
+                                        order.setGiao_hang(updatedOrder.getGiao_hang());
+                                        notifyItemChanged(adapterPosition);
+                                        Toast.makeText(context, "Trạng thái giao hàng đã được cập nhật thành công", Toast.LENGTH_SHORT).show();
 
-                if ("Thanh toán khi nhận hàng".equals(order.getOrder_info())) {
-                    // Update status to 'thành công' and 'giao_hang' to 'đã giao hàng'
-                    order.setStatus("thành công");
-                    order.setGiao_hang("đã giao hàng");
-                    apiService.updateDeliveryStatus(txnRef).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            hideLoading();
-                            if (response.isSuccessful()) {
-                                notifyItemChanged(adapterPosition);
-                                Toast.makeText(context, "Trạng thái đơn hàng đã được cập nhật thành công", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, "Không thể cập nhật trạng thái đơn hàng", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            hideLoading();
-                            Toast.makeText(context, "Lỗi khi cập nhật trạng thái đơn hàng", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    // Existing logic for updating delivery status
-                    apiService.updateDeliveryStatus(txnRef).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.isSuccessful()) {
-                                // After updating the delivery status, check the order status again
-                                apiService.searchOrder(txnRef).enqueue(new Callback<OrderStatusModel>() { // sử dụng txnRef
-                                    @Override
-                                    public void onResponse(Call<OrderStatusModel> call, Response<OrderStatusModel> response) {
-                                        hideLoading(); // Ẩn loading
-                                        if (response.isSuccessful() && response.body() != null) {
-                                            OrderStatusModel updatedOrder = response.body();
-                                            order.setGiao_hang(updatedOrder.getGiao_hang());
-                                            notifyItemChanged(adapterPosition);
-                                            Toast.makeText(context, "Trạng thái giao hàng đã được cập nhật thành công", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(context, "Không thể cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-                                        }
+                                        // Hiển thị dialog cảm ơn sau khi cập nhật thành công
+                                        ThankYouDialogFragment thankYouDialogFragment = new ThankYouDialogFragment();
+                                        thankYouDialogFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "ThankYouDialogFragment");
+                                    } else {
+                                        Toast.makeText(context, "Không thể cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
                                     }
+                                }
 
-                                    @Override
-                                    public void onFailure(Call<OrderStatusModel> call, Throwable t) {
-                                        hideLoading(); // Ẩn loading khi có lỗi xảy ra
-                                        Toast.makeText(context, "Lỗi khi kiểm tra lại trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            } else {
-                                hideLoading(); // Ẩn loading khi có lỗi xảy ra
-                                Toast.makeText(context, "Cập nhật trạng thái giao hàng thất bại", Toast.LENGTH_SHORT).show();
-                            }
+                                @Override
+                                public void onFailure(Call<OrderStatusModel> call, Throwable t) {
+                                    hideLoading(); // Ẩn loading khi có lỗi xảy ra
+                                    Toast.makeText(context, "Lỗi khi kiểm tra lại trạng thái giao hàng", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            hideLoading(); // Ẩn loading khi có lỗi xảy ra
+                            Toast.makeText(context, "Cập nhật trạng thái giao hàng thất bại", Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            hideLoading();
-                            Toast.makeText(context, "Lỗi khi cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(context, "Lỗi khi cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
+                    }
+                });
             });
+
         }
 
         // Set the order details button
@@ -192,6 +172,7 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
             dialogFragment.show(fragmentManager, "OrderDetailsDialogFragment");
         });
     }
+
 
     private void showLoading() {
         if (loadingFragment == null) {

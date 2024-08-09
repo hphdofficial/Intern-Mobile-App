@@ -14,18 +14,31 @@ import com.android.mobile.models.OrderStatusModel;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.Locale;
 
-public class ProductShippingAdapter extends RecyclerView.Adapter<ProductShippingAdapter.ViewHolder> {
+public class ProductShippingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private List<OrderStatusModel.DetailCart> productList;
+    private List<Object> items;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    private static final int TYPE_SUPPLIER = 0;
+    private static final int TYPE_PRODUCT = 1;
+
+    public static class SupplierViewHolder extends RecyclerView.ViewHolder {
+        public TextView textViewSupplierName;
+
+        public SupplierViewHolder(View view) {
+            super(view);
+            textViewSupplierName = view.findViewById(R.id.txt_supplier_name);
+        }
+    }
+
+    public static class ProductViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewName;
         public TextView textViewAmount;
         public ImageView imageViewProduct;
         public TextView textViewQuantity;
 
-        public ViewHolder(View view) {
+        public ProductViewHolder(View view) {
             super(view);
             textViewName = view.findViewById(R.id.txt_name_shipping_item);
             textViewAmount = view.findViewById(R.id.txt_price_product);
@@ -34,33 +47,53 @@ public class ProductShippingAdapter extends RecyclerView.Adapter<ProductShipping
         }
     }
 
-    public ProductShippingAdapter(Context context, List<OrderStatusModel.DetailCart> productList) {
+    public ProductShippingAdapter(Context context, List<Object> items) {
         this.context = context;
-        this.productList = productList;
+        this.items = items;
     }
 
     @Override
-    public ProductShippingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_product_shipping, parent, false);
-        return new ViewHolder(view);
+    public int getItemViewType(int position) {
+        if (items.get(position) instanceof String) {
+            return TYPE_SUPPLIER;
+        } else {
+            return TYPE_PRODUCT;
+        }
     }
 
     @Override
-    public void onBindViewHolder(ProductShippingAdapter.ViewHolder holder, int position) {
-        OrderStatusModel.DetailCart product = productList.get(position);
-        holder.textViewName.setText(product.getProduct().getProductName());
-        holder.textViewAmount.setText(String.format("%,.0f VND", product.getProduct().getUnitPrice()));
-        holder.textViewQuantity.setText("x " + product.getQuantity());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_SUPPLIER) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_supplier_header, parent, false);
+            return new SupplierViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_product_shipping, parent, false);
+            return new ProductViewHolder(view);
+        }
+    }
 
-        /// Load product image using Glide
-        Glide.with(context)
-                .load(product.getProduct().getLink_image())
-                .error(R.drawable.product) // Replace 'default_image' with your drawable resource
-                .into(holder.imageViewProduct);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder.getItemViewType() == TYPE_SUPPLIER) {
+            String supplierName = (String) items.get(position);
+            SupplierViewHolder supplierViewHolder = (SupplierViewHolder) holder;
+            supplierViewHolder.textViewSupplierName.setText(supplierName);
+        } else {
+            OrderStatusModel.DetailCart product = (OrderStatusModel.DetailCart) items.get(position);
+            ProductViewHolder productViewHolder = (ProductViewHolder) holder;
+            productViewHolder.textViewName.setText(product.getProduct().getProductName());
+            productViewHolder.textViewAmount.setText(String.format("%,.0f VND", product.getProduct().getUnitPrice()));
+            productViewHolder.textViewQuantity.setText("x " + product.getQuantity());
+
+            Glide.with(context)
+                    .load(product.getProduct().getLink_image())
+                    .error(R.drawable.product)
+                    .into(productViewHolder.imageViewProduct);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return productList.size();
+        return items.size();
     }
 }

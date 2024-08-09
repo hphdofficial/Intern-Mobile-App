@@ -75,6 +75,7 @@ public class Purchase extends BaseActivity {
     private TextView total;
     private String textPayment;
     private  TextView address;
+    private List<ProductModel> productList;
     private BlankFragment loadingFragment;
 
     @Override
@@ -108,17 +109,19 @@ public class Purchase extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
+        Intent intent = getIntent();
+        productList = intent.getParcelableArrayListExtra("product_list");
 
         // tạo recyclerview
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         // tạo voucher
         CreateVoucher();
         CreatePayment();
-
 
         layout1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +147,8 @@ public class Purchase extends BaseActivity {
 
     public void Summoney(){
         float sum = 0;
-        for (Product value : itemList){
-            sum += value.getPrice()*value.getQuantity();
+        for (ProductModel value : productList) {
+            sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
         }
 
 
@@ -168,9 +171,13 @@ public class Purchase extends BaseActivity {
     }
     public void TotalMoney(){
         float sum = 0;
-        for (Product value : itemList){
-            textPayment += value.getName() + "va";
-            sum += value.getPrice()*value.getQuantity();
+//        for (Product value : itemList){
+//            textPayment += value.getName() + "va";
+//            sum += value.getPrice()*value.getQuantity();
+//        }
+        for (ProductModel value : productList) {
+            textPayment += value.getProductName() + "va";
+            sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
         }
         float dis = Float.parseFloat(discount.getText().toString().replace("đ","").replace(".",""));
 
@@ -250,7 +257,7 @@ public class Purchase extends BaseActivity {
                 Call<ResponseBody> call = apiService.OrderBill("Bearer " + token);
 
 
-                if(itemList.size()> 0)
+                if(productList.size()> 0)
                 {
                     String selectedValue = paymentSpinner.getSelectedItem().toString();
                     if(selectedValue.contains("Qr")){
@@ -278,8 +285,8 @@ public class Purchase extends BaseActivity {
                         });
 
                         float sum = 0;
-                        for (Product value : itemList){
-                            sum += value.getPrice()*value.getQuantity();
+                        for (ProductModel value : productList) {
+                            sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
                         }
                         float dis = Float.parseFloat(discount.getText().toString().replace("đ","").replace(".",""));
 
@@ -321,54 +328,62 @@ public class Purchase extends BaseActivity {
 
     public  void CreateItem(){
 
-        itemList = new ArrayList<>();
+        itemAdapter = new ProductAdapter(productList);
+        recyclerView.setAdapter(itemAdapter);
+        Summoney();
+        DiscountMoney();
+        Transport();
+        TotalMoney();
+        hideLoading();
 
-        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-        int memberId = sharedPreferences.getInt("member_id", -1);
-
-        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-        Call<CartResponse> call = apiService.getCart(memberId+"");
-        call.enqueue(new Callback<CartResponse>() {
-            @Override
-            public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
-                if(response.isSuccessful()){
-                    CartResponse cartResponse = response.body();
-                    List<CartModel> cartItems = cartResponse.getCart();
-                    Double count = 0.0;
-                    if(cartItems.size()>0){
-                        itemList.clear();
-                        for (CartModel value : cartItems){
-
-                            count+= Double.parseDouble(value.getTotalPrice());
-                            ProductModel p = value.getProduct();
-                            Product pr = new Product();
-                            pr.setName(p.getProductName());
-                            pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
-                            pr.setQuantity(value.getQuantity());
-                            pr.setSupplier(p.getSupplierID()+"");
-                            pr.setLinkImage("null");
-                            itemList.add(pr);
-                        }
-                        itemAdapter = new ProductAdapter(itemList);
-                        recyclerView.setAdapter(itemAdapter);
-                        Summoney();
-                        DiscountMoney();
-                        Transport();
-                        TotalMoney();
-                        hideLoading();
-
-                    }
-                }else {
-                    hideLoading();
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CartResponse> call, Throwable t) {
-
-            }
-        });
+//        itemList = new ArrayList<>();
+//
+//        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+//        int memberId = sharedPreferences.getInt("member_id", -1);
+//
+//        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+//        Call<CartResponse> call = apiService.getCart(memberId+"");
+//        call.enqueue(new Callback<CartResponse>() {
+//            @Override
+//            public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
+//                if(response.isSuccessful()){
+//                    CartResponse cartResponse = response.body();
+//                    List<CartModel> cartItems = cartResponse.getCart();
+//                    Double count = 0.0;
+//                    if(cartItems.size()>0){
+//                        itemList.clear();
+//                        for (CartModel value : cartItems){
+//
+//                            count+= Double.parseDouble(value.getTotalPrice());
+//                            ProductModel p = value.getProduct();
+//                            Product pr = new Product();
+//                            pr.setName(p.getProductName());
+//                            pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
+//                            pr.setQuantity(value.getQuantity());
+//                            pr.setSupplier(p.getSupplierID()+"");
+//                            pr.setLinkImage("null");
+//                            itemList.add(pr);
+//                        }
+//                        itemAdapter = new ProductAdapter(itemList);
+//                        recyclerView.setAdapter(itemAdapter);
+//                        Summoney();
+//                        DiscountMoney();
+//                        Transport();
+//                        TotalMoney();
+//                        hideLoading();
+//
+//                    }
+//                }else {
+//                    hideLoading();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<CartResponse> call, Throwable t) {
+//
+//            }
+//        });
 
 
 
