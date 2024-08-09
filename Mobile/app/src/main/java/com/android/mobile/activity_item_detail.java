@@ -114,9 +114,9 @@ public class activity_item_detail extends BaseActivity {
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(response.isSuccessful()){
                                 hideLoading();
-                                Toast.makeText(activity_item_detail.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
-                                Intent intent1 = new Intent(activity_item_detail.this, CartActivity.class);
-                                startActivity(intent1);
+                                Toast.makeText(activity_item_detail.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+//                                Intent intent1 = new Intent(activity_item_detail.this, CartActivity.class);
+//                                startActivity(intent1);
                             }else {
                                 hideLoading();
                                 System.out.println("On Response Fail");

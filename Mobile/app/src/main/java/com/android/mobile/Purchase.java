@@ -318,6 +318,7 @@ public class Purchase extends BaseActivity {
 
                             }
                         });
+                        Toast.makeText(getApplicationContext(),"Đặt hàng thành công",Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(),MenuActivity.class));
                     }
 
