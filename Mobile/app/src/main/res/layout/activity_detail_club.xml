@@ -20,7 +20,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logostartmain" />
 
         <TableLayout
             android:id="@+id/tableLayout"
@@ -42,13 +42,21 @@
                     android:padding="10dp"
                     android:text="Tên câu lạc bộ"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:singleLine="false"
+                    android:ellipsize="none"
+                    android:maxLines="5"
+                    android:scrollHorizontally="false" />
 
                 <TextView
                     android:id="@+id/txtNameDetailClub"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:maxLines="5"
                     android:padding="10dp"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -60,13 +68,21 @@
                     android:padding="10dp"
                     android:text="Người quản lý"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:singleLine="false"
+                    android:ellipsize="none"
+                    android:maxLines="5"
+                    android:scrollHorizontally="false" />
 
                 <TextView
                     android:id="@+id/txtManagerDetailClub"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:maxLines="5"
                     android:padding="10dp"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -78,13 +94,21 @@
                     android:padding="10dp"
                     android:text="Mô tả"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:singleLine="false"
+                    android:ellipsize="none"
+                    android:maxLines="5"
+                    android:scrollHorizontally="false" />
 
                 <TextView
                     android:id="@+id/txtDesDetailClub"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:maxLines="5"
                     android:padding="10dp"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -96,13 +120,21 @@
                     android:padding="10dp"
                     android:text="Địa điểm"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:singleLine="false"
+                    android:ellipsize="none"
+                    android:maxLines="5"
+                    android:scrollHorizontally="false" />
 
                 <TextView
                     android:id="@+id/txtAddressDetailClub"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:maxLines="5"
                     android:padding="10dp"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -114,13 +146,21 @@
                     android:padding="10dp"
                     android:text="Thông tin liên hệ"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:singleLine="false"
+                    android:ellipsize="none"
+                    android:maxLines="5"
+                    android:scrollHorizontally="false" />
 
                 <TextView
                     android:id="@+id/txtPhoneDetailClub"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:maxLines="5"
                     android:padding="10dp"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
                     android:textSize="16sp" />
             </TableRow>
 
@@ -131,7 +171,7 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
-            android:backgroundTint="#03A9F4"
+            android:backgroundTint="#0000C8"
             android:text="Tham gia"
             android:visibility="gone"
             app:cornerRadius="15dp"
@@ -145,7 +185,7 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
-            android:backgroundTint="#FF9800"
+            android:backgroundTint="#FA9600"
             android:text="Rời câu lạc bộ"
             android:textColor="@color/black"
             android:visibility="gone"

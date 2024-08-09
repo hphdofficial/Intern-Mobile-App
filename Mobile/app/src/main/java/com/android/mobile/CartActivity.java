@@ -72,6 +72,9 @@ public class CartActivity extends BaseActivity {
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
 
+        txtSumQuantity = findViewById(R.id.txt_sum_quantity);
+        txtSumPrice = findViewById(R.id.txt_sum_price);
+
         adapter = new CartAdapter(this, productList, this);
         recyclerView = findViewById(R.id.recycler_stored_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -102,6 +105,8 @@ public class CartActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
         int memberId = sharedPreferences.getInt("member_id", 0);
+
+        updateTotalPrice(memberId);
 
         CartApiService service = ApiServiceProvider.getCartApiService();
         Call<JsonObject> call = service.getCart("Bearer" + token, memberId);
@@ -135,10 +140,8 @@ public class CartActivity extends BaseActivity {
                         }
                     }
 
-                    txtSumQuantity = findViewById(R.id.txt_sum_quantity);
-                    txtSumPrice = findViewById(R.id.txt_sum_price);
                     txtSumQuantity.setText("Số lượng: " + products.size() + " sản phẩm");
-                    updateTotalPrice(memberId);
+//                    updateTotalPrice(memberId);
 
                     productList = new ArrayList<>(products);
                     adapter.setData(products);

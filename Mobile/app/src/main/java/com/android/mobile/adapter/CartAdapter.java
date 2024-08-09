@@ -95,13 +95,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.txtQuantityProduct.setText(String.valueOf(productList.get(position).getQuantity()));
         holder.txtNameSupplier.setText("Nhà cung cấp " + productList.get(position).getSupplierName());
         holder.txtCategory.setText("Thể loại: " + productList.get(position).getCategoryName());
-        holder.btnRemoveCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeProduct(productList.get(position).getProductID());
-                Toast.makeText(context, "Xóa sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         if (isViewMode) {
             holder.btnRemoveCart.setVisibility(View.GONE);
@@ -117,14 +110,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         holder.btnIncreaseQuantity.setEnabled(true);
         holder.btnDecreaseQuantity.setEnabled(true);
+        holder.btnRemoveCart.setEnabled(true);
 
         holder.btnIncreaseQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.btnIncreaseQuantity.setEnabled(false);
                 increaseQuantity(productList.get(position).getProductID(), holder);
                 Toast.makeText(context, "Tăng sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, "Đang cập nhật giỏ hàng", Toast.LENGTH_SHORT).show();
-                holder.btnIncreaseQuantity.setEnabled(false);
+                Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -134,11 +128,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 if (holder.txtQuantityProduct.getText().toString().equals("1")) {
                     Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
                 } else {
+                    holder.btnDecreaseQuantity.setEnabled(false);
                     decreaseQuantity(productList.get(position).getProductID(), holder);
                     Toast.makeText(context, "Giảm sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(context, "Đang cập nhật giỏ hàng", Toast.LENGTH_SHORT).show();
-                    holder.btnDecreaseQuantity.setEnabled(false);
+                    Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        holder.btnRemoveCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.btnRemoveCart.setEnabled(false);
+                removeProduct(productList.get(position).getProductID(), holder);
+                Toast.makeText(context, "Xóa sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -154,7 +158,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void removeProduct(int productId) {
+    public void removeProduct(int productId, CartAdapter.ViewHolder holder) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         int memberId = sharedPreferences.getInt("member_id", 0);
 
@@ -164,6 +168,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                holder.btnRemoveCart.setEnabled(true);
                 if (response.isSuccessful()) {
                     cartActivity.loadProductCart();
                 } else {
@@ -173,6 +178,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                holder.btnRemoveCart.setEnabled(true);
                 t.printStackTrace();
             }
         });

@@ -4,8 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
     android:layout_marginTop="10dp"
-    android:background="#FFFFFF"
+    android:layout_marginRight="5dp"
+    android:background="@drawable/rounded_background"
+    android:elevation="3dp"
     android:paddingTop="15dp"
     android:paddingBottom="15dp">
 
@@ -16,7 +19,7 @@
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/logostartmain" />
 
     <TextView
         android:id="@+id/txt_name_club"
@@ -34,11 +37,11 @@
         android:id="@+id/btn_join_club"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#14C814"
+        android:layout_marginEnd="15dp"
+        android:backgroundTint="#0000C8"
         android:text="Chi tiết"
         app:cornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
