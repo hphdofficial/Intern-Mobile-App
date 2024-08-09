@@ -23,6 +23,7 @@ import com.android.mobile.models.OrderStatusModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -98,16 +99,34 @@ public class ShippingOrderActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     orderList = response.body();
                     if (orderList != null && !orderList.isEmpty()) {
-                        // Sort orders by pay_date in descending order
-                        Collections.sort(orderList, new Comparator<OrderStatusModel>() {
-                            @Override
-                            public int compare(OrderStatusModel o1, OrderStatusModel o2) {
-                                return o2.getPay_date().compareTo(o1.getPay_date());
+                        // Lọc các đơn hàng có trạng thái "chưa giao hàng"
+                        List<OrderStatusModel> undeliveredOrders = new ArrayList<>();
+                        for (OrderStatusModel order : orderList) {
+                            if ("chưa giao hàng".equalsIgnoreCase(order.getGiao_hang())) {
+                                undeliveredOrders.add(order);
                             }
-                        });
-                        noOrdersTextView.setVisibility(View.GONE); // Ẩn TextView nếu có đơn hàng
-                        shippingItemAdapter = new ShippingOrderAdapter(ShippingOrderActivity.this, orderList);
-                        recyclerView.setAdapter(shippingItemAdapter);
+                        }
+
+                        if (!undeliveredOrders.isEmpty()) {
+                            // Sắp xếp các đơn hàng theo ngày thanh toán giảm dần
+                            Collections.sort(undeliveredOrders, new Comparator<OrderStatusModel>() {
+                                @Override
+                                public int compare(OrderStatusModel o1, OrderStatusModel o2) {
+                                    return o2.getPay_date().compareTo(o1.getPay_date());
+                                }
+                            });
+
+                            // Ẩn TextView nếu có đơn hàng
+                            noOrdersTextView.setVisibility(View.GONE);
+
+                            // Cập nhật Adapter với danh sách đã lọc
+                            shippingItemAdapter = new ShippingOrderAdapter(ShippingOrderActivity.this, undeliveredOrders);
+                            recyclerView.setAdapter(shippingItemAdapter);
+                        } else {
+                            // Hiển thị TextView nếu không có đơn hàng nào chưa giao hàng
+                            noOrdersTextView.setVisibility(View.VISIBLE);
+                            Toast.makeText(ShippingOrderActivity.this, "Không có đơn hàng nào chưa giao hàng", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         // Hiển thị thông báo TextView khi không có hóa đơn nào
                         noOrdersTextView.setVisibility(View.VISIBLE);
@@ -115,7 +134,7 @@ public class ShippingOrderActivity extends BaseActivity {
                 } else {
                     noOrdersTextView.setVisibility(View.VISIBLE);
                     // Xử lý lỗi khi phản hồi không thành công
-                    // Toast.makeText(ShippingOrderActivity.this, "Bạn chưa có hóa đơn nào", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShippingOrderActivity.this, "Không thể tải đơn hàng", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -127,4 +146,5 @@ public class ShippingOrderActivity extends BaseActivity {
             }
         });
     }
+
 }
