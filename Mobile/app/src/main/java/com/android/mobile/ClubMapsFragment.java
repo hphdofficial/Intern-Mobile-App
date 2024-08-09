@@ -1,7 +1,5 @@
 package com.android.mobile;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,7 +43,6 @@ import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
-import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -57,7 +53,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsFragment extends Fragment {
+public class ClubMapsFragment extends Fragment {
     private static final String ARG_LATITUDE = "latitude";
     private static final String ARG_LONGITUDE = "longitude";
     private MapView map;
@@ -69,8 +65,8 @@ public class MapsFragment extends Fragment {
     private static boolean isCurrent = false;
     private BlankFragment loadingFragment;
 
-    public static MapsFragment newInstance(double latitude, double longitude, boolean current) {
-        MapsFragment fragment = new MapsFragment();
+    public static ClubMapsFragment newInstance(double latitude, double longitude, boolean current) {
+        ClubMapsFragment fragment = new ClubMapsFragment();
         Bundle args = new Bundle();
         args.putDouble(ARG_LATITUDE, latitude);
         args.putDouble(ARG_LONGITUDE, longitude);

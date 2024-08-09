@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,7 +22,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.CartAdapter;
 import com.android.mobile.models.CartItem;
-import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CartApiService;
@@ -68,6 +66,7 @@ public class CartActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Giỏ hàng");
         myContentE.apply();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());

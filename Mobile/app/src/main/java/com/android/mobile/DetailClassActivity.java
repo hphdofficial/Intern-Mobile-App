@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -19,11 +18,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.Class;
-import com.android.mobile.models.Club;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ClassApiService;
-import com.android.mobile.services.ClubApiService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,6 +58,7 @@ public class DetailClassActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Chi tiết lớp học");
         myContentE.apply();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
@@ -187,9 +185,9 @@ public class DetailClassActivity extends BaseActivity {
         Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
         Bundle bundle = new Bundle();
         bundle.putString("id_class", idClass);
-        intent.putExtra("name",name);
-        intent.putExtra("nameClass",nameClass);
-        intent.putExtra("idClass",idClass);
+        intent.putExtra("name", name);
+        intent.putExtra("nameClass", nameClass);
+        intent.putExtra("idClass", idClass);
         intent.putExtras(bundle);
         startActivity(intent);
     }

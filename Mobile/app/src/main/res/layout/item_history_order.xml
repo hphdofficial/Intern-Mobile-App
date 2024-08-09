@@ -39,8 +39,8 @@
         android:maxLines="1"
         android:singleLine="true"
         android:text="Mã đơn hàng"
-        android:textStyle="bold"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
@@ -73,8 +73,8 @@
         android:layout_marginEnd="16dp"
         android:text="Hoàn thành"
         android:textColor="#4CAF50"
-        android:textStyle="bold"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -96,8 +96,8 @@
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
         android:background="#2196F3"
-        app:backgroundTint="@null"
         android:text="Xem sản phẩm"
+        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

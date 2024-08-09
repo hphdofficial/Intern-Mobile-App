@@ -8,7 +8,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;

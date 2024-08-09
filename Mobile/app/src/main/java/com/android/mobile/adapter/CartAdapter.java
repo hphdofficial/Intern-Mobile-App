@@ -1,13 +1,9 @@
 package com.android.mobile.adapter;
 
 
-import static android.app.ProgressDialog.show;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,28 +14,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.CartActivity;
-import com.android.mobile.DetailClubActivity;
 import com.android.mobile.R;
 import com.android.mobile.models.CartItem;
-import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CartApiService;
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;

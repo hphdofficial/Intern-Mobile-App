@@ -3,11 +3,9 @@ package com.android.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -15,20 +13,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.mobile.adapter.BaseActivity;
-import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.adapter.HistoryOrderAdapter;
-import com.android.mobile.models.Club;
 import com.android.mobile.models.OrderModel;
 import com.android.mobile.network.ApiServiceProvider;
-import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.OrderApiService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,26 +28,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.google.android.material.button.MaterialButton;
-
 public class HistoryOrderActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private HistoryOrderAdapter adapter;
     private List<OrderModel> orderList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
     private BlankFragment loadingFragment;
-    private void showLoading() {
-        loadingFragment = new BlankFragment();
-        loadingFragment.show(getSupportFragmentManager(), "loading");
-    }
-    private void hideLoading() {
-        if (loadingFragment != null) {
-            loadingFragment.dismiss();
-            loadingFragment = null;
-        }
-    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +45,8 @@ public class HistoryOrderActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-showLoading();
+        showLoading();
+
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Lịch sử mua hàng");
@@ -100,29 +80,43 @@ showLoading();
         call.enqueue(new Callback<List<OrderModel>>() {
             @Override
             public void onResponse(Call<List<OrderModel>> call, Response<List<OrderModel>> response) {
+                hideLoading();
+
                 swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     List<OrderModel> orders = response.body();
                     List<OrderModel> orderList = new ArrayList<>();
-                    for (OrderModel order: orders) {
-                        if (order.getStatus().equals("thành công") && order.getGiao_hang().equals("đã giao hàng")){
+                    for (OrderModel order : orders) {
+                        if (order.getStatus().equals("thành công") && order.getGiao_hang().equals("đã giao hàng")) {
                             orderList.add(order);
                         }
                     }
                     adapter.setData(orderList);
                     Toast.makeText(HistoryOrderActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
-                    hideLoading();
                 } else {
-                    hideLoading();
                     System.err.println("Response error: " + response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<List<OrderModel>> call, Throwable t) {
+                hideLoading();
+
                 swipeRefreshLayout.setRefreshing(false);
                 t.printStackTrace();
             }
         });
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

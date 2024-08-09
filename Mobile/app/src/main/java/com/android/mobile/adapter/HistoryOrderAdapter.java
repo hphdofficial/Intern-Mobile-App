@@ -3,7 +3,6 @@ package com.android.mobile.adapter;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,8 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.mobile.HistoryOrderActivity;
 import com.android.mobile.R;
 import com.android.mobile.models.OrderModel;
-import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.OrderApiService;

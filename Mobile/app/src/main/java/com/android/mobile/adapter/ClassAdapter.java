@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.DetailClassActivity;
 import com.android.mobile.R;
-import com.android.mobile.RegisterClass;
 import com.android.mobile.models.Class;
 
 import java.util.List;

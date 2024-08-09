@@ -27,9 +27,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
-        <activity
-            android:name=".ThankYouDialogFragment"
-            android:exported="false" />
 
         <uses-library
             android:name="org.osmdroid"
@@ -46,7 +43,10 @@
             android:value="YOUR_TERMINAL_ID" />
 
         <activity
-            android:name=".MapsFragment"
+            android:name=".ThankYouDialogFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ClubMapsFragment"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
@@ -64,7 +64,8 @@
         <activity
             android:name=".HistoryRegisterClass"
             android:exported="false"
-            android:screenOrientation="portrait" /> <!-- <activity -->
+            android:screenOrientation="portrait" />
+        <!-- <activity -->
         <!-- android:name=".MainActivity2" -->
         <!-- android:exported="false" -->
         <!-- android:screenOrientation="portrait" /> -->
@@ -159,7 +160,8 @@
         <activity
             android:name=".CartActivity"
             android:exported="true"
-            android:screenOrientation="portrait" /> <!-- <activity -->
+            android:screenOrientation="portrait" />
+        <!-- <activity -->
         <!-- android:name=".LaguageLayout" -->
         <!-- android:exported="false" -->
         <!-- android:screenOrientation="portrait" /> -->
@@ -218,7 +220,8 @@
         <activity
             android:name=".MenuActivity"
             android:exported="false"
-            android:screenOrientation="portrait" /> <!-- <activity -->
+            android:screenOrientation="portrait" />
+        <!-- <activity -->
         <!-- android:name=".StartActivity" -->
         <!-- android:exported="true" /> -->
         <activity
@@ -271,6 +274,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
