@@ -107,26 +107,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             }
         });
 
-        holder.btnIncreaseQuantity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                increaseQuantity(productList.get(position).getProductID());
-                Toast.makeText(context, "Tăng sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        holder.btnDecreaseQuantity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.txtQuantityProduct.getText().toString().equals("1")) {
-//            holder.btnDecreaseQuantity.setEnabled(false);
-//            holder.btnDecreaseQuantity.setBackgroundColor(ContextCompat.getColor(context, R.color.disabled_button));
-                    Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
-                } else {
-                    decreaseQuantity(productList.get(position).getProductID());
-                    Toast.makeText(context, "Giảm sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
         if (isViewMode) {
             holder.btnRemoveCart.setVisibility(View.GONE);
             holder.btnIncreaseQuantity.setVisibility(View.GONE);
@@ -138,6 +118,33 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             layoutParams.width = widthInPx;
             holder.txtNameProduct.setLayoutParams(layoutParams);
         }
+
+        holder.btnIncreaseQuantity.setEnabled(true);
+        holder.btnDecreaseQuantity.setEnabled(true);
+
+        holder.btnIncreaseQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                increaseQuantity(productList.get(position).getProductID(), holder);
+                Toast.makeText(context, "Tăng sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Đang cập nhật giỏ hàng", Toast.LENGTH_SHORT).show();
+                holder.btnIncreaseQuantity.setEnabled(false);
+            }
+        });
+
+        holder.btnDecreaseQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.txtQuantityProduct.getText().toString().equals("1")) {
+                    Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
+                } else {
+                    decreaseQuantity(productList.get(position).getProductID(), holder);
+                    Toast.makeText(context, "Giảm sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Đang cập nhật giỏ hàng", Toast.LENGTH_SHORT).show();
+                    holder.btnDecreaseQuantity.setEnabled(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -175,15 +182,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         });
     }
 
-    public void increaseQuantity(int productId) {
+    public void increaseQuantity(int productId, CartAdapter.ViewHolder holder) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         int memberId = sharedPreferences.getInt("member_id", 0);
+
         CartApiService service = ApiServiceProvider.getCartApiService();
         Call<JsonObject> call = service.increaseQuantity(new CartItem(memberId, productId));
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                holder.btnIncreaseQuantity.setEnabled(true);
                 if (response.isSuccessful()) {
                     cartActivity.loadProductCart();
                 } else {
@@ -193,12 +202,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                holder.btnIncreaseQuantity.setEnabled(true);
                 t.printStackTrace();
             }
         });
     }
 
-    public void decreaseQuantity(int productId) {
+    public void decreaseQuantity(int productId, CartAdapter.ViewHolder holder) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         int memberId = sharedPreferences.getInt("member_id", 0);
 
@@ -208,6 +218,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                holder.btnDecreaseQuantity.setEnabled(true);
                 if (response.isSuccessful()) {
                     cartActivity.loadProductCart();
                 } else {
@@ -217,6 +228,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                holder.btnDecreaseQuantity.setEnabled(true);
                 t.printStackTrace();
             }
         });
