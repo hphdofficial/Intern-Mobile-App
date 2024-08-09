@@ -47,6 +47,9 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private EditText searchEditText;
     private ImageButton searchButton;
 
+    private BlankFragment loadingFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +118,21 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
         });
     }
 
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
+
     private void saveToSharedPreferences(String key, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
@@ -122,11 +140,13 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     }
 
     private void fetchNews() {
+        showLoading();
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
         Call<List<NewsModel>> call = apiService.getAnouncements();
         call.enqueue(new Callback<List<NewsModel>>() {
             @Override
             public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+                hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "API Response: " + response.body().toString());
                     newsList.clear(); // Clear existing data
@@ -140,6 +160,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
 
             @Override
             public void onFailure(Call<List<NewsModel>> call, Throwable t) {
+                hideLoading();
                 Log.e(TAG, "API Call failed: " + t.getMessage());
                 Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }

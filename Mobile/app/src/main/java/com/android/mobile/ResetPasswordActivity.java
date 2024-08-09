@@ -33,6 +33,8 @@ public class ResetPasswordActivity extends BaseActivity {
     private ImageView iconPasswordVisibilityNew;
     private ImageView iconPasswordVisibilityConfirm;
 
+    private BlankFragment loadingFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +69,21 @@ public class ResetPasswordActivity extends BaseActivity {
             }
         });
     }
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
     private void togglePasswordVisibility(EditText editText, ImageView icon) {
         if (editText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
             editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -94,10 +111,12 @@ public class ResetPasswordActivity extends BaseActivity {
 
         ResetPasswordModel request = new ResetPasswordModel(email, otp, newPassword, confirmPassword);
         UserApiService apiService = ApiServiceProvider.getUserApiService();
+        showLoading();
         Call<ReponseModel> call = apiService.resetPassword(request);
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
                 if (response.isSuccessful()) {
                     Toast.makeText(ResetPasswordActivity.this, "Đặt lại mật khẩu thành công", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ResetPasswordActivity.this, StartActivity.class);
@@ -110,6 +129,7 @@ public class ResetPasswordActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading();
                 Toast.makeText(ResetPasswordActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

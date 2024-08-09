@@ -28,6 +28,9 @@ public class ForgotPasswordActivity extends BaseActivity {
     private Button buttonSendOtp;
     private ImageView img_back;
 
+    private BlankFragment loadingFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,21 @@ public class ForgotPasswordActivity extends BaseActivity {
 
     }
 
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
+
     private void sendOtp() {
         String email = editTextEmail.getText().toString();
 
@@ -65,10 +83,12 @@ public class ForgotPasswordActivity extends BaseActivity {
 
         ForgotPasswordModel request = new ForgotPasswordModel(email);
         UserApiService apiService = ApiServiceProvider.getUserApiService();
+        showLoading();
         Call<ReponseModel> call = apiService.sendOtp(request);
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
                 if (response.isSuccessful()) {
                     Toast.makeText(ForgotPasswordActivity.this, "OTP đã được gửi đến email của bạn", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ForgotPasswordActivity.this, EnterOtpActivity.class).putExtra("email", email));
@@ -79,6 +99,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading(); // Ẩn loading khi có lỗi xảy ra
                 if (t instanceof IOException) {
                     Toast.makeText(ForgotPasswordActivity.this, "Email không tồn tại trong hệ thống", Toast.LENGTH_SHORT).show();
                 } else {

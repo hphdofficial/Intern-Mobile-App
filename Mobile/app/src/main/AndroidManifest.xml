@@ -46,6 +46,12 @@
             android:value="YOUR_TERMINAL_ID" />
 
         <activity
+            android:name=".adapter.ProductShippingAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".OrderDetailsDialogFragment"
+            android:exported="false" />
+        <activity
             android:name=".HistoryRegisterClass"
             android:exported="false" />
 <!--        <activity-->
