@@ -32,6 +32,20 @@
             android:name=".MapsFragment"
             android:exported="true" />
         <activity
+            android:name=".AddressP"
+            android:exported="false" />
+
+        <meta-data
+            android:name="vn.merchant_id"
+            android:value="YOUR_MERCHANT_ID" />
+        <meta-data
+            android:name="vn.secret_key"
+            android:value="YOUR_SECRET_KEY" />
+        <meta-data
+            android:name="vn.terminal_id"
+            android:value="YOUR_TERMINAL_ID" />
+
+        <activity
             android:name=".HistoryRegisterClass"
             android:exported="false" />
 <!--        <activity-->

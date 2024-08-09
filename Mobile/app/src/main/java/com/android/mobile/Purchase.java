@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,13 +34,17 @@ import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.models.StatusRegister;
+import com.android.mobile.models.addressModel;
 import com.android.mobile.network.APIServicePayment;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.PaymentAPI;
 import com.android.mobile.services.UserApiService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +74,9 @@ public class Purchase extends BaseActivity {
     private TextView transport;
     private TextView total;
     List<ProductModel> productList;
+    private String textPayment;
+    private  TextView address;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +88,14 @@ public class Purchase extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        showLoading();
         btn_payment = findViewById(R.id.btn_payment);
         sum_money = findViewById(R.id.sum_money);
         discount = findViewById(R.id.discount);
         transport = findViewById(R.id.transport);
         total = findViewById(R.id.total);
+        layout1 = findViewById(R.id.layout1);
+        address = findViewById(R.id.address);
 
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
@@ -112,6 +122,27 @@ public class Purchase extends BaseActivity {
         CreateVoucher();
         CreatePayment();
 
+
+        layout1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),AddressP.class));
+            }
+        });
+
+        // địa chỉ
+
+
+    }
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 
     public void Summoney(){
@@ -140,6 +171,10 @@ public class Purchase extends BaseActivity {
     }
     public void TotalMoney(){
         float sum = 0;
+        for (Product value : itemList){
+            textPayment += value.getName() + "va";
+        }
+
         for (ProductModel value : productList) {
             sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
         }
@@ -159,9 +194,26 @@ public class Purchase extends BaseActivity {
       //  EventVoucher();
         EventPayment();
         GetStatus();
+        changeAddress();
 
 
+    }
+    public void changeAddress(){
+        SharedPreferences sharedPreferences = getSharedPreferences("myAddress", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list",null);
 
+        if(json != null){
+            Type type = new TypeToken<ArrayList<addressModel>>() {}.getType();
+            List<addressModel> list = gson.fromJson(json, type);
+
+            for (addressModel value : list){
+                if(value.getSelection() == 1){
+                    address.setText(value.getAddress());
+
+                }
+            }
+        }
     }
 
     public void GetStatus(){
@@ -193,17 +245,80 @@ public class Purchase extends BaseActivity {
         }
     }
 
-
+private LinearLayout layout1;
     public void EventPayment(){
         btn_payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+                sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("access_token", null);
+                Call<ResponseBody> call = apiService.OrderBill("Bearer " + token);
+
 
                 if(itemList.size()> 0)
                 {
+                    String selectedValue = paymentSpinner.getSelectedItem().toString();
+                    if(selectedValue.contains("Qr")){
 
-                    getLink();
 
+
+
+                        call.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.isSuccessful()) {
+
+                                    Toast.makeText(getApplicationContext(),"Đặt hàng thành công",Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(getApplicationContext(),"Đặt hàng thất bại vì k có hàng",Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+
+                        float sum = 0;
+                        for (Product value : itemList){
+                            sum += value.getPrice()*value.getQuantity();
+                        }
+                        float dis = Float.parseFloat(discount.getText().toString().replace("đ","").replace(".",""));
+
+                        float tran = Float.parseFloat(transport.getText().toString().replace("đ","").replace(".",""));
+
+                        float to = sum - dis + tran;
+                        Intent inten = new Intent(getApplicationContext(),PaymentQR.class);
+                        inten.putExtra("amount",to);
+                        inten.putExtra("textPayment",textPayment);
+                        startActivity(inten);
+                    }else if(selectedValue.contains("thẻ"))
+                        getLink();
+                    else {
+                        call.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.isSuccessful()) {
+
+                                    Toast.makeText(getApplicationContext(),"Đặt hàng thành công",Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(getApplicationContext(),"Đặt hàng thất bại vì k có hàng",Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+                        startActivity(new Intent(getApplicationContext(),MenuActivity.class));
+                    }
 
                 }
             }
@@ -211,67 +326,64 @@ public class Purchase extends BaseActivity {
     }
 
     public  void CreateItem(){
-        itemAdapter = new ProductAdapter(productList);
-        recyclerView.setAdapter(itemAdapter);
-        Summoney();
-        DiscountMoney();
-        Transport();
-        TotalMoney();
-//
-//        itemList = new ArrayList<>();
-//
-//        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-//        int memberId = sharedPreferences.getInt("member_id", -1);
-//        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-//        Call<CartResponse> call = apiService.getCart(memberId + "");
-//        call.enqueue(new Callback<CartResponse>() {
-//            @Override
-//            public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
-//                if (response.isSuccessful()) {
-//                    CartResponse cartResponse = response.body();
-//                    List<CartModel> cartItems = cartResponse.getCart();
-//                    Double count = 0.0;
-//                    if (cartItems.size() > 0) {
-//                        for (CartModel value : cartItems) {
-//
-//                            count += Double.parseDouble(value.getTotalPrice());
-//                            ProductModel p = value.getProduct();
-//
-//
-//                            Product pr = new Product();
-//                            pr.setName(p.getProductName());
-//                            pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
-//                            pr.setQuantity(value.getQuantity());
-//                            pr.setSupplier(p.getSupplierID() + "");
-//                            pr.setLinkImage("null");
-//                            itemList.add(pr);
-//                        }
-//                        itemAdapter = new ProductAdapter(itemList);
-//                        recyclerView.setAdapter(itemAdapter);
-//                        Summoney();
-//                        DiscountMoney();
-//                        Transport();
-//                        TotalMoney();
-//
-//
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<CartResponse> call, Throwable t) {
-//
-//            }
-//        });
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+            itemList = new ArrayList<>();
+
+        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        int memberId = sharedPreferences.getInt("member_id", -1);
+
+            PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+            Call<CartResponse> call = apiService.getCart(memberId+"");
+            call.enqueue(new Callback<CartResponse>() {
+                @Override
+                public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
+                   if(response.isSuccessful()){
+                       CartResponse cartResponse = response.body();
+                       List<CartModel> cartItems = cartResponse.getCart();
+                        Double count = 0.0;
+                       if(cartItems.size()>0){
+                            itemList.clear();
+                            for (CartModel value : cartItems){
+
+                                    count+= Double.parseDouble(value.getTotalPrice());
+                                ProductModel p = value.getProduct();
+                                Product pr = new Product();
+                                pr.setName(p.getProductName());
+                                pr.setPrice(Float.parseFloat(p.getUnitPrice().toString()));
+                                pr.setQuantity(value.getQuantity());
+                                pr.setSupplier(p.getSupplierID()+"");
+                                pr.setLinkImage("null");
+                                itemList.add(pr);
+                            }
+                           itemAdapter = new ProductAdapter(itemList);
+                           recyclerView.setAdapter(itemAdapter);
+                           Summoney();
+                           DiscountMoney();
+                           Transport();
+                           TotalMoney();
+                           hideLoading();
+
+                       }
+                   }else {
+                       hideLoading();
+
+                   }
+                }
+
+                @Override
+                public void onFailure(Call<CartResponse> call, Throwable t) {
+
+                }
+            });
+
+
+
+
+
+
+
+
+
     }
     public void getLink(){
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
@@ -313,8 +425,8 @@ public class Purchase extends BaseActivity {
         paymentList = new ArrayList<>();
         // Thêm dữ liệu mẫu vào danh sách voucher
         paymentList.add("Thanh toán trực tiếp");
-        paymentList.add("Thanh toán Momo");
-        paymentList.add("Thay toán ...");
+        paymentList.add("Thanh toán thẻ");
+        paymentList.add("Thanh toán Qr");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.layout_textviewsize, paymentList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         paymentSpinner.setAdapter(adapter);

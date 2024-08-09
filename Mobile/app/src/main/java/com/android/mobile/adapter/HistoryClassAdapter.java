@@ -63,6 +63,7 @@ public class HistoryClassAdapter extends RecyclerView.Adapter<HistoryClassAdapte
     private TextView nameClass;
     private TextView current;
     private TextView price;
+
     private ConstraintLayout item_belt;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
@@ -70,7 +71,10 @@ public class HistoryClassAdapter extends RecyclerView.Adapter<HistoryClassAdapte
         id.setText("Chi tiết hóa đơn số " +chapterList.get(i).getIdBill());
         nameClass.setText("Tên lớp: " + chapterList.get(i).getNameClass());
         date.setText("Ngày tạo: " + chapterList.get(i).getDate());
-        current.setText("Trạng thái: " + chapterList.get(i).getStatus());
+        if(chapterList.get(i).getStatus().contains("chua"))
+        current.setText("Trạng thái: chưa thanh toán");else {
+            current.setText("Trạng thái: hoàn thành");
+        }
         price.setText("Tổng thanh toán: "+chapterList.get(i).getPrice().toString());
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

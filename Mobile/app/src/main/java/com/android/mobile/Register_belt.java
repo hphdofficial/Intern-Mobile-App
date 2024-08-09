@@ -40,6 +40,7 @@ public class Register_belt extends BaseActivity {
     private  List<Belt> chapters = new ArrayList<>();
     private RecyclerView recyclerView;
     private  Adapter_Register_belt chapterAdapter;
+    private BlankFragment loadingFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,7 @@ public class Register_belt extends BaseActivity {
         String token = sharedPreferences.getString("access_token", null);
 
 
-
+        showLoading();
         PaymentAPI apiService = APIServicePayment.getPaymentApiService();
 
         Call<BeltModel> callBell = apiService.GetBelt("Bearer" + token);
@@ -88,6 +89,7 @@ public class Register_belt extends BaseActivity {
                 chapters = response.body();
                 chapterAdapter.loadList(chapters);
                 recyclerView.setAdapter(chapterAdapter);
+                hideLoading();
             }
 
             @Override
@@ -120,5 +122,15 @@ public class Register_belt extends BaseActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+    }
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

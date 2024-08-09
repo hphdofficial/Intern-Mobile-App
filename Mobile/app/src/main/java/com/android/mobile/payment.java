@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +35,8 @@ import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.StatusRegister;
 import com.android.mobile.network.APIServicePayment;
 import com.android.mobile.services.PaymentAPI;
+import com.android.mobile.services.VNPaySDK;
+import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,15 +53,14 @@ public class payment extends BaseActivity {
     private Button payment;
     private ImageView sub_menu;
 
-    private TextView textViewFullName;
-    private TextView textViewPhoneNumber;
-    private TextView textViewDOB;
+
     private TextView textViewFeeAmount;
     private TextView textViewHealthStatus;
     private TextView textViewClass;
     private TextView textViewInstructorName;
     String id_class = null;
     private String link = null;
+    private ImageView qrcode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,20 +77,21 @@ public class payment extends BaseActivity {
         imageView = findViewById(R.id.payment_momo);
         borderView = findViewById(R.id.borderView);*/
         payment = findViewById(R.id.payment);
-        textViewFullName = findViewById(R.id.textViewFullName);
+/*        textViewFullName = findViewById(R.id.textViewFullName);
         textViewPhoneNumber = findViewById(R.id.textViewPhoneNumber);
-        textViewDOB = findViewById(R.id.textViewDOB);
+        textViewDOB = findViewById(R.id.textViewDOB);*/
         textViewFeeAmount = findViewById(R.id.textViewFeeAmount);
         textViewHealthStatus = findViewById(R.id.textViewHealthStatus);
         textViewClass = findViewById(R.id.textViewClass);
         textViewInstructorName = findViewById(R.id.textViewInstructorName);
+        qrcode = findViewById(R.id.qrcode);
 
 
         SharedPreferences infor = getSharedPreferences("infor", Context.MODE_PRIVATE);
 
-        textViewFullName.setText(infor.getString("name","null"));
+/*        textViewFullName.setText(infor.getString("name","null"));
         textViewPhoneNumber.setText(infor.getString("phone","null"));
-        textViewDOB.setText(infor.getString("birthday","null"));
+        textViewDOB.setText(infor.getString("birthday","null"));*/
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -107,6 +111,10 @@ public class payment extends BaseActivity {
             textViewFeeAmount.setText(money.toString()+" VND");
             total = money.toString();
         }
+        displayQRCode("https://api.vietqr.io/image/970425-0937759311-cG4PADy.jpg&amount=" + total+
+
+                "&addInfo=" + "thanh toan class");
+
 
 /*        onImageViewClicked(imageView);*/
         payment.setOnClickListener(new View.OnClickListener() {
@@ -210,6 +218,12 @@ public class payment extends BaseActivity {
         });
     }*/
 
+    public void displayQRCode(String qrCodeUrl) {
+        ImageView qrCodeImageView = findViewById(R.id.qrcode);
+        Glide.with(this)
+                .load(qrCodeUrl)
+                .into(qrCodeImageView);
+    }
     @Override
     protected void onResume() {
         super.onResume();
