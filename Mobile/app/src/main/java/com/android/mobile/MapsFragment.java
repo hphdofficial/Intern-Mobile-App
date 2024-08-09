@@ -67,6 +67,7 @@ public class MapsFragment extends Fragment {
     private double latitude;
     private double longitude;
     private static boolean isCurrent = false;
+    private BlankFragment loadingFragment;
 
     public static MapsFragment newInstance(double latitude, double longitude, boolean current) {
         MapsFragment fragment = new MapsFragment();
@@ -242,6 +243,8 @@ public class MapsFragment extends Fragment {
     }
 
     private void fetchClubData() {
+        showLoading();
+
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
 
@@ -261,7 +264,7 @@ public class MapsFragment extends Fragment {
                     }
                     Drawable marker = resizeDrawable(getResources().getDrawable(R.drawable.ic_marker_vovinam), 60, 80);
                     displayClubsOnMap(clubItems, marker);
-                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(requireContext(), "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                     }
@@ -272,6 +275,8 @@ public class MapsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                hideLoading();
+
                 Log.e("Error", t.getMessage());
             }
         });
@@ -318,6 +323,8 @@ public class MapsFragment extends Fragment {
             map.getOverlays().add(marker);
         }
         map.invalidate();
+
+        hideLoading();
     }
 
     private Drawable resizeDrawable(Drawable image, int width, int height) {
@@ -326,5 +333,18 @@ public class MapsFragment extends Fragment {
         image.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         image.draw(canvas);
         return new BitmapDrawable(getResources(), bitmap);
+    }
+
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getParentFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

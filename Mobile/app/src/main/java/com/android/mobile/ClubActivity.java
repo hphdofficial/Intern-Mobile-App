@@ -72,6 +72,7 @@ public class ClubActivity extends BaseActivity {
     private Spinner spinnerCountry;
     private Spinner spinnerCity;
     private boolean mapsView = false;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,9 +170,9 @@ public class ClubActivity extends BaseActivity {
         spinnerCountry = findViewById(R.id.spinner_country);
         spinnerCity = findViewById(R.id.spinner_city);
 
-        loadListClubDefault();
         showListCountry();
         showListCity();
+        loadListClubDefault();
     }
 
     private void showSearchDialog() {
@@ -198,16 +199,29 @@ public class ClubActivity extends BaseActivity {
     }
 
     public void searchClub(String text) {
+        showLoading();
+
+        viewOptionsSpinner.setSelection(1);
+        FragmentTransaction fragmentTransactionClubList = getSupportFragmentManager().beginTransaction();
+        fragmentTransactionClubList.replace(R.id.fragment_container_club, clubListFragment);
+        fragmentTransactionClubList.commit();
+
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<List<Club>> call = service.searchClub(text);
 
         call.enqueue(new Callback<List<Club>>() {
             @Override
             public void onResponse(Call<List<Club>> call, Response<List<Club>> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     List<Club> clubs = response.body();
                     clubListFragment.setData(clubs);
-                    Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
+                    if (!clubs.isEmpty()) {
+                        Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ClubActivity.this, "Không có câu lạc bộ nào khớp với tìm kiếm", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }
@@ -215,6 +229,8 @@ public class ClubActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<Club>> call, Throwable t) {
+                hideLoading();
+
                 t.printStackTrace();
             }
         });
@@ -309,6 +325,8 @@ public class ClubActivity extends BaseActivity {
     }
 
     public void loadListClubDefault() {
+        showLoading();
+
 //        switchToMapsFragment(10.76833026, 106.67583063);
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
@@ -318,6 +336,8 @@ public class ClubActivity extends BaseActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful()) {
+                    hideLoading();
+
                     JsonObject jsonObject = response.body();
                     Gson gson = new Gson();
                     Type clubListType = new TypeToken<List<Club>>() {
@@ -335,14 +355,19 @@ public class ClubActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                hideLoading();
                 t.printStackTrace();
             }
         });
     }
 
     public void loadClubListByLocation(double latitude, double longitude) {
+        showLoading();
+
         if (mapsView) {
             switchToMapsFragment(latitude, longitude, true);
+
+            hideLoading();
         } else {
             ClubApiService service = ApiServiceProvider.getClubApiService();
             Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
@@ -350,6 +375,8 @@ public class ClubActivity extends BaseActivity {
             call.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    hideLoading();
+
                     if (response.isSuccessful()) {
                         JsonObject jsonObject = response.body();
                         Gson gson = new Gson();
@@ -357,7 +384,7 @@ public class ClubActivity extends BaseActivity {
                         }.getType();
                         List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
                         clubListFragment.setData(clubs);
-                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                         if (clubs.isEmpty()) {
                             Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                         }
@@ -368,6 +395,8 @@ public class ClubActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
+                    hideLoading();
+
                     t.printStackTrace();
                 }
             });
@@ -375,8 +404,12 @@ public class ClubActivity extends BaseActivity {
     }
 
     public void loadClubListByCountry(int countryId, String latitude, String longitude) {
+        showLoading();
+
         if (mapsView) {
             switchToMapsFragment(Double.parseDouble(latitude), Double.parseDouble(longitude), false);
+
+            hideLoading();
         } else {
             ClubApiService service = ApiServiceProvider.getClubApiService();
             Call<JsonObject> call = service.getListClubMap1(countryId);
@@ -384,6 +417,8 @@ public class ClubActivity extends BaseActivity {
             call.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    hideLoading();
+
                     if (response.isSuccessful()) {
                         JsonObject jsonObject = response.body();
                         Gson gson = new Gson();
@@ -391,7 +426,7 @@ public class ClubActivity extends BaseActivity {
                         }.getType();
                         List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
                         clubListFragment.setData(clubs);
-                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                         if (clubs.isEmpty()) {
                             Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                         }
@@ -402,6 +437,8 @@ public class ClubActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
+                    hideLoading();
+
                     t.printStackTrace();
                 }
             });
@@ -409,8 +446,12 @@ public class ClubActivity extends BaseActivity {
     }
 
     public void loadClubListByCity(int cityId, String latitude, String longitude) {
+        showLoading();
+
         if (mapsView) {
             switchToMapsFragment(Double.parseDouble(latitude), Double.parseDouble(longitude), false);
+
+            hideLoading();
         } else {
             ClubApiService service = ApiServiceProvider.getClubApiService();
             Call<JsonObject> call = service.getListClubMap2(230, cityId);
@@ -418,6 +459,8 @@ public class ClubActivity extends BaseActivity {
             call.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    hideLoading();
+
                     if (response.isSuccessful()) {
                         JsonObject jsonObject = response.body();
                         Gson gson = new Gson();
@@ -425,7 +468,7 @@ public class ClubActivity extends BaseActivity {
                         }.getType();
                         List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
                         clubListFragment.setData(clubs);
-                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                         if (clubs.isEmpty()) {
                             Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                         }
@@ -436,6 +479,8 @@ public class ClubActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
+                    hideLoading();
+
                     t.printStackTrace();
                 }
             });
@@ -467,7 +512,7 @@ public class ClubActivity extends BaseActivity {
                             String latitude = selectedCountry.getMap_lat();
                             String longitude = selectedCountry.getMap_long();
                             if (position > 0) {
-                                Toast.makeText(ClubActivity.this, "Selected: " + selectedCountry.getTen(), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ClubActivity.this, "Selected: " + selectedCountry.getTen(), Toast.LENGTH_SHORT).show();
                                 loadClubListByCountry(countryId, latitude, longitude);
                                 spinnerCity.setSelection(0);
                             }
@@ -514,7 +559,7 @@ public class ClubActivity extends BaseActivity {
                             String latitude = selectedCity.getMap_lat();
                             String longitude = selectedCity.getMap_long();
                             if (position > 0) {
-                                Toast.makeText(ClubActivity.this, "Selected: " + selectedCity.getTen(), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ClubActivity.this, "Selected: " + selectedCity.getTen(), Toast.LENGTH_SHORT).show();
                                 loadClubListByCity(cityId, latitude, longitude);
                                 spinnerCountry.setSelection(0);
                             }
@@ -541,5 +586,17 @@ public class ClubActivity extends BaseActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container_club, mapsFragment);
         transaction.commit();
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }
