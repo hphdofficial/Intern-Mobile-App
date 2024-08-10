@@ -48,15 +48,26 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         public TextView totalPrice;
         public Button buttonConfirm;
         public Button buttonDetails;
+        public Button btnHuydon;
+        public Button button_cofirm;
+
+        public TextView txtMaDonHang;
 
         public ViewHolder(View view) {
             super(view);
             textViewStatus = view.findViewById(R.id.textView13);
-            textViewSupplier = view.findViewById(R.id.textView10);
+//            textViewSupplier = view.findViewById(R.id.textView10);
+
+            txtMaDonHang = view.findViewById(R.id.txtMaDonHang);
+
             recyclerProductList = view.findViewById(R.id.recycler_product_list);
             totalPrice = view.findViewById(R.id.total_price);
-            buttonConfirm = view.findViewById(R.id.button3);
+//            buttonConfirm = view.findViewById(R.id.button3);
             buttonDetails = view.findViewById(R.id.button_details);
+
+
+            btnHuydon = view.findViewById(R.id.btnHuydon);
+            button_cofirm = view.findViewById(R.id.button_cofirm);
         }
     }
 
@@ -76,6 +87,16 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
     public void onBindViewHolder(ShippingOrderAdapter.ViewHolder holder, int position) {
         OrderStatusModel order = data.get(position);
         holder.textViewStatus.setText(order.getGiao_hang());
+        holder.txtMaDonHang.setText("Đơn hàng "+ order.getTxn_ref());
+
+        // update trang thai nut Huy don hang
+        if (order.getGiao_hang().equals("chưa giao hàng")) {
+            holder.btnHuydon.setVisibility(View.VISIBLE);
+        }
+
+        if (order.getGiao_hang().equals("đã giao hàng")) {
+            holder.button_cofirm.setVisibility(View.VISIBLE);
+        }
 
         // Group products by supplier
         Map<String, List<OrderStatusModel.DetailCart>> supplierProductMap = new LinkedHashMap<>();
@@ -105,66 +126,67 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         }
         holder.totalPrice.setText(String.format("Tổng giá: %,.0f VND", totalPrice));
 
-        // Check delivery status and update button text and color
-        if ("đã giao hàng".equals(order.getGiao_hang())) {
-            holder.buttonConfirm.setText("Đã nhận hàng");
-            holder.buttonConfirm.setBackgroundColor(ContextCompat.getColor(context, R.color.orange_button_color)); // Set button color to orange
-            holder.buttonConfirm.setTextColor(ContextCompat.getColor(context, R.color.white)); // Set button text color to white
-            holder.buttonConfirm.setEnabled(false); // Disable button if already received
-        } else {
-            holder.buttonConfirm.setText("Xác nhận nhận hàng");
-            holder.buttonConfirm.setBackgroundColor(ContextCompat.getColor(context, R.color.special_color)); // Set button color to default
-            holder.buttonConfirm.setTextColor(ContextCompat.getColor(context, R.color.black)); // Set button text color to black (or any other default color)
-            holder.buttonConfirm.setEnabled(true); // Enable button if not yet received
+//        // Check delivery status and update button text and color
+//        if ("đã giao hàng".equals(order.getGiao_hang())) {
+//            holder.buttonConfirm.setText("Đã nhận hàng");
+//            holder.buttonConfirm.setBackgroundColor(ContextCompat.getColor(context, R.color.orange_button_color)); // Set button color to orange
+//            holder.buttonConfirm.setTextColor(ContextCompat.getColor(context, R.color.white)); // Set button text color to white
+//            holder.buttonConfirm.setEnabled(false); // Disable button if already received
+//        } else {
+//            holder.buttonConfirm.setText("Xác nhận nhận hàng");
+//            holder.buttonConfirm.setBackgroundColor(ContextCompat.getColor(context, R.color.special_color)); // Set button color to default
+//            holder.buttonConfirm.setTextColor(ContextCompat.getColor(context, R.color.black)); // Set button text color to black (or any other default color)
+//            holder.buttonConfirm.setEnabled(true);
 
-            holder.buttonConfirm.setOnClickListener(v -> {
-                int adapterPosition = holder.getAdapterPosition();
-                String txnRef = order.getTxn_ref(); // Lấy txn_ref từ order
+//            holder.buttonConfirm.setEnabled(false);
+//            holder.buttonConfirm.setOnClickListener(v -> {
+//                int adapterPosition = holder.getAdapterPosition();
+//                String txnRef = order.getTxn_ref(); // Lấy txn_ref từ order
+//
+//                showLoading(); // Hiển thị loading
+//                apiService.updateDeliveryStatus(txnRef).enqueue(new Callback<Void>() {
+//                    @Override
+//                    public void onResponse(Call<Void> call, Response<Void> response) {
+//                        if (response.isSuccessful()) {
+//                            // After updating the delivery status, check the order status again
+//                            apiService.searchOrder(txnRef).enqueue(new Callback<OrderStatusModel>() { // sử dụng txnRef
+//                                @Override
+//                                public void onResponse(Call<OrderStatusModel> call, Response<OrderStatusModel> response) {
+//                                    hideLoading(); // Ẩn loading
+//                                    if (response.isSuccessful() && response.body() != null) {
+//                                        OrderStatusModel updatedOrder = response.body();
+//                                        order.setGiao_hang(updatedOrder.getGiao_hang());
+//                                        notifyItemChanged(adapterPosition);
+//                                        Toast.makeText(context, "Trạng thái giao hàng đã được cập nhật thành công", Toast.LENGTH_SHORT).show();
+//
+//                                        // Hiển thị dialog cảm ơn sau khi cập nhật thành công
+//                                        ThankYouDialogFragment thankYouDialogFragment = new ThankYouDialogFragment();
+//                                        thankYouDialogFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "ThankYouDialogFragment");
+//                                    } else {
+//                                        Toast.makeText(context, "Không thể cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<OrderStatusModel> call, Throwable t) {
+//                                    hideLoading(); // Ẩn loading khi có lỗi xảy ra
+//                                    Toast.makeText(context, "Lỗi khi kiểm tra lại trạng thái giao hàng", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                        } else {
+//                            hideLoading(); // Ẩn loading khi có lỗi xảy ra
+//                            Toast.makeText(context, "Cập nhật trạng thái giao hàng thất bại", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Void> call, Throwable t) {
+//                        Toast.makeText(context, "Lỗi khi cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            });
 
-                showLoading(); // Hiển thị loading
-                apiService.updateDeliveryStatus(txnRef).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.isSuccessful()) {
-                            // After updating the delivery status, check the order status again
-                            apiService.searchOrder(txnRef).enqueue(new Callback<OrderStatusModel>() { // sử dụng txnRef
-                                @Override
-                                public void onResponse(Call<OrderStatusModel> call, Response<OrderStatusModel> response) {
-                                    hideLoading(); // Ẩn loading
-                                    if (response.isSuccessful() && response.body() != null) {
-                                        OrderStatusModel updatedOrder = response.body();
-                                        order.setGiao_hang(updatedOrder.getGiao_hang());
-                                        notifyItemChanged(adapterPosition);
-                                        Toast.makeText(context, "Trạng thái giao hàng đã được cập nhật thành công", Toast.LENGTH_SHORT).show();
-
-                                        // Hiển thị dialog cảm ơn sau khi cập nhật thành công
-                                        ThankYouDialogFragment thankYouDialogFragment = new ThankYouDialogFragment();
-                                        thankYouDialogFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "ThankYouDialogFragment");
-                                    } else {
-                                        Toast.makeText(context, "Không thể cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<OrderStatusModel> call, Throwable t) {
-                                    hideLoading(); // Ẩn loading khi có lỗi xảy ra
-                                    Toast.makeText(context, "Lỗi khi kiểm tra lại trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
-                            hideLoading(); // Ẩn loading khi có lỗi xảy ra
-                            Toast.makeText(context, "Cập nhật trạng thái giao hàng thất bại", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(context, "Lỗi khi cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            });
-
-        }
+//        }
 
         // Set the order details button
         holder.buttonDetails.setOnClickListener(v -> {

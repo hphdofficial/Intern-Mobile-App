@@ -50,7 +50,6 @@ public class OrderSuccessFragment extends Fragment {
             return insets;
         });
 
-        showLoading();
 
         adapter = new ShippingOrderAdapter(getContext(), orderList);
         recyclerView = view.findViewById(R.id.recycler_shipping_item);
@@ -72,7 +71,6 @@ public class OrderSuccessFragment extends Fragment {
         call.enqueue(new Callback<List<OrderStatusModel>>() {
             @Override
             public void onResponse(Call<List<OrderStatusModel>> call, Response<List<OrderStatusModel>> response) {
-                hideLoading();
 
                 if (response.isSuccessful()) {
                     List<OrderStatusModel> orders = response.body();
@@ -91,22 +89,8 @@ public class OrderSuccessFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<OrderStatusModel>> call, Throwable t) {
-                hideLoading();
-
                 t.printStackTrace();
             }
         });
-    }
-
-    private void showLoading() {
-        loadingFragment = new BlankFragment();
-        loadingFragment.show(getParentFragmentManager(), "loading");
-    }
-
-    private void hideLoading() {
-        if (loadingFragment != null) {
-            loadingFragment.dismiss();
-            loadingFragment = null;
-        }
     }
 }

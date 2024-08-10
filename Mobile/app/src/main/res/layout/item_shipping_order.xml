@@ -21,10 +21,10 @@
 
             <!-- Supplier Name -->
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/txtMaDonHang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nhà cung cấp"
+                android:text="Mã đơn hàng"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,15 +70,6 @@
             android:orientation="vertical"
             android:gravity="end"
             android:layout_marginTop="8dp">
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:backgroundTint="#0C96B8"
-                android:text="Xác nhận nhận hàng" />
-
             <Button
                 android:id="@+id/button_details"
                 android:layout_width="wrap_content"
@@ -87,6 +78,23 @@
                 android:layout_marginRight="10dp"
                 android:backgroundTint="#0C96B8"
                 android:text="Chi tiết" />
+            <Button
+                android:id="@+id/button_cofirm"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="#0C96B8"
+                android:text="Xác nhận nhận hàng" />
+            <Button
+                android:id="@+id/btnHuydon"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#0C96B8"
+                android:text="Hủy đơn hàng" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
