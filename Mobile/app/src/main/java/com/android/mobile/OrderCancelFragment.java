@@ -53,14 +53,14 @@ public class OrderCancelFragment extends Fragment {
     }
 
     private void fetchAllOrders() {
+        if (getView() == null) return;
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
-
         apiService.getAllOrders("Bearer " + accessToken).enqueue(new Callback<List<OrderStatusModel>>() {
             @Override
             public void onResponse(Call<List<OrderStatusModel>> call, Response<List<OrderStatusModel>> response) {
                 if (response.isSuccessful()) {
-                    orderList = response.body();
+                    List<OrderStatusModel> orderList = response.body();
                     if (orderList != null && !orderList.isEmpty()) {
                         // Lọc các đơn hàng có trạng thái "chưa giao hàng"
                         List<OrderStatusModel> undeliveredOrders = new ArrayList<>();
@@ -81,23 +81,28 @@ public class OrderCancelFragment extends Fragment {
 
                             // Ẩn TextView nếu có đơn hàng
                             noOrdersTextView.setVisibility(View.GONE);
-
-                            // Cập nhật Adapter với danh sách đã lọc
-                            shippingItemAdapter = new ShippingOrderAdapter(getContext(), undeliveredOrders);
-                            recyclerView.setAdapter(shippingItemAdapter);
                         } else {
-                            // Hiển thị TextView nếu không có đơn hàng nào chưa giao hàng
+                            // Hiển thị TextView nếu không có đơn hàng nào
                             noOrdersTextView.setVisibility(View.VISIBLE);
                         }
-                    } else {
-                        // Hiển thị thông báo TextView khi không có hóa đơn nào
-                        noOrdersTextView.setVisibility(View.VISIBLE);
+
+                        // Cập nhật Adapter với danh sách đã lọc
+                        if (shippingItemAdapter == null) {
+                            shippingItemAdapter = new ShippingOrderAdapter(getContext(), undeliveredOrders);
+                            recyclerView.setAdapter(shippingItemAdapter);
+                            Toast.makeText(getContext(), "Adapter Null", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            shippingItemAdapter.setData(undeliveredOrders);
+                            Toast.makeText(getContext(), "Adapter Not Null", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 } else {
-                    noOrdersTextView.setVisibility(View.VISIBLE);
                     // Xử lý lỗi khi phản hồi không thành công
                     Toast.makeText(getContext(), "Không thể tải đơn hàng", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
@@ -106,5 +111,11 @@ public class OrderCancelFragment extends Fragment {
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchAllOrders();
     }
 }

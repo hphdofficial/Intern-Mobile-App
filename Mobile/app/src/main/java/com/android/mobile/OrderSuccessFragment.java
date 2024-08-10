@@ -62,6 +62,7 @@ public class OrderSuccessFragment extends Fragment {
     }
 
     private void fetchOrderSuccess() {
+        if (getView() == null) return;
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
 
@@ -81,7 +82,7 @@ public class OrderSuccessFragment extends Fragment {
                         }
                     }
                     adapter.setData(orderList);
-                    Toast.makeText(getContext(), "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Tải dữ liệu thành công 123", Toast.LENGTH_SHORT).show();
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }
@@ -92,5 +93,11 @@ public class OrderSuccessFragment extends Fragment {
                 t.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchOrderSuccess();
     }
 }

@@ -90,7 +90,7 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         holder.txtMaDonHang.setText("Đơn hàng "+ order.getTxn_ref());
 
         // update trang thai nut Huy don hang
-        if (order.getGiao_hang().equals("chưa giao hàng")) {
+        if (order.getGiao_hang().equals("chờ xác nhận")) {
             holder.btnHuydon.setVisibility(View.VISIBLE);
         }
 

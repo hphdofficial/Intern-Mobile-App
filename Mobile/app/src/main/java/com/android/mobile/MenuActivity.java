@@ -256,7 +256,7 @@ public class MenuActivity extends BaseActivity {
         btn_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HistoryOrderActivity.class));
+                startActivity(new Intent(getApplicationContext(), OrderActivity.class));
             }
         });
 

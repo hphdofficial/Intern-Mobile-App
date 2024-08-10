@@ -30,6 +30,7 @@ public class OrderActivity extends BaseActivity {
             return insets;
         });
 
+
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Đơn hàng của tôi");

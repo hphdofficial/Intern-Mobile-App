@@ -194,10 +194,11 @@ public class activity_item_detail extends BaseActivity {
                     quantityInStock = product.getUnitsInStock();
                     String image = product.getImage_link();
                     System.out.println("ABC" + image);
-                    if (image != null) {
-                        Picasso.get().load(image).placeholder(R.drawable.logo_vovinam).into(imageItem);
-                    }else{
+                    if (image.isEmpty() || image.equals(" ")) {
                         imageItem.setImageResource(R.drawable.logo_vovinam);
+                    }else{
+                        Picasso.get().load(image).placeholder(R.drawable.logo_vovinam).into(imageItem);
+
                     }
 
                     hideLoading();

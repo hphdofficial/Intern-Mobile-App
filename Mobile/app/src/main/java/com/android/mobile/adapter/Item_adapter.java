@@ -47,11 +47,12 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
         viewHolder.txtProductInStock.setText("Còn: "+txtProductInStock);
 
         String image = ProductList.get(i).getImage_link();
-        if (image != null) {
-            Picasso.get().load(image).placeholder(R.drawable.logo_vovinam).into(viewHolder.imgProductImage);
-        }else{
+        if(image.isEmpty() || image.equals(" ")){
             viewHolder.imgProductImage.setImageResource(R.drawable.logo_vovinam);
+        }else{
+            Picasso.get().load(image).placeholder(R.drawable.logo_vovinam).into(viewHolder.imgProductImage);
         }
+
 
         int idProduct = ProductList.get(i).getProductID();
         int idSupplier = ProductList.get(i).getSupplierID();

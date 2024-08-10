@@ -50,6 +50,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private BlankFragment loadingFragment;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
