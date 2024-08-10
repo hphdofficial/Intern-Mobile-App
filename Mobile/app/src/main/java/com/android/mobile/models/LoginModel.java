@@ -1,27 +1,31 @@
 package com.android.mobile.models;
 
 public class LoginModel {
-    private String email;
-    private String password;
+    private String login;  // Có thể là username, email hoặc số điện thoại
+    private String password;  // Mật khẩu của người dùng
 
-    public LoginModel(String email, String password) {
-        this.email = email;
+    // Constructor
+    public LoginModel(String login, String password) {
+        this.login = login;
         this.password = password;
     }
 
-    // Getters and setters...
-    public String getEmail() {
-        return email;
+    // Getter cho login
+    public String getLogin() {
+        return login;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    // Setter cho login
+    public void setLogin(String login) {
+        this.login = login;
     }
 
+    // Getter cho password
     public String getPassword() {
         return password;
     }
 
+    // Setter cho password
     public void setPassword(String password) {
         this.password = password;
     }

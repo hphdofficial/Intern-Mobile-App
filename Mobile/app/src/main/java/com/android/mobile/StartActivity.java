@@ -149,15 +149,16 @@ public class StartActivity extends BaseActivity {
     }
 
     private void loginUser() {
-        String email = editEmail.getText().toString();
-        String password = editPassword.getText().toString();
+        String login = editEmail.getText().toString().trim();  // login có thể là username, email hoặc số điện thoại
+        String password = editPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(StartActivity.this, "Vui lòng nhập email và mật khẩu", Toast.LENGTH_SHORT).show();
+        if (login.isEmpty() || password.isEmpty()) {
+            Toast.makeText(StartActivity.this, "Vui lòng nhập tên tài khoản, email hoặc số điện thoại và mật khẩu", Toast.LENGTH_SHORT).show();
             return;
         }
+
         showLoading();
-        LoginModel request = new LoginModel(email, password);
+        LoginModel request = new LoginModel(login, password);
         UserApiService apiService = ApiServiceProvider.getUserApiService();
         Call<TokenModel> call = apiService.loginUser(request);
         call.enqueue(new Callback<TokenModel>() {
@@ -169,7 +170,7 @@ public class StartActivity extends BaseActivity {
                     if (tokenResponse != null) {
                         saveLoginDetails(tokenResponse);
                         if (checkboxSavePassword.isChecked()) {
-                            saveCredentials(email, password);
+                            saveCredentials(login, password);
                             saveCheckboxState(true); // Lưu trạng thái của checkbox
                         } else {
                             clearCredentials();
@@ -179,11 +180,9 @@ public class StartActivity extends BaseActivity {
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                         finish(); // Đóng StartActivity để người dùng không quay lại trang đăng nhập
                     }
-
-
                 } else {
                     if (response.code() == 401) {
-                        Toast.makeText(StartActivity.this, "Sai thông tin email hoặc mật khẩu", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StartActivity.this, "Sai thông tin đăng nhập hoặc mật khẩu", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(StartActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                     }
@@ -197,6 +196,7 @@ public class StartActivity extends BaseActivity {
             }
         });
     }
+
 
 
 

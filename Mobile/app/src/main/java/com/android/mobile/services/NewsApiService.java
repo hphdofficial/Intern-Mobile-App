@@ -17,9 +17,10 @@ public interface NewsApiService {
     @GET("api/thongbao/search/{tenvi}")
     Call<List<NewsModel>> searchAnouncements(@Path("tenvi") String tenvi);
 
-    @GET("api/clubs/getdetail/")
-    Call<ClubModel> getClubDetail(@Query("id_club") int idClub);
+    @GET("api/clubs/getall")
+    Call<List<ClubModel>> getAllClubs();
 
-    @GET("api/clubs/list")
-    Call<List<ClubModel>> getClubs();
+    @GET("api/news/filter-announcements-by-club/{id_club}")
+    Call<List<NewsModel>> filterAnnouncementsByClub(@Path("id_club") int idClub);
+
 }
