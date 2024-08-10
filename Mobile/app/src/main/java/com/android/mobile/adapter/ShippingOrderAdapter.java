@@ -21,6 +21,7 @@ import com.android.mobile.OrderDetailsDialogFragment;
 import com.android.mobile.R;
 import com.android.mobile.SupplierInfoActivity;
 import com.android.mobile.ThankYouDialogFragment;
+import com.android.mobile.models.OrderModel;
 import com.android.mobile.models.OrderStatusModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
@@ -191,5 +192,11 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public void setData(List<OrderStatusModel> newData) {
+        data.clear();
+        data.addAll(newData);
+        notifyDataSetChanged();
     }
 }

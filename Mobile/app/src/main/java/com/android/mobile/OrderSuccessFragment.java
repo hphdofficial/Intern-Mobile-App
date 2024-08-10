@@ -19,9 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.mobile.adapter.HistoryOrderAdapter;
+import com.android.mobile.adapter.ShippingOrderAdapter;
 import com.android.mobile.models.OrderModel;
+import com.android.mobile.models.OrderStatusModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.OrderApiService;
+import com.android.mobile.services.UserApiService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +35,14 @@ import retrofit2.Response;
 
 public class OrderSuccessFragment extends Fragment {
     private RecyclerView recyclerView;
-    private HistoryOrderAdapter adapter;
-    private List<OrderModel> orderList = new ArrayList<>();
+    private ShippingOrderAdapter adapter;
+    private List<OrderStatusModel> orderList = new ArrayList<>();
     private BlankFragment loadingFragment;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_order_success, container, false);
+        View view = inflater.inflate(R.layout.activity_shipping_order, container, false);
 
         ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -49,8 +52,8 @@ public class OrderSuccessFragment extends Fragment {
 
         showLoading();
 
-        adapter = new HistoryOrderAdapter(getContext(), orderList);
-        recyclerView = view.findViewById(R.id.recycler_purchase_history);
+        adapter = new ShippingOrderAdapter(getContext(), orderList);
+        recyclerView = view.findViewById(R.id.recycler_shipping_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -63,18 +66,18 @@ public class OrderSuccessFragment extends Fragment {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
 
-        OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderModel>> call = service.getHistoryOrder("Bearer " + token);
+        UserApiService service = ApiServiceProvider.getUserApiService();
+        Call<List<OrderStatusModel>> call = service.getAllOrders("Bearer " + token);
 
-        call.enqueue(new Callback<List<OrderModel>>() {
+        call.enqueue(new Callback<List<OrderStatusModel>>() {
             @Override
-            public void onResponse(Call<List<OrderModel>> call, Response<List<OrderModel>> response) {
+            public void onResponse(Call<List<OrderStatusModel>> call, Response<List<OrderStatusModel>> response) {
                 hideLoading();
 
                 if (response.isSuccessful()) {
-                    List<OrderModel> orders = response.body();
-                    List<OrderModel> orderList = new ArrayList<>();
-                    for (OrderModel order : orders) {
+                    List<OrderStatusModel> orders = response.body();
+                    List<OrderStatusModel> orderList = new ArrayList<>();
+                    for (OrderStatusModel order : orders) {
                         if (order.getStatus().equals("thành công") && order.getGiao_hang().equals("đã giao hàng")) {
                             orderList.add(order);
                         }
@@ -87,7 +90,7 @@ public class OrderSuccessFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<OrderModel>> call, Throwable t) {
+            public void onFailure(Call<List<OrderStatusModel>> call, Throwable t) {
                 hideLoading();
 
                 t.printStackTrace();
