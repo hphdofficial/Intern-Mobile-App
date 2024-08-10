@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
-                android:text="Vui Lonòng Nhập Thông Tin Cá Nhân Của Bạn"
+                android:text="Vui Lòng Nhập Thông Tin Cá Nhân Của Bạn"
                 android:textSize="14sp"
                 android:textColor="#808080" />
 

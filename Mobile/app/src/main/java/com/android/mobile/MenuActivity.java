@@ -192,12 +192,12 @@ public class MenuActivity extends BaseActivity {
 
     private TextView text;
     public void onMenuItemClick(View view) {
-         text = findViewById(R.id.languageText);
+        text = findViewById(R.id.languageText);
         String language = text.getText()+"";
         if(view.getId() == R.id.btn_change){
-           if(language.contains("VN")){
-               text.setText("ENG");
-           }else text.setText("VN");
+            if(language.contains("VN")){
+                text.setText("ENG");
+            }else text.setText("VN");
         }
     }
     @SuppressLint("RestrictedApi")
