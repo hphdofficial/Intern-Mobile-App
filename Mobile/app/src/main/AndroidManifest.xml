@@ -43,8 +43,13 @@
             android:value="YOUR_TERMINAL_ID" />
 
         <activity
+            android:name=".OrderActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ThankYouDialogFragment"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ClubMapsFragment"
             android:exported="true"
