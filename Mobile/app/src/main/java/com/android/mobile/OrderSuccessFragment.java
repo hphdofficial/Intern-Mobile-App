@@ -16,14 +16,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.android.mobile.adapter.HistoryOrderAdapter;
-import com.android.mobile.adapter.ShippingOrderAdapter;
-import com.android.mobile.models.OrderModel;
-import com.android.mobile.models.OrderStatusModel;
+import com.android.mobile.adapter.OrderAdapter;
+import com.android.mobile.models.OrderListModel;
 import com.android.mobile.network.ApiServiceProvider;
-import com.android.mobile.services.OrderApiService;
 import com.android.mobile.services.UserApiService;
 
 import java.util.ArrayList;
@@ -35,14 +31,14 @@ import retrofit2.Response;
 
 public class OrderSuccessFragment extends Fragment {
     private RecyclerView recyclerView;
-    private ShippingOrderAdapter adapter;
-    private List<OrderStatusModel> orderList = new ArrayList<>();
+    private OrderAdapter adapter;
+    private List<OrderListModel> orderList = new ArrayList<>();
     private BlankFragment loadingFragment;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_shipping_order, container, false);
+        View view = inflater.inflate(R.layout.fragment_order, container, false);
 
         ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -51,7 +47,7 @@ public class OrderSuccessFragment extends Fragment {
         });
 
 
-        adapter = new ShippingOrderAdapter(getContext(), orderList);
+        adapter = new OrderAdapter(getContext(), orderList);
         recyclerView = view.findViewById(R.id.recycler_shipping_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
@@ -67,16 +63,16 @@ public class OrderSuccessFragment extends Fragment {
         String token = sharedPreferences.getString("access_token", null);
 
         UserApiService service = ApiServiceProvider.getUserApiService();
-        Call<List<OrderStatusModel>> call = service.getAllOrders("Bearer " + token);
+        Call<List<OrderListModel>> call = service.getListOrder("Bearer " + token);
 
-        call.enqueue(new Callback<List<OrderStatusModel>>() {
+        call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
-            public void onResponse(Call<List<OrderStatusModel>> call, Response<List<OrderStatusModel>> response) {
+            public void onResponse(Call<List<OrderListModel>> call, Response<List<OrderListModel>> response) {
 
                 if (response.isSuccessful()) {
-                    List<OrderStatusModel> orders = response.body();
-                    List<OrderStatusModel> orderList = new ArrayList<>();
-                    for (OrderStatusModel order : orders) {
+                    List<OrderListModel> orders = response.body();
+                    List<OrderListModel> orderList = new ArrayList<>();
+                    for (OrderListModel order : orders) {
                         if (order.getStatus().equals("thành công") && order.getGiao_hang().equals("đã giao hàng")) {
                             orderList.add(order);
                         }
@@ -89,7 +85,7 @@ public class OrderSuccessFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<OrderStatusModel>> call, Throwable t) {
+            public void onFailure(Call<List<OrderListModel>> call, Throwable t) {
                 t.printStackTrace();
             }
         });

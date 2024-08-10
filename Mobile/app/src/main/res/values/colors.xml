@@ -28,4 +28,6 @@
     <color name="item_background_supplier">#ffffff</color>
     <color name="default_button_color">#CCCCCC</color> <!-- Replace with your desired default color -->
     <color name="orange_button_color">#FFA500</color> <!-- Orange color -->
+    <color name="default_blue_color">#0000FF</color>
+    <color name="default_red_color">#FF0000</color>
 </resources>

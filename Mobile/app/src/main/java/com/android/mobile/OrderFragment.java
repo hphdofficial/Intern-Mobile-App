@@ -3,17 +3,17 @@ package com.android.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.android.mobile.R;
-import com.android.mobile.adapter.ShippingOrderAdapter;
-import com.android.mobile.models.OrderStatusModel;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.mobile.adapter.OrderAdapter;
+import com.android.mobile.models.OrderListModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
@@ -28,8 +28,8 @@ public class OrderFragment extends Fragment {
 
     private static final String ARG_STATUS = "status";
     private RecyclerView recyclerView;
-    private ShippingOrderAdapter shippingItemAdapter;
-    private List<OrderStatusModel> orderList;
+    private OrderAdapter shippingItemAdapter;
+    private List<OrderListModel> orderList;
     private UserApiService apiService;
 
     public static OrderFragment newInstance(String status) {
@@ -57,22 +57,22 @@ public class OrderFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
-        apiService.getAllOrders("Bearer " + accessToken).enqueue(new Callback<List<OrderStatusModel>>() {
+        apiService.getListOrder("Bearer " + accessToken).enqueue(new Callback<List<OrderListModel>>() {
             @Override
-            public void onResponse(Call<List<OrderStatusModel>> call, Response<List<OrderStatusModel>> response) {
+            public void onResponse(Call<List<OrderListModel>> call, Response<List<OrderListModel>> response) {
                 if (response.isSuccessful()) {
                     orderList = response.body();
                     if (orderList != null && !orderList.isEmpty()) {
                         // Lọc các đơn hàng có trạng thái "chưa giao hàng"
-                        List<OrderStatusModel> filteredOrders = new ArrayList<>();
-                        for (OrderStatusModel order : orderList) {
+                        List<OrderListModel> filteredOrders = new ArrayList<>();
+                        for (OrderListModel order : orderList) {
                             if ("chưa giao hàng".equalsIgnoreCase(order.getGiao_hang())) {
                                 filteredOrders.add(order);
                             }
                         }
 
                         // Cập nhật adapter với danh sách đơn hàng đã lọc
-                        shippingItemAdapter = new ShippingOrderAdapter(getContext(), filteredOrders);
+                        shippingItemAdapter = new OrderAdapter(getContext(), filteredOrders);
                         recyclerView.setAdapter(shippingItemAdapter);
                     } else {
                         Toast.makeText(getContext(), "Không có đơn hàng nào", Toast.LENGTH_SHORT).show();
@@ -83,7 +83,7 @@ public class OrderFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<OrderStatusModel>> call, Throwable t) {
+            public void onFailure(Call<List<OrderListModel>> call, Throwable t) {
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

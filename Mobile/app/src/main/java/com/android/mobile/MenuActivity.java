@@ -383,7 +383,7 @@ public class MenuActivity extends BaseActivity {
         btn_order_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ShippingOrderActivity.class));
+                startActivity(new Intent(getApplicationContext(), OrderActivity.class));
             }
         });
         btn_logout.setOnClickListener(new View.OnClickListener() {

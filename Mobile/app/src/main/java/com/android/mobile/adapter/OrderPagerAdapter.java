@@ -13,8 +13,6 @@ import com.android.mobile.OrderWaitConfirmFragment;
 import com.android.mobile.OrderWaitProductFragment;
 
 public class OrderPagerAdapter extends FragmentStateAdapter {
-
-
     public OrderPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
@@ -42,5 +40,4 @@ public class OrderPagerAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return 5;
     }
-
 }

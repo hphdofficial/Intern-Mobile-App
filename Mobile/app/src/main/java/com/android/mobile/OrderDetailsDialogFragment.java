@@ -11,16 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.android.mobile.models.OrderStatusModel;
+import com.android.mobile.models.OrderListModel;
 import com.google.gson.Gson;
 
 public class OrderDetailsDialogFragment extends DialogFragment {
 
     private static final String ARG_ORDER = "order";
 
-    private OrderStatusModel order;
+    private OrderListModel order;
 
-    public static OrderDetailsDialogFragment newInstance(OrderStatusModel order) {
+    public static OrderDetailsDialogFragment newInstance(OrderListModel order) {
         OrderDetailsDialogFragment fragment = new OrderDetailsDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_ORDER, new Gson().toJson(order));
@@ -33,7 +33,7 @@ public class OrderDetailsDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             String orderJson = getArguments().getString(ARG_ORDER);
-            order = new Gson().fromJson(orderJson, OrderStatusModel.class);
+            order = new Gson().fromJson(orderJson, OrderListModel.class);
         }
     }
 

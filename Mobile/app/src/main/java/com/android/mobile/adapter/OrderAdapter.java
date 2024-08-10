@@ -1,16 +1,12 @@
 package com.android.mobile.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,10 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.mobile.BlankFragment;
 import com.android.mobile.OrderDetailsDialogFragment;
 import com.android.mobile.R;
-import com.android.mobile.SupplierInfoActivity;
-import com.android.mobile.ThankYouDialogFragment;
-import com.android.mobile.models.OrderModel;
-import com.android.mobile.models.OrderStatusModel;
+import com.android.mobile.models.OrderListModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
@@ -31,13 +24,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdapter.ViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     Context context;
-    private List<OrderStatusModel> data;
+    private List<OrderListModel> data;
     private UserApiService apiService;
     private BlankFragment loadingFragment;
 
@@ -71,21 +60,21 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         }
     }
 
-    public ShippingOrderAdapter(Context context, List<OrderStatusModel> data) {
+    public OrderAdapter(Context context, List<OrderListModel> data) {
         this.context = context;
         this.data = data;
         apiService = ApiServiceProvider.getUserApiService();
     }
 
     @Override
-    public ShippingOrderAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shipping_order, parent, false);
+    public OrderAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ShippingOrderAdapter.ViewHolder holder, int position) {
-        OrderStatusModel order = data.get(position);
+    public void onBindViewHolder(OrderAdapter.ViewHolder holder, int position) {
+        OrderListModel order = data.get(position);
         holder.textViewStatus.setText(order.getGiao_hang());
         holder.txtMaDonHang.setText("Đơn hàng "+ order.getTxn_ref());
 
@@ -99,8 +88,8 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         }
 
         // Group products by supplier
-        Map<String, List<OrderStatusModel.DetailCart>> supplierProductMap = new LinkedHashMap<>();
-        for (OrderStatusModel.DetailCart detailCart : order.getDetail_carts()) {
+        Map<String, List<OrderListModel.DetailCart>> supplierProductMap = new LinkedHashMap<>();
+        for (OrderListModel.DetailCart detailCart : order.getDetail_carts()) {
             String supplierName = detailCart.getProduct().getSupplierName();
             if (!supplierProductMap.containsKey(supplierName)) {
                 supplierProductMap.put(supplierName, new ArrayList<>());
@@ -110,21 +99,21 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
 
         // Create a list of items including supplier names and their products
         List<Object> items = new ArrayList<>();
-        for (Map.Entry<String, List<OrderStatusModel.DetailCart>> entry : supplierProductMap.entrySet()) {
+        for (Map.Entry<String, List<OrderListModel.DetailCart>> entry : supplierProductMap.entrySet()) {
             items.add(entry.getKey()); // Add supplier name as a header
             items.addAll(entry.getValue()); // Add products of the supplier
         }
 
         // Setup product list with grouped items
         holder.recyclerProductList.setLayoutManager(new LinearLayoutManager(context));
-        holder.recyclerProductList.setAdapter(new ProductShippingAdapter(context, items));
+        holder.recyclerProductList.setAdapter(new ProductOrderAdapter(context, items));
 
         // Calculate total price
         double totalPrice = 0;
-        for (OrderStatusModel.DetailCart cart : order.getDetail_carts()) {
+        for (OrderListModel.DetailCart cart : order.getDetail_carts()) {
             totalPrice += cart.getProduct().getUnitPrice() * cart.getQuantity();
         }
-        holder.totalPrice.setText(String.format("Tổng giá: %,.0f VND", totalPrice));
+        holder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
 
 //        // Check delivery status and update button text and color
 //        if ("đã giao hàng".equals(order.getGiao_hang())) {
@@ -196,27 +185,12 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         });
     }
 
-
-    private void showLoading() {
-        if (loadingFragment == null) {
-            loadingFragment = new BlankFragment();
-            loadingFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "loading");
-        }
-    }
-
-    private void hideLoading() {
-        if (loadingFragment != null) {
-            loadingFragment.dismiss();
-            loadingFragment = null;
-        }
-    }
-
     @Override
     public int getItemCount() {
         return data.size();
     }
 
-    public void setData(List<OrderStatusModel> newData) {
+    public void setData(List<OrderListModel> newData) {
         data.clear();
         data.addAll(newData);
         notifyDataSetChanged();

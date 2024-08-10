@@ -131,7 +131,7 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
-            android:backgroundTint="#0000C8"
+            android:backgroundTint="@color/default_blue_color"
             android:text="Đăng ký lớp học"
             android:visibility="gone"
             app:cornerRadius="15dp"

@@ -59,7 +59,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".adapter.ProductShippingAdapter"
+            android:name=".adapter.ProductOrderAdapter"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -70,10 +70,6 @@
             android:name=".HistoryRegisterClass"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <!-- <activity -->
-        <!-- android:name=".MainActivity2" -->
-        <!-- android:exported="false" -->
-        <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".activity_teacher_checkin"
             android:exported="true"
@@ -159,17 +155,9 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ShippingOrderActivity"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".CartActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <!-- <activity -->
-        <!-- android:name=".LaguageLayout" -->
-        <!-- android:exported="false" -->
-        <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".EnterOtpActivity"
             android:exported="true"
@@ -226,9 +214,6 @@
             android:name=".MenuActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <!-- <activity -->
-        <!-- android:name=".StartActivity" -->
-        <!-- android:exported="true" /> -->
         <activity
             android:name=".ClassActivity"
             android:exported="true"
