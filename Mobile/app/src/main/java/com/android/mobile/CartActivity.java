@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class CartActivity extends BaseActivity {
     private TextView txtSumPrice;
     private SwipeRefreshLayout swipeRefreshLayout;
     private BlankFragment loadingFragment;
+    private ImageView imgNotify;
+    private TextView txtNotify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,8 @@ public class CartActivity extends BaseActivity {
 
         txtSumQuantity = findViewById(R.id.txt_sum_quantity);
         txtSumPrice = findViewById(R.id.txt_sum_price);
+        imgNotify = findViewById(R.id.img_notify);
+        txtNotify = findViewById(R.id.txt_notify);
 
         adapter = new CartAdapter(this, productList, this);
         recyclerView = findViewById(R.id.recycler_stored_item);
@@ -145,6 +150,11 @@ public class CartActivity extends BaseActivity {
 
                     productList = new ArrayList<>(products);
                     adapter.setData(products);
+
+                    if (products.isEmpty()) {
+                        imgNotify.setVisibility(View.VISIBLE);
+                        txtNotify.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }

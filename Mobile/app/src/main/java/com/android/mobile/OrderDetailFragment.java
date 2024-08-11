@@ -1,5 +1,7 @@
 package com.android.mobile;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +16,13 @@ import androidx.fragment.app.DialogFragment;
 import com.android.mobile.models.OrderListModel;
 import com.google.gson.Gson;
 
-public class OrderDetailsDialogFragment extends DialogFragment {
+public class OrderDetailFragment extends DialogFragment {
 
     private static final String ARG_ORDER = "order";
-
     private OrderListModel order;
 
-    public static OrderDetailsDialogFragment newInstance(OrderListModel order) {
-        OrderDetailsDialogFragment fragment = new OrderDetailsDialogFragment();
+    public static OrderDetailFragment newInstance(OrderListModel order) {
+        OrderDetailFragment fragment = new OrderDetailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_ORDER, new Gson().toJson(order));
         fragment.setArguments(args);
@@ -41,8 +42,10 @@ public class OrderDetailsDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order_details, container, false);
+        if (getDialog() != null) {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
 
-        // Initialize views and display order details
         TextView orderId = view.findViewById(R.id.order_id);
         TextView txnRef = view.findViewById(R.id.txn_ref);
         TextView orderInfo = view.findViewById(R.id.order_info);
@@ -51,7 +54,6 @@ public class OrderDetailsDialogFragment extends DialogFragment {
         TextView orderPayDate = view.findViewById(R.id.order_pay_date);
         Button buttonClose = view.findViewById(R.id.button_close);
 
-        // Set order details
         orderId.setText(String.format("%d", order.getId()));
         txnRef.setText(order.getTxn_ref());
         orderInfo.setText(order.getOrder_info());
@@ -59,7 +61,6 @@ public class OrderDetailsDialogFragment extends DialogFragment {
         orderStatus.setText(order.getStatus());
         orderPayDate.setText(order.getPay_date());
 
-        // Handle close button click
         buttonClose.setOnClickListener(v -> dismiss());
 
         return view;

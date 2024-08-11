@@ -580,40 +580,6 @@
                         </TextView>
                     </LinearLayout>
                     <LinearLayout
-                        android:id="@+id/btn_order_status"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_order_status_card"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/img_order_status"
-                                tools:ignore="DuplicateIds"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/delivery" />
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Trạng thái đơn hàng" />
-                    </LinearLayout>
-                    <LinearLayout
                         android:id="@+id/btn_logout"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"

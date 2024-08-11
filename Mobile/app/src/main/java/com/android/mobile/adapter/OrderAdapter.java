@@ -1,11 +1,15 @@
 package com.android.mobile.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -13,50 +17,46 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.BlankFragment;
-import com.android.mobile.OrderDetailsDialogFragment;
+import com.android.mobile.OrderActivity;
+import com.android.mobile.OrderDetailFragment;
 import com.android.mobile.R;
 import com.android.mobile.models.OrderListModel;
+import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.OrderApiService;
 import com.android.mobile.services.UserApiService;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     Context context;
-    private List<OrderListModel> data;
     private UserApiService apiService;
-    private BlankFragment loadingFragment;
+    private List<OrderListModel> data;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewStatus;
-        public TextView textViewSupplier;
-        public RecyclerView recyclerProductList;
+        public TextView txtIdOrder;
+        public TextView txtStatusOrder;
         public TextView totalPrice;
-        public Button buttonConfirm;
-        public Button buttonDetails;
-        public Button btnHuydon;
-        public Button button_cofirm;
-
-        public TextView txtMaDonHang;
+        public RecyclerView recyclerProductList;
+        public Button buttonDetail;
+        public Button buttonCancel;
 
         public ViewHolder(View view) {
             super(view);
-            textViewStatus = view.findViewById(R.id.textView13);
-//            textViewSupplier = view.findViewById(R.id.textView10);
-
-            txtMaDonHang = view.findViewById(R.id.txtMaDonHang);
-
-            recyclerProductList = view.findViewById(R.id.recycler_product_list);
+            txtIdOrder = view.findViewById(R.id.txt_id_order);
+            txtStatusOrder = view.findViewById(R.id.txt_status_order);
             totalPrice = view.findViewById(R.id.total_price);
-//            buttonConfirm = view.findViewById(R.id.button3);
-            buttonDetails = view.findViewById(R.id.button_details);
-
-
-            btnHuydon = view.findViewById(R.id.btnHuydon);
-            button_cofirm = view.findViewById(R.id.button_cofirm);
+            recyclerProductList = view.findViewById(R.id.recycler_product_list);
+            buttonDetail = view.findViewById(R.id.button_detail);
+            buttonCancel = view.findViewById(R.id.button_cancel);
         }
     }
 
@@ -75,17 +75,65 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(OrderAdapter.ViewHolder holder, int position) {
         OrderListModel order = data.get(position);
-        holder.textViewStatus.setText(order.getGiao_hang());
-        holder.txtMaDonHang.setText("Đơn hàng "+ order.getTxn_ref());
 
-        // update trang thai nut Huy don hang
+        holder.txtIdOrder.setText("Đơn hàng " + order.getTxn_ref());
+        holder.txtStatusOrder.setText(order.getGiao_hang().substring(0, 1).toUpperCase() + order.getGiao_hang().substring(1).toLowerCase());
+
         if (order.getGiao_hang().equals("chờ xác nhận")) {
-            holder.btnHuydon.setVisibility(View.VISIBLE);
+            holder.buttonCancel.setVisibility(View.VISIBLE);
+            holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String[] reasons = {
+                            "Tôi muốn cập nhật thông tin nhận hàng",
+                            "Tôi muốn thay đổi mã giảm giá",
+                            "Tôi muốn thay đồi sản phẩm",
+                            "Tôi tìm thấy cửa hàng khác tốt hơn",
+                            "Tôi không có nhu cầu mua nữa",
+                            "Tôi không tìm thấy lý do hủy phù hợp"};
+
+                    final int[] selectedReason = {-1};
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setTitle("Chọn lý do hủy đơn hàng");
+
+                    builder.setSingleChoiceItems(reasons, -1, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            selectedReason[0] = which;
+                        }
+                    });
+
+                    builder.setNegativeButton("Đóng", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.setPositiveButton("Xác nhận hủy", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (selectedReason[0] != -1) {
+                                String reason = reasons[selectedReason[0]];
+                                cancelOrder(order.getTxn_ref());
+                            } else {
+                                Toast.makeText(v.getContext(), "Vui lòng chọn một lý do để hủy đơn hàng", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                    builder.create().show();
+                }
+            });
         }
 
-        if (order.getGiao_hang().equals("đã giao hàng")) {
-            holder.button_cofirm.setVisibility(View.VISIBLE);
+        // Tính tổng tiền (trước khi cập nhật danh sách sản phẩm)
+        double totalPrice = 0;
+        for (OrderListModel.DetailCart cart : order.getDetail_carts()) {
+            totalPrice += cart.getProduct().getUnitPrice() * cart.getQuantity();
         }
+        holder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
 
         // Group products by supplier
         Map<String, List<OrderListModel.DetailCart>> supplierProductMap = new LinkedHashMap<>();
@@ -104,83 +152,39 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             items.addAll(entry.getValue()); // Add products of the supplier
         }
 
+        // Cập nhật danh sách sản phẩm (cập nhật số lượng và loại bỏ sản phẩm trùng lặp)
+        for (int i = 0; i < items.size(); i++) {
+            Object item = items.get(i);
+
+            if (item instanceof OrderListModel.DetailCart) {
+                OrderListModel.DetailCart detailCart = (OrderListModel.DetailCart) item;
+                boolean found = false;
+
+                for (int j = i + 1; j < items.size(); j++) {
+                    Object compareItem = items.get(j);
+
+                    if (compareItem instanceof OrderListModel.DetailCart) {
+                        OrderListModel.DetailCart compareDetailCart = (OrderListModel.DetailCart) compareItem;
+
+                        if (detailCart.getProduct().getProductID() == compareDetailCart.getProduct().getProductID()) {
+                            detailCart.setQuantity(detailCart.getQuantity() + compareDetailCart.getQuantity());
+                            items.remove(j);
+                            j--;
+                            found = true;
+                        }
+                    }
+                }
+            }
+        }
+
         // Setup product list with grouped items
         holder.recyclerProductList.setLayoutManager(new LinearLayoutManager(context));
         holder.recyclerProductList.setAdapter(new ProductOrderAdapter(context, items));
 
-        // Calculate total price
-        double totalPrice = 0;
-        for (OrderListModel.DetailCart cart : order.getDetail_carts()) {
-            totalPrice += cart.getProduct().getUnitPrice() * cart.getQuantity();
-        }
-        holder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
-
-//        // Check delivery status and update button text and color
-//        if ("đã giao hàng".equals(order.getGiao_hang())) {
-//            holder.buttonConfirm.setText("Đã nhận hàng");
-//            holder.buttonConfirm.setBackgroundColor(ContextCompat.getColor(context, R.color.orange_button_color)); // Set button color to orange
-//            holder.buttonConfirm.setTextColor(ContextCompat.getColor(context, R.color.white)); // Set button text color to white
-//            holder.buttonConfirm.setEnabled(false); // Disable button if already received
-//        } else {
-//            holder.buttonConfirm.setText("Xác nhận nhận hàng");
-//            holder.buttonConfirm.setBackgroundColor(ContextCompat.getColor(context, R.color.special_color)); // Set button color to default
-//            holder.buttonConfirm.setTextColor(ContextCompat.getColor(context, R.color.black)); // Set button text color to black (or any other default color)
-//            holder.buttonConfirm.setEnabled(true);
-
-//            holder.buttonConfirm.setEnabled(false);
-//            holder.buttonConfirm.setOnClickListener(v -> {
-//                int adapterPosition = holder.getAdapterPosition();
-//                String txnRef = order.getTxn_ref(); // Lấy txn_ref từ order
-//
-//                showLoading(); // Hiển thị loading
-//                apiService.updateDeliveryStatus(txnRef).enqueue(new Callback<Void>() {
-//                    @Override
-//                    public void onResponse(Call<Void> call, Response<Void> response) {
-//                        if (response.isSuccessful()) {
-//                            // After updating the delivery status, check the order status again
-//                            apiService.searchOrder(txnRef).enqueue(new Callback<OrderStatusModel>() { // sử dụng txnRef
-//                                @Override
-//                                public void onResponse(Call<OrderStatusModel> call, Response<OrderStatusModel> response) {
-//                                    hideLoading(); // Ẩn loading
-//                                    if (response.isSuccessful() && response.body() != null) {
-//                                        OrderStatusModel updatedOrder = response.body();
-//                                        order.setGiao_hang(updatedOrder.getGiao_hang());
-//                                        notifyItemChanged(adapterPosition);
-//                                        Toast.makeText(context, "Trạng thái giao hàng đã được cập nhật thành công", Toast.LENGTH_SHORT).show();
-//
-//                                        // Hiển thị dialog cảm ơn sau khi cập nhật thành công
-//                                        ThankYouDialogFragment thankYouDialogFragment = new ThankYouDialogFragment();
-//                                        thankYouDialogFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "ThankYouDialogFragment");
-//                                    } else {
-//                                        Toast.makeText(context, "Không thể cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onFailure(Call<OrderStatusModel> call, Throwable t) {
-//                                    hideLoading(); // Ẩn loading khi có lỗi xảy ra
-//                                    Toast.makeText(context, "Lỗi khi kiểm tra lại trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
-//                        } else {
-//                            hideLoading(); // Ẩn loading khi có lỗi xảy ra
-//                            Toast.makeText(context, "Cập nhật trạng thái giao hàng thất bại", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Void> call, Throwable t) {
-//                        Toast.makeText(context, "Lỗi khi cập nhật trạng thái giao hàng", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            });
-
-//        }
-
         // Set the order details button
-        holder.buttonDetails.setOnClickListener(v -> {
+        holder.buttonDetail.setOnClickListener(v -> {
             FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-            OrderDetailsDialogFragment dialogFragment = OrderDetailsDialogFragment.newInstance(order);
+            OrderDetailFragment dialogFragment = OrderDetailFragment.newInstance(order);
             dialogFragment.show(fragmentManager, "OrderDetailsDialogFragment");
         });
     }
@@ -194,5 +198,29 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         data.clear();
         data.addAll(newData);
         notifyDataSetChanged();
+    }
+
+    public void cancelOrder(String idOrder) {
+        if (context instanceof OrderActivity) {
+            ((OrderActivity) context).switchToTab(4);
+        }
+        OrderApiService service = ApiServiceProvider.getOrderApiService();
+        Call<ReponseModel> call = service.cancelOrder(idOrder, "cancel");
+
+        call.enqueue(new Callback<ReponseModel>() {
+            @Override
+            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Hủy đơn hàng thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e("Error", response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReponseModel> call, Throwable t) {
+                Log.e("Fail", Objects.requireNonNull(t.getMessage()));
+            }
+        });
     }
 }

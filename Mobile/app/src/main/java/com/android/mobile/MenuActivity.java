@@ -241,7 +241,6 @@ public class MenuActivity extends BaseActivity {
         btn_new = findViewById(R.id.btn_infor);
         btn_logout = findViewById(R.id.btn_logout);
         btn_product = findViewById(R.id.btn_product);
-        btn_order_status = findViewById(R.id.btn_order_status);
         user = findViewById(R.id.user);
         test = findViewById(R.id.test);
         test1 = findViewById(R.id.test1);
@@ -380,12 +379,6 @@ public class MenuActivity extends BaseActivity {
             }
         });
 
-        btn_order_status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), OrderActivity.class));
-            }
-        });
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

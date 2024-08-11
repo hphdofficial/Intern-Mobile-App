@@ -22,6 +22,26 @@
             android:paddingBottom="10dp" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <ImageView
+        android:id="@+id/img_notify"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_above="@+id/txt_notify"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:srcCompat="@drawable/cart" />
+
+    <TextView
+        android:id="@+id/txt_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:text="Giỏ hàng rỗng"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
@@ -66,4 +86,5 @@
         android:textColor="@color/beautiful_color"
         android:textSize="18sp"
         android:textStyle="bold" />
+
 </RelativeLayout>
