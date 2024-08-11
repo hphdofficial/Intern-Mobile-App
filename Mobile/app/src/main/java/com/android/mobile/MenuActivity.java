@@ -295,7 +295,7 @@ public class MenuActivity extends BaseActivity {
         btn_lythuyet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), activity_lessons.class));
+                startActivity(new Intent(getApplicationContext(), activity_chapters.class));
             }
         });
         btn_club.setOnClickListener(new View.OnClickListener() {

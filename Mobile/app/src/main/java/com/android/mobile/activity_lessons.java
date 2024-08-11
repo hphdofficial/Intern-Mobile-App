@@ -1,6 +1,7 @@
 package com.android.mobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,12 +25,14 @@ import com.android.mobile.adapter.Item_adapter;
 import com.android.mobile.adapter.TheoryAdapter;
 import com.android.mobile.adapter.lesson_adapter;
 import com.android.mobile.models.Class;
+import com.android.mobile.models.Club;
 import com.android.mobile.models.Lesson;
 import com.android.mobile.models.NewsModel;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.TheoryModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CheckinApiService;
+import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.ProductApiService;
 import com.android.mobile.services.TheoryApiService;
 
@@ -48,7 +51,7 @@ public class activity_lessons extends BaseActivity {
     private TheoryAdapter theoryAdapter;
     private EditText search_edit_text;
     private BlankFragment loadingFragment;
-
+    private String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,9 @@ public class activity_lessons extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Lý thuyết võ thuật");
         myContentE.apply();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        token = sharedPreferences.getString("access_token", null);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -111,15 +117,45 @@ public class activity_lessons extends BaseActivity {
 
     private void FetchTheory(){
         showLoading();
-        TheoryApiService apiService = ApiServiceProvider.getTheoryApiService();
-        apiService.getMartialArtsTheory().enqueue(new Callback<List<TheoryModel>>() {
+
+        ClubApiService apiServiceClub = ApiServiceProvider.getClubApiService();
+        apiServiceClub.getDetailClubMember("Bearer "+token).enqueue(new Callback<Club>() {
             @Override
-            public void onResponse(Call<List<TheoryModel>> call, Response<List<TheoryModel>> response) {
+            public void onResponse(Call<Club> call, Response<Club> response) {
                 if(response.isSuccessful()){
-                    theoryList.clear(); // Clear existing data
-                    theoryList.addAll(response.body());
-                    filterTheory(search_edit_text.getText().toString());
-                    hideLoading();
+                    Club club = response.body();
+                    int idClub = Integer.parseInt(club.getId_club());
+
+                    Intent intent = getIntent();
+                    int idBelt = intent.getIntExtra("idBelt", -1);
+
+                    // Lấy danh sách lý thuyết theo id đai vs id Club
+                    TheoryApiService apiService = ApiServiceProvider.getTheoryApiService();
+                    apiService.getMartialArtsTheoryByClubByBelt(idClub, idBelt).enqueue(new Callback<List<TheoryModel>>() {
+                        @Override
+                        public void onResponse(Call<List<TheoryModel>> call, Response<List<TheoryModel>> response) {
+                            if(response.isSuccessful()){
+                                theoryList.clear(); // Clear existing data
+                                theoryList.addAll(response.body());
+                                filterTheory(search_edit_text.getText().toString());
+                                hideLoading();
+                            }else {
+                                hideLoading();
+                                Toast.makeText(activity_lessons.this, "Lỗi lấy danh sách lý thuyết, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                                System.out.println("Active: Call onResponse");
+                                Log.e("PostData", "Error: " + response.message());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
+                            hideLoading();
+                            Toast.makeText(activity_lessons.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                            System.out.println("Active: Call Onfail");
+                            Log.e("PostData", "Failure: " + throwable.getMessage());
+                        }
+                    });
+
                 }else {
                     hideLoading();
                     Toast.makeText(activity_lessons.this, "Lỗi lấy danh sách lý thuyết, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
@@ -129,13 +165,14 @@ public class activity_lessons extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
+            public void onFailure(Call<Club> call, Throwable throwable) {
                 hideLoading();
                 Toast.makeText(activity_lessons.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+
     }
 
     private void SearchTheoryByName(String query){

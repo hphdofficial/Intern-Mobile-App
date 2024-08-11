@@ -34,6 +34,9 @@ public class ProductModel implements Parcelable {
     private String CategoryName;
     private String SupplierName;
 
+    private String sale;
+    private int noibat;
+
     public ProductModel(String categoryID, String image_link, int productID, String productName, int supplierID, String unitPrice, int unitsInStock) {
         this.categoryID = categoryID;
         this.image_link = image_link;
@@ -52,6 +55,21 @@ public class ProductModel implements Parcelable {
         this.quantity = quantity;
         this.CategoryName = categoryName;
         this.SupplierName = supplierName;
+    }
+
+    public ProductModel(String categoryID, String categoryName, String image_link, int noibat, int productID, String productName, int quantity, String sale, int supplierID, String supplierName, String unitPrice, int unitsInStock) {
+        this.categoryID = categoryID;
+        CategoryName = categoryName;
+        this.image_link = image_link;
+        this.noibat = noibat;
+        this.productID = productID;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.sale = sale;
+        this.supplierID = supplierID;
+        SupplierName = supplierName;
+        this.unitPrice = unitPrice;
+        this.unitsInStock = unitsInStock;
     }
 
     protected ProductModel(Parcel in) {
@@ -78,6 +96,22 @@ public class ProductModel implements Parcelable {
             return new ProductModel[size];
         }
     };
+
+    public int getNoibat() {
+        return noibat;
+    }
+
+    public void setNoibat(int noibat) {
+        this.noibat = noibat;
+    }
+
+    public String getSale() {
+        return sale;
+    }
+
+    public void setSale(String sale) {
+        this.sale = sale;
+    }
 
     public String getImage_link() {
         return image_link;

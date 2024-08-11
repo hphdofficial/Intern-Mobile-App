@@ -2,6 +2,7 @@ package com.android.mobile;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -89,6 +90,74 @@ public class activity_items extends BaseActivity {
         myContentE.apply();
 
         ImageButton btnFilter = findViewById(R.id.btnFilter);
+
+        Button btnAll = findViewById(R.id.btn_all);
+        Button btnAmazing = findViewById(R.id.btn_amazing);
+        Button btnNew = findViewById(R.id.btn_new);
+        Button btnSale = findViewById(R.id.btn_sale);
+
+        btnAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FetchProducts();
+                btnAll.setTextColor(Color.WHITE);
+                btnAll.setBackgroundColor(Color.parseColor("#006DFF"));
+                btnAmazing.setTextColor(Color.BLACK);
+                btnAmazing.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnNew.setTextColor(Color.BLACK);
+                btnNew.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnSale.setTextColor(Color.BLACK);
+                btnSale.setBackgroundColor(Color.parseColor("#DFDFDF"));
+            }
+        });
+
+        btnAmazing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoading();
+                btnAll.setTextColor(Color.BLACK);
+                btnAll.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnAmazing.setTextColor(Color.WHITE);
+                btnAmazing.setBackgroundColor(Color.parseColor("#006DFF"));
+                btnNew.setTextColor(Color.BLACK);
+                btnNew.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnSale.setTextColor(Color.BLACK);
+                btnSale.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                sortByAmazing("desc");
+            }
+        });
+
+        btnNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoading();
+                btnAll.setTextColor(Color.BLACK);
+                btnAll.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnAmazing.setTextColor(Color.BLACK);
+                btnAmazing.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnNew.setTextColor(Color.WHITE);
+                btnNew.setBackgroundColor(Color.parseColor("#006DFF"));
+                btnSale.setTextColor(Color.BLACK);
+                btnSale.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                sortByNew("desc");
+            }
+        });
+
+        btnSale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoading();
+                btnAll.setTextColor(Color.BLACK);
+                btnAll.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnAmazing.setTextColor(Color.BLACK);
+                btnAmazing.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnNew.setTextColor(Color.BLACK);
+                btnNew.setBackgroundColor(Color.parseColor("#DFDFDF"));
+                btnSale.setTextColor(Color.WHITE);
+                btnSale.setBackgroundColor(Color.parseColor("#006DFF"));
+                sortBySale("desc");
+            }
+        });
 
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,11 +354,6 @@ public class activity_items extends BaseActivity {
             }
         });
 
-
-
-
-
-
         if(!min_price_str.isEmpty() && !max_price_str.isEmpty()){
             min_price = Integer.parseInt(min_price_str);
             max_price = Integer.parseInt(max_price_str);
@@ -452,5 +516,107 @@ public class activity_items extends BaseActivity {
             loadingFragment.dismiss();
             loadingFragment = null;
         }
+    }
+
+    private void sortByAmazing(String desc){
+        ProductApiService apiService = ApiServiceProvider.getProductApiService();
+        apiService.sortByFeatured(desc).enqueue(new Callback<List<ProductModel>>() {
+            @Override
+            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                if(response.isSuccessful()){
+                    productList.clear();
+                    List<ProductModel> productListBySupplier = response.body();
+                    for (ProductModel product : productListBySupplier){
+                        Log.e("PostData", "Success: " + product.getProductName());
+                        productList.add(product);
+
+                    }
+                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
+                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                    recyclerView.setAdapter(itemAdapterFilter);
+                    hideLoading();
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                    hideLoading();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                hideLoading();
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
+    }
+
+    private void sortByNew(String desc){
+        ProductApiService apiService = ApiServiceProvider.getProductApiService();
+        apiService.sortByNew(desc).enqueue(new Callback<List<ProductModel>>() {
+            @Override
+            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                if(response.isSuccessful()){
+                    productList.clear();
+                    List<ProductModel> productListBySupplier = response.body();
+                    for (ProductModel product : productListBySupplier){
+                        Log.e("PostData", "Success: " + product.getProductName());
+                        productList.add(product);
+
+                    }
+                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
+                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                    recyclerView.setAdapter(itemAdapterFilter);
+                    hideLoading();
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                    hideLoading();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                hideLoading();
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
+    }
+
+    private void sortBySale(String desc){
+        ProductApiService apiService = ApiServiceProvider.getProductApiService();
+        apiService.sortBySale(desc).enqueue(new Callback<List<ProductModel>>() {
+            @Override
+            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+                if(response.isSuccessful()){
+                    productList.clear();
+                    List<ProductModel> productListBySupplier = response.body();
+                    for (ProductModel product : productListBySupplier){
+                        Log.e("PostData", "Success: " + product.getProductName());
+                        productList.add(product);
+
+                    }
+                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
+                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                    recyclerView.setAdapter(itemAdapterFilter);
+                    hideLoading();
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+                    hideLoading();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
+                hideLoading();
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
     }
 }
