@@ -21,6 +21,8 @@ import com.android.mobile.models.TokenModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -181,10 +183,15 @@ public class StartActivity extends BaseActivity {
                         finish(); // Đóng StartActivity để người dùng không quay lại trang đăng nhập
                     }
                 } else {
-                    if (response.code() == 401) {
-                        Toast.makeText(StartActivity.this, "Sai thông tin đăng nhập hoặc mật khẩu", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(StartActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    try {
+                        // Xử lý phản hồi lỗi từ server
+                        JSONObject errorObject = new JSONObject(response.errorBody().string());
+                        String errorMessage = errorObject.getString("error");
+
+                        Toast.makeText(StartActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(StartActivity.this, "Đăng nhập thất bại.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
                 }
             }
@@ -196,6 +203,8 @@ public class StartActivity extends BaseActivity {
             }
         });
     }
+
+
 
 
 
