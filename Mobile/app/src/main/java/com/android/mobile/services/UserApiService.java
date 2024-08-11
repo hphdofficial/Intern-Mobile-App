@@ -5,6 +5,7 @@ import com.android.mobile.models.ForgotPasswordModel;
 import com.android.mobile.models.LoginModel;
 import com.android.mobile.models.OrderModel;
 import com.android.mobile.models.OrderStatusModel;
+import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.models.RegisterModel;
 import com.android.mobile.models.ReponseModel;
@@ -91,5 +92,11 @@ public interface UserApiService {
 
     @GET("api/orders/All")
     Call<List<OrderStatusModel>> getAllOrders(@Header("Authorization") String token);
+
+    @GET("api/hoadon")
+    Call<List<OrderModel>> getUserOrders(@Header("Authorization") String token);
+
+    @GET("api/chitiethoadon")
+    Call<List<ProductModel>> getListProductOrder(@Query("id_order") int orderId);
 
 }

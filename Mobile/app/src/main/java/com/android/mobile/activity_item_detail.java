@@ -144,6 +144,8 @@ public class activity_item_detail extends BaseActivity {
 
                                 // Hoàn tất việc thêm Fragment
                                 transaction.commit();
+                                Toast.makeText(activity_item_detail.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
                             }else {
                                 hideLoading();
                                 System.out.println("On Response Fail");

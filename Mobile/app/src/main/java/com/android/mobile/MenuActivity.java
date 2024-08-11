@@ -392,12 +392,12 @@ public class MenuActivity extends BaseActivity {
                 logout();
             }
         });
-        test5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
+//        test5.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                logout();
+//            }
+//        });
 
         eventAnimationImage();
 

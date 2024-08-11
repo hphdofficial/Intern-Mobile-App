@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -68,6 +69,8 @@ public class PaymentQR extends BaseActivity {
 
         imageViewQRCode = findViewById(R.id.imageViewQRCode);
         buttonGenerateQRCode = findViewById(R.id.buttonGenerateQRCode);
+
+        buttonGenerateQRCode.setVisibility(View.GONE);
 
         buttonGenerateQRCode.setOnClickListener(v -> generateQRCode("Hello, QR Code!"));
         Intent intent = getIntent();
