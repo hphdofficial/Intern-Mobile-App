@@ -191,6 +191,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                 if (response.isSuccessful() && response.body() != null) {
                     newsList.clear(); // Xóa dữ liệu cũ
                     newsList.addAll(response.body());
+
                     filterNews(searchEditText.getText().toString()); // Lọc theo tìm kiếm
                 } else {
                     showNoNewsMessage();

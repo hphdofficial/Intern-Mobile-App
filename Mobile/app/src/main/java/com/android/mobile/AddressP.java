@@ -204,10 +204,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
             editor.putString("list", j);
             editor.apply();
         }
-<<<<<<< HEAD
 
-=======
->>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
     }
     @Override
     public void onItemClick(int position) {

@@ -1,14 +1,8 @@
 package com.android.mobile.models;
 
 public class LoginModel {
-<<<<<<< HEAD
-
-    private String email;
-    private String password;
-=======
     private String login;  // Có thể là username, email hoặc số điện thoại
     private String password;  // Mật khẩu của người dùng
->>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
 
     // Constructor
     public LoginModel(String login, String password) {

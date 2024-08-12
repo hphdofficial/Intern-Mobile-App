@@ -1,15 +1,20 @@
 package com.android.mobile;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,6 +27,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -35,6 +41,8 @@ import com.android.mobile.models.Club;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.HistoryClassModel;
 import com.android.mobile.models.NewsModel;
+import com.android.mobile.models.Product;
+import com.android.mobile.models.ProductSaleModel;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.APIServicePayment;
 import com.android.mobile.network.ApiServiceProvider;
@@ -43,10 +51,16 @@ import com.android.mobile.services.ClubApiService;
 import com.android.mobile.services.NewsApiService;
 import com.android.mobile.services.PaymentAPI;
 import com.android.mobile.services.UserApiService;
+import com.google.android.flexbox.FlexboxLayout;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.sql.Wrapper;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -77,14 +91,15 @@ public class MenuActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         // lưu trữ hình ảnh
         String linkAvatar = "https://firebasestorage.googleapis.com/v0/b/fir-43107.appspot.com/o/avatar-anime-707x600.jpg?alt=media&token=7f20d70e-a0d1-4244-8f35-0f32b69b1c46";
         SharedPreferences sharedPreferences = getSharedPreferences("myImage", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("linkImage", linkAvatar);
         editor.apply();  // Lưu thay đổi vào SharedPreferences
-        CreateNew();
 
+        showLoading();
 
 
       //  ImageView imageView = findViewById(R.id.img_avatar_menu);
@@ -119,62 +134,376 @@ public class MenuActivity extends BaseActivity {
         textViewBirthday= findViewById(R.id.txt_content);*/
 
         //click image
-        setEventClick();
+
 
         // Get id_club_shared and id_class_shared
         getMyClub();
         getMyClass();
 
         // Gọi phương thức loadUserData để hiển thị thông tin người dùng
-        loadUserData();
+      //  loadUserData();
+        hotP = findViewById(R.id.hotP);
+        menu = findViewById(R.id.menu);
+        getListNew();
+        getProductP();
+
+        AddLayout();
+        setEventClick();
+        RemoveView();
+        ShowMenu();
+
+
+
     }
 
-    private List<NewsModel> listNew;
+    private FlexboxLayout hotP;
+    private FlexboxLayout menu;
+    private List<ProductSaleModel> listP = new ArrayList<>();
+    private List<NewsModel> listNew = new ArrayList<>();
+    private List<LinearLayout> listMenu = new ArrayList<>();
+
+
+    public void getProductP(){
+        ProductSaleModel p = new ProductSaleModel();
+        p.setId(1);
+        p.setName("Sp1");
+        p.setPrice(1000.0);
+        p.setCategoryId(1);
+        p.setQuantity(10);
+
+        listP.add(p);
+        CreateItemP(listP);
+
+    }
+    public void ShowMenu(){
+        String token = sharedPreferences.getString("access_token", null);
+        String role = decodeRoleFromToken(token);
+        if(role.contains("0")){
+            String club = sharedPreferences.getString("id_club_shared",null);
+           if(club !=null){
+               String myClass = sharedPreferences.getString("id_class_shared",null);
+               if(myClass != null){
+                   RemoveViewUser();
+               }else {
+                   ViewUserNotRegister();
+               }
+           }else {
+               ViewUserNotClub();
+           }
+        }else {
+                RemoveViewHLV();
+        }
+    }
+    private LinearLayout btn_lythuyet;
+    private LinearLayout btn_club;
+    private LinearLayout btn_register;
+    private LinearLayout btn_class;
+    private LinearLayout btn_new;
+    private LinearLayout btn_logout;
+    private LinearLayout btn_historyclass1;
+    private LinearLayout btn_product;
+    private LinearLayout btn_sup;
+    private LinearLayout btn_order_status;
+    private LinearLayout btn_cart;
+    private LinearLayout btn_history;
+
+    public void AddLayout(){
+        menu.removeAllViews();
+        btn_new = CreateLinearLayout(btn_new,"Tin tức võ học","newin");
+        btn_lythuyet = CreateLinearLayout(btn_lythuyet,"Lý thuyết võ đạo","booklt");
+        btn_club = CreateLinearLayout(btn_club,"Câu lạc bộ","club");
+        btn_register = CreateLinearLayout(btn_register,"Đăng ký lớp học","images");
+        btn_product = CreateLinearLayout(btn_product,"Sản phẩm","product");
+        btn_cart  = CreateLinearLayout(btn_cart,"Giỏ hàng","cart1");
+        btn_order_status = CreateLinearLayout(btn_order_status,"Duyệt đơn hàng","imaghe");
+        btn_history  = CreateLinearLayout(btn_history,"Lịch sử mua hàng","history6");
+        btn_class = CreateLinearLayout(btn_class,"Lớp giảng dạy","tick");
+        btn_historyclass1 = CreateLinearLayout(btn_historyclass1,"Lịch sử đăng ký môn học","imaghe");
+
+        btn_sup = CreateLinearLayout(btn_sup,"Nhà cung cấp","house");
+
+        btn_logout = CreateLinearLayout(btn_logout,"Đăng xuất","run");
+
+
+    }
+    public void RemoveView(){
+        menu.removeView(btn_lythuyet);
+        menu.removeView(btn_historyclass1);
+
+        menu.removeView(btn_logout);
+    }
+    public void RemoveViewUser(){
+        menu.removeView(btn_order_status);
+        menu.removeView(btn_club);
+        menu.removeView(btn_class);
+        menu.removeView(btn_register);
+
+    }
+    public void ViewUserNotRegister(){
+        menu.removeView(btn_order_status);
+        menu.removeView(btn_club);
+        menu.removeView(btn_class);
+
+    }
+    public void ViewUserNotClub(){
+        menu.removeView(btn_order_status);
+        menu.removeView(btn_register);
+        menu.removeView(btn_class);
+
+    }
+    public void RemoveViewHLV(){
+        menu.removeView(btn_club);
+
+        menu.removeView(btn_register);
+
+    }
+    private LinearLayout CreateLinearLayout(LinearLayout linear, String content, String linkImage){
+        linear = new LinearLayout(this);
+        FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(
+                0, // Width sẽ được xác định bởi layout_flexBasisPercent
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        linear.setGravity(Gravity.CENTER);
+        layoutParams.setMargins(10,0,10,10);
+        layoutParams.setFlexBasisPercent(0.30f); // Chiếm 1/3 chiều rộng (33%)
+        linear.setLayoutParams(layoutParams);
+        linear.setOrientation(LinearLayout.VERTICAL);
+        CardView cardView = new CardView(this);
+        cardView.setId(View.generateViewId());
+        cardView.setLayoutParams(new ViewGroup.LayoutParams(
+                250,250
+        ));
+        cardView.setCardElevation(4);
+        cardView.setRadius(250); // Thiết lập corner radius
+
+        // Tạo ImageView và thêm vào CardView
+        ImageView imageView = new ImageView(this);
+        imageView.setId(View.generateViewId());
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        String imageName = linkImage; // Tên tệp hình ảnh mà bạn muốn đặt
+        int resourceId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+        imageView.setBackgroundResource(resourceId);
+
+        cardView.addView(imageView);
+
+
+        // tạo văn bản
+        TextView textView = new TextView(this);
+
+        textView.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+        textView.setText(content);
+        textView.setTextColor(Color.BLACK);
+        textView.setTextSize(17);
+        linear.addView(cardView);
+        linear.addView(textView);
+        menu.addView(linear);
+
+
+        return linear;
+
+        // cái 2
+
+    }
+
+    public static String decodeRoleFromToken(String jwtToken) {
+        try {
+            // Tách token thành các phần: header, payload, và signature
+            String[] parts = jwtToken.split("\\.");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid JWT token format");
+            }
+
+            // Phần payload là phần thứ 2
+            String payload = parts[1];
+
+            // Giải mã payload từ Base64Url
+            byte[] decodedBytes = Base64.decode(payload, Base64.URL_SAFE);
+            String decodedPayload = new String(decodedBytes, StandardCharsets.UTF_8);
+
+            // Chuyển đổi payload thành JSONObject
+            JSONObject jsonObject = new JSONObject(decodedPayload);
+
+            // Trích xuất role từ payload
+            return jsonObject.getString("role");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public void getListNew(){
+
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
         Call<List<NewsModel>> call = apiService.getAnouncements();
         call.enqueue(new Callback<List<NewsModel>>() {
             @Override
             public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+
                 if (response.isSuccessful() && response.body() != null) {
-                   // Log.d(TAG, "API Response: " + response.body().toString());
-                    listNew.clear(); // Clear existing data
+                    listNew.clear(); // Xóa dữ liệu cũ
                     listNew.addAll(response.body());
+                    CreateNew(listNew);
+                    //filterNews(searchEditText.getText().toString()); // Lọc theo tìm kiếm
                 } else {
-                   /* Log.d(TAG, "API Response is not successful or body is null");
-                    Toast.makeText(ActivityNews.this, "Không thể lấy danh sách tin tức", Toast.LENGTH_SHORT).show();*/
+                 //   showNoNewsMessage();
                 }
+                hideLoading();
             }
 
             @Override
             public void onFailure(Call<List<NewsModel>> call, Throwable t) {
-               /* Log.e(TAG, "API Call failed: " + t.getMessage());
-                Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();*/
+
+              //  Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
     }
-    public void CreateNew(){
-        getListNew();
-        int count = 3;
-        if(listNew.size()>0){
-            while (listNew.size()>0 && count>0){
-                NewsModel news = listNew.get(listNew.size()-1);
+    public void CreateItemP(List<ProductSaleModel> list){
+        hotP.removeAllViews();
+        int count = 1;
+        if(list.size()>0){
+            while (count <= list.size() && count<=3){
+                ProductSaleModel p = list.get(list.size()-count);
+
+
+                LinearLayout linear = new LinearLayout(this);
+                FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(
+                        0, // Width sẽ được xác định bởi layout_flexBasisPercent
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                linear.setGravity(Gravity.CENTER);
+                layoutParams.setMargins(10,0,10,10);
+                layoutParams.setFlexBasisPercent(0.480f); // Chiếm 1/3 chiều rộng (33%)
+                linear.setLayoutParams(layoutParams);
+                linear.setOrientation(LinearLayout.VERTICAL);
+                CardView cardView = new CardView(this);
+                cardView.setId(View.generateViewId());
+                cardView.setLayoutParams(new ViewGroup.LayoutParams(
+                        150,150
+                ));
+                cardView.setCardElevation(4);
+              //  cardView.setRadius(150); // Thiết lập corner radius
+
+                // Tạo ImageView và thêm vào CardView
+                ImageView imageView = new ImageView(this);
+                imageView.setId(View.generateViewId());
+                imageView.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                ));
+                String imageName = p.getLinkImage(); // Tên tệp hình ảnh mà bạn muốn đặt
+                Picasso.get().load(imageName).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageView);
+
+
+                cardView.addView(imageView);
+
+
+                // tạo văn bản
                 TextView textView = new TextView(this);
-                textView.setId(news.getId());
-                textView.setText(news.getTenvi());
-                textView.setTextColor(Color.RED);
-                textView.setTextSize(24);
-                linearinfor.addView(textView);
-                Animation blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink);
-                textView.startAnimation(blinkAnimation);
+
+                textView.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+                textView.setText("SP: "+p.getName());
+                textView.setTextColor(Color.BLACK);
+                textView.setTextSize(14);
+
+                TextView textView1 = new TextView(this);
+
+                textView1.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+                textView1.setText("Price: "+p.getPrice().toString());
+                textView1.setTextColor(Color.BLACK);
+                textView1.setTextSize(14);
+
+                TextView textView2 = new TextView(this);
+
+                textView2.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+                textView2.setText("SL bán: "+p.getQuantity());
+                textView2.setTextColor(Color.BLACK);
+                textView2.setTextSize(14);
+
+                linear.addView(cardView);
+                linear.addView(textView);
+                linear.addView(textView1);
+                linear.addView(textView2);
+
+                linear.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent iten = new Intent(getApplicationContext(),activity_item_detail.class);
+                        iten.putExtra("id",p.getId());
+                        iten.putExtra("IDSupplier",p.getCategoryId());
+                        iten.putExtra("categoryName","Không xác định");
+                    }
+                });
 
 
 
 
-                listNew.remove(listNew.size()-1);
-                count = count-1;
+                hotP.addView(linear);
+
+                count = count+1;
+
             }
-            setContentView(linearinfor);
+
+            //setContentView(linearinfor);
+        }
+
+    }
+
+    public void CreateNew(List<NewsModel> list){
+        linearinfor.removeAllViews();
+        TextView t = new TextView(getApplicationContext());
+
+        t.setText("Thông báo" + "(NEW)");
+        t.setTextColor(Color.RED);
+        t.setTextSize(20);
+
+        linearinfor.addView(t);
+        int count = 1;
+        if(list.size()>0){
+            while (list.size()>0 && count<=3){
+
+                NewsModel news = list.get(list.size()-count);
+                TextView textView = new TextView(getApplicationContext());
+                textView.setPadding(10,0,0,0);
+                textView.setId(news.getId());
+                textView.setText("*"+news.getTenvi());
+                textView.setTextColor(Color.RED);
+                textView.setTextSize(18);
+                String imageUrl = "http://tambinh.websinhvien.net/thumbs/340x280x1/upload/news/" + news.getPhoto();
+                // event
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getApplicationContext(), NewsDetailActivity.class);
+                        intent.putExtra("NewsTitle", news.getTenvi());
+                        intent.putExtra("NewsContent", news.getNoidungvi());
+                        intent.putExtra("NewsImage", imageUrl); // Pass the full image URL
+                        startActivity(intent);
+                    }
+                });
+
+                linearinfor.addView(textView);
+
+                ObjectAnimator colorAnim = ObjectAnimator.ofInt(
+                        textView, "textColor",
+                        Color.RED, Color.BLUE, Color.GREEN
+                );
+
+                // Sử dụng ArgbEvaluator để chuyển đổi màu mượt mà
+                colorAnim.setEvaluator(new ArgbEvaluator());
+
+                // Thiết lập thời gian chuyển đổi màu
+                colorAnim.setDuration(3000);
+                count = count+1;
+
+            }
+
+            //setContentView(linearinfor);
         }
     }
     public void getMyClub() {
@@ -269,16 +598,7 @@ public class MenuActivity extends BaseActivity {
         return true;
     }
 
-    private LinearLayout btn_lythuyet;
-    private LinearLayout btn_club;
-    private LinearLayout btn_register;
-    private LinearLayout btn_class;
-    private LinearLayout btn_new;
-    private LinearLayout btn_logout;
-    private LinearLayout btn_historyclass1;
-    private LinearLayout btn_product;
-    private LinearLayout btn_sup;
-    private LinearLayout btn_order_status;
+
     private ImageView img_avatar_menu;
     private ImageView test;
     private ImageView test1;
@@ -286,27 +606,10 @@ public class MenuActivity extends BaseActivity {
     private ImageView test3;
     private ImageView test4;
     private ImageView test5;
-    private LinearLayout btn_cart;
-    private LinearLayout btn_history;
+
     private ConstraintLayout user;
     public void setEventClick(){
-        btn_lythuyet = findViewById(R.id.btn_lythuyet);
-        btn_club = findViewById(R.id.btn_club);
-        btn_register = findViewById(R.id.btn_register);
-        btn_class = findViewById(R.id.btn_class);
-        btn_new = findViewById(R.id.btn_infor);
-        btn_logout = findViewById(R.id.btn_logout);
-        btn_product = findViewById(R.id.btn_product);
-        user = findViewById(R.id.user);
-        test = findViewById(R.id.test);
-        test1 = findViewById(R.id.test1);
-        test2 = findViewById(R.id.test2);
-        test3 = findViewById(R.id.test3);
-        test4 = findViewById(R.id.test4);
-        test5 = findViewById(R.id.test5);
-        btn_sup = findViewById(R.id.btn_sup);
-        btn_cart = findViewById(R.id.btn_cart);
-        btn_history = findViewById(R.id.btn_history);
+
 
         btn_history.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,7 +618,7 @@ public class MenuActivity extends BaseActivity {
             }
         });
 
-        showLoading();
+
 
         btn_cart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -333,19 +636,7 @@ public class MenuActivity extends BaseActivity {
 
       //  img_avatar_menu = findViewById(R.id.img_avatar_menu);
 
-        btn_historyclass1 = findViewById(R.id.btn_historyclass1);
-        img_avatar_menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ActivityDetailMember.class));
-            }
-        });
-        user.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ActivityDetailMember.class));
-            }
-        });
+
 
         btn_lythuyet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -448,7 +739,7 @@ public class MenuActivity extends BaseActivity {
 //            }
 //        });
 
-        eventAnimationImage();
+      //  eventAnimationImage();
 
     }
     private void logout() {
@@ -552,11 +843,11 @@ public class MenuActivity extends BaseActivity {
                             } else {
                              //   imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
                             }
-                            hideLoading();
+
 
                         }
                     } else {
-                        hideLoading();
+
                         Toast.makeText(MenuActivity.this, "Không thể lấy thông tin cá nhân", Toast.LENGTH_SHORT).show();
                     }
                 }
