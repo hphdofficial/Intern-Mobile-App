@@ -6,15 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.android.mobile.OrderCancelFragment;
-import com.android.mobile.OrderShippingFragment;
-import com.android.mobile.OrderSuccessFragment;
-import com.android.mobile.OrderWaitConfirmFragment;
-import com.android.mobile.OrderWaitProductFragment;
+import com.android.mobile.OrderFragment;
 
 public class OrderPagerAdapter extends FragmentStateAdapter {
-
-
     public OrderPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
@@ -24,17 +18,17 @@ public class OrderPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new OrderWaitConfirmFragment();
+                return new OrderFragment("chờ xác nhận");
             case 1:
-                return new OrderWaitProductFragment();
+                return new OrderFragment("chờ lấy hàng");
             case 2:
-                return new OrderShippingFragment();
+                return new OrderFragment("đang giao hàng");
             case 3:
-                return new OrderSuccessFragment();
+                return new OrderFragment("đã giao hàng");
             case 4:
-                return new OrderCancelFragment();
+                return new OrderFragment("đã hủy");
             default:
-                return new OrderWaitConfirmFragment();
+                return new OrderFragment("chờ xác nhận");
         }
     }
 
@@ -42,5 +36,4 @@ public class OrderPagerAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return 5;
     }
-
 }

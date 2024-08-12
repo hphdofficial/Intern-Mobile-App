@@ -13,25 +13,26 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <!-- Product Image -->
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logostartmain" />
 
-        <!-- Product Details -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="12dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txt_name_shipping_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="Sản phẩm A"
                 android:textSize="20sp" />
 
@@ -39,18 +40,21 @@
                 android:id="@+id/txt_price_product"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="10,000 VND"
                 android:textColor="#FF0000"
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <!-- Quantity -->
         <TextView
             android:id="@+id/txt_quantity_shipping_item"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="x 1"
-            android:textSize="20sp" />
+            android:textStyle="italic"
+            android:textSize="18sp" />
+
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

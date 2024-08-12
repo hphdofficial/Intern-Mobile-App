@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -33,7 +32,7 @@ public class OrderActivity extends BaseActivity {
 
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Đơn hàng của tôi");
+        myContentE.putString("title", "Lịch sử mua hàng");
         myContentE.apply();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -69,30 +68,10 @@ public class OrderActivity extends BaseActivity {
                 }
             }
         }).attach();
+    }
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    Toast.makeText(OrderActivity.this, "Selected: Chờ xác nhận", Toast.LENGTH_SHORT).show();
-                } else if (tab.getPosition() == 1) {
-                    Toast.makeText(OrderActivity.this, "Selected: Chờ lấy hàng", Toast.LENGTH_SHORT).show();
-                } else if (tab.getPosition() == 2) {
-                    Toast.makeText(OrderActivity.this, "Selected: Đang giao hàng", Toast.LENGTH_SHORT).show();
-                } else if (tab.getPosition() == 3) {
-                    Toast.makeText(OrderActivity.this, "Selected: Đã giao", Toast.LENGTH_SHORT).show();
-                } else if (tab.getPosition() == 4) {
-                    Toast.makeText(OrderActivity.this, "Selected: Đã hủy", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+    public void switchToTab(int tabPosition) {
+        ViewPager2 viewPager = findViewById(R.id.viewPager);
+        viewPager.setCurrentItem(tabPosition);
     }
 }

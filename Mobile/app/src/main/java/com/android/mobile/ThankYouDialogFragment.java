@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class ThankYouDialogFragment extends DialogFragment {
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -21,17 +20,13 @@ public class ThankYouDialogFragment extends DialogFragment {
         Button buttonViewHistory = view.findViewById(R.id.buttonViewHistory);
         Button buttonGoHome = view.findViewById(R.id.buttonGoHome);
 
-        // Xử lý sự kiện nút "Xem lịch sử mua hàng"
         buttonViewHistory.setOnClickListener(v -> {
-            // Chuyển sang activity lịch sử mua hàng
-            Intent intent = new Intent(getActivity(), HistoryOrderActivity.class);
+            Intent intent = new Intent(getActivity(), OrderActivity.class);
             startActivity(intent);
             dismiss();
         });
 
-        // Xử lý sự kiện nút "Trở về trang chủ"
         buttonGoHome.setOnClickListener(v -> {
-            // Chuyển sang activity trang chủ
             Intent intent = new Intent(getActivity(), StartActivity.class);
             startActivity(intent);
             dismiss();

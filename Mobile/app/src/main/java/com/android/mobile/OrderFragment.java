@@ -3,90 +3,114 @@ package com.android.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.android.mobile.R;
-import com.android.mobile.adapter.ShippingOrderAdapter;
-import com.android.mobile.models.OrderStatusModel;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.mobile.adapter.OrderAdapter;
+import com.android.mobile.models.OrderListModel;
 import com.android.mobile.network.ApiServiceProvider;
+import com.android.mobile.services.OrderApiService;
 import com.android.mobile.services.UserApiService;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderFragment extends Fragment {
-
-    private static final String ARG_STATUS = "status";
+    private OrderApiService apiService;
     private RecyclerView recyclerView;
-    private ShippingOrderAdapter shippingItemAdapter;
-    private List<OrderStatusModel> orderList;
-    private UserApiService apiService;
+    private OrderAdapter shippingItemAdapter;
+    private String statusOrder;
+    private ImageView imgNotify;
+    private TextView txtNotify;
 
-    public static OrderFragment newInstance(String status) {
-        OrderFragment fragment = new OrderFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_STATUS, status);
-        fragment.setArguments(args);
-        return fragment;
+    public OrderFragment(String statusOrder) {
+        this.statusOrder = statusOrder;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_order_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_order, container, false);
+
+        apiService = ApiServiceProvider.getOrderApiService();
+        imgNotify = view.findViewById(R.id.img_notify);
+        txtNotify = view.findViewById(R.id.txt_notify);
+
+        shippingItemAdapter = new OrderAdapter(getContext(), new ArrayList<>());
         recyclerView = view.findViewById(R.id.recycler_shipping_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        apiService = ApiServiceProvider.getUserApiService();
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(shippingItemAdapter);
 
-        String status = getArguments().getString(ARG_STATUS);
-        fetchOrders(status);
+        fetchListOrder();
 
         return view;
     }
 
-    private void fetchOrders(String status) {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString("access_token", null);
+    private void fetchListOrder() {
+        shippingItemAdapter.setData(new ArrayList<>());
+        imgNotify.setVisibility(View.GONE);
+        txtNotify.setText("Loading...");
+        if (getView() == null) return;
 
-        apiService.getAllOrders("Bearer " + accessToken).enqueue(new Callback<List<OrderStatusModel>>() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString("access_token", null);
+        apiService.getListOrder("Bearer " + accessToken).enqueue(new Callback<List<OrderListModel>>() {
             @Override
-            public void onResponse(Call<List<OrderStatusModel>> call, Response<List<OrderStatusModel>> response) {
+            public void onResponse(Call<List<OrderListModel>> call, Response<List<OrderListModel>> response) {
                 if (response.isSuccessful()) {
-                    orderList = response.body();
-                    if (orderList != null && !orderList.isEmpty()) {
-                        // Lọc các đơn hàng có trạng thái "chưa giao hàng"
-                        List<OrderStatusModel> filteredOrders = new ArrayList<>();
-                        for (OrderStatusModel order : orderList) {
-                            if ("chưa giao hàng".equalsIgnoreCase(order.getGiao_hang())) {
-                                filteredOrders.add(order);
+                    List<OrderListModel> orders = response.body();
+                    List<OrderListModel> orderList = new ArrayList<>();
+                    if (orders != null && !orders.isEmpty()) {
+                        for (OrderListModel order : orders) {
+                            if (statusOrder.equalsIgnoreCase(order.getGiao_hang())) {
+                                orderList.add(order);
                             }
                         }
-
-                        // Cập nhật adapter với danh sách đơn hàng đã lọc
-                        shippingItemAdapter = new ShippingOrderAdapter(getContext(), filteredOrders);
-                        recyclerView.setAdapter(shippingItemAdapter);
-                    } else {
-                        Toast.makeText(getContext(), "Không có đơn hàng nào", Toast.LENGTH_SHORT).show();
+                        if (!orderList.isEmpty()) {
+                            Collections.sort(orderList, new Comparator<OrderListModel>() {
+                                @Override
+                                public int compare(OrderListModel o1, OrderListModel o2) {
+                                    return o2.getPay_date().compareTo(o1.getPay_date());
+                                }
+                            });
+                            txtNotify.setText("");
+                            shippingItemAdapter.setData(orderList);
+                        } else {
+                            imgNotify.setVisibility(View.VISIBLE);
+                            txtNotify.setText("Bạn chưa có đơn hàng nào cả");
+                        }
                     }
                 } else {
-                    Toast.makeText(getContext(), "Không thể tải đơn hàng", Toast.LENGTH_SHORT).show();
+                    Log.e("Error", response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<OrderStatusModel>> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<List<OrderListModel>> call, @NonNull Throwable t) {
+                Log.e("Fail", Objects.requireNonNull(t.getMessage()));
             }
         });
     }
-}
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchListOrder();
+    }
+}
