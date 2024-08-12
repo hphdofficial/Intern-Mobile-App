@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class SupplierProductActivity extends BaseActivity {
     private static final String NAME_SHARED = "myContent";
     private static final String KEY_TITLE = "title";
     private static final String VALUE_INFO = "SupplierProduct";
+    private BlankFragment loadingFragment;
 
     private List<ProductModel> products = new ArrayList<>();
     private ItemSupplierProductAdapter itemAdapter;
@@ -71,7 +73,7 @@ public class SupplierProductActivity extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
         itemAdapter = new ItemSupplierProductAdapter(this, products);
@@ -85,6 +87,12 @@ public class SupplierProductActivity extends BaseActivity {
     }
 
     private void fetchSupplierInfo(int supplierID) {
+        if (supplierID == -1) {
+            Toast.makeText(this, "Invalid Supplier ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        showLoading();
         SupplierApiService apiService = ApiServiceProvider.getSupplierApiService();
         apiService.getSupplier(supplierID).enqueue(new Callback<SupplierModel>() {
             @Override
@@ -93,19 +101,30 @@ public class SupplierProductActivity extends BaseActivity {
                     SupplierModel supplier = response.body();
                     txtSupplierName.setText(supplier.getSupplierName());
                     txtSupplierAddress.setText(supplier.getAddress());
+                    hideLoading();
                 } else {
+                    hideLoading();
                     // Handle error
+                    Toast.makeText(SupplierProductActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<SupplierModel> call, Throwable t) {
+                hideLoading();
                 // Handle failure
+                Toast.makeText(SupplierProductActivity.this, "Failure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void fetchProductsBySupplier(int supplierID) {
+        if (supplierID == -1) {
+            Toast.makeText(this, "Invalid Supplier ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        showLoading();
         SupplierApiService apiService = ApiServiceProvider.getSupplierApiService();
         apiService.getProductsBySupplier(supplierID).enqueue(new Callback<List<ProductModel>>() {
             @Override
@@ -114,16 +133,35 @@ public class SupplierProductActivity extends BaseActivity {
                     products.clear();  // Clear existing data
                     products.addAll(response.body());
                     itemAdapter.notifyDataSetChanged();
+                    hideLoading();
                 } else {
+                    hideLoading();
                     // Handle the error
+                    Toast.makeText(SupplierProductActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<ProductModel>> call, Throwable t) {
+                hideLoading();
                 // Handle the failure
+                Toast.makeText(SupplierProductActivity.this, "Failure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 
     private void saveToSharedPreferences(String key, String value) {
@@ -138,5 +176,4 @@ public class SupplierProductActivity extends BaseActivity {
         intent.putExtra("SupplierID", supplierID);
         startActivity(intent);
     }
-
 }

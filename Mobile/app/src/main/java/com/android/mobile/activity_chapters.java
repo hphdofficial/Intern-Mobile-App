@@ -1,10 +1,13 @@
 package com.android.mobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -13,47 +16,66 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.android.mobile.adapter.Adapter_Register_belt;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.Chapter_adapter;
+import com.android.mobile.adapter.Theory_Belt_Adapter;
+import com.android.mobile.models.Belt;
 import com.android.mobile.models.Chapter;
+import com.android.mobile.network.APIServicePayment;
+import com.android.mobile.services.PaymentAPI;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class activity_chapters extends BaseActivity {
-    Chapter chapter1 = new Chapter("Khởi quyền", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
-    Chapter chapter2 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
-    Chapter chapter3 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
-    Chapter chapter4 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
-    Chapter chapter5 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
-    Chapter chapter6 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
-    Chapter chapter7 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
-    Chapter chapter8 = new Chapter("Bóp cổ trước lối 1 và 2", 100, "Bài tập gồm bộ: đấm thẳng, chém số 1, 2, 3, đá thẳng, song móc, song múc, song đầm, chỏ số 1, 2", "");
-    ArrayList<Chapter> chapters = new ArrayList<>();
 
+    List<Belt> belts = new ArrayList<>();
+    private BlankFragment loadingFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapters);
 
-        chapters.add(chapter1);
-        chapters.add(chapter2);
-        chapters.add(chapter3);
-        chapters.add(chapter4);
-        chapters.add(chapter5);
-        chapters.add(chapter6);
-        chapters.add(chapter7);
-        chapters.add(chapter8);
-
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
 
 
+        showLoading();
+        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+        Call<List<Belt>> call = apiService.getAllBelt();
+        call.enqueue(new Callback<List<Belt>>() {
+            @Override
+            public void onResponse(Call<List<Belt>> call, Response<List<Belt>> response) {
+                if(response.isSuccessful()){
+                    belts = response.body();
+                    Theory_Belt_Adapter beltAdapter = new Theory_Belt_Adapter(belts, activity_chapters.this);
+                    RecyclerView recyclerView = findViewById(R.id.chapter_recycleview);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(activity_chapters.this));
+                    recyclerView.setAdapter(beltAdapter);
+                    hideLoading();
+                }else{
+                    Toast.makeText(activity_chapters.this, "Lỗi lấy dữ liệu", Toast.LENGTH_SHORT).show();
+                    hideLoading();
+                }
 
+            }
 
-        Chapter_adapter chapterAdapter = new Chapter_adapter(this, chapters);
-        RecyclerView recyclerView = findViewById(R.id.chapter_recycleview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(chapterAdapter);
+            @Override
+            public void onFailure(Call<List<Belt>> call, Throwable t) {
+                Toast.makeText(activity_chapters.this, "Lỗi kết nối mạng", Toast.LENGTH_SHORT).show();
+                hideLoading();
+            }
+        });
+
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Danh sách lý thuyết");
+        myContentE.apply();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -62,7 +84,20 @@ public class activity_chapters extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
+
+
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

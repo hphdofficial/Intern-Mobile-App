@@ -1,8 +1,13 @@
 package com.android.mobile.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
-public class ProductModel {
+public class ProductModel implements Parcelable {
     @SerializedName("ProductID")
     private int productID;
 
@@ -29,6 +34,9 @@ public class ProductModel {
     private String CategoryName;
     private String SupplierName;
 
+    private String sale;
+    private int noibat;
+
     public ProductModel(String categoryID, String image_link, int productID, String productName, int supplierID, String unitPrice, int unitsInStock) {
         this.categoryID = categoryID;
         this.image_link = image_link;
@@ -47,6 +55,62 @@ public class ProductModel {
         this.quantity = quantity;
         this.CategoryName = categoryName;
         this.SupplierName = supplierName;
+    }
+
+    public ProductModel(String categoryID, String categoryName, String image_link, int noibat, int productID, String productName, int quantity, String sale, int supplierID, String supplierName, String unitPrice, int unitsInStock) {
+        this.categoryID = categoryID;
+        CategoryName = categoryName;
+        this.image_link = image_link;
+        this.noibat = noibat;
+        this.productID = productID;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.sale = sale;
+        this.supplierID = supplierID;
+        SupplierName = supplierName;
+        this.unitPrice = unitPrice;
+        this.unitsInStock = unitsInStock;
+    }
+
+    protected ProductModel(Parcel in) {
+        productID = in.readInt();
+        productName = in.readString();
+        supplierID = in.readInt();
+        unitPrice = in.readString();
+        unitsInStock = in.readInt();
+        categoryID = in.readString();
+        image_link = in.readString();
+        quantity = in.readInt();
+        CategoryName = in.readString();
+        SupplierName = in.readString();
+    }
+
+    public static final Creator<ProductModel> CREATOR = new Creator<ProductModel>() {
+        @Override
+        public ProductModel createFromParcel(Parcel in) {
+            return new ProductModel(in);
+        }
+
+        @Override
+        public ProductModel[] newArray(int size) {
+            return new ProductModel[size];
+        }
+    };
+
+    public int getNoibat() {
+        return noibat;
+    }
+
+    public void setNoibat(int noibat) {
+        this.noibat = noibat;
+    }
+
+    public String getSale() {
+        return sale;
+    }
+
+    public void setSale(String sale) {
+        this.sale = sale;
     }
 
     public String getImage_link() {
@@ -126,5 +190,24 @@ public class ProductModel {
 
     public void setSupplierName(String supplierName) {
         SupplierName = supplierName;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(productID);
+        dest.writeString(productName);
+        dest.writeInt(supplierID);
+        dest.writeString(unitPrice);
+        dest.writeInt(unitsInStock);
+        dest.writeString(categoryID);
+        dest.writeString(image_link);
+        dest.writeInt(quantity);
+        dest.writeString(CategoryName);
+        dest.writeString(SupplierName);
     }
 }

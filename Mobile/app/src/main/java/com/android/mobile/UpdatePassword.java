@@ -19,6 +19,8 @@ import com.android.mobile.models.UpdatePasswordModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,6 +33,9 @@ public class UpdatePassword extends BaseActivity {
     private ImageButton buttonToggleCurrentPasswordVisibility, buttonToggleNewPasswordVisibility, buttonTogglePasswordConfirmationVisibility;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
+
+    private BlankFragment loadingFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,7 @@ public class UpdatePassword extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         // Khởi tạo các view
@@ -113,22 +118,39 @@ public class UpdatePassword extends BaseActivity {
             updatePasswordModel.setNew_pass_confirmation(confirmPassword);
 
             UserApiService apiService = ApiServiceProvider.getUserApiService();
+            showLoading();
             Call<ReponseModel> call = apiService.updatePassword("Bearer " + token, updatePasswordModel);
             call.enqueue(new Callback<ReponseModel>() {
                 @Override
                 public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                    hideLoading();
                     if (response.isSuccessful() && response.body() != null) {
                         Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(UpdatePassword.this, MenuActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại", Toast.LENGTH_SHORT).show();
+                        try {
+                            // Xử lý phản hồi lỗi từ server
+                            String errorMessage = response.errorBody().string();
+                            JSONObject errorObject = new JSONObject(errorMessage);
+                            String error = errorObject.optString("error");
+
+                            if (response.code() == 400 && error.equals("Mật khẩu hiện tại không đúng")) {
+                                Toast.makeText(UpdatePassword.this, "Mật khẩu hiện tại không đúng", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại: " + error, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại.", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ReponseModel> call, Throwable t) {
+                    hideLoading();
                     Toast.makeText(UpdatePassword.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -136,4 +158,20 @@ public class UpdatePassword extends BaseActivity {
             Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
 }

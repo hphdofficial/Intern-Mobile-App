@@ -10,14 +10,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/fragment_container"
-        >
+        android:layout_below="@+id/fragment_container">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
 
+            <!-- Avatar Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/avatarCard"
                 android:layout_width="100dp"
@@ -52,45 +52,53 @@
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- Edit Info Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_edit_info"
-                android:layout_width="110dp"
+                android:layout_width="0dp"
+                android:layout_marginLeft="18dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/avatarCard"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.7"
+                app:layout_constraintStart_toEndOf="@id/avatarCard"
+                app:layout_constraintTop_toTopOf="@id/avatarCard"
                 android:text="Sửa thông tin"
                 app:cornerRadius="8dp"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/colorPrimary" />
 
+            <!-- Edit Password Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_edit_password"
-                android:layout_width="110dp"
+                android:layout_width="0dp"
+                android:layout_marginLeft="18dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.7"
+                app:layout_constraintStart_toEndOf="@id/avatarCard"
                 app:layout_constraintTop_toBottomOf="@id/button_edit_info"
                 android:text="Sửa mật khẩu"
                 app:cornerRadius="8dp"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/colorPrimary" />
 
+            <!-- Class Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/classCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintStart_toEndOf="@id/avatarCard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/avatarCard"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
 
@@ -113,15 +121,14 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- User Info Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintStart_toEndOf="@id/avatarCard"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/classCard"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
@@ -130,6 +137,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
+
+                    <!-- Email Field -->
                     <TextView
                         android:id="@+id/textViewEmailLabel"
                         android:layout_width="wrap_content"
@@ -146,6 +155,7 @@
                         android:text="email@example.com"
                         android:padding="4dp"/>
 
+                    <!-- Username Field -->
                     <TextView
                         android:id="@+id/textViewUsernameLabel"
                         android:layout_width="wrap_content"
@@ -162,6 +172,7 @@
                         android:text="nguyenvana"
                         android:padding="4dp"/>
 
+                    <!-- Name Field -->
                     <TextView
                         android:id="@+id/textViewTenLabel"
                         android:layout_width="wrap_content"
@@ -178,6 +189,7 @@
                         android:text="Nguyen Van A"
                         android:padding="4dp"/>
 
+                    <!-- Phone Field -->
                     <TextView
                         android:id="@+id/textViewDienthoaiLabel"
                         android:layout_width="wrap_content"
@@ -194,6 +206,7 @@
                         android:text="0123456789"
                         android:padding="4dp"/>
 
+                    <!-- Address Field -->
                     <TextView
                         android:id="@+id/textViewDiachiLabel"
                         android:layout_width="wrap_content"
@@ -207,9 +220,10 @@
                         android:id="@+id/textViewDiachiValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="123 Đường ABC, Quận 1, TP.HCM,"
+                        android:text="123 Đường ABC, Quận 1, TP.HCM"
                         android:padding="4dp"/>
 
+                    <!-- Gender Field -->
                     <TextView
                         android:id="@+id/textViewGioitinhLabel"
                         android:layout_width="wrap_content"
@@ -226,6 +240,7 @@
                         android:text="Nam"
                         android:padding="4dp"/>
 
+                    <!-- Birthday Field -->
                     <TextView
                         android:id="@+id/textViewNgaysinhLabel"
                         android:layout_width="wrap_content"
@@ -242,6 +257,7 @@
                         android:text="1990-01-01"
                         android:padding="4dp"/>
 
+                    <!-- Height Field -->
                     <TextView
                         android:id="@+id/textViewChieucaoLabel"
                         android:layout_width="wrap_content"
@@ -258,6 +274,7 @@
                         android:text="175"
                         android:padding="4dp"/>
 
+                    <!-- Weight Field -->
                     <TextView
                         android:id="@+id/textViewCannangLabel"
                         android:layout_width="wrap_content"
@@ -274,6 +291,7 @@
                         android:text="70"
                         android:padding="4dp"/>
 
+                    <!-- Guardian Name Field -->
                     <TextView
                         android:id="@+id/textViewHotengiamhoLabel"
                         android:layout_width="wrap_content"
@@ -290,6 +308,7 @@
                         android:text="ABC"
                         android:padding="4dp"/>
 
+                    <!-- Guardian Phone Field -->
                     <TextView
                         android:id="@+id/textViewDienthoaiGiamhoLabel"
                         android:layout_width="wrap_content"
@@ -306,6 +325,7 @@
                         android:text="0912312312"
                         android:padding="4dp"/>
 
+                    <!-- Last Login Field -->
                     <TextView
                         android:id="@+id/textViewLastloginLabel"
                         android:layout_width="wrap_content"

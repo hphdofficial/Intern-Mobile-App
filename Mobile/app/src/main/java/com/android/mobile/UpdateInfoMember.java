@@ -22,6 +22,8 @@ import com.android.mobile.models.UpdateInfoModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,6 +41,9 @@ public class UpdateInfoMember extends BaseActivity {
     private Button buttonUpdateInfo;
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
+
+    private BlankFragment loadingFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class UpdateInfoMember extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
         // Khởi tạo các view
@@ -104,17 +109,37 @@ public class UpdateInfoMember extends BaseActivity {
         buttonUpdateInfo.setOnClickListener(v -> updateInfo());
     }
 
+
+    private boolean isValidDateFormat(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false); // Đảm bảo không chấp nhận các ngày không hợp lệ như 2024-02-30
+        try {
+            sdf.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
     private void updateInfo() {
         String token = sharedPreferences.getString("access_token", null);
         if (token != null) {
             if (isValidInput()) {
+                String ngaysinh = editTextNgaysinh.getText().toString();
+
+                // Kiểm tra định dạng ngày sinh
+                if (!isValidDateFormat(ngaysinh)) {
+                    Toast.makeText(this, "Ngày sinh phải có định dạng Y-m-d, ví dụ: 2024-08-11", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 UpdateInfoModel updateInfoModel = new UpdateInfoModel();
                 updateInfoModel.setUsername(editTextUsername.getText().toString());
                 updateInfoModel.setEmail(editTextEmail.getText().toString());
                 updateInfoModel.setTen(editTextTen.getText().toString());
                 updateInfoModel.setDienthoai(editTextDienthoai.getText().toString());
                 updateInfoModel.setDiachi(editTextDiachi.getText().toString());
-                updateInfoModel.setNgaysinh(editTextNgaysinh.getText().toString());
+                updateInfoModel.setNgaysinh(ngaysinh);
                 updateInfoModel.setChieucao(editTextChieucao.getText().toString());
                 updateInfoModel.setCannang(editTextCannang.getText().toString());
                 int selectedGioitinhId = radioGroupGioitinh.getCheckedRadioButtonId();
@@ -124,44 +149,33 @@ public class UpdateInfoMember extends BaseActivity {
                     updateInfoModel.setGioitinh("Nữ");
                 }
 
-                int age = getAgeFromBirthdate(editTextNgaysinh.getText().toString());
+                int age = getAgeFromBirthdate(ngaysinh);
                 if (age < 18) {
                     updateInfoModel.setHoten_giamho(editTextHotengiamho.getText().toString());
                     updateInfoModel.setDienthoai_giamho(editTextDienthoaigiamho.getText().toString());
                 }
 
-                // In log các giá trị
-                Log.d("UpdateInfo", "Username: " + updateInfoModel.getUsername());
-                Log.d("UpdateInfo", "Email: " + updateInfoModel.getEmail());
-                Log.d("UpdateInfo", "Ten: " + updateInfoModel.getTen());
-                Log.d("UpdateInfo", "Dienthoai: " + updateInfoModel.getDienthoai());
-                Log.d("UpdateInfo", "Diachi: " + updateInfoModel.getDiachi());
-                Log.d("UpdateInfo", "Ngaysinh: " + updateInfoModel.getNgaysinh());
-                Log.d("UpdateInfo", "Hoten_giamho: " + updateInfoModel.getHoten_giamho());
-                Log.d("UpdateInfo", "Dienthoai_giamho: " + updateInfoModel.getDienthoai_giamho());
-                Log.d("UpdateInfo", "Chieucao: " + updateInfoModel.getChieucao());
-                Log.d("UpdateInfo", "Cannang: " + updateInfoModel.getCannang());
-                Log.d("UpdateInfo", "Gioitinh: " + updateInfoModel.getGioitinh());
-
                 UserApiService apiService = ApiServiceProvider.getUserApiService();
+                showLoading();
                 Call<ReponseModel> call = apiService.updateInfo("Bearer " + token, updateInfoModel);
                 call.enqueue(new Callback<ReponseModel>() {
                     @Override
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                        hideLoading();
                         if (response.isSuccessful() && response.body() != null) {
                             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
-                            // Chuyển hướng về ActivityDetailMember và load lại thông tin
                             Intent intent = new Intent(UpdateInfoMember.this, ActivityDetailMember.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
                         } else {
-                            Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();
+                            handleErrorResponse(response);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ReponseModel> call, Throwable t) {
+                        hideLoading();
                         Toast.makeText(UpdateInfoMember.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -170,6 +184,31 @@ public class UpdateInfoMember extends BaseActivity {
             Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void handleErrorResponse(Response<ReponseModel> response) {
+        try {
+            String errorMessage = response.errorBody().string();
+            JSONObject errorObject = new JSONObject(errorMessage);
+            JSONObject errors = errorObject.getJSONObject("error");
+
+            if (errors.has("username")) {
+                Toast.makeText(UpdateInfoMember.this, "Tên tài khoản đã tồn tại.", Toast.LENGTH_SHORT).show();
+            } else if (errors.has("email")) {
+                Toast.makeText(UpdateInfoMember.this, "Email đã tồn tại.", Toast.LENGTH_SHORT).show();
+            } else if (errors.has("dienthoai")) {
+                Toast.makeText(UpdateInfoMember.this, "Số điện thoại đã tồn tại.", Toast.LENGTH_SHORT).show();
+            } else if (errors.has("ngaysinh")) {
+                Toast.makeText(UpdateInfoMember.this, "Ngày sinh phải có định dạng Y-m-d, ví dụ: 2024-08-03", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+
 
 
     private boolean isValidInput() {
@@ -203,4 +242,19 @@ public class UpdateInfoMember extends BaseActivity {
             return 0;
         }
     }
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
 }

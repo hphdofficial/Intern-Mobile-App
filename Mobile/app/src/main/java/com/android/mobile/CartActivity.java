@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,7 +23,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.CartAdapter;
 import com.android.mobile.models.CartItem;
-import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.CartApiService;
@@ -51,6 +50,9 @@ public class CartActivity extends BaseActivity {
     private TextView txtSumQuantity;
     private TextView txtSumPrice;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private BlankFragment loadingFragment;
+    private ImageView imgNotify;
+    private TextView txtNotify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +69,16 @@ public class CartActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Giỏ hàng");
         myContentE.apply();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
+
+        txtSumQuantity = findViewById(R.id.txt_sum_quantity);
+        txtSumPrice = findViewById(R.id.txt_sum_price);
+        imgNotify = findViewById(R.id.img_notify);
+        txtNotify = findViewById(R.id.txt_notify);
 
         adapter = new CartAdapter(this, productList, this);
         recyclerView = findViewById(R.id.recycler_stored_item);
@@ -90,15 +98,20 @@ public class CartActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CartActivity.this, Purchase.class);
+                intent.putParcelableArrayListExtra("product_list", new ArrayList<>(productList));
                 startActivity(intent);
             }
         });
     }
 
-    public void loadProductCart(){
+    public void loadProductCart() {
+        showLoading();
+
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
         int memberId = sharedPreferences.getInt("member_id", 0);
+
+        updateTotalPrice(memberId);
 
         CartApiService service = ApiServiceProvider.getCartApiService();
         Call<JsonObject> call = service.getCart("Bearer" + token, memberId);
@@ -132,12 +145,16 @@ public class CartActivity extends BaseActivity {
                         }
                     }
 
-                    txtSumQuantity = findViewById(R.id.txt_sum_quantity);
-                    txtSumPrice = findViewById(R.id.txt_sum_price);
                     txtSumQuantity.setText("Số lượng: " + products.size() + " sản phẩm");
-                    updateTotalPrice(memberId);
+//                    updateTotalPrice(memberId);
 
+                    productList = new ArrayList<>(products);
                     adapter.setData(products);
+
+                    if (products.isEmpty()) {
+                        imgNotify.setVisibility(View.VISIBLE);
+                        txtNotify.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }
@@ -145,6 +162,8 @@ public class CartActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                hideLoading();
+
                 swipeRefreshLayout.setRefreshing(false);
                 t.printStackTrace();
             }
@@ -158,6 +177,8 @@ public class CartActivity extends BaseActivity {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     JsonObject jsonResponse = response.body();
                     Gson gson = new Gson();
@@ -173,8 +194,22 @@ public class CartActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                hideLoading();
+
                 t.printStackTrace();
             }
         });
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

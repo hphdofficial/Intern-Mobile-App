@@ -45,7 +45,7 @@ public class Checked_Teacher_adapter extends RecyclerView.Adapter<Checked_Teache
         String txtTimeIn = checkinList.get(i).getIn();
         viewHolder.txtTimeIn.setText(txtTimeIn);
 
-        viewHolder.txtChecked.setText("Có mặt");
+//        viewHolder.txtChecked.setText("Có mặt");
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Checked_Teacher_adapter extends RecyclerView.Adapter<Checked_Teache
             super(itemView);
             txtDate = itemView.findViewById(R.id.txtDate);
             txtName = itemView.findViewById(R.id.txtName);
-            txtChecked = itemView.findViewById(R.id.txtChecked);
+//            txtChecked = itemView.findViewById(R.id.txtChecked);
             txtTimeIn = itemView.findViewById(R.id.txtTimeIn);
         }
     }

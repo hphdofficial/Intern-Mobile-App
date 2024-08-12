@@ -15,6 +15,7 @@ public class OrderModel {
     private String status;
     private String created_at;
     private String updated_at;
+    private String giao_hang;
 
     public OrderModel() {
     }
@@ -114,5 +115,13 @@ public class OrderModel {
 
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public String getGiao_hang() {
+        return giao_hang;
+    }
+
+    public void setGiao_hang(String giao_hang) {
+        this.giao_hang = giao_hang;
     }
 }

@@ -23,6 +23,7 @@ public class BlankFragment extends DialogFragment {
         setCancelable(false);
         return view;
     }
+
     @Override
     public void onStart() {
         super.onStart();

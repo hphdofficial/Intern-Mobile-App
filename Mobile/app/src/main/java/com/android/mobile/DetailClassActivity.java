@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -19,11 +18,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.Class;
-import com.android.mobile.models.Club;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ClassApiService;
-import com.android.mobile.services.ClubApiService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +39,7 @@ public class DetailClassActivity extends BaseActivity {
     private String idClass = null;
     private String name = "";
     private String nameClass = "";
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +58,7 @@ public class DetailClassActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Chi tiết lớp học");
         myContentE.apply();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
@@ -122,6 +121,8 @@ public class DetailClassActivity extends BaseActivity {
     }
 
     public void getDetailClass() {
+        showLoading();
+
         String token = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
@@ -130,6 +131,8 @@ public class DetailClassActivity extends BaseActivity {
         call.enqueue(new Callback<Class>() {
             @Override
             public void onResponse(Call<Class> call, Response<Class> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     Class dataClass = response.body();
                     nameClass = dataClass.getTen();
@@ -146,6 +149,8 @@ public class DetailClassActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<Class> call, Throwable t) {
+                hideLoading();
+
                 Toast.makeText(DetailClassActivity.this, "Loi " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -180,22 +185,26 @@ public class DetailClassActivity extends BaseActivity {
         Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
         Bundle bundle = new Bundle();
         bundle.putString("id_class", idClass);
-        intent.putExtra("name",name);
-        intent.putExtra("nameClass",nameClass);
-        intent.putExtra("idClass",idClass);
+        intent.putExtra("name", name);
+        intent.putExtra("nameClass", nameClass);
+        intent.putExtra("idClass", idClass);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     public void leaveClass() {
+        showLoading();
+
         String token = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<ReponseModel> call = service.leaveClass("Bearer" + token, new Class(Integer.parseInt(idClass)));
+        Call<ReponseModel> call = service.leaveClass("Bearer" + token);
 
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("id_class_shared", null);
@@ -210,6 +219,8 @@ public class DetailClassActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                hideLoading();
+
                 Toast.makeText(DetailClassActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -226,6 +237,18 @@ public class DetailClassActivity extends BaseActivity {
             btnDirectClass.setVisibility(View.GONE);
             btnRegisterClass.setVisibility(View.VISIBLE);
             Toast.makeText(DetailClassActivity.this, "Bạn chưa tham gia lớp học nào", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
         }
     }
 }

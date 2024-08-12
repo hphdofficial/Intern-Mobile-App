@@ -26,7 +26,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiServiceProvider {
     private static final String BASE_URL = "https://vovinammoi-4bedb6dd1c05.herokuapp.com/";
+    private static final String MAPS_URL = "https://vovinammoi-4bedb6dd1c05.herokuapp.com/";
     private static Retrofit retrofit = null;
+    private static Retrofit retrofitMaps = null;
 
     private static Retrofit getRetrofitInstance() {
         if (retrofit == null) {
@@ -50,6 +52,30 @@ public class ApiServiceProvider {
                     .build();
         }
         return retrofit;
+    }
+
+    public static Retrofit getMapsInstance() {
+        if (retrofitMaps == null) {
+
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .build();
+
+            Gson gson = new GsonBuilder().create();
+
+            retrofitMaps = new Retrofit.Builder()
+                    .baseUrl(MAPS_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+        }
+        return retrofitMaps;
     }
 
     public static UserApiService getUserApiService() {

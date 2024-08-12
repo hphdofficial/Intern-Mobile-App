@@ -18,9 +18,11 @@ public class CityModel {
     public CityModel() {
     }
 
-    public CityModel(int id, String ten) {
+    public CityModel(int id, String ten, String map_lat, String map_long) {
         this.id = id;
         this.ten = ten;
+        this.map_lat = map_lat;
+        this.map_long = map_long;
     }
 
     public int getId() {

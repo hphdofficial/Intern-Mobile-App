@@ -10,19 +10,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@id/fragment_container">
+        android:layout_below="@id/fragment_container"
+        android:orientation="vertical">
 
-        <SearchView
-            android:id="@+id/search_location"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/rounded_searchview"
-            android:iconifiedByDefault="false"
-            android:queryHint="Tìm kiếm..."
-            android:focusable="false"
-            android:focusableInTouchMode="false" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/label_view_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:paddingStart="16dp"
+                android:paddingEnd="8dp"
+                android:text="Dạng xem:" />
+
+            <Spinner
+                android:id="@+id/spinner_view_options"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/label_view_options" />
+
+            <ImageButton
+                android:id="@+id/btn_search_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/search" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,14 +53,14 @@
 
             <Spinner
                 android:id="@+id/spinner_country"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:spinnerMode="dropdown" />
 
             <Spinner
                 android:id="@+id/spinner_city"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:spinnerMode="dropdown" />
@@ -53,11 +74,10 @@
             android:text="Tìm kiếm xung quanh vị trí của tôi"
             android:textColor="#2196F3" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_club"
+        <FrameLayout
+            android:id="@+id/fragment_container_club"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#E6E6E6" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -66,4 +86,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints" />
+
 </RelativeLayout>

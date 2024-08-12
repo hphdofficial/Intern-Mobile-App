@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -31,7 +32,8 @@ public class titleFragment extends Fragment {
     private TextView title;
     ConstraintLayout main;
     private ImageView img_menu;
-    private ImageView img_language;
+    private ImageView btnHome;
+
     public static titleFragment newInstance() {
         return new titleFragment();
     }
@@ -42,17 +44,25 @@ public class titleFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_title, container, false);
         rootView.bringToFront();
         title = rootView.findViewById(R.id.txt_title);
-        main =  rootView.findViewById(R.id.main);
+        main = rootView.findViewById(R.id.main);
         sub_menu = rootView.findViewById(R.id.sub_menu);
         img_menu = rootView.findViewById(R.id.img_menu);
         btn_back = rootView.findViewById(R.id.btn_back);
+        btnHome = rootView.findViewById(R.id.button_home);
 
         SharedPreferences myContent = getActivity().getSharedPreferences("myContent", Context.MODE_PRIVATE);
-        String value = myContent.getString("title", "default_value");
+        String value = myContent.getString("title", "Vovinam");
 
         title.setText(value);
-      //  CreateFracmentSubMenu();
+        //  CreateFracmentSubMenu();
 
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), StartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         main.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,10 +95,10 @@ public class titleFragment extends Fragment {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!menu.contains("MenuActivity")){
+                if (!menu.contains("MenuActivity")) {
                     getActivity().finish();
-                }else {
-                    Toast.makeText(getContext(),"Không thể quay về",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Không thể quay về", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -96,11 +106,12 @@ public class titleFragment extends Fragment {
         return rootView;
 
     }
-    public void restartView(){
+
+    public void restartView() {
         sub_menu.setVisibility(View.GONE);
     }
 
-    public void CreateFracmentSubMenu(){
+    public void CreateFracmentSubMenu() {
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new sub_menu())
                 .commit();

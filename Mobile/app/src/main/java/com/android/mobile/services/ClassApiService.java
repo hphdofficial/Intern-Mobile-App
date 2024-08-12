@@ -1,17 +1,14 @@
 package com.android.mobile.services;
 
 import com.android.mobile.models.Class;
-import com.android.mobile.models.Club;
 import com.android.mobile.models.ReponseModel;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface ClassApiService {
@@ -31,10 +28,9 @@ public interface ClassApiService {
             @Header("Authorization") String token
     );
 
-    @POST("/api/roi-khoi-lop-hoc")
+    @POST("/api/leave-class")
     Call<ReponseModel> leaveClass(
-            @Header("Authorization") String token,
-            @Body Class classs
+            @Header("Authorization") String token
     );
 
     @GET("/api/classes/search_name")

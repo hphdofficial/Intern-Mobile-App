@@ -39,6 +39,9 @@ public class FragmentWriteReviewActivity extends DialogFragment {
     private int productId;
     private OnReviewSubmittedListener listener;
 
+    private BlankFragment loadingFragment;
+
+
     public static FragmentWriteReviewActivity newInstance(int productId) {
         FragmentWriteReviewActivity fragment = new FragmentWriteReviewActivity();
         Bundle args = new Bundle();
@@ -82,6 +85,21 @@ public class FragmentWriteReviewActivity extends DialogFragment {
         return view;
     }
 
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getActivity().getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
+
     private void submitReview() {
         float ratingValue = ratingBar.getRating();
         String reviewContent = editReviewContent.getText().toString().trim();
@@ -110,9 +128,11 @@ public class FragmentWriteReviewActivity extends DialogFragment {
         review.setId_atg_members(memberId);
         review.setRatingCount(1);  // Đặt giá trị RatingCount
 
+        showLoading();
         ApiServiceProvider.getProductApiService().addReview("Bearer " + token, productId, review).enqueue(new Callback<ReviewModel>() {
             @Override
             public void onResponse(Call<ReviewModel> call, Response<ReviewModel> response) {
+                hideLoading();
                 if (response.isSuccessful()) {
                     ReviewModel createdReview = response.body();
                     Toast.makeText(getContext(), "Đánh giá đã được gửi", Toast.LENGTH_SHORT).show();
@@ -130,6 +150,7 @@ public class FragmentWriteReviewActivity extends DialogFragment {
                     try {
                         Log.e("ReviewSubmit", "Error body: " + response.errorBody().string());
                     } catch (IOException e) {
+                        Toast.makeText(getContext(), "Lỗi khi gửi đánh giá. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
@@ -137,6 +158,7 @@ public class FragmentWriteReviewActivity extends DialogFragment {
 
             @Override
             public void onFailure(Call<ReviewModel> call, Throwable t) {
+                hideLoading();
                 Toast.makeText(getContext(), "Lỗi khi gửi đánh giá: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("ReviewSubmit", "Error: ", t);
             }

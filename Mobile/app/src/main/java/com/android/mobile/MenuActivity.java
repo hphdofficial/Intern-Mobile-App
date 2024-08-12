@@ -248,12 +248,12 @@ public class MenuActivity extends BaseActivity {
 
     private TextView text;
     public void onMenuItemClick(View view) {
-         text = findViewById(R.id.languageText);
+        text = findViewById(R.id.languageText);
         String language = text.getText()+"";
         if(view.getId() == R.id.btn_change){
-           if(language.contains("VN")){
-               text.setText("ENG");
-           }else text.setText("VN");
+            if(language.contains("VN")){
+                text.setText("ENG");
+            }else text.setText("VN");
         }
     }
     @SuppressLint("RestrictedApi")
@@ -278,6 +278,7 @@ public class MenuActivity extends BaseActivity {
     private LinearLayout btn_historyclass1;
     private LinearLayout btn_product;
     private LinearLayout btn_sup;
+    private LinearLayout btn_order_status;
     private ImageView img_avatar_menu;
     private ImageView test;
     private ImageView test1;
@@ -310,7 +311,7 @@ public class MenuActivity extends BaseActivity {
         btn_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HistoryOrderActivity.class));
+                startActivity(new Intent(getApplicationContext(), OrderActivity.class));
             }
         });
 
@@ -349,7 +350,7 @@ public class MenuActivity extends BaseActivity {
         btn_lythuyet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), activity_lessons.class));
+                startActivity(new Intent(getApplicationContext(), activity_chapters.class));
             }
         });
         btn_club.setOnClickListener(new View.OnClickListener() {
@@ -433,18 +434,20 @@ public class MenuActivity extends BaseActivity {
                 startActivity(new Intent(getApplicationContext(), activity_items.class));
             }
         });
+
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logout();
             }
         });
-        test5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
+//        test5.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                logout();
+//            }
+//        });
+
         eventAnimationImage();
 
     }

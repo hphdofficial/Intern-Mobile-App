@@ -21,6 +21,8 @@ import com.android.mobile.models.TokenModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +37,9 @@ public class StartActivity extends BaseActivity {
     private ImageView iconPasswordVisibility;
     private CheckBox checkboxSavePassword;
     private boolean isPasswordVisible = false;
+
+    private BlankFragment loadingFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +123,21 @@ public class StartActivity extends BaseActivity {
         loadSavedCredentials();
     }
 
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
+
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
             editPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -131,26 +151,28 @@ public class StartActivity extends BaseActivity {
     }
 
     private void loginUser() {
-        String email = editEmail.getText().toString();
-        String password = editPassword.getText().toString();
+        String login = editEmail.getText().toString().trim();  // login có thể là username, email hoặc số điện thoại
+        String password = editPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(StartActivity.this, "Vui lòng nhập email và mật khẩu", Toast.LENGTH_SHORT).show();
+        if (login.isEmpty() || password.isEmpty()) {
+            Toast.makeText(StartActivity.this, "Vui lòng nhập tên tài khoản, email hoặc số điện thoại và mật khẩu", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        LoginModel request = new LoginModel(email, password);
+        showLoading();
+        LoginModel request = new LoginModel(login, password);
         UserApiService apiService = ApiServiceProvider.getUserApiService();
         Call<TokenModel> call = apiService.loginUser(request);
         call.enqueue(new Callback<TokenModel>() {
             @Override
             public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
+                hideLoading();
                 if (response.isSuccessful()) {
                     TokenModel tokenResponse = response.body();
                     if (tokenResponse != null) {
                         saveLoginDetails(tokenResponse);
                         if (checkboxSavePassword.isChecked()) {
-                            saveCredentials(email, password);
+                            saveCredentials(login, password);
                             saveCheckboxState(true); // Lưu trạng thái của checkbox
                         } else {
                             clearCredentials();
@@ -160,23 +182,32 @@ public class StartActivity extends BaseActivity {
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                         finish(); // Đóng StartActivity để người dùng không quay lại trang đăng nhập
                     }
-
-
                 } else {
-                    if (response.code() == 401) {
-                        Toast.makeText(StartActivity.this, "Sai thông tin email hoặc mật khẩu", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(StartActivity.this, "Đăng nhập thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    try {
+                        // Xử lý phản hồi lỗi từ server
+                        JSONObject errorObject = new JSONObject(response.errorBody().string());
+                        String errorMessage = errorObject.getString("error");
+
+                        Toast.makeText(StartActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(StartActivity.this, "Đăng nhập thất bại.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<TokenModel> call, Throwable t) {
+                hideLoading();
                 Toast.makeText(StartActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
+
+
+
 
     private void saveLoginDetails(TokenModel tokenResponse) {
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);

@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.NewsAdapter;
 import com.android.mobile.models.NewsModel;
+import com.android.mobile.models.ClubModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.NewsApiService;
 
@@ -46,6 +52,12 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private static final String TAG = "ActivityNews";
     private EditText searchEditText;
     private ImageButton searchButton;
+    private Spinner clubSpinner;
+    private BlankFragment loadingFragment;
+    private ArrayAdapter<ClubModel> spinnerAdapter;
+    private List<ClubModel> clubList = new ArrayList<>();
+    private TextView noNewsText; // TextView hiển thị khi không có thông báo nào
+    private boolean isFirstLoad = true; // Cờ để kiểm tra lần tải đầu tiên
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,32 +71,23 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
         myContentE.putString("title", "Tin tức và thông báo");
         myContentE.apply();
 
-        RecyclerView recyclerView = findViewById(R.id.itemNews);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        adapter = new NewsAdapter(filteredNewsList, this);
-        recyclerView.setAdapter(adapter);
-
-        fetchNews();
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return WindowInsetsCompat.CONSUMED;
-        });
-
-        // chèn fragment
+        // Chèn fragment tiêu đề
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        // Thêm hoặc thay thế Fragment mới
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
-        // Initialize EditText and ImageButton
+        // Thiết lập RecyclerView và Adapter
+        RecyclerView recyclerView = findViewById(R.id.itemNews);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new NewsAdapter(filteredNewsList, this);
+        recyclerView.setAdapter(adapter);
+
+        noNewsText = findViewById(R.id.no_news_text); // Ánh xạ TextView
+
+        // Thiết lập EditText và ImageButton cho tìm kiếm
         searchEditText = findViewById(R.id.search_edit_text);
         searchButton = findViewById(R.id.search_button);
 
@@ -98,7 +101,6 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
 
         searchButton.setOnClickListener(v -> searchNews(searchEditText.getText().toString()));
 
-        // Listen for text changes to filter the list
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -113,42 +115,144 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             public void afterTextChanged(Editable s) {
             }
         });
-    }
 
-    private void saveToSharedPreferences(String key, String value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, value);
-        editor.apply();
-    }
+        // Thiết lập Spinner và tải danh sách câu lạc bộ
+        clubSpinner = findViewById(R.id.club_spinner);
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, clubList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        clubSpinner.setAdapter(spinnerAdapter);
 
-    private void fetchNews() {
-        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<NewsModel>> call = apiService.getAnouncements();
-        call.enqueue(new Callback<List<NewsModel>>() {
+        fetchClubs();
+
+        // Xử lý sự kiện chọn mục trong Spinner
+        clubSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.d(TAG, "API Response: " + response.body().toString());
-                    newsList.clear(); // Clear existing data
-                    newsList.addAll(response.body());
-                    filterNews(searchEditText.getText().toString());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!isFirstLoad) { // Chỉ thực hiện khi không phải lần tải đầu tiên
+                    ClubModel selectedClub = (ClubModel) parent.getItemAtPosition(position);
+
+                    if (selectedClub.getId() == 0) {
+                        fetchAllNews(); // Nếu chọn "Tất cả"
+                    } else {
+                        fetchNewsByClub(selectedClub.getId()); // Lọc theo câu lạc bộ
+                    }
                 } else {
-                    Log.d(TAG, "API Response is not successful or body is null");
-                    Toast.makeText(ActivityNews.this, "Không thể lấy danh sách tin tức", Toast.LENGTH_SHORT).show();
+                    isFirstLoad = false; // Đặt cờ là đã tải lần đầu
                 }
             }
 
             @Override
-            public void onFailure(Call<List<NewsModel>> call, Throwable t) {
-                Log.e(TAG, "API Call failed: " + t.getMessage());
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Không làm gì cả
+            }
+        });
+
+        // Tải tất cả tin tức lần đầu tiên
+        fetchAllNews();
+    }
+
+    private void fetchClubs() {
+        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
+        Call<List<ClubModel>> call = apiService.getAllClubs();
+        call.enqueue(new Callback<List<ClubModel>>() {
+            @Override
+            public void onResponse(Call<List<ClubModel>> call, Response<List<ClubModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    clubList.clear();
+
+                    // Thêm mục "Tất cả" vào đầu danh sách
+                    ClubModel allClubs = new ClubModel();
+                    allClubs.setId(0); // ID giả định cho "Tất cả"
+                    allClubs.setTen("Tất cả");
+                    clubList.add(allClubs);
+
+                    clubList.addAll(response.body());
+                    spinnerAdapter.notifyDataSetChanged(); // Cập nhật dữ liệu cho Spinner
+                } else {
+                    Toast.makeText(ActivityNews.this, "Không thể lấy danh sách câu lạc bộ", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ClubModel>> call, Throwable t) {
                 Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void fetchAllNews() {
+        showLoading();
+        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
+        Call<List<NewsModel>> call = apiService.getAnouncements();
+        call.enqueue(new Callback<List<NewsModel>>() {
+            @Override
+            public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+                hideLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    newsList.clear(); // Xóa dữ liệu cũ
+                    newsList.addAll(response.body());
+                    filterNews(searchEditText.getText().toString()); // Lọc theo tìm kiếm
+                } else {
+                    showNoNewsMessage();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsModel>> call, Throwable t) {
+                hideLoading();
+                Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchNewsByClub(int clubId) {
+        showLoading();
+        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
+        Call<List<NewsModel>> call = apiService.filterAnnouncementsByClub(clubId);
+        call.enqueue(new Callback<List<NewsModel>>() {
+            @Override
+            public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+                hideLoading();
+                if (response.isSuccessful() && response.body() != null) {
+                    filteredNewsList.clear();
+                    filteredNewsList.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+                    checkIfNoNews();
+                } else {
+                    showNoNewsMessage();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsModel>> call, Throwable t) {
+                hideLoading();
+                Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showLoading() {
+        if (loadingFragment == null) {
+            loadingFragment = new BlankFragment();
+            loadingFragment.show(getSupportFragmentManager(), "loading");
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
+    }
+
     private void searchNews(String query) {
         if (query.isEmpty()) {
-            fetchNews(); // Fetch all news if query is empty
+            int selectedClubId = ((ClubModel) clubSpinner.getSelectedItem()).getId();
+            if (selectedClubId == 0) {
+                fetchAllNews();
+            } else {
+                fetchNewsByClub(selectedClubId);
+            }
         } else {
             NewsApiService apiService = ApiServiceProvider.getNewsApiService();
             Call<List<NewsModel>> call = apiService.searchAnouncements(query);
@@ -156,11 +260,12 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                 @Override
                 public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        newsList.clear(); // Clear existing data
-                        newsList.addAll(response.body());
-                        filterNews(query);
+                        filteredNewsList.clear();
+                        filteredNewsList.addAll(response.body());
+                        adapter.notifyDataSetChanged();
+                        checkIfNoNews();
                     } else {
-                        Toast.makeText(ActivityNews.this, "Không thể tìm kiếm tin tức", Toast.LENGTH_SHORT).show();
+                        showNoNewsMessage();
                     }
                 }
 
@@ -186,6 +291,21 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             }
         }
         adapter.notifyDataSetChanged();
+        checkIfNoNews();
+    }
+
+    private void checkIfNoNews() {
+        if (filteredNewsList.isEmpty()) {
+            noNewsText.setVisibility(View.VISIBLE);
+        } else {
+            noNewsText.setVisibility(View.GONE);
+        }
+    }
+
+    private void showNoNewsMessage() {
+        filteredNewsList.clear();
+        adapter.notifyDataSetChanged();
+        noNewsText.setVisibility(View.VISIBLE);
     }
 
     private String removeDiacritics(String input) {

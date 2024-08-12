@@ -7,7 +7,6 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -18,17 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ClassAdapter;
-import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.models.Class;
-import com.android.mobile.models.Club;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ClassApiService;
-import com.android.mobile.services.ClubApiService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +33,7 @@ public class ClassActivity extends BaseActivity {
     private ClassAdapter adapter;
     private List<Class> classList = new ArrayList<>();
     private SearchView searchView;
+    private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +50,7 @@ public class ClassActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách lớp học");
         myContentE.apply();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
@@ -81,6 +75,7 @@ public class ClassActivity extends BaseActivity {
                 return false;
             }
         });
+        showLoading();
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
@@ -91,29 +86,42 @@ public class ClassActivity extends BaseActivity {
         call.enqueue(new Callback<List<Class>>() {
             @Override
             public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     List<Class> classes = response.body();
                     adapter.setData(classes);
-                    Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    if (!classes.isEmpty()) {
+                        Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
+                    Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
                     System.err.println("Response error: " + response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<List<Class>> call, Throwable t) {
+                hideLoading();
+
                 t.printStackTrace();
             }
         });
     }
 
     public void searchClass(String text) {
+        showLoading();
+
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<List<Class>> call = service.searchClass(text);
 
         call.enqueue(new Callback<List<Class>>() {
             @Override
             public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     List<Class> classes = response.body();
                     adapter.setData(classes);
@@ -126,8 +134,22 @@ public class ClassActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<Class>> call, Throwable t) {
+                hideLoading();
+
                 t.printStackTrace();
             }
         });
+    }
+
+    private void showLoading() {
+        loadingFragment = new BlankFragment();
+        loadingFragment.show(getSupportFragmentManager(), "loading");
+    }
+
+    private void hideLoading() {
+        if (loadingFragment != null) {
+            loadingFragment.dismiss();
+            loadingFragment = null;
+        }
     }
 }

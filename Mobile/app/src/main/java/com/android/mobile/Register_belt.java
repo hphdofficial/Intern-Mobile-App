@@ -80,11 +80,30 @@ public class Register_belt extends BaseActivity {
                            hideLoading();
                        }
 
+<<<<<<< HEAD
                        @Override
                        public void onFailure(Call<List<Belt>> call, Throwable t) {
                            Toast.makeText(getApplicationContext(),"fails nn",Toast.LENGTH_SHORT).show();
                        }
                    });
+=======
+                   Call<List<Belt>> callb = apiService.getAllBelt();
+                   callb.enqueue(new Callback<List<Belt>>() {
+                       @Override
+                       public void onResponse(Call<List<Belt>> call, Response<List<Belt>> response) {
+                           chapters = response.body();
+                           chapterAdapter.loadList(chapters);
+                           recyclerView.setAdapter(chapterAdapter);
+                           hideLoading();
+                       }
+
+                       @Override
+                       public void onFailure(Call<List<Belt>> call, Throwable t) {
+
+                       }
+                   });
+
+>>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
                }else {
                    Toast.makeText(getApplicationContext(),"fails nn",Toast.LENGTH_SHORT).show();
                }
@@ -96,6 +115,10 @@ public class Register_belt extends BaseActivity {
             }
         });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
 
        /* chapters.add(new Belt("Đai trắng","Đã học"));
         chapters.add(new Belt("Đai đen","Đã học"));*/
@@ -119,7 +142,7 @@ public class Register_belt extends BaseActivity {
         titleFragment newFragment = new titleFragment();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
+//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
     }
     private void showLoading() {

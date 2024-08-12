@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.DetailClassActivity;
 import com.android.mobile.R;
-import com.android.mobile.RegisterClass;
 import com.android.mobile.models.Class;
 
 import java.util.List;
@@ -25,11 +24,13 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
+        public TextView textView1;
         public Button btnRegister;
 
         public ViewHolder(View view) {
             super(view);
             textView = view.findViewById(R.id.txt_name_class);
+            textView1 = view.findViewById(R.id.txt_name_teacher);
             btnRegister = view.findViewById(R.id.btn_register_class);
         }
     }
@@ -48,6 +49,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ClassAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.textView.setText(classList.get(position).getTen());
+        holder.textView1.setText("Giảng viên: " + classList.get(position).getGiangvien());
         holder.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
