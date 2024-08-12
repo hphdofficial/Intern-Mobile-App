@@ -307,7 +307,7 @@ public class activity_items extends BaseActivity {
 
     private void performSearch() {
         showLoading();
-
+        filteredProductList.clear();
         String min_price_str = editMinPrice.getText().toString().trim();
         String max_price_str = editMaxPrice.getText().toString().trim();
         List<ProductModel> productList = new ArrayList<>();
@@ -330,15 +330,15 @@ public class activity_items extends BaseActivity {
             @Override
             public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
                 if(response.isSuccessful()){
+
                     List<ProductModel> productListByCategory = response.body();
                     for (ProductModel product : productListByCategory){
                         Log.e("PostData", "Success: " + product.getProductName());
-                        productList.add(product);
+                        filteredProductList.add(product);
                     }
-                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                    recyclerView.setAdapter(itemAdapterFilter);
+
+                    itemAdapter.notifyDataSetChanged();
+                    hideLoading();
                 }else {
                     hideLoading();
                     System.out.println("Active: Call onResponse");
@@ -364,13 +364,11 @@ public class activity_items extends BaseActivity {
                         List<ProductModel> productListByPrice = response.body();
                         for (ProductModel product : productListByPrice){
                             Log.e("PostData", "Success: " + product.getProductName());
-                            productList.add(product);
-
+                            filteredProductList.add(product);
                         }
-                        itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
-                        RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                        recyclerView.setAdapter(itemAdapterFilter);
+
+                        itemAdapter.notifyDataSetChanged();
+                        hideLoading();
 
                     }else {
                         hideLoading();
@@ -400,13 +398,10 @@ public class activity_items extends BaseActivity {
                     List<ProductModel> productListBySupplier = response.body();
                     for (ProductModel product : productListBySupplier){
                         Log.e("PostData", "Success: " + product.getProductName());
-                        productList.add(product);
-
+                        filteredProductList.add(product);
                     }
-                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                    recyclerView.setAdapter(itemAdapterFilter);
+
+                    itemAdapter.notifyDataSetChanged();
                     hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
@@ -524,17 +519,14 @@ public class activity_items extends BaseActivity {
             @Override
             public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
                 if(response.isSuccessful()){
-                    productList.clear();
+                    filteredProductList.clear();
                     List<ProductModel> productListBySupplier = response.body();
                     for (ProductModel product : productListBySupplier){
                         Log.e("PostData", "Success: " + product.getProductName());
-                        productList.add(product);
+                        filteredProductList.add(product);
 
                     }
-                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                    recyclerView.setAdapter(itemAdapterFilter);
+                    itemAdapter.notifyDataSetChanged();
                     hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
@@ -558,17 +550,14 @@ public class activity_items extends BaseActivity {
             @Override
             public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
                 if(response.isSuccessful()){
-                    productList.clear();
+                    filteredProductList.clear();
                     List<ProductModel> productListBySupplier = response.body();
                     for (ProductModel product : productListBySupplier){
                         Log.e("PostData", "Success: " + product.getProductName());
-                        productList.add(product);
+                        filteredProductList.add(product);
 
                     }
-                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                    recyclerView.setAdapter(itemAdapterFilter);
+                    itemAdapter.notifyDataSetChanged();
                     hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
@@ -592,17 +581,15 @@ public class activity_items extends BaseActivity {
             @Override
             public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
                 if(response.isSuccessful()){
-                    productList.clear();
+                    filteredProductList.clear();
                     List<ProductModel> productListBySupplier = response.body();
                     for (ProductModel product : productListBySupplier){
                         Log.e("PostData", "Success: " + product.getProductName());
-                        productList.add(product);
+                        filteredProductList.add(product);
 
                     }
-                    itemAdapterFilter = new Item_adapter(getApplicationContext(), productList);
-                    RecyclerView recyclerView = findViewById(R.id.recycler_item);
-                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                    recyclerView.setAdapter(itemAdapterFilter);
+
+                    itemAdapter.notifyDataSetChanged();
                     hideLoading();
                 }else {
                     System.out.println("Active: Call onResponse");
