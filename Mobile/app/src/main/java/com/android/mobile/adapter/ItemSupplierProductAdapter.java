@@ -1,4 +1,3 @@
-// ItemSupplierProductAdapter.java
 package com.android.mobile.adapter;
 
 import android.content.Context;
@@ -68,6 +67,7 @@ public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplie
         });
 
         String imageLink = product.getImage_link();
+        String categoryName = product.getCategoryName();
 
         if (imageLink != null && !imageLink.trim().isEmpty()) {
             Picasso.get()
@@ -83,10 +83,11 @@ public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplie
             Intent intent = new Intent(context, activity_item_detail.class);
             intent.putExtra("id", product.getProductID());
             intent.putExtra("IDSupplier", product.getSupplierID());
+            intent.putExtra("categoryName", categoryName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
     }
-
 
     @Override
     public int getItemCount() {
