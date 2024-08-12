@@ -19,6 +19,8 @@ import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import retrofit2.Call;
@@ -162,10 +164,20 @@ public class EnterOtpActivity extends BaseActivity {
                     intent.putExtra("otp", otp);
                     startActivity(intent);
                 } else {
-                    if (response.code() == 400) {
-                        Toast.makeText(EnterOtpActivity.this, "Mã OTP không chính xác", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(EnterOtpActivity.this, "Xác thực OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    try {
+                        // Xử lý phản hồi lỗi từ server
+                        String errorMessage = response.errorBody().string();
+                        JSONObject errorObject = new JSONObject(errorMessage);
+                        String error = errorObject.optString("error");
+
+                        if (response.code() == 400 && error.equals("Không đúng hoặc hết thời gian OTP.")) {
+                            Toast.makeText(EnterOtpActivity.this, "Mã OTP không chính xác hoặc đã hết hạn.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(EnterOtpActivity.this, "Xác thực OTP thất bại: " + error, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(EnterOtpActivity.this, "Xác thực OTP thất bại.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
                 }
             }
@@ -177,6 +189,7 @@ public class EnterOtpActivity extends BaseActivity {
             }
         });
     }
+
 
 
     private void resendOtp() {

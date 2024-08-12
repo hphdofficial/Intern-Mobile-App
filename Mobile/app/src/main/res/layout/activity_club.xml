@@ -23,16 +23,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="Dạng xem:"
                 android:paddingStart="16dp"
-                android:paddingEnd="8dp" />
+                android:paddingEnd="8dp"
+                android:text="Dạng xem:" />
 
             <Spinner
                 android:id="@+id/spinner_view_options"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_toEndOf="@id/label_view_options"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/label_view_options" />
 
             <ImageButton
                 android:id="@+id/btn_search_view"

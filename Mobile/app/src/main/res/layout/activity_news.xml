@@ -7,11 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".ActivityNews">
 
+    <!-- Fragment Container -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:paddingTop="16dp"
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
@@ -49,10 +51,46 @@
             android:contentDescription="@string/search"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/club_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_layout"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/club_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lọc theo CLB:"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_vertical" />
+
+        <Spinner
+            android:id="@+id/club_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:spinnerMode="dropdown" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/no_news_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Chưa có thông báo nào"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/itemNews"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/search_layout"
+        android:layout_below="@id/club_layout"
         android:layout_marginTop="16dp"/>
 </RelativeLayout>

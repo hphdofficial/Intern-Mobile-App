@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -67,7 +66,7 @@ public class ClubActivity extends BaseActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private ImageButton btnSearchView;
     private ClubListFragment clubListFragment;
-    private MapsFragment mapsFragment;
+    private ClubMapsFragment mapsFragment;
     private Spinner viewOptionsSpinner;
     private Spinner spinnerCountry;
     private Spinner spinnerCity;
@@ -121,7 +120,7 @@ public class ClubActivity extends BaseActivity {
         });
 
         clubListFragment = new ClubListFragment();
-        mapsFragment = new MapsFragment();
+        mapsFragment = new ClubMapsFragment();
 
         FragmentTransaction fragmentTransactionClubList = getSupportFragmentManager().beginTransaction();
         fragmentTransactionClubList.replace(R.id.fragment_container_club, mapsFragment);
@@ -140,7 +139,7 @@ public class ClubActivity extends BaseActivity {
 
                 switch (position) {
                     case 0:
-                        tag = MapsFragment.class.getSimpleName();
+                        tag = ClubMapsFragment.class.getSimpleName();
                         if (fragmentManager.findFragmentByTag(tag) == null) {
                             transaction.replace(R.id.fragment_container_club, mapsFragment, tag);
                             mapsView = true;
@@ -582,7 +581,7 @@ public class ClubActivity extends BaseActivity {
     }
 
     private void switchToMapsFragment(double latitude, double longitude, boolean current) {
-        MapsFragment mapsFragment = MapsFragment.newInstance(latitude, longitude, current);
+        ClubMapsFragment mapsFragment = ClubMapsFragment.newInstance(latitude, longitude, current);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container_club, mapsFragment);
         transaction.commit();

@@ -1,5 +1,6 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.Belt;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.TheoryModel;
 
@@ -19,4 +20,11 @@ public interface TheoryApiService {
 
     @GET("api/lythuyet/search/{tenvi}")
     Call<List<TheoryModel>> searchMartialArtsTheory(@Path("tenvi") String tenvi);
+
+    @GET("api/all-belts")
+    Call<List<Belt>> getAllBelt();
+
+    @GET("api/martial-arts-theory-by-club-and-belt/{id_club}/{beltId}")
+    Call<List<TheoryModel>> getMartialArtsTheoryByClubByBelt(@Path("id_club") int id_club,
+                                                                @Path("beltId") int beltId);
 }

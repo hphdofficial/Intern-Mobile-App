@@ -13,11 +13,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:text="Danh sách sản phẩm"
+        android:textColor="#215CF3"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="#2196F3"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_products"
@@ -25,8 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="0dp"
-        android:paddingBottom="10dp"
         android:background="#E6E6E6"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

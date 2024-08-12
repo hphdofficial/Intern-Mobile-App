@@ -4,13 +4,12 @@ import com.android.mobile.models.ClassModelTest;
 import com.android.mobile.models.ForgotPasswordModel;
 import com.android.mobile.models.LoginModel;
 import com.android.mobile.models.OrderModel;
-import com.android.mobile.models.OrderStatusModel;
+import com.android.mobile.models.OrderListModel;
 import com.android.mobile.models.ProductModel;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.models.RegisterModel;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.models.ResetPasswordModel;
-import com.android.mobile.models.SupplierModel;
 import com.android.mobile.models.TokenModel;
 import com.android.mobile.models.UpdateInfoModel;
 import com.android.mobile.models.UpdatePasswordModel;
@@ -29,7 +28,6 @@ import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserApiService {
@@ -84,14 +82,14 @@ public interface UserApiService {
 
     // API kiểm tra trạng thái đơn hàng sử dụng txn_ref
     @GET("search_order")
-    Call<OrderStatusModel> searchOrder(@Query("id") String txnRef);
+    Call<OrderListModel> searchOrder(@Query("id") String txnRef);
 
     // API cập nhật trạng thái giao hàng sử dụng txn_ref
     @GET("delivery_update")
     Call<Void> updateDeliveryStatus(@Query("id") String txnRef);
 
     @GET("api/orders/All")
-    Call<List<OrderStatusModel>> getAllOrders(@Header("Authorization") String token);
+    Call<List<OrderListModel>> getListOrder(@Header("Authorization") String token);
 
     @GET("api/hoadon")
     Call<List<OrderModel>> getUserOrders(@Header("Authorization") String token);

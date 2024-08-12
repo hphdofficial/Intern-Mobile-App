@@ -7,7 +7,6 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -18,17 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.adapter.ClassAdapter;
-import com.android.mobile.adapter.ClubAdapter;
 import com.android.mobile.models.Class;
-import com.android.mobile.models.Club;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ClassApiService;
-import com.android.mobile.services.ClubApiService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +50,7 @@ public class ClassActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách lớp học");
         myContentE.apply();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());

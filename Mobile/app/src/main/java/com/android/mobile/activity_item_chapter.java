@@ -61,7 +61,7 @@ public class activity_item_chapter extends BaseActivity {
                     txtTheoryTittle.setText(theory.getTenvi());
                     txtTheoryContent.setText("Bài tập gồm: "+theory.getNoidungvi());
                     String videoPath = theory.getLink_video();
-//                    String videoPath = "https://www.youtube.com/embed/qYE5kRio898?si=vf-idDf1Rz7N6UHT";
+//                    String videoPath = "https://www.youtube.com/embed/h_1t3-6oWz4?si=bDM6H-FSaNHV9d--";
                     String video = "<iframe width=\"100%\" height=\"100%\" src=\"" +
                             videoPath +
                             "\" title=\"YouTube video player\" frameborder=\"0\" allow=\"" +

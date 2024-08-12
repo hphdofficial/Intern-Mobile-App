@@ -34,8 +34,6 @@ public interface ProductApiService {
     @Headers("Accept: application/json")
     Call<ReviewModel> addReview(@Header("Authorization") String token, @Query("ProductID") int productId, @Body ReviewModel review);
 
-
-
     @GET("api/products/search/{name}")
     Call<List<ProductModel>> search(@Path("name") String name);
 
@@ -51,4 +49,13 @@ public interface ProductApiService {
                          @Query("member_id") int id,
                          @Query("product_id") int ProductID,
                          @Query("quantity") int quantity);
+
+    @GET("api/productsFeatured")
+    Call<List<ProductModel>> sortByFeatured(@Query("sort") String sort);
+
+    @GET("api/productsSale")
+    Call<List<ProductModel>> sortBySale(@Query("sort") String sort);
+
+    @GET("api/productsNew")
+    Call<List<ProductModel>> sortByNew(@Query("sort") String sort);
 }

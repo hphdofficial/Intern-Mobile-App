@@ -1,9 +1,9 @@
 package com.android.mobile.services;
 
-import com.android.mobile.models.Class;
+import com.android.mobile.models.OrderListModel;
 import com.android.mobile.models.OrderModel;
-import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
+import com.android.mobile.models.ReponseModel;
 
 import java.util.List;
 
@@ -21,5 +21,16 @@ public interface OrderApiService {
     @GET("/api/chitiethoadon")
     Call<List<ProductModel>> getListProductOrder(
             @Query("id_order") int orderId
+    );
+
+    @GET("api/orders/All")
+    Call<List<OrderListModel>> getListOrder(
+            @Header("Authorization") String token
+    );
+
+    @GET("/update_delete_delivery")
+    Call<ReponseModel> cancelOrder(
+            @Query("id") String txnRef,
+            @Query("action") String action
     );
 }

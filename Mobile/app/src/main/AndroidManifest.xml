@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -27,9 +28,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mobile"
         tools:targetApi="31">
-        <activity
-            android:name=".ThankYouDialogFragment"
-            android:exported="false" />
 
         <uses-library
             android:name="org.osmdroid"
@@ -46,7 +44,15 @@
             android:value="YOUR_TERMINAL_ID" />
 
         <activity
-            android:name=".MapsFragment"
+            android:name=".OrderActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ThankYouDialogFragment"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ClubMapsFragment"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
@@ -54,20 +60,17 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".adapter.ProductShippingAdapter"
+            android:name=".adapter.ProductOrderAdapter"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".OrderDetailsDialogFragment"
+            android:name=".OrderDetailFragment"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".HistoryRegisterClass"
             android:exported="false"
-            android:screenOrientation="portrait" /> <!-- <activity -->
-        <!-- android:name=".MainActivity2" -->
-        <!-- android:exported="false" -->
-        <!-- android:screenOrientation="portrait" /> -->
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity_teacher_checkin"
             android:exported="true"
@@ -149,20 +152,9 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HistoryOrderActivity"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ShippingOrderActivity"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".CartActivity"
             android:exported="true"
-            android:screenOrientation="portrait" /> <!-- <activity -->
-        <!-- android:name=".LaguageLayout" -->
-        <!-- android:exported="false" -->
-        <!-- android:screenOrientation="portrait" /> -->
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EnterOtpActivity"
             android:exported="true"
@@ -218,9 +210,7 @@
         <activity
             android:name=".MenuActivity"
             android:exported="false"
-            android:screenOrientation="portrait" /> <!-- <activity -->
-        <!-- android:name=".StartActivity" -->
-        <!-- android:exported="true" /> -->
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ClassActivity"
             android:exported="true"
@@ -271,6 +261,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

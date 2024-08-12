@@ -192,12 +192,12 @@ public class MenuActivity extends BaseActivity {
 
     private TextView text;
     public void onMenuItemClick(View view) {
-         text = findViewById(R.id.languageText);
+        text = findViewById(R.id.languageText);
         String language = text.getText()+"";
         if(view.getId() == R.id.btn_change){
-           if(language.contains("VN")){
-               text.setText("ENG");
-           }else text.setText("VN");
+            if(language.contains("VN")){
+                text.setText("ENG");
+            }else text.setText("VN");
         }
     }
     @SuppressLint("RestrictedApi")
@@ -241,7 +241,6 @@ public class MenuActivity extends BaseActivity {
         btn_new = findViewById(R.id.btn_infor);
         btn_logout = findViewById(R.id.btn_logout);
         btn_product = findViewById(R.id.btn_product);
-        btn_order_status = findViewById(R.id.btn_order_status);
         user = findViewById(R.id.user);
         test = findViewById(R.id.test);
         test1 = findViewById(R.id.test1);
@@ -256,7 +255,7 @@ public class MenuActivity extends BaseActivity {
         btn_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), HistoryOrderActivity.class));
+                startActivity(new Intent(getApplicationContext(), OrderActivity.class));
             }
         });
 
@@ -295,7 +294,7 @@ public class MenuActivity extends BaseActivity {
         btn_lythuyet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), activity_lessons.class));
+                startActivity(new Intent(getApplicationContext(), activity_chapters.class));
             }
         });
         btn_club.setOnClickListener(new View.OnClickListener() {
@@ -380,12 +379,6 @@ public class MenuActivity extends BaseActivity {
             }
         });
 
-        btn_order_status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ShippingOrderActivity.class));
-            }
-        });
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

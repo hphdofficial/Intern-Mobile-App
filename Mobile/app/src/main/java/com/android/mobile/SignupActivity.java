@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,6 +19,8 @@ import com.android.mobile.models.RegisterModel;
 import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 
@@ -117,38 +120,90 @@ public class SignupActivity extends BaseActivity {
     }
 
     private void registerUser() {
-        String username = editTextUsername.getText().toString();
-        String password = editTextPassword.getText().toString();
-        String email = editTextEmail.getText().toString();
-        String ten = editTextTen.getText().toString();
-        int chieucao = Integer.parseInt(editTextChieucao.getText().toString());
-        int cannang = Integer.parseInt(editTextCannang.getText().toString());
-        String dienthoai = editTextDienthoai.getText().toString();
-        String diachi = editTextDiachi.getText().toString();
-        String ngaysinh = editTextNgaysinh.getText().toString();
-        String hoten_giamho = editTextHotenGiamho.getText().toString();
-        String dienthoai_giamho = editTextDienthoaiGiamho.getText().toString();
-
-        String confirmPasswordEditText = edit_text_confirm_password.getText().toString();
-
+        // Lấy giá trị từ các trường nhập liệu
+        String username = editTextUsername.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String ten = editTextTen.getText().toString().trim();
+        String dienthoai = editTextDienthoai.getText().toString().trim();
+        String diachi = editTextDiachi.getText().toString().trim();
+        String ngaysinh = editTextNgaysinh.getText().toString().trim();
+        String hoten_giamho = editTextHotenGiamho.getText().toString().trim();
+        String dienthoai_giamho = editTextDienthoaiGiamho.getText().toString().trim();
+        String confirmPasswordEditText = edit_text_confirm_password.getText().toString().trim();
 
         int selectedGenderId = radioGroupGender.getCheckedRadioButtonId();
         RadioButton selectedGenderButton = findViewById(selectedGenderId);
         String gioitinh = selectedGenderButton.getText().toString();
 
-        // Check if password is at least 6 characters
+        // Kiểm tra username
+        if (username.isEmpty()) {
+            Toast.makeText(SignupActivity.this, "Vui lòng nhập tên tài khoản.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra email
+        if (email.isEmpty()) {
+            Toast.makeText(SignupActivity.this, "Vui lòng nhập email.", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(SignupActivity.this, "Email không hợp lệ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra mật khẩu có ít nhất 6 ký tự
         if (password.length() < 6) {
             Toast.makeText(SignupActivity.this, "Mật khẩu phải có ít nhất 6 ký tự.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Check if passwords match
+        // Kiểm tra mật khẩu xác nhận khớp với mật khẩu
         if (!password.equals(confirmPasswordEditText)) {
             Toast.makeText(SignupActivity.this, "Mật khẩu xác nhận không khớp.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Check if user is under 18
+        // Kiểm tra tên người dùng
+        if (ten.isEmpty()) {
+            Toast.makeText(SignupActivity.this, "Vui lòng nhập họ và tên.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra số điện thoại
+        if (dienthoai.isEmpty()) {
+            Toast.makeText(SignupActivity.this, "Vui lòng nhập số điện thoại.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra địa chỉ
+        if (diachi.isEmpty()) {
+            Toast.makeText(SignupActivity.this, "Vui lòng nhập địa chỉ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra ngày sinh
+        if (ngaysinh.isEmpty()) {
+            Toast.makeText(SignupActivity.this, "Vui lòng nhập ngày sinh.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra chiều cao và cân nặng
+        int chieucao, cannang;
+        try {
+            chieucao = Integer.parseInt(editTextChieucao.getText().toString().trim());
+            cannang = Integer.parseInt(editTextCannang.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            Toast.makeText(SignupActivity.this, "Chiều cao và cân nặng phải là số hợp lệ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra giới tính
+        if (gioitinh.isEmpty()) {
+            Toast.makeText(SignupActivity.this, "Vui lòng chọn giới tính.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Kiểm tra độ tuổi
         Calendar birthDate = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
         String[] dateParts = ngaysinh.split("-");
@@ -163,6 +218,7 @@ public class SignupActivity extends BaseActivity {
             return;
         }
 
+        // Tạo đối tượng RegisterModel và gửi yêu cầu đăng ký
         RegisterModel request = new RegisterModel();
         request.setUsername(username);
         request.setPassword(password);
@@ -178,10 +234,11 @@ public class SignupActivity extends BaseActivity {
             request.setHoten_giamho(hoten_giamho);
             request.setDienthoai_giamho(dienthoai_giamho);
         } else {
-            request.setHoten_giamho(null); // explicitly setting these to null to avoid sending empty strings
+            request.setHoten_giamho(null);
             request.setDienthoai_giamho(null);
         }
 
+        // Hiển thị loading và gọi API đăng ký
         showLoading();
         UserApiService apiService = ApiServiceProvider.getUserApiService();
         Call<ReponseModel> call = apiService.registerUser(request);
@@ -191,11 +248,28 @@ public class SignupActivity extends BaseActivity {
                 hideLoading();
                 if (response.isSuccessful()) {
                     Toast.makeText(SignupActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SignupActivity.this,StartActivity.class);
+                    Intent intent = new Intent(SignupActivity.this, StartActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(SignupActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    try {
+                        // Xử lý phản hồi lỗi từ server
+                        JSONObject errorObject = new JSONObject(response.errorBody().string());
+                        JSONObject errors = errorObject.getJSONObject("error");
+
+                        if (errors.has("username")) {
+                            Toast.makeText(SignupActivity.this, "Tên tài khoản đã tồn tại.", Toast.LENGTH_SHORT).show();
+                        } else if (errors.has("email")) {
+                            Toast.makeText(SignupActivity.this, "Email đã tồn tại.", Toast.LENGTH_SHORT).show();
+                        } else if (errors.has("dienthoai")) {
+                            Toast.makeText(SignupActivity.this, "Số điện thoại đã tồn tại.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(SignupActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(SignupActivity.this, "Đăng ký thất bại.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -206,4 +280,6 @@ public class SignupActivity extends BaseActivity {
             }
         });
     }
+
+
 }
