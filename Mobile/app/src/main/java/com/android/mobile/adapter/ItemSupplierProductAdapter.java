@@ -67,10 +67,16 @@ public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplie
             }
         });
 
-        if (product.getImage_link() != null && !product.getImage_link().isEmpty()) {
-            Picasso.get().load(product.getImage_link()).into(viewHolder.imgItem);
+        String imageLink = product.getImage_link();
+
+        if (imageLink != null && !imageLink.trim().isEmpty()) {
+            Picasso.get()
+                    .load(imageLink)
+                    .placeholder(R.drawable.product) // Hình ảnh placeholder khi đang tải
+                    .error(R.drawable.logo_vovinam)  // Hình ảnh hiển thị khi có lỗi
+                    .into(viewHolder.imgItem);
         } else {
-            viewHolder.imgItem.setImageResource(R.drawable.product); // default placeholder image
+            viewHolder.imgItem.setImageResource(R.drawable.product); // Sử dụng hình ảnh mặc định
         }
 
         viewHolder.itemView.setOnClickListener(view -> {
@@ -80,6 +86,7 @@ public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplie
             context.startActivity(intent);
         });
     }
+
 
     @Override
     public int getItemCount() {

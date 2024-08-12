@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.android.mobile.models.OrderListModel;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 public class OrderDetailFragment extends DialogFragment {
@@ -52,6 +54,7 @@ public class OrderDetailFragment extends DialogFragment {
         TextView orderAmount = view.findViewById(R.id.order_amount);
         TextView orderStatus = view.findViewById(R.id.order_status);
         TextView orderPayDate = view.findViewById(R.id.order_pay_date);
+        ImageView qrCode = view.findViewById(R.id.qr_code); // ImageView để hiển thị QR code
         Button buttonClose = view.findViewById(R.id.button_close);
 
         orderId.setText(String.format("%d", order.getId()));
@@ -60,6 +63,15 @@ public class OrderDetailFragment extends DialogFragment {
         orderAmount.setText(String.format("%,.0f VND", order.getAmount()));
         orderStatus.setText(order.getStatus());
         orderPayDate.setText(order.getPay_date());
+
+        // Sử dụng Glide để tải ảnh QR code từ URL
+        if (order.getQr_link() != null && !order.getQr_link().isEmpty()) {
+            Glide.with(this)
+                    .load(order.getQr_link())
+                    .into(qrCode);
+        } else {
+            qrCode.setVisibility(View.GONE); // Ẩn ImageView nếu không có QR link
+        }
 
         buttonClose.setOnClickListener(v -> dismiss());
 

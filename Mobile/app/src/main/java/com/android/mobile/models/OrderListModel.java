@@ -17,6 +17,7 @@ public class OrderListModel {
     private String updated_at;
     private String ten;
     private String giao_hang;
+    private String qr_link;
     private List<DetailCart> detail_carts;
 
     public static class DetailCart {
@@ -253,6 +254,15 @@ public class OrderListModel {
     public void setGiao_hang(String giao_hang) {
         this.giao_hang = giao_hang;
     }
+
+    public String getQr_link() {
+        return qr_link;
+    }
+
+    public void setQr_link(String qr_link) {
+        this.qr_link = qr_link;
+    }
+
 
     public List<DetailCart> getDetail_carts() {
         return detail_carts;

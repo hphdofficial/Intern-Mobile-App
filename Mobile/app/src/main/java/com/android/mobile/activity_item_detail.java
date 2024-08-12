@@ -58,7 +58,7 @@ public class activity_item_detail extends BaseActivity {
             return insets;
         });
 
-        showLoading();
+//        showLoading();
 
         Intent intent = getIntent();
         int idProduct = intent.getIntExtra("id", -1);
