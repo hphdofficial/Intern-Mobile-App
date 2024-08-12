@@ -298,9 +298,8 @@ public class activity_item_detail extends BaseActivity {
     }
 
     private void FetchProductsByCategory(String categoryName){
-        showLoading();
+
         ProductApiService apiService = ApiServiceProvider.getProductApiService();
-        System.out.println(categoryName);
         apiService.getByCategory(categoryName).enqueue(new Callback<List<ProductModel>>() {
             @Override
             public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
