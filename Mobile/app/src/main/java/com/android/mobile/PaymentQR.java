@@ -69,7 +69,6 @@ public class PaymentQR extends BaseActivity {
 
 
 
-
         imageViewQRCode = findViewById(R.id.imageViewQRCode);
         buttonGenerateQRCode = findViewById(R.id.buttonGenerateQRCode);
         author = findViewById(R.id.author);
