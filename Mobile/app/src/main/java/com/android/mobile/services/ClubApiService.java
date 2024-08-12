@@ -10,14 +10,19 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ClubApiService {
+    @GET("api/interpreter")
+    Call<MapsResponse> getMapData(@Query("data") String data);
+
     @GET("/api/countries")
     Call<List<CountryModel>> getListCountry();
 
@@ -66,6 +71,32 @@ public interface ClubApiService {
             @Query("keyword") String name
     );
 
-    @GET("api/interpreter")
-    Call<MapsResponse> getMapData(@Query("data") String data);
+    @GET("/api/clubs/pending")
+    Call<List<Club>> getListClubPending(
+            @Header("Authorization") String token
+    );
+
+    @GET("/api/clubs/join-clubpending")
+    Call<ReponseModel> joinClubPending(
+            @Header("Authorization") String token,
+            @Query("id_club") int clubId
+    );
+
+    @POST("/api/clubs/out-pending")
+    Call<ReponseModel> cancelClubPending(
+            @Header("Authorization") String token,
+            @Query("id_club") int clubId
+    );
+
+    @POST("/api/coach/approve-join")
+    Call<ReponseModel> approveJoinClub(
+            @Header("Authorization") String token,
+            @Query("id_member") int memberId,
+            @Query("id_club") int clubId
+    );
+
+    @GET("/api/coach/join-memberpending")
+    Call<List<Club>> getListMemberPending(
+            @Header("Authorization") String token
+    );
 }
