@@ -1,6 +1,7 @@
 package com.android.mobile.models;
 
 public class LoginModel {
+
     private String email;
     private String password;
 

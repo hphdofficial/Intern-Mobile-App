@@ -29,7 +29,7 @@ import java.util.List;
 public class Adapter_Register_belt extends RecyclerView.Adapter<Adapter_Register_belt.ViewHolder>{
     Context context;
 
-    BeltModel b ;
+    BeltModel b;
     List<Belt> chapterList = new ArrayList<>();
 
     public Adapter_Register_belt(Context context, List<Belt> list) {

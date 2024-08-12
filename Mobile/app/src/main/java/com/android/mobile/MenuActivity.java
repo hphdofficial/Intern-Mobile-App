@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,11 +34,13 @@ import com.android.mobile.models.ClassModelT;
 import com.android.mobile.models.Club;
 import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.HistoryClassModel;
+import com.android.mobile.models.NewsModel;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.APIServicePayment;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ClassApiService;
 import com.android.mobile.services.ClubApiService;
+import com.android.mobile.services.NewsApiService;
 import com.android.mobile.services.PaymentAPI;
 import com.android.mobile.services.UserApiService;
 import com.squareup.picasso.Picasso;
@@ -53,11 +58,12 @@ public class MenuActivity extends BaseActivity {
 
     private int placeholderResourceId = R.drawable.photo3x4;
 
-    private ImageView imgAvatarMenu;
-    private TextView textViewName;
+/*    private ImageView imgAvatarMenu;
+    private TextView textViewName;*/
     private SharedPreferences sharedPreferences;
-    private TextView textViewBirthday;
+ //   private TextView textViewBirthday;
     private BlankFragment loadingFragment;
+    private LinearLayout linearinfor;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,16 +83,18 @@ public class MenuActivity extends BaseActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("linkImage", linkAvatar);
         editor.apply();  // Lưu thay đổi vào SharedPreferences
+        CreateNew();
 
 
 
-
-        ImageView imageView = findViewById(R.id.img_avatar_menu);
-        Picasso.get()
+      //  ImageView imageView = findViewById(R.id.img_avatar_menu);
+       /* Picasso.get()
                 .load(linkAvatar)
                 .placeholder(placeholderResourceId) // Hình ảnh placeholder
                 .error(placeholderResourceId) // Hình ảnh sẽ hiển thị nếu tải lỗi
-                .into(imageView);
+                .into(imageView);*/
+
+        linearinfor = findViewById(R.id.linearinfor);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -106,9 +114,9 @@ public class MenuActivity extends BaseActivity {
 
 
         // Tham chiếu đến các thành phần giao diện
-        imgAvatarMenu = findViewById(R.id.img_avatar_menu);
+/*        imgAvatarMenu = findViewById(R.id.img_avatar_menu);
         textViewName = findViewById(R.id.textViewName);
-        textViewBirthday= findViewById(R.id.txt_content);
+        textViewBirthday= findViewById(R.id.txt_content);*/
 
         //click image
         setEventClick();
@@ -121,6 +129,54 @@ public class MenuActivity extends BaseActivity {
         loadUserData();
     }
 
+    private List<NewsModel> listNew;
+    public void getListNew(){
+        NewsApiService apiService = ApiServiceProvider.getNewsApiService();
+        Call<List<NewsModel>> call = apiService.getAnouncements();
+        call.enqueue(new Callback<List<NewsModel>>() {
+            @Override
+            public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                   // Log.d(TAG, "API Response: " + response.body().toString());
+                    listNew.clear(); // Clear existing data
+                    listNew.addAll(response.body());
+                } else {
+                   /* Log.d(TAG, "API Response is not successful or body is null");
+                    Toast.makeText(ActivityNews.this, "Không thể lấy danh sách tin tức", Toast.LENGTH_SHORT).show();*/
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsModel>> call, Throwable t) {
+               /* Log.e(TAG, "API Call failed: " + t.getMessage());
+                Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();*/
+            }
+        });
+    }
+    public void CreateNew(){
+        getListNew();
+        int count = 3;
+        if(listNew.size()>0){
+            while (listNew.size()>0 && count>0){
+                NewsModel news = listNew.get(listNew.size()-1);
+                TextView textView = new TextView(this);
+                textView.setId(news.getId());
+                textView.setText(news.getTenvi());
+                textView.setTextColor(Color.RED);
+                textView.setTextSize(24);
+                linearinfor.addView(textView);
+                Animation blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink);
+                textView.startAnimation(blinkAnimation);
+
+
+
+
+                listNew.remove(listNew.size()-1);
+                count = count-1;
+            }
+            setContentView(linearinfor);
+        }
+    }
     public void getMyClub() {
         String token = sharedPreferences.getString("access_token", null);
 
@@ -274,7 +330,7 @@ public class MenuActivity extends BaseActivity {
             }
         });
 
-        img_avatar_menu = findViewById(R.id.img_avatar_menu);
+      //  img_avatar_menu = findViewById(R.id.img_avatar_menu);
 
         btn_historyclass1 = findViewById(R.id.btn_historyclass1);
         img_avatar_menu.setOnClickListener(new View.OnClickListener() {
@@ -479,8 +535,8 @@ public class MenuActivity extends BaseActivity {
 
 
 
-                            textViewName.setText(profile.getTen());
-                            textViewBirthday.setText(profile.getNgaysinh());
+                          /*  textViewName.setText(profile.getTen());
+                            textViewBirthday.setText(profile.getNgaysinh());*/
 
                             // Load avatar từ SharedPreferences cho user cụ thể
                             String avatarUrl = sharedPreferences.getString("avatar_url_" + memberId, null);
@@ -489,9 +545,9 @@ public class MenuActivity extends BaseActivity {
                             myContentE.apply();
                             if (avatarUrl != null) {
 
-                                Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imgAvatarMenu);
+                             //   Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imgAvatarMenu);
                             } else {
-                                imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
+                             //   imgAvatarMenu.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
                             }
                             hideLoading();
 

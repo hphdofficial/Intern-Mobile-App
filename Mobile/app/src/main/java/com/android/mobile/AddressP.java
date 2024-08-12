@@ -100,12 +100,12 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
                     SharedPreferences sharedPreferences = getSharedPreferences("myAddress", Context.MODE_PRIVATE);
                     Gson gson = new Gson();
                     String json = sharedPreferences.getString("list",null);
-
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     if(json != null){
                         Type type = new TypeToken<ArrayList<addressModel>>() {}.getType();
                         list = gson.fromJson(json, type);
 
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
 
                         // thay doi data
                         addressModel a = new addressModel(s,0);
@@ -121,6 +121,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
                         adapter.notifyDataSetChanged();
 
                     }
+
                 }
 
             }
@@ -191,18 +192,19 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
         }
     }
     public void createList(){
-/*        SharedPreferences sharedPreferences = getSharedPreferences("myAddress", Context.MODE_PRIVATE);
-        addressModel m = new addressModel("Long An",1);
-        addressModel m1 = new addressModel("Cần Thơ",0);
-        addressModel m2 = new addressModel("Cần Giờ",0);
-        list.add(m);
-        list.add(m1);
-        list.add(m2);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences sharedPreferences = getSharedPreferences("myAddress", Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString("list", json);
-        editor.apply();*/
+        String json = sharedPreferences.getString("list",null);
+        if(json == null){
+            addressModel m = new addressModel("Long An",1);
+            list.add(m);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            String j = gson.toJson(list);
+            editor.putString("list", j);
+            editor.apply();
+        }
+
     }
     @Override
     public void onItemClick(int position) {

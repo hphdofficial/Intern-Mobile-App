@@ -24,10 +24,31 @@
         android:paddingBottom="20dp"
 
         android:id="@+id/linearinfor"
+        android:orientation="vertical"
         android:background="@drawable/background_blue1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thông báo"
+            android:textSize="18sp"
+            >
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+
+
+        <!--<androidx.constraintlayout.widget.ConstraintLayout
 
             android:id="@+id/user"
             android:layout_width="wrap_content"
@@ -38,9 +59,9 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints">
 
-            <!-- Avatar người dùng -->
+            &lt;!&ndash; Avatar người dùng &ndash;&gt;
 
-            <!-- Tên người dùng -->
+            &lt;!&ndash; Tên người dùng &ndash;&gt;
             <androidx.cardview.widget.CardView
                 android:id="@+id/img_avatar"
                 android:layout_width="80dp"
@@ -94,7 +115,7 @@
             </LinearLayout>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>-->
     </LinearLayout>
 
    <ScrollView
