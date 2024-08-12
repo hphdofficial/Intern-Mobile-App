@@ -50,14 +50,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
+            <EditText
+                android:id="@+id/editTextDate2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ems="10"
+                android:hint="Nhập ngày bắt đầu"
+                android:inputType="date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
+                android:id="@+id/linearLayout7"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/btnExport"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/editTextDate3">
 
                 <TableLayout
                     android:layout_width="match_parent"
@@ -72,46 +86,47 @@
 
                         <TextView
                             android:id="@+id/textView20"
-                            android:layout_column="1"
-                            android:text="Ngày"
-                            android:gravity="center"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
                             android:layout_width="0dp"
+                            android:layout_column="1"
                             android:layout_weight="1"
-                            android:padding="8dp"/>
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="Ngày"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/textView9"
-                            android:layout_column="1"
-                            android:text="Tên"
-                            android:gravity="center"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
                             android:layout_width="0dp"
+                            android:layout_column="1"
                             android:layout_weight="1"
-                            android:padding="8dp"/>
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="Tên"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/textView2"
-                            android:text="Điểm danh lúc"
-                            android:layout_column="1"
-                            android:gravity="center"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
                             android:layout_width="0dp"
+                            android:layout_column="1"
                             android:layout_weight="1"
-                            android:padding="8dp"/>
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="Điểm danh lúc"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/textView7"-->
-<!--                            android:layout_column="1"-->
-<!--                            android:text="Hiện diện"-->
-<!--                            android:gravity="center"-->
-<!--                            android:textSize="16sp"-->
-<!--                            android:textStyle="bold" />-->
+                        <!--                        <TextView-->
+                        <!--                            android:id="@+id/textView7"-->
+                        <!--                            android:layout_column="1"-->
+                        <!--                            android:text="Hiện diện"-->
+                        <!--                            android:gravity="center"-->
+                        <!--                            android:textSize="16sp"-->
+                        <!--                            android:textStyle="bold" />-->
 
                     </TableRow>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_checkin"
                         android:layout_width="match_parent"
@@ -120,8 +135,40 @@
                 </TableLayout>
 
 
-
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btnExport"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Xuất Excel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/editTextDate3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Nhập ngày kết thúc"
+                android:inputType="date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextDate2" />
+
+            <Button
+                android:id="@+id/btnFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Lọc"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
