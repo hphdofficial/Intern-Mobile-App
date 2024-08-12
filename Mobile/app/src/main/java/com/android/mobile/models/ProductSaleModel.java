@@ -1,12 +1,31 @@
 package com.android.mobile.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ProductSaleModel {
+    @SerializedName("ProductName")
     private  String name;
+
+    @SerializedName("total_quantity_sold")
     private int quantity;
+    @SerializedName("product_price")
     private Double price;
+    @SerializedName("id_product")
     private int id;
+    @SerializedName("link_image")
     private String linkImage;
+    @SerializedName("SupplierID")
     private int categoryId;
+    @SerializedName("SupplierName")
+    private String nameSup;
+
+    public String getNameSup() {
+        return nameSup;
+    }
+
+    public void setNameSup(String nameSup) {
+        this.nameSup = nameSup;
+    }
 
     public int getCategoryId() {
         return categoryId;

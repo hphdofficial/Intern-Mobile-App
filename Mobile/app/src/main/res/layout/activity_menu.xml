@@ -92,12 +92,14 @@
     </LinearLayout>
     <TextView
         android:layout_marginTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sản phẩm bán chạy"
         android:background="@color/white"
         android:textStyle="bold"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="#FF0000"
         android:id="@+id/productsale"
         app:layout_constraintTop_toBottomOf="@id/linearinfor"></TextView>
@@ -129,6 +131,7 @@
 
         <com.google.android.flexbox.FlexboxLayout
 
+            android:paddingTop="10dp"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

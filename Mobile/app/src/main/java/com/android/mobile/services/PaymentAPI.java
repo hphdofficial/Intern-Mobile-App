@@ -8,6 +8,8 @@ import com.android.mobile.models.CartResponse;
 import com.android.mobile.models.ClassModelT;
 import com.android.mobile.models.DetailsBelt;
 import com.android.mobile.models.HistoryClassModel;
+import com.android.mobile.models.ProductModel;
+import com.android.mobile.models.ProductSaleModel;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.models.StatusOrther;
 import com.android.mobile.models.StatusRegister;
@@ -69,6 +71,9 @@ public interface PaymentAPI {
 
     @GET("status_payingclass")
     Call<StatusRegister> GetStatusRegister(@Query ("id") int id);
+
+    @GET("api/getTopSellingProducts")
+    Call<List<ProductSaleModel>> GetSaleProduct();
 
 
 }

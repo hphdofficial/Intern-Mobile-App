@@ -2,6 +2,7 @@ package com.android.mobile;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -64,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -164,15 +166,28 @@ public class MenuActivity extends BaseActivity {
 
 
     public void getProductP(){
-        ProductSaleModel p = new ProductSaleModel();
-        p.setId(1);
-        p.setName("Sp1");
-        p.setPrice(1000.0);
-        p.setCategoryId(1);
-        p.setQuantity(10);
+        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+        Call<List<ProductSaleModel>> call = apiService.GetSaleProduct();
 
-        listP.add(p);
-        CreateItemP(listP);
+        call.enqueue(new Callback<List<ProductSaleModel>>() {
+            @Override
+            public void onResponse(Call<List<ProductSaleModel>> call, Response<List<ProductSaleModel>> response) {
+                if(response.isSuccessful()){
+                    listP = response.body();
+                    CreateItemP(listP);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductSaleModel>> call, Throwable t) {
+
+            }
+        });
+
+
+
+
+
 
     }
     public void ShowMenu(){
@@ -263,6 +278,7 @@ public class MenuActivity extends BaseActivity {
                 0, // Width sẽ được xác định bởi layout_flexBasisPercent
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
+
         linear.setGravity(Gravity.CENTER);
         layoutParams.setMargins(10,0,10,10);
         layoutParams.setFlexBasisPercent(0.30f); // Chiếm 1/3 chiều rộng (33%)
@@ -294,6 +310,10 @@ public class MenuActivity extends BaseActivity {
         TextView textView = new TextView(this);
 
         textView.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+        textView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                150
+        ));
         textView.setText(content);
         textView.setTextColor(Color.BLACK);
         textView.setTextSize(17);
@@ -378,7 +398,7 @@ public class MenuActivity extends BaseActivity {
                 );
                 linear.setGravity(Gravity.CENTER);
                 layoutParams.setMargins(10,0,10,10);
-                layoutParams.setFlexBasisPercent(0.480f); // Chiếm 1/3 chiều rộng (33%)
+                layoutParams.setFlexBasisPercent(0.30f); // Chiếm 1/3 chiều rộng (33%)
                 linear.setLayoutParams(layoutParams);
                 linear.setOrientation(LinearLayout.VERTICAL);
                 CardView cardView = new CardView(this);
@@ -399,7 +419,6 @@ public class MenuActivity extends BaseActivity {
                 String imageName = p.getLinkImage(); // Tên tệp hình ảnh mà bạn muốn đặt
                 Picasso.get().load(imageName).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageView);
 
-
                 cardView.addView(imageView);
 
 
@@ -407,23 +426,27 @@ public class MenuActivity extends BaseActivity {
                 TextView textView = new TextView(this);
 
                 textView.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+                textView.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        100
+                ));
                 textView.setText("SP: "+p.getName());
-                textView.setTextColor(Color.BLACK);
-                textView.setTextSize(14);
+                textView.setTextColor(Color.BLUE);
+                textView.setTextSize(12);
 
                 TextView textView1 = new TextView(this);
 
                 textView1.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
                 textView1.setText("Price: "+p.getPrice().toString());
-                textView1.setTextColor(Color.BLACK);
-                textView1.setTextSize(14);
+                textView1.setTextColor(Color.RED);
+                textView1.setTextSize(12);
 
                 TextView textView2 = new TextView(this);
 
                 textView2.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
                 textView2.setText("SL bán: "+p.getQuantity());
-                textView2.setTextColor(Color.BLACK);
-                textView2.setTextSize(14);
+                textView2.setTextColor(Color.GRAY);
+                textView2.setTextSize(12);
 
                 linear.addView(cardView);
                 linear.addView(textView);
@@ -436,7 +459,8 @@ public class MenuActivity extends BaseActivity {
                         Intent iten = new Intent(getApplicationContext(),activity_item_detail.class);
                         iten.putExtra("id",p.getId());
                         iten.putExtra("IDSupplier",p.getCategoryId());
-                        iten.putExtra("categoryName","Không xác định");
+                        iten.putExtra("categoryName",p.getNameSup());
+                        startActivity(iten);
                     }
                 });
 
@@ -461,6 +485,24 @@ public class MenuActivity extends BaseActivity {
         t.setText("Thông báo" + "(NEW)");
         t.setTextColor(Color.RED);
         t.setTextSize(20);
+        // Áp dụng animation chữ chạy
+        // Tạo ValueAnimator để thay đổi màu sắc
+        ValueAnimator colorAnimator = ValueAnimator.ofArgb(Color.YELLOW, Color.RED);
+        colorAnimator.setDuration(1000); // Thay đổi màu trong 1 giây
+        colorAnimator.setRepeatCount(ValueAnimator.INFINITE); // Lặp lại vô hạn
+        colorAnimator.setRepeatMode(ValueAnimator.REVERSE); // Đảo ngược màu
+
+        // Cập nhật màu chữ của TextView
+        colorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                int color = (int) animator.getAnimatedValue();
+                t.setTextColor(color);
+            }
+        });
+
+        // Bắt đầu animation
+        colorAnimator.start();
 
         linearinfor.addView(t);
         int count = 1;
