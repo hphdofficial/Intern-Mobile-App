@@ -16,6 +16,8 @@ import com.android.mobile.models.ReponseModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import retrofit2.Call;
@@ -74,7 +76,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
 
     private void sendOtp() {
-        String email = editTextEmail.getText().toString();
+        String email = editTextEmail.getText().toString().trim();
 
         if (email.isEmpty()) {
             Toast.makeText(ForgotPasswordActivity.this, "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
@@ -93,7 +95,20 @@ public class ForgotPasswordActivity extends BaseActivity {
                     Toast.makeText(ForgotPasswordActivity.this, "OTP đã được gửi đến email của bạn", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ForgotPasswordActivity.this, EnterOtpActivity.class).putExtra("email", email));
                 } else {
-                    Toast.makeText(ForgotPasswordActivity.this, "Gửi OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    try {
+                        // Xử lý phản hồi lỗi từ server
+                        JSONObject errorObject = new JSONObject(response.errorBody().string());
+                        JSONObject errors = errorObject.getJSONObject("errors");
+
+                        if (errors.has("email")) {
+                            Toast.makeText(ForgotPasswordActivity.this, "Email không hợp lệ hoặc không tồn tại.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ForgotPasswordActivity.this, "Gửi OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ForgotPasswordActivity.this, "Gửi OTP thất bại.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -108,4 +123,5 @@ public class ForgotPasswordActivity extends BaseActivity {
             }
         });
     }
+
 }

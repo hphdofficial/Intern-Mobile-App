@@ -19,6 +19,8 @@ import com.android.mobile.models.UpdatePasswordModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -128,7 +130,21 @@ public class UpdatePassword extends BaseActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại", Toast.LENGTH_SHORT).show();
+                        try {
+                            // Xử lý phản hồi lỗi từ server
+                            String errorMessage = response.errorBody().string();
+                            JSONObject errorObject = new JSONObject(errorMessage);
+                            String error = errorObject.optString("error");
+
+                            if (response.code() == 400 && error.equals("Mật khẩu hiện tại không đúng")) {
+                                Toast.makeText(UpdatePassword.this, "Mật khẩu hiện tại không đúng", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại: " + error, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại.", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
                     }
                 }
 
@@ -142,6 +158,7 @@ public class UpdatePassword extends BaseActivity {
             Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void showLoading() {
         if (loadingFragment == null) {
