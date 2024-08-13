@@ -40,7 +40,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:drawablePadding="8dp"
-                    android:hint="Tìm kiếm sản phẩm"
+                    android:hint="@string/hint_search_edit"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:padding="8dp"
@@ -82,7 +82,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="#DFDFDF"
                     android:padding="8dp"
-                    android:text="Tất cả"
+                    android:text="@string/btn_text_sort_all"
                     android:textColor="#000000" />
 
                 <Button
@@ -92,7 +92,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="#DFDFDF"
                     android:padding="8dp"
-                    android:text="Nổi bật"
+                    android:text="@string/btn_text_sort_amazing"
                     android:textColor="#000000" />
 
                 <Button
@@ -102,7 +102,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="#DFDFDF"
                     android:padding="8dp"
-                    android:text="Giảm giá"
+                    android:text="@string/btn_text_sort_sale"
                     android:textColor="#000000" />
 
                 <Button
@@ -112,7 +112,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="#DFDFDF"
                     android:padding="8dp"
-                    android:text="Mới về"
+                    android:text="@string/btn_text_sort_new"
                     android:textColor="#000000" />
             </LinearLayout>
 

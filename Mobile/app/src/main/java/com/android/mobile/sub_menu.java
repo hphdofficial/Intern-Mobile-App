@@ -1,9 +1,11 @@
 package com.android.mobile;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,11 +27,14 @@ import android.widget.TextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.mobile.adapter.BaseActivity;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
+
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -178,6 +183,22 @@ public class sub_menu extends Fragment {
                 }
 
                 if(id == R.id.btn_language){
+//                    changeLanguage("en");
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("AppSettings", Activity.MODE_PRIVATE);
+
+                    String lang = sharedPreferences.getString("App_Language", "vi");
+                    if(lang.equals("vi")){
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("App_Language", "en");
+                        editor.apply();
+                        changeLanguage("en");
+                    }else{
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("App_Language", "vi");
+                        editor.apply();
+                        changeLanguage("vi");
+                    }
+
                 }
                 // Close the navigation drawer
                return true;
@@ -315,5 +336,26 @@ public class sub_menu extends Fragment {
 
     }
     public void onIconClick(View view) {
+    }
+
+    private void changeLanguage(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
+        // Save selected language
+        saveLanguagePreference(languageCode);
+
+        // Refresh the current fragment/activity
+        getActivity().recreate();  // Reload lại activity để áp dụng ngôn ngữ mới
+    }
+
+    private void saveLanguagePreference(String languageCode) {
+        SharedPreferences preferences = getActivity().getSharedPreferences("AppSettings", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("App_Language", languageCode);
+        editor.apply();
     }
 }

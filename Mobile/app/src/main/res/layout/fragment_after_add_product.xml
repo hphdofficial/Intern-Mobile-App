@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Thêm vào giỏ hàng thành công"
+                android:text="@string/text_success_for_add_to_cart"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:backgroundTint="@color/blue_primary"
-                    android:text="Tiếp tục mua sắm"
+                    android:text="@string/btn_text_continue_shopping"
                     android:textColor="#FFFFFF" />
 
                 <Button
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:backgroundTint="@color/blue_primary"
-                    android:text="Đến giỏ hàng"
+                    android:text="@string/btn_text_go_to_cart"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:backgroundTint="#FF0000"
-                android:text="Đóng"
+                android:text="@string/btn_text_close"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

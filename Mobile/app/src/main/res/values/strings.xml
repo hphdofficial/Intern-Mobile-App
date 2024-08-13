@@ -10,6 +10,70 @@
     <string name="logo_desc">logo_desc</string>
     <string name="qr_code_image">qr_code_image</string>
 
+    <!-- layout: checkin -->
+
+    <string name="btn_text_checkin_history">Lịch sử điểm danh</string>
+    <string name="btn_text_checkin">Lưu</string>
+    <string name="tbl_header_text_idAttendee">Mã số</string>
+    <string name="tbl_header_text_nameAttendee">Tên</string>
+    <string name="tbl_header_text_checkbox">Hiện diện</string>
+    <string name="text_heading">Điểm danh</string>
+
+    <!-- layout: student_view_checkin -->
+
+    <string name="text_heading_class_name">Tên lớp</string>
+    <string name="text_days_attend_to_class">Số ngày tham gia lớp học</string>
+    <string name="tbl_header_text_date">Ngày</string>
+    <string name="tbl_header_text_timeIn">Điểm danh lúc</string>
+
+    <!-- layout: teacher_view_checkin -->
+
+    <string name="hint_search_edit_start_date">Nhập ngày bắt đầu</string>
+    <string name="hint_search_edit_end_date">Nhập ngày kết thúc</string>
+    <string name="btn_text_export_excel">Xuất Excel</string>
+
+    <!-- layout: items -->
+    <string name="btn_text_sort_all">Tất cả</string>
+    <string name="btn_text_sort_new">Mới về</string>
+    <string name="btn_text_sort_sale">Giảm giá</string>
+    <string name="btn_text_sort_amazing">Nổi bật</string>
+    <string name="hint_search_edit">Tìm kiếm sản phẩm</string>
+
+    <!-- layout: item_detail -->
+    <string name="text_quantity_to_buy">Số lượng muốn mua:</string>
+    <string name="btn_text_add_to_cart">Thêm vào giỏ hàng</string>
+    <string name="text_product_infor">Thông tin:</string>
+    <string name="text_product_infor_supplier">Nhà cung cấp:</string>
+    <string name="text_product_infor_product_in_stock">Số lượng hàng còn:</string>
+    <string name="btn_text_review_product">Đánh giá sản phẩm</string>
+    <string name="text_product_alike">Các sản phẩm tương tự</string>
+
+    <!-- layout: item_detail -->
+    <string name="text_amazing">Nổi bật !</string>
+<!--    <string name="text_in_stock">Thêm vào giỏ hàng</string>-->
+
+    <!-- layout: fragment_after_add_to_cart -->
+    <string name="text_success_for_add_to_cart">Thêm vào giỏ hàng thành công</string>
+    <string name="btn_text_continue_shopping">Tiếp tục mua sắm</string>
+    <string name="btn_text_go_to_cart">Đến giỏ hàng</string>
+    <string name="btn_text_close">Đóng</string>
+
+    <!-- layout: bottom_sheet_dialog_filter -->
+    <string name="text_heading_filter">Lọc</string>
+    <string name="text_filter_category">Loại:</string>
+    <string name="text_filter_price">Giá:</string>
+    <string name="text_filter_price_min">Giá tối thiểu:</string>
+    <string name="text_filter_price_max">Giá tối đa:</string>
+    <string name="text_filter_supplier">Nhà cung cấp:</string>
+    <string name="btn_text_filter">Lọc</string>
+
+    <!-- layout: lesson -->
+    <string name="hint_search_lesson_edit">Tìm kiếm lý thuyết</string>
+
+    <!-- layout: detail_item_chapter -->
+    <string name="text_heading_theory_name">Tên lý thuyết</string>
+    <string name="text_warning_theory">Đồng môn vui lòng đợi load clip từ server nhé. Nếu video nào không có logo liên đoàn thì là không có clip, anh em tự quay cho đồng môn tham khảo nhé. Sẽ cập nhật khi có clip liên đoàn.</string>
+
     <string-array name="view_options">
         <item>Bản đồ</item>
         <item>Danh sách</item>
