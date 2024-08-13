@@ -167,7 +167,7 @@ public class activity_checkin extends BaseActivity {
                     System.out.println(checkin.getId());
                     attendee.setIn(formattedTime);
 //                    attendee.setIn("18:08");
-                    attendee.setOut("19:30");
+                    attendee.setOut("20:30");
                     attendees.add(attendee);
                 }
 
