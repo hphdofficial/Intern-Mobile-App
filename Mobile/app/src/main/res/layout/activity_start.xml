@@ -5,12 +5,12 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity"
-    android:background="#F6F8FB">
+    android:background="#F6F8FB"
+    tools:context=".StartActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,11 +19,11 @@
 
         <ImageView
             android:id="@+id/imageViewLogo"
-            android:layout_width="181dp"
-            android:layout_height="192dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/logostartmain" />
 
         <TextView
@@ -55,11 +55,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/subtitle"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:orientation="vertical"
             android:background="@drawable/rounded_edittext_background"
+            android:orientation="vertical"
             android:padding="8dp">
 
             <EditText
@@ -81,11 +81,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/username"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:orientation="vertical"
             android:background="@drawable/rounded_edittext_background"
+            android:orientation="vertical"
             android:padding="8dp">
 
             <RelativeLayout
@@ -110,9 +110,9 @@
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/hide"
                     android:clickable="true"
-                    android:focusable="true" />
+                    android:focusable="true"
+                    android:src="@drawable/hide" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -121,8 +121,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/password"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
             android:text="Lưu mật khẩu"
             android:textColor="#808080" />
 
@@ -131,9 +131,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/password"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="20dp"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
             android:text="Quên mật khẩu?"
             android:textColor="#808080"
             android:textStyle="bold" />
@@ -143,27 +143,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/checkbox_save_password"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:backgroundTint="@color/purple_500"
+            android:backgroundTint="@color/default_blue_color"
             android:text="Đăng nhập"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:cornerRadius="15dp" />
 
         <Button
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/btn_login"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:backgroundTint="@color/purple_500"
+            android:backgroundTint="@color/default_blue_color"
             android:text="Đăng ký"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:cornerRadius="15dp" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

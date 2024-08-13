@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +27,16 @@ import android.widget.TextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.mobile.models.Item;
 import com.android.mobile.models.ProfileModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.UserApiService;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,6 +97,9 @@ public class sub_menu extends Fragment {
         }
     }
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -127,8 +137,11 @@ public class sub_menu extends Fragment {
 
         // xét icon item đủ màu
         navigationView.setItemIconTintList(null);
+        Menu menu = navigationView.getMenu();
+        ShowMenu(menu);
 
-
+        String token = sharedPreferences.getString("access_token", null);
+        String role = decodeRoleFromToken(token);
         // sự kiện các nút
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -141,6 +154,7 @@ public class sub_menu extends Fragment {
                 }
 
                 if(id == R.id.btn_register_up){
+
                     startActivity(new Intent(getContext(), Register_belt.class));
                 }
                 if(id == R.id.btn_self){
@@ -150,6 +164,7 @@ public class sub_menu extends Fragment {
                     startActivity(new Intent(getContext(), activity_lessons.class));
                 }
                 if(id == R.id.btn_club){
+
                     startActivity(new Intent(getContext(), ClubActivity.class));
                 }
                 if(id == R.id.btn_registerclass){
@@ -168,12 +183,14 @@ public class sub_menu extends Fragment {
                     startActivity(new Intent(getContext(),  AboutActivity.class));
                 }
                 if(id == R.id.btn_class){
+
                     //Các lớp học giảng viên đang dạy điểm danh
                     startActivity(new Intent(getContext(), MyClassActivity.class));
                     //Đã đăng ký lớp học (Học viên)
 //                    startActivity(new Intent(getContext(), activity_member_checkin.class));
                 }
                 if(id == R.id.btn_logout){
+
                     logout();
                 }
 
@@ -217,6 +234,68 @@ public class sub_menu extends Fragment {
         }
 
         return rootView;
+    }
+    public void ShowMenu(Menu menu){
+        String token = sharedPreferences.getString("access_token", null);
+        String role = decodeRoleFromToken(token);
+        if(role.contains("0")){
+            String club = sharedPreferences.getString("id_club_shared",null);
+            if(club !=null){
+                String myClass = sharedPreferences.getString("id_class_shared",null);
+                if(myClass != null){
+                    MenuItem item = menu.findItem(R.id.btn_club);
+                    item.setVisible(false);
+                    MenuItem item2 =  menu.findItem(R.id.btn_register_up);
+                    item2.setVisible(false);
+                  //  RemoveViewUser();
+                }else {
+                    MenuItem item =  menu.findItem(R.id.btn_club);
+                    item.setVisible(false);
+                    MenuItem item1 =  menu.findItem(R.id.btn_class);
+                    item1.setVisible(false);
+                   // ViewUserNotRegister();
+                }
+            }else {
+                MenuItem item =  menu.findItem(R.id.btn_registerclass);
+                item.setVisible(false);
+                MenuItem item1 =  menu.findItem(R.id.btn_class);
+                item1.setVisible(false);
+                MenuItem item2 =  menu.findItem(R.id.btn_register_up);
+                item2.setVisible(false);
+
+            }
+        }else {
+            MenuItem item =  menu.findItem(R.id.btn_registerclass);
+            item.setVisible(false);
+
+          //  RemoveViewHLV();
+        }
+    }
+    public static String decodeRoleFromToken(String jwtToken) {
+        try {
+            // Tách token thành các phần: header, payload, và signature
+            String[] parts = jwtToken.split("\\.");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid JWT token format");
+            }
+
+            // Phần payload là phần thứ 2
+            String payload = parts[1];
+
+            // Giải mã payload từ Base64Url
+            byte[] decodedBytes = Base64.decode(payload, Base64.URL_SAFE);
+            String decodedPayload = new String(decodedBytes, StandardCharsets.UTF_8);
+
+            // Chuyển đổi payload thành JSONObject
+            JSONObject jsonObject = new JSONObject(decodedPayload);
+
+            // Trích xuất role từ payload
+            return jsonObject.getString("role");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     ConstraintLayout main;
     private LinearLayout back_content;

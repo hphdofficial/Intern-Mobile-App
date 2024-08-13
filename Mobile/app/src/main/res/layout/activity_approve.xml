@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ApproveActivity">
+
+    <Spinner
+        android:id="@+id/spinner_options"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/fragment_container"
+        android:layout_centerHorizontal="true" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spinner_options"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:background="#E6E6E6"
+        android:paddingVertical="5dp" />
+
+    <TextView
+        android:id="@+id/txt_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingTop="70dp"
+        android:text="Loading..."
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
+</RelativeLayout>

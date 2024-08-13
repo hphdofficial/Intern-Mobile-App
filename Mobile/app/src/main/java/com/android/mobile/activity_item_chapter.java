@@ -26,6 +26,12 @@ import com.android.mobile.models.TheoryModel;
 import com.android.mobile.network.ApiServiceProvider;
 import com.android.mobile.services.ProductApiService;
 import com.android.mobile.services.TheoryApiService;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackException;
+import com.google.android.exoplayer2.analytics.AnalyticsListener;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -36,6 +42,7 @@ import retrofit2.Response;
 
 public class activity_item_chapter extends BaseActivity {
     private BlankFragment loadingFragment;
+    private ExoPlayer player;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +53,6 @@ public class activity_item_chapter extends BaseActivity {
 
         TextView txtTheoryTittle = findViewById(R.id.txtTheoryTitle);
         TextView txtTheoryContent = findViewById(R.id.txtTheoryContent);
-        WebView webView = findViewById(R.id.webView);
 
 
 
@@ -61,15 +67,16 @@ public class activity_item_chapter extends BaseActivity {
                     txtTheoryTittle.setText(theory.getTenvi());
                     txtTheoryContent.setText("Bài tập gồm: "+theory.getNoidungvi());
                     String videoPath = theory.getLink_video();
-//                    String videoPath = "https://www.youtube.com/embed/h_1t3-6oWz4?si=bDM6H-FSaNHV9d--";
-                    String video = "<iframe width=\"100%\" height=\"100%\" src=\"" +
-                            videoPath +
-                            "\" title=\"YouTube video player\" frameborder=\"0\" allow=\"" +
-                            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\"" +
-                            " referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>";
-                    webView.loadData(video, "text/html", "utf-8");
-                    webView.getSettings().setJavaScriptEnabled(true);
-                    webView.setWebChromeClient(new WebChromeClient());
+
+                    player = new ExoPlayer.Builder(getApplicationContext()).build();
+                    PlayerView playerView = findViewById(R.id.webView);
+                    playerView.setPlayer(player);
+
+                    Uri uri = Uri.parse(videoPath);
+                    MediaItem mediaItem = MediaItem.fromUri(uri);
+                    player.setMediaItem(mediaItem);
+                    player.prepare();
+                    player.play();
 
                     hideLoading();
                 }else {
@@ -117,4 +124,13 @@ public class activity_item_chapter extends BaseActivity {
             loadingFragment = null;
         }
     }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        player.setPlayWhenReady(false);
+        player.release();
+        player = null;
+    }
+
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator
+        android:propertyName="textColor"
+        android:valueFrom="@android:color/black"
+        android:valueTo="@android:color/holo_red_light"
+        android:duration="1000"
+        android:repeatCount="infinite"
+        android:repeatMode="reverse"
+        android:interpolator="@android:anim/accelerate_interpolator"/>
+</set>

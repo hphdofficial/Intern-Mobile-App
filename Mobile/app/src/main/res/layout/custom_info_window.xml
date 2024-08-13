@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:backgroundTint="#0000C8"
-        android:text="Chi tiết"
+        android:text="Xem chi tiết"
         android:textSize="15sp"
         android:visibility="visible" />
 </LinearLayout>

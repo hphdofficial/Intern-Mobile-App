@@ -4,6 +4,7 @@ package com.android.mobile.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtNameProduct;
         public TextView txtPriceProduct;
+        public TextView txtPriceSale;
+        public TextView txtSale;
         public TextView txtQuantityProduct;
         public TextView txtNameSupplier;
         public TextView txtCategory;
@@ -55,6 +58,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             imageViewProduct = view.findViewById(R.id.imageViewProductCart);
             txtNameProduct = view.findViewById(R.id.txt_name_stored_item);
             txtPriceProduct = view.findViewById(R.id.txt_price_product);
+            txtPriceSale = view.findViewById(R.id.txt_price_sale);
+            txtSale = view.findViewById(R.id.txt_sale);
             txtQuantityProduct = view.findViewById(R.id.textview_quantity);
             txtNameSupplier = view.findViewById(R.id.txt_name_supplier);
             txtCategory = view.findViewById(R.id.txt_category_product);
@@ -70,12 +75,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         this.cartActivity = cartActivity;
     }
 
-    public CartAdapter(Context context, List<ProductModel> data, Boolean viewMode) {
-        this.context = context;
-        this.productList = data;
-        this.isViewMode = viewMode;
-    }
-
     @Override
     public CartAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart, parent, false);
@@ -84,14 +83,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(CartAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         Glide.with(context)
                 .load(productList.get(position).getImage_link())
                 .error(R.drawable.product)
                 .into(holder.imageViewProduct);
         holder.txtNameProduct.setText(productList.get(position).getProductName());
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedPrice = currencyFormat.format(Double.parseDouble(productList.get(position).getUnitPrice()));
         holder.txtPriceProduct.setText(formattedPrice);
+        holder.txtPriceProduct.setPaintFlags(holder.txtPriceProduct.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        float percent = Float.parseFloat(productList.get(position).getSale().toString());
+        int intPercent = (int) (percent * 100);
+        int txtProductPriceSale = Integer.parseInt(productList.get(position).getUnitPrice()) - (Integer.parseInt(productList.get(position).getUnitPrice()) * intPercent) / 100;
+        String formattedPriceSale = currencyFormat.format(Double.parseDouble(String.valueOf(txtProductPriceSale)));
+        holder.txtPriceSale.setText(formattedPriceSale);
+        holder.txtSale.setText("-" + intPercent + "%");
         holder.txtQuantityProduct.setText(String.valueOf(productList.get(position).getQuantity()));
         holder.txtNameSupplier.setText("Nhà cung cấp " + productList.get(position).getSupplierName());
         holder.txtCategory.setText("Thể loại: " + productList.get(position).getCategoryName());

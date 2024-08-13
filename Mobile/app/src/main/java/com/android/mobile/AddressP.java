@@ -100,12 +100,12 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
                     SharedPreferences sharedPreferences = getSharedPreferences("myAddress", Context.MODE_PRIVATE);
                     Gson gson = new Gson();
                     String json = sharedPreferences.getString("list",null);
-
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     if(json != null){
                         Type type = new TypeToken<ArrayList<addressModel>>() {}.getType();
                         list = gson.fromJson(json, type);
 
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
 
                         // thay doi data
                         addressModel a = new addressModel(s,0);
@@ -121,6 +121,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
                         adapter.notifyDataSetChanged();
 
                     }
+
                 }
 
             }
@@ -203,6 +204,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
             editor.putString("list", j);
             editor.apply();
         }
+
     }
     @Override
     public void onItemClick(int position) {

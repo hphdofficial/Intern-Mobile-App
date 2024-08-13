@@ -247,7 +247,7 @@ public class activity_item_detail extends BaseActivity {
                     }
 
                     SharedPreferences sharedPreferences = getSharedPreferences("myContent", Context.MODE_PRIVATE);
-                    String categoryNameSave = sharedPreferences.getString("categoryName", null);
+                    String categoryNameSave = sharedPreferences.getString("categoryName", "Găng tay");
                     FetchProductsByCategory(categoryNameSave);
                     hideLoading();
                 }else {
@@ -298,9 +298,8 @@ public class activity_item_detail extends BaseActivity {
     }
 
     private void FetchProductsByCategory(String categoryName){
-        showLoading();
+
         ProductApiService apiService = ApiServiceProvider.getProductApiService();
-        System.out.println(categoryName);
         apiService.getByCategory(categoryName).enqueue(new Callback<List<ProductModel>>() {
             @Override
             public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {

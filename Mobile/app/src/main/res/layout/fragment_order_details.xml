@@ -164,6 +164,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/qr_code"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="26dp"
+                    android:layout_marginLeft="-100dp"
+                    android:contentDescription="@string/qr_code_image"
+                    android:scaleType="fitCenter" />
             </LinearLayout>
 
             <Button

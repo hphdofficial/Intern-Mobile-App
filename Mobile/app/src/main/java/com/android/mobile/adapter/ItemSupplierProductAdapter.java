@@ -1,4 +1,3 @@
-// ItemSupplierProductAdapter.java
 package com.android.mobile.adapter;
 
 import android.content.Context;
@@ -67,16 +66,25 @@ public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplie
             }
         });
 
-        if (product.getImage_link() != null && !product.getImage_link().isEmpty()) {
-            Picasso.get().load(product.getImage_link()).into(viewHolder.imgItem);
+        String imageLink = product.getImage_link();
+        String categoryName = product.getCategoryName();
+
+        if (imageLink != null && !imageLink.trim().isEmpty()) {
+            Picasso.get()
+                    .load(imageLink)
+                    .placeholder(R.drawable.product) // Hình ảnh placeholder khi đang tải
+                    .error(R.drawable.logo_vovinam)  // Hình ảnh hiển thị khi có lỗi
+                    .into(viewHolder.imgItem);
         } else {
-            viewHolder.imgItem.setImageResource(R.drawable.product); // default placeholder image
+            viewHolder.imgItem.setImageResource(R.drawable.product); // Sử dụng hình ảnh mặc định
         }
 
         viewHolder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, activity_item_detail.class);
             intent.putExtra("id", product.getProductID());
             intent.putExtra("IDSupplier", product.getSupplierID());
+            intent.putExtra("categoryName", categoryName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
     }

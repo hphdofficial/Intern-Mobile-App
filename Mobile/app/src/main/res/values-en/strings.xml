@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vovinam</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="password_visibility_toggle">Toggle Password Visibility</string>
+    <string name="news_image_desc">news_image_desc</string>
+    <string name="search">search</string>
+    <string name="supplier">supplier</string>
+    <string name="logo_desc">logo_desc</string>
+
+    <!-- layout: checkin -->
+
+    <string name="btn_text_checkin_history">Checkin History</string>
+    <string name="btn_text_checkin">Save</string>
+    <string name="tbl_header_text_idAttendee">ID</string>
+    <string name="tbl_header_text_nameAttendee">Name</string>
+    <string name="tbl_header_text_checkbox">Present</string>
+    <string name="text_heading">Checkin</string>
+
+    <!-- layout: student_view_checkin -->
+
+    <string name="text_heading_class_name">Class Name</string>
+    <string name="text_days_attend_to_class">Days attend to Class</string>
+    <string name="tbl_header_text_date">Date</string>
+    <string name="tbl_header_text_timeIn">Checkin Time</string>
+
+    <!-- layout: teacher_view_checkin -->
+
+    <string name="hint_search_edit_start_date">Enter Start Day</string>
+    <string name="hint_search_edit_end_date">Enter End Day</string>
+    <string name="btn_text_export_excel">Export Excel</string>
+
+    <!-- layout: items -->
+    <string name="btn_text_sort_all">All</string>
+    <string name="btn_text_sort_new">New</string>
+    <string name="btn_text_sort_sale">Sale</string>
+    <string name="btn_text_sort_amazing">Amazing</string>
+    <string name="hint_search_edit">Search Product</string>
+
+    <!-- layout: chapters -->
+
+    <!-- layout: item_detail -->
+    <string name="text_quantity_to_buy">Quantity:</string>
+    <string name="btn_text_add_to_cart">Add to Cart</string>
+    <string name="text_product_infor">Product Information:</string>
+    <string name="text_product_infor_supplier">Supplier:</string>
+    <string name="text_product_infor_product_in_stock">Product In Stock:</string>
+    <string name="btn_text_review_product">Review Product</string>
+    <string name="text_product_alike">You May Like</string>
+
+    <!-- layout: item_detail -->
+    <string name="text_amazing">Amazing !</string>
+    <!--    <string name="text_in_stock">Thêm vào giỏ hàng</string>-->
+
+    <!-- fragment: fragment_after_add_to_cart -->
+    <string name="text_success_for_add_to_cart">Add to Cart Successfully</string>
+    <string name="btn_text_continue_shopping">Continue Shopping</string>
+    <string name="btn_text_go_to_cart">Go to Cart</string>
+    <string name="btn_text_close">Close</string>
+
+    <!-- layout: bottom_sheet_dialog_filter -->
+    <string name="text_heading_filter">Filter</string>
+    <string name="text_filter_category">Category:</string>
+    <string name="text_filter_price">Price:</string>
+    <string name="text_filter_price_min">Minimum Price:</string>
+    <string name="text_filter_price_max">Maximum Price:</string>
+    <string name="text_filter_supplier">Supplier:</string>
+    <string name="btn_text_filter">Comfirm</string>
+
+    <!-- layout: lesson -->
+    <string name="hint_search_lesson_edit">Search Theory</string>
+
+    <!-- layout: detail_item_chapter -->
+    <string name="text_heading_theory_name">Theory Name</string>
+    <string name="text_warning_theory">Fellow, please wait for the clip from the server. If any video does not have the League Logo, there is no clip, you can film for your own reference. Will update when there is a federated clip.</string>
+
+</resources>

@@ -65,6 +65,7 @@ public class activity_lessons extends BaseActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         token = sharedPreferences.getString("access_token", null);
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMjg2OTcwOCwiZXhwIjoxNzIyOTU2MTA4LCJuYmYiOjE3MjI4Njk3MDgsImp0aSI6IlcyaTRucGpCWldBMGtYMEoiLCJzdWIiOiIyNDkiLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyNDksInJvbGUiOjB9.SKZRS6X1ON0Eh2Dk9H6MMpHeO59Sgg1sGmVu7qt0xaM";
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -124,41 +125,52 @@ public class activity_lessons extends BaseActivity {
             public void onResponse(Call<Club> call, Response<Club> response) {
                 if(response.isSuccessful()){
                     Club club = response.body();
-                    int idClub = Integer.parseInt(club.getId_club());
+                    if(club.getId_club().equals("0")){
+                        Toast.makeText(activity_lessons.this, "Bạn chưa đăng ký club, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = getIntent();
-                    int idBelt = intent.getIntExtra("idBelt", -1);
+                    }else{
+                        int idClub = Integer.parseInt(club.getId_club());
 
-                    // Lấy danh sách lý thuyết theo id đai vs id Club
-                    TheoryApiService apiService = ApiServiceProvider.getTheoryApiService();
-                    apiService.getMartialArtsTheoryByClubByBelt(idClub, idBelt).enqueue(new Callback<List<TheoryModel>>() {
-                        @Override
-                        public void onResponse(Call<List<TheoryModel>> call, Response<List<TheoryModel>> response) {
-                            if(response.isSuccessful()){
-                                theoryList.clear(); // Clear existing data
-                                theoryList.addAll(response.body());
-                                filterTheory(search_edit_text.getText().toString());
-                                hideLoading();
-                            }else {
-                                hideLoading();
-                                Toast.makeText(activity_lessons.this, "Lỗi lấy danh sách lý thuyết, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
-                                System.out.println("Active: Call onResponse");
-                                Log.e("PostData", "Error: " + response.message());
+                        Intent intent = getIntent();
+                        int idBelt = intent.getIntExtra("idBelt", -1);
+
+                        // Lấy danh sách lý thuyết theo id đai vs id Club
+                        TheoryApiService apiService = ApiServiceProvider.getTheoryApiService();
+                        apiService.getMartialArtsTheoryByClubByBelt(idClub, idBelt).enqueue(new Callback<List<TheoryModel>>() {
+                            @Override
+                            public void onResponse(Call<List<TheoryModel>> call, Response<List<TheoryModel>> response) {
+                                if(response.isSuccessful()){
+                                    theoryList.clear(); // Clear existing data
+                                    theoryList.addAll(response.body());
+                                    if(theoryList.isEmpty()){
+                                        Toast.makeText(activity_lessons.this, "Club chưa có lý thuyết", Toast.LENGTH_SHORT).show();
+
+                                    }else{
+                                        filterTheory(search_edit_text.getText().toString());
+                                    }
+
+                                    hideLoading();
+                                }else {
+                                    hideLoading();
+                                    Toast.makeText(activity_lessons.this, "Không tìm thấy lý thuyết", Toast.LENGTH_SHORT).show();
+                                    System.out.println("Active: Call onResponse");
+                                    Log.e("PostData", "Error: " + response.message());
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
-                            hideLoading();
-                            Toast.makeText(activity_lessons.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
-                            System.out.println("Active: Call Onfail");
-                            Log.e("PostData", "Failure: " + throwable.getMessage());
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
+                                hideLoading();
+                                Toast.makeText(activity_lessons.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                                System.out.println("Active: Call Onfail");
+                                Log.e("PostData", "Failure: " + throwable.getMessage());
+                            }
+                        });
+                    }
 
                 }else {
                     hideLoading();
-                    Toast.makeText(activity_lessons.this, "Lỗi lấy danh sách lý thuyết, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity_lessons.this, "Bạn chưa đăng ký club, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
                 }
