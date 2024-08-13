@@ -156,7 +156,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             approveJoinClass(itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
                             break;
                         case "leaveclub":
-                            approveLeaveClub(itemClubClass.getId_member(), itemClubClass.getId_club(), clubClassViewHolder.btnApproveRequest);
+                            approveLeaveClub(itemClubClass.getId_member(), itemClubClass.getId_club(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
                             break;
                         case "leaveclass":
                             approveLeaveClass(itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
@@ -304,12 +304,12 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveLeaveClub(int idMember, int idClub, Button button) {
+    private void approveLeaveClub(int idMember, int idClub, int idClass, Button button) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<ReponseModel> call = service.approveLeaveClub("Bearer " + accessToken, idMember, idClub);
+        Call<ReponseModel> call = service.approveLeaveClub("Bearer " + accessToken, new ApproveModel(idMember, idClub, idClass));
 
         Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
 

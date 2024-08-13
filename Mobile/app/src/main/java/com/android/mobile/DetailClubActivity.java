@@ -40,6 +40,7 @@ public class DetailClubActivity extends BaseActivity {
     private TextView txtManagerClub;
     private Button btnJoinClubPending;
     private Button btnCancelClubPending;
+    private Button btnLeaveClubPending;
     private Button btnDirectClub;
     private String idClub = null;
     private List<Club> listClubPending = new ArrayList<>();
@@ -76,6 +77,7 @@ public class DetailClubActivity extends BaseActivity {
         txtManagerClub = findViewById(R.id.txtManagerDetailClub);
         btnJoinClubPending = findViewById(R.id.btn_join_club_pending);
         btnCancelClubPending = findViewById(R.id.btn_cancel_club_pending);
+        btnLeaveClubPending = findViewById(R.id.btn_leave_club_pending);
         btnDirectClub = findViewById(R.id.btn_direct_club);
 
         Intent intent = getIntent();
@@ -97,6 +99,13 @@ public class DetailClubActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 cancelClubPending();
+            }
+        });
+
+        btnLeaveClubPending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveClubPending();
             }
         });
 
@@ -187,6 +196,8 @@ public class DetailClubActivity extends BaseActivity {
             btnCancelClubPending.setVisibility(isPending ? View.VISIBLE : View.GONE);
         } else if (!idClub.equals(idClubShared)) {
             btnDirectClub.setVisibility(View.VISIBLE);
+        } else {
+            btnLeaveClubPending.setVisibility(View.VISIBLE);
         }
     }
 
@@ -236,6 +247,35 @@ public class DetailClubActivity extends BaseActivity {
                     setupButton();
                     btnCancelClubPending.setEnabled(true);
                     Toast.makeText(DetailClubActivity.this, "Đã hủy yêu cầu tham gia", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e("Error", response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReponseModel> call, Throwable t) {
+                Log.e("Fail", t.getMessage());
+            }
+        });
+    }
+
+    private void leaveClubPending() {
+        btnLeaveClubPending.setEnabled(false);
+        Toast.makeText(DetailClubActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
+
+        String token = sharedPreferences.getString("access_token", null);
+
+        ClubApiService service = ApiServiceProvider.getClubApiService();
+        Call<ReponseModel> call = service.leaveClubPending("Bearer" + token);
+
+        call.enqueue(new Callback<ReponseModel>() {
+            @Override
+            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                if (response.isSuccessful()) {
+                    isPending = false;
+                    setupButton();
+                    btnLeaveClubPending.setEnabled(true);
+                    Toast.makeText(DetailClubActivity.this, "Đã gửi yêu cầu rời câu lạc bộ", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.e("Error", response.message());
                 }

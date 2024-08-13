@@ -89,12 +89,17 @@ public interface ClubApiService {
             @Query("id_club") int clubId
     );
 
+    @POST("/api/member/leave-club-request")
+    Call<ReponseModel> leaveClubPending(
+            @Header("Authorization") String token
+    );
+
     @GET("/api/coach/join-memberpending")
     Call<List<ApproveModel>> getListJoinClubPending(
             @Header("Authorization") String token
     );
 
-    @GET("")
+    @GET("/api/coach/leave-club-requests")
     Call<List<ApproveModel>> getListLeaveClubPending(
             @Header("Authorization") String token
     );
@@ -106,10 +111,9 @@ public interface ClubApiService {
             @Query("id_club") int clubId
     );
 
-    @POST("")
+    @POST("/api/coach/approve-leave-club-request")
     Call<ReponseModel> approveLeaveClub(
             @Header("Authorization") String token,
-            @Query("id_member") int memberId,
-            @Query("id_club") int clubId
+            @Body ApproveModel model
     );
 }

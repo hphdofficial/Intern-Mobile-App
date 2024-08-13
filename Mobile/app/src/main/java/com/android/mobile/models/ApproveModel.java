@@ -9,6 +9,12 @@ public class ApproveModel {
     private String ten;
     private String created_at;
 
+    public ApproveModel(int id_member, int id_club, int id_class) {
+        this.id_member = id_member;
+        this.id_club = id_club;
+        this.id_class = id_class;
+    }
+
     public int getId_club() {
         return id_club;
     }
