@@ -1,8 +1,10 @@
 package com.android.mobile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +30,7 @@ import com.android.mobile.adapter.MyClassAdapter;
 import com.android.mobile.models.AttendanceRequest;
 import com.android.mobile.models.CheckinMemberModel;
 import com.android.mobile.models.ClassModel;
+import com.android.mobile.models.ErrorCheckinModel;
 import com.android.mobile.models.Member;
 import com.android.mobile.models.OptionCategory;
 import com.android.mobile.models.ProductModel;
@@ -38,12 +41,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -61,6 +67,8 @@ public class activity_checkin extends BaseActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_checkin);
 
+
+
         Intent intent = getIntent();
         int idClass = intent.getIntExtra("id", -1);
 
@@ -71,7 +79,7 @@ public class activity_checkin extends BaseActivity {
         txtDate.setText("Ngày: "+formattedDate);
 
 
-
+        loadLanguagePreference();
 
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
@@ -123,16 +131,14 @@ public class activity_checkin extends BaseActivity {
                 // Lấy thời gian hiện tại
                 LocalTime currentTime = null;
 
-                String formattedTime = "";
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    currentTime = LocalTime.now();
-                    // Định dạng thời gian theo kiểu 24 giờ
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                currentTime = LocalTime.now();
+                // Định dạng thời gian theo kiểu 24 giờ
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-                    // Chuyển đổi thời gian hiện tại sang chuỗi theo định dạng đã cho
-                    formattedTime = currentTime.format(formatter);
-                }
+                // Chuyển đổi thời gian hiện tại sang chuỗi theo định dạng đã cho
+                String formattedTime = currentTime.format(formatter);
 
+                System.out.println("Time: " + formattedTime);
 
 
                 AttendanceRequest attendanceRequest = new AttendanceRequest();
@@ -141,8 +147,10 @@ public class activity_checkin extends BaseActivity {
                 LocalDate currentTodayDate = null;
                 String todayDate = "";
                 currentTodayDate = LocalDate.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                todayDate = currentTodayDate.format(formatter);
+                DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                todayDate = currentTodayDate.format(formatter1);
+
+                System.out.println("Date: " +todayDate);
 
                 attendanceRequest.setDate(todayDate);
 
@@ -168,7 +176,7 @@ public class activity_checkin extends BaseActivity {
                 attendanceRequest.setAttendees(attendees);
 
                 CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-                apiService.teacherCheckin("Bearer "+token,attendanceRequest).enqueue(new Callback<Void>() {
+                apiService.teacherCheckin("Bearer "+token, attendanceRequest).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if(response.isSuccessful()){
@@ -182,10 +190,20 @@ public class activity_checkin extends BaseActivity {
 
                             Toast.makeText(activity_checkin.this, "Điểm danh thành công", Toast.LENGTH_SHORT).show();
                         }else {
+                            try {
+                                // Xử lý phản hồi lỗi từ server
+                                JSONObject errorObject = new JSONObject(response.errorBody().string());
+                                String errorMessage = errorObject.getString("error");
 
+                                Toast.makeText(activity_checkin.this, errorMessage, Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                Toast.makeText(activity_checkin.this, "Điểm danh thất bại.", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
                             hideLoading();
 
-                            Toast.makeText(activity_checkin.this, "Điểm danh thất bại do chưa đúng thời gian điểm danh lớp học", Toast.LENGTH_SHORT).show();
+//                            System.out.println(response.errorBody());
+//                            Toast.makeText(activity_checkin.this, "Điểm danh thất bại do chưa đúng thời gian điểm danh lớp học", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -255,5 +273,15 @@ public class activity_checkin extends BaseActivity {
             loadingFragment.dismiss();
             loadingFragment = null;
         }
+    }
+
+    private void loadLanguagePreference() {
+        SharedPreferences preferences = getSharedPreferences("AppSettings", Activity.MODE_PRIVATE);
+        String language = preferences.getString("App_Language", "vi"); // mặc định là tiếng Viet
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 }

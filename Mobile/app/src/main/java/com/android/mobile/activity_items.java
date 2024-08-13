@@ -1,7 +1,9 @@
 package com.android.mobile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -48,6 +50,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -82,6 +85,8 @@ public class activity_items extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        loadLanguagePreference();
 
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
@@ -605,5 +610,15 @@ public class activity_items extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+    }
+
+    private void loadLanguagePreference() {
+        SharedPreferences preferences = getSharedPreferences("AppSettings", Activity.MODE_PRIVATE);
+        String language = preferences.getString("App_Language", "vi"); // mặc định là tiếng Viet
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
     }
 }

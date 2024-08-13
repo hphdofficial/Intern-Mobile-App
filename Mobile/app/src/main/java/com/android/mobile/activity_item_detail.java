@@ -247,7 +247,7 @@ public class activity_item_detail extends BaseActivity {
                     }
 
                     SharedPreferences sharedPreferences = getSharedPreferences("myContent", Context.MODE_PRIVATE);
-                    String categoryNameSave = sharedPreferences.getString("categoryName", null);
+                    String categoryNameSave = sharedPreferences.getString("categoryName", "Găng tay");
                     FetchProductsByCategory(categoryNameSave);
                     hideLoading();
                 }else {
