@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -47,6 +48,8 @@ public class PaymentQR extends BaseActivity {
 
     private ImageView imageViewQRCode;
     private Button buttonGenerateQRCode;
+    private TextView author;
+    private TextView bank;
     private Float total = 0f;
     private String textPayment;
     private BlankFragment loadingFragment;
@@ -66,24 +69,20 @@ public class PaymentQR extends BaseActivity {
 
 
 
-
         imageViewQRCode = findViewById(R.id.imageViewQRCode);
         buttonGenerateQRCode = findViewById(R.id.buttonGenerateQRCode);
-
+        author = findViewById(R.id.author);
+        bank = findViewById(R.id.bank);
+        bank.setText(bank.getText() + "Techcombank");
+        author.setText(author.getText() + "Huỳnh Hữu Lợi");
         buttonGenerateQRCode.setVisibility(View.GONE);
 
-        buttonGenerateQRCode.setOnClickListener(v -> generateQRCode("Hello, QR Code!"));
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            // Lấy dữ liệu từ Bundle
-            String title = extras.getString("title");
-            total = extras.getFloat("amount");
-            textPayment = extras.getString("textPayment","infonull");
-           /* if(title.contains("registerclass")){
-                Toast.makeText(getApplicationContext(),extras.getDouble("money")+"",Toast.LENGTH_SHORT).show();
-            }*/
-        }
+        buttonGenerateQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),MenuActivity.class));
+            }
+        });
 
    /*     Retrofit retrofit = ApiClient.getClient(baseUrl);
         vietQRService = retrofit.create(VietQRService.class);*/

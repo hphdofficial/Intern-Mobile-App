@@ -196,6 +196,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                     // Thêm tất cả tin tức vào danh sách
                     newsList.addAll(response.body());
 
+
                     // Sắp xếp tin tức theo thứ tự mới nhất lên đầu
                     Collections.sort(newsList, new Comparator<NewsModel>() {
                         @Override

@@ -58,6 +58,7 @@ public class Register_belt extends BaseActivity {
 
 
         showLoading();
+
         PaymentAPI apiService = APIServicePayment.getPaymentApiService();
 
         Call<BeltModel> callBell = apiService.GetBelt("Bearer" + token);
@@ -68,9 +69,7 @@ public class Register_belt extends BaseActivity {
                if(response.isSuccessful()){
                    BeltModel b = response.body();
 
-
                    chapterAdapter.loadBelt(b);
-
                    Call<List<Belt>> callb = apiService.getAllBelt();
                    callb.enqueue(new Callback<List<Belt>>() {
                        @Override
@@ -81,12 +80,12 @@ public class Register_belt extends BaseActivity {
                            hideLoading();
                        }
 
+
                        @Override
                        public void onFailure(Call<List<Belt>> call, Throwable t) {
-
+                           Toast.makeText(getApplicationContext(),"fails nn",Toast.LENGTH_SHORT).show();
                        }
                    });
-
                }else {
                    Toast.makeText(getApplicationContext(),"fails nn",Toast.LENGTH_SHORT).show();
                }

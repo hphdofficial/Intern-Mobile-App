@@ -6,28 +6,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PaymentQR">
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="16dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="42dp">
+
+        <TextView
+            android:id="@+id/author"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_above="@+id/stk"
+            android:text="Chủ sở hữu: ">
+
+
+        </TextView>
+        <TextView
+android:id="@+id/stk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_above="@+id/bank"
+            android:text="Số tài khoản: ">
+
+
+        </TextView>
+        <TextView
+            android:id="@+id/bank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_above="@+id/imageViewQRCode"
+            android:text="Tên ngân hàng: ">
+
+
+        </TextView>
+        <TextView
+            android:id="@+id/abc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/author"
+
+            android:text="Đặt hàng thành công, cảm ơn bạn đã mua sản phẩm của chú tôi">
+
+        </TextView>
+
+
 
         <ImageView
             android:id="@+id/imageViewQRCode"
             android:layout_width="300dp"
             android:layout_height="300dp"
+android:textAlignment="center"
             android:layout_centerInParent="true"
-            android:scaleType="centerCrop"
             android:background="@android:color/white"
-            android:contentDescription="QR Code" />
+            android:contentDescription="QR Code"
+            android:scaleType="centerCrop" />
 
         <Button
             android:id="@+id/buttonGenerateQRCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Generate QR Code"
             android:layout_below="@id/imageViewQRCode"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:text="Quay về trang chính" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

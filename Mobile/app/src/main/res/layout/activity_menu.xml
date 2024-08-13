@@ -13,8 +13,40 @@
 
 
 
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/fragment_container"
+    tools:ignore="MissingConstraints">
+
+    <LinearLayout
+        android:paddingBottom="20dp"
+
+        android:id="@+id/linearinfor"
+        android:orientation="vertical"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+<!--        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+
+            android:layout_height="wrap_content">
+
+        </LinearLayout>-->
+
+
+        <!--<androidx.constraintlayout.widget.ConstraintLayout
+=======
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+>>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
 
         android:layout_height="wrap_content"
         android:layout_below="@+id/fragment_container"
@@ -23,6 +55,19 @@
         <LinearLayout
             android:paddingBottom="20dp"
 
+<<<<<<< HEAD
+            &lt;!&ndash; Avatar người dùng &ndash;&gt;
+
+            &lt;!&ndash; Tên người dùng &ndash;&gt;
+            <androidx.cardview.widget.CardView
+                android:id="@+id/img_avatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="75dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+=======
             android:id="@+id/linearinfor"
             android:background="@drawable/background_blue1"
             android:layout_width="match_parent"
@@ -34,599 +79,84 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:padding="16dp"
+>>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
 
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="MissingConstraints">
 
-                <!-- Avatar người dùng -->
 
-                <!-- Tên người dùng -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/img_avatar"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    app:cardCornerRadius="75dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
 
-                    tools:layout_editor_absoluteX="16dp">
+                Tên người dùng -->
 
-                    <ImageView
-                        android:id="@+id/img_avatar_menu"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
 
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/avatar_anime"
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sản phẩm bán chạy"
+        android:background="@color/white"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="#FF0000"
+        android:id="@+id/productsale"
+        app:layout_constraintTop_toBottomOf="@id/linearinfor"></TextView>
 
-                        tools:layout_editor_absoluteX="16dp" />
-                </androidx.cardview.widget.CardView>
+    <com.google.android.flexbox.FlexboxLayout
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/img_avatar"
-                    app:layout_constraintStart_toEndOf="@+id/img_avatar"
-                    app:layout_constraintTop_toTopOf="@+id/img_avatar">
 
-                    <TextView
-                        android:id="@+id/textViewName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexWrap="wrap"
+        app:alignItems="stretch"
+        app:flexDirection="row"
+        android:id="@+id/hotP"
+        app:layout_constraintTop_toBottomOf="@+id/productsale"
+        android:background="@color/white"
+        app:justifyContent="center">
+        <!-- Các phần tử con ở đây -->
 
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+    </com.google.android.flexbox.FlexboxLayout>
 
-                        android:text="Nguyễn Mộng Mơ"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+    <ScrollView
+        android:id="@+id/text1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/hotP"
+        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/txt_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="22 Tuổi"
-                        android:textColor="@android:color/darker_gray"
-                        android:textSize="14sp" />
-                </LinearLayout>
+        <com.google.android.flexbox.FlexboxLayout
+
+            android:paddingTop="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            app:alignItems="stretch"
+            app:flexDirection="row"
+            android:id="@+id/menu"
+
+            android:background="@color/white"
+            app:justifyContent="center">
+            <!-- Các phần tử con ở đây -->
+
+        </com.google.android.flexbox.FlexboxLayout>
+    </ScrollView>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
 
-        <ScrollView
-            android:id="@+id/text1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="match_parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearinfor"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:background="@color/cardview_light_background"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
 
-                >
 
-                <LinearLayout
 
-                    android:id="@+id/menu_item"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
 
-                    android:paddingLeft="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/user">
 
-                    <LinearLayout
-                        android:id="@+id/btn_lythuyet"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
 
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_test1"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
 
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/booklt"
-                                >
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Lý thuyết võ đạo">
-
-                        </TextView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/btn_club"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_test2"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test1"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/club"
-                                >
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Câu lạc bộ">
-
-                        </TextView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/btn_register"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_test3"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test2"
-
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/images"
-                                >
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Lớp học">
-
-                        </TextView>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/menu_item2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/menu_item">
-
-                    <LinearLayout
-                        android:id="@+id/btn_class"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_class1"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test3"
-                                tools:ignore="DuplicateIds"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/tick">
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Điểm danh">
-
-                        </TextView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/btn_infor"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_infor2"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test4"
-                                tools:ignore="DuplicateIds"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/newin">
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Tin tức võ học">
-
-                        </TextView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/btn_product"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_item_product"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test5"
-                                tools:ignore="DuplicateIds"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/product">
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Sản phẩm">
-
-                        </TextView>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/menu_item3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/menu_item">
-
-                    <LinearLayout
-                        android:id="@+id/btn_cart"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_item_cart"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test3"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/cart1"
-                                tools:ignore="DuplicateIds">
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Giỏ hàng">
-
-                        </TextView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/btn_history"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_item_history"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test4"
-                                tools:ignore="DuplicateIds"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/history6">
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Lịch sử mua hàng">
-
-                        </TextView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/btn_historyclass1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_historyclass2"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/historyclass"
-                                tools:ignore="DuplicateIds"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/imaghe">
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Lịch sử đăng ký lớp">
-
-                        </TextView>
-                    </LinearLayout>
-
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/menuitem4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/menu_item">
-
-
-
-
-                    <LinearLayout
-                        android:id="@+id/btn_sup"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_sup1"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/btn_sup2"
-                                tools:ignore="DuplicateIds"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/house">
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Nhà cung cấp">
-
-                        </TextView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/btn_logout"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/btn_logout2"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="75dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-
-                            tools:layout_editor_absoluteX="16dp">
-
-                            <ImageView
-                                android:id="@+id/test5"
-                                tools:ignore="DuplicateIds"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/run">
-
-                            </ImageView>
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="Đăng xuất">
-
-                        </TextView>
-                    </LinearLayout>
-
-
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </ScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
