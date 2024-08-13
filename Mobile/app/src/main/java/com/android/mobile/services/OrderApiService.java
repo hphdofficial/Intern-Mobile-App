@@ -28,6 +28,21 @@ public interface OrderApiService {
             @Header("Authorization") String token
     );
 
+    @GET("/update_second_delivery")
+    Call<ReponseModel> updateConfirmOrder(
+            @Query("id") String txnRef
+    );
+
+    @GET("/update_third_delivery")
+    Call<ReponseModel> updateGetOrder(
+            @Query("id") String txnRef
+    );
+
+    @GET("/delivery_update")
+    Call<ReponseModel> updateShipOrder(
+            @Query("id") String txnRef
+    );
+
     @GET("/update_delete_delivery")
     Call<ReponseModel> cancelOrder(
             @Query("id") String txnRef,

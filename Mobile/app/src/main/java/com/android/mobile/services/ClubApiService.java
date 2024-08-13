@@ -1,5 +1,6 @@
 package com.android.mobile.services;
 
+import com.android.mobile.models.ApproveModel;
 import com.android.mobile.models.CityModel;
 import com.android.mobile.models.Club;
 import com.android.mobile.models.CountryModel;
@@ -88,6 +89,16 @@ public interface ClubApiService {
             @Query("id_club") int clubId
     );
 
+    @GET("/api/coach/join-memberpending")
+    Call<List<ApproveModel>> getListJoinClubPending(
+            @Header("Authorization") String token
+    );
+
+    @GET("")
+    Call<List<ApproveModel>> getListLeaveClubPending(
+            @Header("Authorization") String token
+    );
+
     @POST("/api/coach/approve-join")
     Call<ReponseModel> approveJoinClub(
             @Header("Authorization") String token,
@@ -95,8 +106,10 @@ public interface ClubApiService {
             @Query("id_club") int clubId
     );
 
-    @GET("/api/coach/join-memberpending")
-    Call<List<Club>> getListMemberPending(
-            @Header("Authorization") String token
+    @POST("")
+    Call<ReponseModel> approveLeaveClub(
+            @Header("Authorization") String token,
+            @Query("id_member") int memberId,
+            @Query("id_club") int clubId
     );
 }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/rounded_background"
+    android:elevation="4dp"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/txt_name_approve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:maxLines="2"
+        android:text="Yêu cầu..."
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewProductCart"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_name_approve"
+        app:srcCompat="@drawable/logostartmain" />
+
+    <TextView
+        android:id="@+id/txt_name_clubclass"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="10dp"
+        android:maxLines="2"
+        android:text="Name"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCart"
+        app:layout_constraintTop_toTopOf="@+id/imageViewProductCart" />
+
+    <TextView
+        android:id="@+id/txt_name_member"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        android:maxLines="2"
+        android:text="Member"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCart"
+        app:layout_constraintTop_toBottomOf="@+id/txt_name_clubclass" />
+
+    <TextView
+        android:id="@+id/txt_time_request"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:maxLines="2"
+        android:text="Time"
+        android:textSize="18sp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewProductCart"
+        app:layout_constraintTop_toBottomOf="@+id/txt_name_member" />
+
+    <Button
+        android:id="@+id/button_approve_request"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/default_blue_color"
+        android:layout_marginTop="15dp"
+        android:text="Duyệt"
+        app:cornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_time_request" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -27,6 +26,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mobile"
+        android:forceDarkAllowed="false"
         tools:targetApi="31">
 
         <uses-library
@@ -43,6 +43,10 @@
             android:name="vn.terminal_id"
             android:value="YOUR_TERMINAL_ID" />
 
+        <activity
+            android:name=".ApproveActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".OrderActivity"
             android:exported="true"
@@ -261,7 +265,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
