@@ -36,6 +36,8 @@ import com.android.mobile.services.NewsApiService;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -183,14 +185,26 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private void fetchAllNews() {
         showLoading();
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<NewsModel>> call = apiService.getAnouncements();
+        Call<List<NewsModel>> call = apiService.getAllNews(); // Sử dụng API mới để lấy tất cả tin tức
         call.enqueue(new Callback<List<NewsModel>>() {
             @Override
             public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
                 hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     newsList.clear(); // Xóa dữ liệu cũ
+
+                    // Thêm tất cả tin tức vào danh sách
                     newsList.addAll(response.body());
+
+                    // Sắp xếp tin tức theo thứ tự mới nhất lên đầu
+                    Collections.sort(newsList, new Comparator<NewsModel>() {
+                        @Override
+                        public int compare(NewsModel o1, NewsModel o2) {
+                            // Giả sử ngaytao là trường thời gian lưu trữ theo UNIX timestamp
+                            return Long.compare(o2.getNgaytao(), o1.getNgaytao()); // Sắp xếp giảm dần
+                        }
+                    });
+
                     filterNews(searchEditText.getText().toString()); // Lọc theo tìm kiếm
                 } else {
                     showNoNewsMessage();

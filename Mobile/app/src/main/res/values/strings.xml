@@ -8,6 +8,7 @@
     <string name="search">search</string>
     <string name="supplier">supplier</string>
     <string name="logo_desc">logo_desc</string>
+    <string name="qr_code_image">qr_code_image</string>
 
     <string-array name="view_options">
         <item>Bản đồ</item>

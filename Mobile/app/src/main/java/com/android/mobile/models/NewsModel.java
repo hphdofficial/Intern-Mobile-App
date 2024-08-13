@@ -5,6 +5,8 @@ public class NewsModel {
     private String tenvi;
     private String noidungvi;
     private String photo;
+    private String type; // Thêm trường type
+    private long ngaytao;
 
     // Getters and Setters
     public int getId() {
@@ -37,5 +39,21 @@ public class NewsModel {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getType() { // Thêm getter cho type
+        return type;
+    }
+
+    public void setType(String type) { // Thêm setter cho type
+        this.type = type;
+    }
+
+    public long getNgaytao() {
+        return ngaytao;
+    }
+
+    public void setNgaytao(long ngaytao) {
+        this.ngaytao = ngaytao;
     }
 }

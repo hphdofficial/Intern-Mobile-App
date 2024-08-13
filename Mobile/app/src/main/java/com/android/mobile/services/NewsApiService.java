@@ -14,6 +14,9 @@ public interface NewsApiService {
     @GET("api/thongbao")
     Call<List<NewsModel>> getAnouncements();
 
+    @GET("api/news")
+    Call<List<NewsModel>> getAllNews();  // Sử dụng API này để lấy toàn bộ tin tức
+
     @GET("api/thongbao/search/{tenvi}")
     Call<List<NewsModel>> searchAnouncements(@Path("tenvi") String tenvi);
 
