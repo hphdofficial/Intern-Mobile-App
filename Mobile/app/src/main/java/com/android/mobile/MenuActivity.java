@@ -1,14 +1,19 @@
 package com.android.mobile;
 
+import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,10 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -53,6 +61,18 @@ import com.android.mobile.services.NewsApiService;
 import com.android.mobile.services.PaymentAPI;
 import com.android.mobile.services.UserApiService;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -71,6 +91,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MenuActivity extends BaseActivity {
+
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    private static final int REQUEST_CHECK_SETTINGS = 2;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     private int placeholderResourceId = R.drawable.photo3x4;
 
@@ -154,8 +178,100 @@ public class MenuActivity extends BaseActivity {
         RemoveView();
         ShowMenu();
 
+        // Get current location
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MenuActivity.this);
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MenuActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+        } else {
+            checkLocationSettings();
+        }
 
 
+    }
+
+    private void getCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                LocationRequest locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setNumUpdates(1).setInterval(10000).setFastestInterval(5000);
+
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult == null) {
+                            Toast.makeText(MenuActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Location location = locationResult.getLastLocation();
+                        if (location != null) {
+                            Toast.makeText(MenuActivity.this, "Truy cập vị trí hiện tại thành công", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MenuActivity.this, "Không lấy được vị trí hiện tại", Toast.LENGTH_SHORT).show();
+                        }
+                        fusedLocationProviderClient.removeLocationUpdates(this);
+                    }
+                }, Looper.getMainLooper());
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "SecurityException: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            ActivityCompat.requestPermissions(MenuActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+        }
+    }
+
+    private void checkLocationSettings() {
+        LocationRequest locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+        Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+
+        task.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    getCurrentLocation();
+                } catch (ApiException exception) {
+                    switch (exception.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            try {
+                                ResolvableApiException resolvable = (ResolvableApiException) exception;
+                                resolvable.startResolutionForResult(MenuActivity.this, REQUEST_CHECK_SETTINGS);
+                            } catch (IntentSender.SendIntentException e) {
+                            } catch (ClassCastException e) {
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                getCurrentLocation();
+            } else {
+                Toast.makeText(this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                checkLocationSettings();
+            } else {
+                Toast.makeText(this, "Bạn đã từ chối truy cập vị trí hiện tại", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private FlexboxLayout hotP;
@@ -221,6 +337,7 @@ public class MenuActivity extends BaseActivity {
     private LinearLayout btn_order_status;
     private LinearLayout btn_cart;
     private LinearLayout btn_history;
+    private LinearLayout btn_approve;
 
     public void AddLayout(){
         menu.removeAllViews();
@@ -237,6 +354,7 @@ public class MenuActivity extends BaseActivity {
 
         btn_sup = CreateLinearLayout(btn_sup,"Nhà cung cấp","house");
 
+        btn_approve = CreateLinearLayout(btn_approve,"Duyệt yêu cầu","imaghe");
         btn_logout = CreateLinearLayout(btn_logout,"Đăng xuất","run");
 
 
@@ -252,18 +370,20 @@ public class MenuActivity extends BaseActivity {
         menu.removeView(btn_club);
         menu.removeView(btn_class);
         menu.removeView(btn_register);
-
+        menu.removeView(btn_approve);
     }
     public void ViewUserNotRegister(){
         menu.removeView(btn_order_status);
         menu.removeView(btn_club);
         menu.removeView(btn_class);
+        menu.removeView(btn_approve);
 
     }
     public void ViewUserNotClub(){
         menu.removeView(btn_order_status);
         menu.removeView(btn_register);
         menu.removeView(btn_class);
+        menu.removeView(btn_approve);
 
     }
     public void RemoveViewHLV(){
@@ -772,6 +892,13 @@ public class MenuActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 logout();
+            }
+        });
+        btn_approve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ApproveActivity.class));
+
             }
         });
 //        test5.setOnClickListener(new View.OnClickListener() {
