@@ -133,7 +133,7 @@ public class MenuActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     Club clb = response.body();
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("id_club_shared", clb != null ? clb.getId() : null);
+                    editor.putString("id_club_shared", clb != null ? clb.getId_club() : null);
                     editor.apply();
                 }
             }

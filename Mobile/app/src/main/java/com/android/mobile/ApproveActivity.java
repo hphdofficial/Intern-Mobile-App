@@ -257,7 +257,7 @@ public class ApproveActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListOrder("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
@@ -305,7 +305,7 @@ public class ApproveActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListOrder("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
@@ -353,7 +353,7 @@ public class ApproveActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListOrder("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override

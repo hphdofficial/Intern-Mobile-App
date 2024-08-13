@@ -77,7 +77,7 @@ public interface ClubApiService {
             @Header("Authorization") String token
     );
 
-    @GET("/api/clubs/join-clubpending")
+    @POST("/api/clubs/join-clubpending")
     Call<ReponseModel> joinClubPending(
             @Header("Authorization") String token,
             @Query("id_club") int clubId

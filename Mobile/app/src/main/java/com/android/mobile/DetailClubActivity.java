@@ -275,6 +275,7 @@ public class DetailClubActivity extends BaseActivity {
                     isPending = false;
                     setupButton();
                     btnLeaveClubPending.setEnabled(true);
+                    btnLeaveClubPending.setVisibility(View.GONE);
                     Toast.makeText(DetailClubActivity.this, "Đã gửi yêu cầu rời câu lạc bộ", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.e("Error", response.message());

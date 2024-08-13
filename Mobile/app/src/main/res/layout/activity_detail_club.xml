@@ -209,6 +209,20 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
+            android:id="@+id/btn_cancel_leave_club_pending"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="30dp"
+            android:backgroundTint="#D8241B"
+            android:text="Hủy yêu cầu rời câu lạc bộ"
+            android:visibility="gone"
+            app:cornerRadius="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
             android:id="@+id/btn_direct_club"
             android:layout_width="wrap_content"
             android:layout_height="50dp"

@@ -28,6 +28,11 @@ public interface OrderApiService {
             @Header("Authorization") String token
     );
 
+    @GET("/admin_order")
+    Call<List<OrderListModel>> getListAllOrder(
+            @Header("Authorization") String token
+    );
+
     @GET("/update_second_delivery")
     Call<ReponseModel> updateConfirmOrder(
             @Query("id") String txnRef
