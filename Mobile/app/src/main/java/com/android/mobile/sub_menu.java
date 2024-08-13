@@ -161,8 +161,7 @@ public class sub_menu extends Fragment {
                     startActivity(new Intent(getContext(), ActivityDetailMember.class));
                 }
                 if(id == R.id.btn_lythuyet){
-                    startActivity(new Intent(getContext(), activity_lessons.class));
-                }
+                    startActivity(new Intent(getContext(), activity_chapters.class));                }
                 if(id == R.id.btn_club){
 
                     startActivity(new Intent(getContext(), ClubActivity.class));
@@ -247,13 +246,13 @@ public class sub_menu extends Fragment {
                     item.setVisible(false);
                     MenuItem item2 =  menu.findItem(R.id.btn_register_up);
                     item2.setVisible(false);
-                  //  RemoveViewUser();
+                    //  RemoveViewUser();
                 }else {
                     MenuItem item =  menu.findItem(R.id.btn_club);
                     item.setVisible(false);
                     MenuItem item1 =  menu.findItem(R.id.btn_class);
                     item1.setVisible(false);
-                   // ViewUserNotRegister();
+                    // ViewUserNotRegister();
                 }
             }else {
                 MenuItem item =  menu.findItem(R.id.btn_registerclass);
@@ -268,7 +267,7 @@ public class sub_menu extends Fragment {
             MenuItem item =  menu.findItem(R.id.btn_registerclass);
             item.setVisible(false);
 
-          //  RemoveViewHLV();
+            //  RemoveViewHLV();
         }
     }
     public static String decodeRoleFromToken(String jwtToken) {
