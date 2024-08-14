@@ -64,6 +64,19 @@ public class OrderDetailFragment extends DialogFragment {
         orderStatus.setText(order.getStatus());
         orderPayDate.setText(order.getPay_date());
 
+        // Tính toán lại tổng số tiền sau khi đã áp dụng giảm giá
+        double totalAmount = 0;
+        for (OrderListModel.DetailCart cart : order.getDetail_carts()) {
+            double unitPrice = cart.getProduct().getUnitPrice();
+            String sale = cart.getProduct().getSale(); // Lấy giá trị giảm giá
+            double percent = sale != null ? Double.parseDouble(sale) : 0;
+            double priceAfterDiscount = unitPrice - (unitPrice * percent);
+            totalAmount += priceAfterDiscount * cart.getQuantity();
+        }
+
+        // Hiển thị tổng số tiền sau khi giảm giá
+        orderAmount.setText(String.format("%,.0f VND", totalAmount));
+
         // Sử dụng Glide để tải ảnh QR code từ URL
         if (order.getQr_link() != null && !order.getQr_link().isEmpty()) {
             Glide.with(this)

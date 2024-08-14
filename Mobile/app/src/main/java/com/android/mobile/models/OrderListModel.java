@@ -36,6 +36,7 @@ public class OrderListModel {
             private String CategoryName;
             private String link_image;
             private String SupplierName;
+            private String sale;
 
             public int getProductID() {
                 return ProductID;
@@ -99,6 +100,14 @@ public class OrderListModel {
 
             public void setSupplierName(String supplierName) {
                 SupplierName = supplierName;
+            }
+
+            public String getSale() {
+                return sale;
+            }
+
+            public void setSale(String sale) {
+                this.sale = sale;
             }
         }
 
