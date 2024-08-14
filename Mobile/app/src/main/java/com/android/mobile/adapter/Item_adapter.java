@@ -61,7 +61,7 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
 
         String sale = ProductList.get(i).getSale();
 
-        if(sale.equals("0")){
+        if(sale.equals("0.00")){
             viewHolder.txtProductPriceSale.setVisibility(View.INVISIBLE);
         }else {
             viewHolder.txtProductPriceSale.setVisibility(View.VISIBLE);
