@@ -49,7 +49,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="@string/btn_text_add_to_cart"
+                android:text="Thêm vào giỏ hàng"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editQuantity" />
@@ -90,7 +90,7 @@
                         android:background="@drawable/table_row_border"
                         android:gravity="center"
                         android:padding="8dp"
-                        android:text="@string/text_product_infor_supplier"
+                        android:text="Nhà cung cấp"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -119,7 +119,7 @@
                         android:background="@drawable/table_row_border"
                         android:gravity="center"
                         android:padding="8dp"
-                        android:text="@string/text_product_infor_product_in_stock"
+                        android:text="Số hàng còn"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -150,7 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/btn_text_review_product"
+                android:text="Đánh giá sản phẩm"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
-                android:text="@string/text_quantity_to_buy"
+                android:text="Số lượng muốn mua"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtItemPriceSale" />
 
@@ -205,7 +205,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/text_product_alike"
+                android:text="Các sản phẩm tương tự"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold"
