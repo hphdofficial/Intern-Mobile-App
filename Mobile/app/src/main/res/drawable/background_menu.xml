@@ -1,0 +1,27 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Lớp bóng -->
+    <item android:left="2dp" android:right="2dp" android:top="2dp" android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#40000000" /> <!-- Màu bóng mờ với độ trong suốt -->
+            <corners
+                android:topLeftRadius="50dp"
+                android:topRightRadius="50dp"
+                android:bottomLeftRadius="50dp"
+                android:bottomRightRadius="50dp" />
+        </shape>
+    </item>
+
+    <!-- Lớp nền chính -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" /> <!-- Màu nền chính -->
+            <corners
+                android:topLeftRadius="50dp"
+                android:topRightRadius="50dp"
+                android:bottomLeftRadius="50dp"
+                android:bottomRightRadius="50dp" />
+        </shape>
+    </item>
+
+</layer-list>

@@ -11,11 +11,11 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface NewsApiService {
-    @GET("api/thongbao")
+    @GET("api/news/latest")
     Call<List<NewsModel>> getAnouncements();
 
     @GET("api/news")
-    Call<List<NewsModel>> getAllNews();  // Sử dụng API này để lấy toàn bộ tin tức
+    Call<List<NewsModel>> getAllNews();
 
     @GET("api/thongbao/search/{tenvi}")
     Call<List<NewsModel>> searchAnouncements(@Path("tenvi") String tenvi);
