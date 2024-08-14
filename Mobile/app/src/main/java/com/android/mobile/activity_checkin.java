@@ -277,7 +277,8 @@ public class activity_checkin extends BaseActivity {
 
     private void loadLanguagePreference() {
         SharedPreferences preferences = getSharedPreferences("AppSettings", Activity.MODE_PRIVATE);
-        String language = preferences.getString("App_Language", "vi"); // mặc định là tiếng Viet
+//        String language = preferences.getString("App_Language", "vi"); // mặc định là tiếng Viet
+        String language = "vi";
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Configuration config = new Configuration();

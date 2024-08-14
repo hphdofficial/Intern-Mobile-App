@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class ProductModel implements Parcelable {
     @SerializedName("ProductID")
     private int productID;
@@ -212,5 +214,18 @@ public class ProductModel implements Parcelable {
         dest.writeString(CategoryName);
         dest.writeString(SupplierName);
         dest.writeString(sale);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductModel productModel = (ProductModel) o;
+        return productID == productModel.productID && Objects.equals(productName, productModel.productName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productID, productName);
     }
 }
