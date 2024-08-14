@@ -224,6 +224,16 @@ public class DetailClassActivity extends BaseActivity {
                     isPending = true;
                     setupButton();
                     btnJoinClassPending.setEnabled(true);
+
+                    Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id_class", idClass);
+                    intent.putExtra("name", name);
+                    intent.putExtra("nameClass", nameClass);
+                    intent.putExtra("idClass", idClass);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+
                     Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.e("Error", response.message());
