@@ -278,12 +278,14 @@ public class DetailClubActivity extends BaseActivity {
                     btnLeaveClubPending.setVisibility(View.GONE);
                     Toast.makeText(DetailClubActivity.this, "Đã gửi yêu cầu rời câu lạc bộ", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(DetailClubActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
                     Log.e("Error", response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                Toast.makeText(DetailClubActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
                 Log.e("Fail", t.getMessage());
             }
         });

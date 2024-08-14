@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.mobile.ApproveActivity;
+import com.android.mobile.ApproveOrderActivity;
 import com.android.mobile.R;
 import com.android.mobile.models.ApproveModel;
 import com.android.mobile.models.OrderListModel;
@@ -119,8 +120,8 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 case "joinclass":
                     clubClassViewHolder.txtApprove.setTextColor(Color.BLUE);
                     clubClassViewHolder.txtApprove.setText("Yêu cầu tham gia");
-                    clubClassViewHolder.txtClubClass.setText("Lớp học: " + itemClubClass.getClass_name());
-                    clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
+                    clubClassViewHolder.txtClubClass.setText("Lớp học: " + itemClubClass.getTen_class());
+                    clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen_member());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
                     clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.BLUE);
                     break;
@@ -150,16 +151,16 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.btnApproveRequest.setEnabled(false);
                     switch (viewType) {
                         case "joinclub":
-                            approveJoinClub(itemClubClass.getId_member(), itemClubClass.getId_club(), clubClassViewHolder.btnApproveRequest);
+                            approveJoinClub(position, itemClubClass.getId_member(), itemClubClass.getId_club(), clubClassViewHolder.btnApproveRequest);
                             break;
                         case "joinclass":
-                            approveJoinClass(itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
+                            approveJoinClass(position, itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
                             break;
                         case "leaveclub":
-                            approveLeaveClub(itemClubClass.getId_member(), itemClubClass.getId_club(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
+                            approveLeaveClub(position, itemClubClass.getId_member(), itemClubClass.getId_club(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
                             break;
                         case "leaveclass":
-                            approveLeaveClass(itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
+                            approveLeaveClass(position, itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
                             break;
                         default:
                             break;
@@ -183,13 +184,13 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     orderViewHolder.btnApproveOrder.setEnabled(false);
                     switch (viewType) {
                         case "confirmorder":
-                            approveConfirmOrder(finalItemOrder.getTxn_ref(), orderViewHolder.btnApproveOrder);
+                            approveConfirmOrder(position, finalItemOrder.getTxn_ref(), orderViewHolder.btnApproveOrder);
                             break;
                         case "getorder":
-                            approveGetOrder(finalItemOrder.getTxn_ref(), orderViewHolder.btnApproveOrder);
+                            approveGetOrder(position, finalItemOrder.getTxn_ref(), orderViewHolder.btnApproveOrder);
                             break;
                         case "shiporder":
-                            approveShipOrder(finalItemOrder.getTxn_ref(), orderViewHolder.btnApproveOrder);
+                            approveShipOrder(position, finalItemOrder.getTxn_ref(), orderViewHolder.btnApproveOrder);
                             break;
                         default:
                             break;
@@ -240,7 +241,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private void approveJoinClub(int idMember, int idClub, Button button) {
+    private void approveJoinClub(int position, int idMember, int idClub, Button button) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
@@ -250,13 +251,18 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
 
         call.enqueue(new Callback<ReponseModel>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Duyệt tham gia câu lạc bộ thành công", Toast.LENGTH_SHORT).show();
-                    if (context instanceof ApproveActivity) {
-                        ((ApproveActivity) context).selectSpinnerItem(0);
+                    approveListClubClass.remove(position);
+                    notifyDataSetChanged();
+                    if (approveListClubClass.isEmpty()) {
+                        if (context instanceof ApproveActivity) {
+                            ((ApproveActivity) context).setEmptyList();
+                        }
                     }
                     Log.i("Success", response.message());
                 } else {
@@ -272,7 +278,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveJoinClass(int idMember, int idClass, Button button) {
+    private void approveJoinClass(int position, int idMember, int idClass, Button button) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
@@ -282,13 +288,18 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
 
         call.enqueue(new Callback<ReponseModel>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Duyệt tham gia lớp học thành công", Toast.LENGTH_SHORT).show();
-                    if (context instanceof ApproveActivity) {
-                        ((ApproveActivity) context).selectSpinnerItem(1);
+                    approveListClubClass.remove(position);
+                    notifyDataSetChanged();
+                    if (approveListClubClass.isEmpty()) {
+                        if (context instanceof ApproveActivity) {
+                            ((ApproveActivity) context).setEmptyList();
+                        }
                     }
                     Log.i("Success", response.message());
                 } else {
@@ -304,7 +315,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveLeaveClub(int idMember, int idClub, int idClass, Button button) {
+    private void approveLeaveClub(int position, int idMember, int idClub, int idClass, Button button) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
@@ -314,13 +325,18 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
 
         call.enqueue(new Callback<ReponseModel>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Duyệt rời câu lạc bộ thành công", Toast.LENGTH_SHORT).show();
-                    if (context instanceof ApproveActivity) {
-                        ((ApproveActivity) context).selectSpinnerItem(2);
+                    approveListClubClass.remove(position);
+                    notifyDataSetChanged();
+                    if (approveListClubClass.isEmpty()) {
+                        if (context instanceof ApproveActivity) {
+                            ((ApproveActivity) context).setEmptyList();
+                        }
                     }
                     Log.i("Success", response.message());
                 } else {
@@ -336,7 +352,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveLeaveClass(int idMember, int idClass, Button button) {
+    private void approveLeaveClass(int position, int idMember, int idClass, Button button) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
@@ -346,14 +362,14 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
 
         call.enqueue(new Callback<ReponseModel>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Duyệt rời lớp học thành công", Toast.LENGTH_SHORT).show();
-                    if (context instanceof ApproveActivity) {
-                        ((ApproveActivity) context).selectSpinnerItem(3);
-                    }
+                    approveListClubClass.remove(position);
+                    notifyDataSetChanged();
                     Log.i("Success", response.message());
                 } else {
                     Log.e("Error", response.message());
@@ -368,7 +384,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveConfirmOrder(String idOrder, Button button) {
+    private void approveConfirmOrder(int position, String idOrder, Button button) {
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<ReponseModel> call = service.updateConfirmOrder(idOrder);
 
@@ -380,8 +396,12 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Cập nhật thành công trạng thái chờ lấy hàng", Toast.LENGTH_SHORT).show();
-                    if (context instanceof ApproveActivity) {
-                        ((ApproveActivity) context).selectSpinnerItem(4);
+                    approveListOrder.remove(position);
+                    notifyDataSetChanged();
+                    if (approveListOrder.isEmpty()){
+                        if (context instanceof ApproveOrderActivity) {
+                            ((ApproveOrderActivity) context).setEmptyList();
+                        }
                     }
                     Log.i("Success", response.message());
                 } else {
@@ -397,20 +417,25 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveGetOrder(String idOrder, Button button) {
+    private void approveGetOrder(int position, String idOrder, Button button) {
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<ReponseModel> call = service.updateGetOrder(idOrder);
 
         Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
 
         call.enqueue(new Callback<ReponseModel>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Cập nhật thành công trạng thái đang giao hàng", Toast.LENGTH_SHORT).show();
-                    if (context instanceof ApproveActivity) {
-                        ((ApproveActivity) context).selectSpinnerItem(5);
+                    approveListOrder.remove(position);
+                    notifyDataSetChanged();
+                    if (approveListOrder.isEmpty()){
+                        if (context instanceof ApproveOrderActivity) {
+                            ((ApproveOrderActivity) context).setEmptyList();
+                        }
                     }
                     Log.i("Success", response.message());
                 } else {
@@ -426,20 +451,25 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveShipOrder(String idOrder, Button button) {
+    private void approveShipOrder(int position, String idOrder, Button button) {
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<ReponseModel> call = service.updateShipOrder(idOrder);
 
         Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
 
         call.enqueue(new Callback<ReponseModel>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Cập nhật thành công trạng thái đã giao hàng", Toast.LENGTH_SHORT).show();
-                    if (context instanceof ApproveActivity) {
-                        ((ApproveActivity) context).selectSpinnerItem(6);
+                    approveListOrder.remove(position);
+                    notifyDataSetChanged();
+                    if (approveListOrder.isEmpty()){
+                        if (context instanceof ApproveOrderActivity) {
+                            ((ApproveOrderActivity) context).setEmptyList();
+                        }
                     }
                     Log.i("Success", response.message());
                 } else {

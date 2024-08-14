@@ -310,19 +310,66 @@ public class MenuActivity extends BaseActivity {
         String token = sharedPreferences.getString("access_token", null);
         String role = decodeRoleFromToken(token);
         if(role.contains("0")){
-            String club = sharedPreferences.getString("id_club_shared",null);
-           if(club !=null){
-               String myClass = sharedPreferences.getString("id_class_shared",null);
-               if(myClass != null){
-                   RemoveViewUser();
-               }else {
-                   ViewUserNotRegister();
-               }
-           }else {
-               ViewUserNotClub();
-           }
+
+            // call club
+            ClubApiService service = ApiServiceProvider.getClubApiService();
+            Call<Club> call = service.getDetailClubMember("Bearer" + token);
+
+            call.enqueue(new Callback<Club>() {
+                @Override
+                public void onResponse(Call<Club> call, Response<Club> response) {
+                    if (response.isSuccessful()) {
+                        Club clb = response.body();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("id_club_shared", clb.getId_club());
+                        editor.apply();
+                        String club = sharedPreferences.getString("id_club_shared",null);
+
+                        if(club !=null){
+
+
+                            // call my class
+                            ClassApiService service = ApiServiceProvider.getClassApiService();
+                            Call<List<Class>> callz = service.getDetailClassMember("Bearer" + token);
+
+                            callz.enqueue(new Callback<List<Class>>() {
+                                @Override
+                                public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                                    List<Class> classs = response.body();
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("id_class_shared", classs.get(0).getId() != 0 ? String.valueOf(classs.get(0).getId()) : null);
+                                    editor.apply();
+
+                                    String myClass = sharedPreferences.getString("id_class_shared",null);
+                                    RemoveViewUser();
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<Class>> call, Throwable t) {
+                                    editor.putString("id_class_shared",null);
+                                    ViewUserNotRegister();
+
+                                }
+                            });
+                        }else {
+                            ViewUserNotClub();
+                        }
+                    } else {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("id_club_shared", null);
+                        editor.apply();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<Club> call, Throwable t) {
+                }
+            });
+
         }else {
-                RemoveViewHLV();
+            RemoveViewHLV();
         }
     }
     private LinearLayout btn_lythuyet;
@@ -348,13 +395,13 @@ public class MenuActivity extends BaseActivity {
         btn_product = CreateLinearLayout(btn_product,"Sản phẩm","product");
         btn_cart  = CreateLinearLayout(btn_cart,"Giỏ hàng","cart1");
         btn_order_status = CreateLinearLayout(btn_order_status,"Duyệt đơn hàng","imaghe");
+        btn_approve = CreateLinearLayout(btn_approve,"Duyệt yêu cầu","imaghe");
         btn_history  = CreateLinearLayout(btn_history,"Lịch sử mua hàng","history6");
         btn_class = CreateLinearLayout(btn_class,"Lớp giảng dạy","tick");
         btn_historyclass1 = CreateLinearLayout(btn_historyclass1,"Lịch sử đăng ký môn học","imaghe");
 
         btn_sup = CreateLinearLayout(btn_sup,"Nhà cung cấp","house");
 
-        btn_approve = CreateLinearLayout(btn_approve,"Duyệt yêu cầu","imaghe");
         btn_logout = CreateLinearLayout(btn_logout,"Đăng xuất","run");
 
 
@@ -495,7 +542,7 @@ public class MenuActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<NewsModel>> call, Throwable t) {
-
+            hideLoading();
               //  Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -550,21 +597,21 @@ public class MenuActivity extends BaseActivity {
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         100
                 ));
-                textView.setText("SP: "+p.getName());
+                textView.setText(p.getName());
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
                 TextView textView1 = new TextView(this);
 
                 textView1.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
-                textView1.setText("Price: "+p.getPrice().toString());
+                textView1.setText("Giá: " + String.format("%,.0f đ", p.getPrice()));
                 textView1.setTextColor(Color.RED);
                 textView1.setTextSize(12);
 
                 TextView textView2 = new TextView(this);
 
                 textView2.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
-                textView2.setText("SL bán: "+p.getQuantity());
+                textView2.setText("Đã bán: "+p.getQuantity());
                 textView2.setTextColor(Color.GRAY);
                 textView2.setTextSize(12);
 
@@ -602,7 +649,7 @@ public class MenuActivity extends BaseActivity {
         linearinfor.removeAllViews();
         TextView t = new TextView(getApplicationContext());
 
-        t.setText("Thông báo" + "(NEW)");
+        t.setText("Thông báo" + " (NEW)");
         t.setTextColor(Color.RED);
         t.setTextSize(20);
         // Áp dụng animation chữ chạy
@@ -631,9 +678,9 @@ public class MenuActivity extends BaseActivity {
 
                 NewsModel news = list.get(list.size()-count);
                 TextView textView = new TextView(getApplicationContext());
-                textView.setPadding(10,0,0,0);
+                textView.setPadding(10,5,0,0);
                 textView.setId(news.getId());
-                textView.setText("*"+news.getTenvi());
+                textView.setText("* "+news.getTenvi());
                 textView.setTextColor(Color.RED);
                 textView.setTextSize(18);
                 String imageUrl = "http://tambinh.websinhvien.net/thumbs/340x280x1/upload/news/" + news.getPhoto();
@@ -680,14 +727,17 @@ public class MenuActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     Club clb = response.body();
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("id_club_shared", clb != null ? clb.getId_club() : null);
+                    editor.putString("id_club_shared", clb.getId_club());
+                    editor.apply();
+                } else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("id_club_shared", null);
                     editor.apply();
                 }
             }
 
             @Override
             public void onFailure(Call<Club> call, Throwable t) {
-//                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -705,12 +755,13 @@ public class MenuActivity extends BaseActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id_class_shared", classs.get(0).getId() != 0 ? String.valueOf(classs.get(0).getId()) : null);
                 editor.apply();
-//                Toast.makeText(MenuActivity.this, "id_class_shared " + sharedPreferences.getString("id_class_shared", null), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<List<Class>> call, Throwable t) {
-//                Toast.makeText(MenuActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id_class_shared", null);
+                editor.apply();
             }
         });
     }
@@ -898,6 +949,13 @@ public class MenuActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), ApproveActivity.class));
+
+            }
+        });
+        btn_order_status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ApproveOrderActivity.class));
 
             }
         });

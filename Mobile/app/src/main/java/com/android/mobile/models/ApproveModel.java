@@ -8,6 +8,8 @@ public class ApproveModel {
     private String class_name;
     private String ten;
     private String created_at;
+    private String ten_class;
+    private String ten_member;
 
     public ApproveModel(int id_member, int id_club, int id_class) {
         this.id_member = id_member;
@@ -69,5 +71,21 @@ public class ApproveModel {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    public String getTen_member() {
+        return ten_member;
+    }
+
+    public void setTen_member(String ten_member) {
+        this.ten_member = ten_member;
+    }
+
+    public String getTen_class() {
+        return ten_class;
+    }
+
+    public void setTen_class(String ten_class) {
+        this.ten_class = ten_class;
     }
 }
