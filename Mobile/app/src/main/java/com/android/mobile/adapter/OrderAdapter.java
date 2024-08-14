@@ -131,7 +131,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         // Tính tổng tiền (trước khi cập nhật danh sách sản phẩm)
         double totalPrice = 0;
         for (OrderListModel.DetailCart cart : order.getDetail_carts()) {
-            totalPrice += cart.getProduct().getUnitPrice() * cart.getQuantity();
+            double unitPrice = cart.getProduct().getUnitPrice();
+            String sale = cart.getProduct().getSale();
+            double percent = sale != null ? Double.parseDouble(sale) : 0;
+            double priceAfterDiscount = unitPrice - (unitPrice * percent);
+
+            totalPrice += priceAfterDiscount * cart.getQuantity();
         }
         holder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
 
