@@ -44,6 +44,10 @@
             android:value="YOUR_TERMINAL_ID" />
 
         <activity
+            android:name=".ApproveOrderActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ApproveActivity"
             android:exported="true"
             android:screenOrientation="portrait" />

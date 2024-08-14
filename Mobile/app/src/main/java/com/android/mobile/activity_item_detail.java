@@ -233,7 +233,7 @@ public class activity_item_detail extends BaseActivity {
                     }
 
                     String sale = product.getSale();
-                    if(sale.equals("0")){
+                    if(sale.equals("0.00")){
                         txtItemPriceSale.setVisibility(View.INVISIBLE);
                     }else {
                         txtItemPriceSale.setVisibility(View.VISIBLE);

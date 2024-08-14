@@ -58,7 +58,7 @@ public class ApproveActivity extends BaseActivity {
 
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Phê duyệt");
+        myContentE.putString("title", "Duyệt yêu cầu");
         myContentE.apply();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -76,10 +76,7 @@ public class ApproveActivity extends BaseActivity {
                 "Yêu cầu tham gia câu lạc bộ",
                 "Yêu cầu đăng ký lớp học",
                 "Yêu cầu rời câu lạc bộ",
-                "Yêu cầu rời lớp học",
-                "Đơn hàng chờ xác nhận",
-                "Đơn hàng chờ lấy hàng",
-                "Đơn hàng đang giao"
+                "Yêu cầu rời lớp học"
         };
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
@@ -105,12 +102,12 @@ public class ApproveActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<ApproveModel> list = response.body();
                     if (list != null && !list.isEmpty()) {
-                        Collections.sort(list, new Comparator<ApproveModel>() {
-                            @Override
-                            public int compare(ApproveModel o1, ApproveModel o2) {
-                                return o2.getCreated_at().compareTo(o1.getCreated_at());
-                            }
-                        });
+//                        Collections.sort(list, new Comparator<ApproveModel>() {
+//                            @Override
+//                            public int compare(ApproveModel o1, ApproveModel o2) {
+//                                return o2.getCreated_at().compareTo(o1.getCreated_at());
+//                            }
+//                        });
                         approveAdapter.setDataClubClass(list);
                         txtNotify.setText("");
                     } else {
@@ -145,12 +142,12 @@ public class ApproveActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<ApproveModel> list = response.body();
                     if (list != null && !list.isEmpty()) {
-                        Collections.sort(list, new Comparator<ApproveModel>() {
-                            @Override
-                            public int compare(ApproveModel o1, ApproveModel o2) {
-                                return o2.getCreated_at().compareTo(o1.getCreated_at());
-                            }
-                        });
+//                        Collections.sort(list, new Comparator<ApproveModel>() {
+//                            @Override
+//                            public int compare(ApproveModel o1, ApproveModel o2) {
+//                                return o2.getCreated_at().compareTo(o1.getCreated_at());
+//                            }
+//                        });
                         approveAdapter.setDataClubClass(list);
                         txtNotify.setText("");
                     } else {
@@ -185,12 +182,12 @@ public class ApproveActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<ApproveModel> list = response.body();
                     if (list != null && !list.isEmpty()) {
-                        Collections.sort(list, new Comparator<ApproveModel>() {
-                            @Override
-                            public int compare(ApproveModel o1, ApproveModel o2) {
-                                return o2.getCreated_at().compareTo(o1.getCreated_at());
-                            }
-                        });
+//                        Collections.sort(list, new Comparator<ApproveModel>() {
+//                            @Override
+//                            public int compare(ApproveModel o1, ApproveModel o2) {
+//                                return o2.getCreated_at().compareTo(o1.getCreated_at());
+//                            }
+//                        });
                         approveAdapter.setDataClubClass(list);
                         txtNotify.setText("");
                     } else {
@@ -225,12 +222,12 @@ public class ApproveActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<ApproveModel> list = response.body();
                     if (list != null && !list.isEmpty()) {
-                        Collections.sort(list, new Comparator<ApproveModel>() {
-                            @Override
-                            public int compare(ApproveModel o1, ApproveModel o2) {
-                                return o2.getCreated_at().compareTo(o1.getCreated_at());
-                            }
-                        });
+//                        Collections.sort(list, new Comparator<ApproveModel>() {
+//                            @Override
+//                            public int compare(ApproveModel o1, ApproveModel o2) {
+//                                return o2.getCreated_at().compareTo(o1.getCreated_at());
+//                            }
+//                        });
                         approveAdapter.setDataClubClass(list);
                         txtNotify.setText("");
                     } else {
@@ -243,150 +240,6 @@ public class ApproveActivity extends BaseActivity {
 
             @Override
             public void onFailure(@NonNull Call<List<ApproveModel>> call, @NonNull Throwable t) {
-                Log.e("Fail", Objects.requireNonNull(t.getMessage()));
-            }
-        });
-    }
-
-    private void getListConfirmOrder() {
-        txtNotify.setText("Loading...");
-        approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "confirmorder");
-        recyclerView.setAdapter(approveAdapter);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString("access_token", null);
-
-        OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
-
-        call.enqueue(new Callback<List<OrderListModel>>() {
-            @Override
-            public void onResponse(Call<List<OrderListModel>> call, Response<List<OrderListModel>> response) {
-                if (response.isSuccessful()) {
-                    List<OrderListModel> orders = response.body();
-                    List<OrderListModel> orderList = new ArrayList<>();
-                    if (orders != null && !orders.isEmpty()) {
-                        for (OrderListModel order : orders) {
-                            if ("chờ xác nhận".equalsIgnoreCase(order.getGiao_hang())) {
-                                orderList.add(order);
-                            }
-                        }
-                        if (!orderList.isEmpty()) {
-                            Collections.sort(orderList, new Comparator<OrderListModel>() {
-                                @Override
-                                public int compare(OrderListModel o1, OrderListModel o2) {
-                                    return o2.getPay_date().compareTo(o1.getPay_date());
-                                }
-                            });
-                            approveAdapter.setDataOrder(orderList);
-                            txtNotify.setText("");
-                        } else {
-                            txtNotify.setText("Không có đơn hàng nào");
-                        }
-                    }
-                } else {
-                    Log.e("Error", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<OrderListModel>> call, @NonNull Throwable t) {
-                Log.e("Fail", Objects.requireNonNull(t.getMessage()));
-            }
-        });
-    }
-
-    private void getListGetOrder() {
-        txtNotify.setText("Loading...");
-        approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "getorder");
-        recyclerView.setAdapter(approveAdapter);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString("access_token", null);
-
-        OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
-
-        call.enqueue(new Callback<List<OrderListModel>>() {
-            @Override
-            public void onResponse(Call<List<OrderListModel>> call, Response<List<OrderListModel>> response) {
-                if (response.isSuccessful()) {
-                    List<OrderListModel> orders = response.body();
-                    List<OrderListModel> orderList = new ArrayList<>();
-                    if (orders != null && !orders.isEmpty()) {
-                        for (OrderListModel order : orders) {
-                            if ("chờ lấy hàng".equalsIgnoreCase(order.getGiao_hang())) {
-                                orderList.add(order);
-                            }
-                        }
-                        if (!orderList.isEmpty()) {
-                            Collections.sort(orderList, new Comparator<OrderListModel>() {
-                                @Override
-                                public int compare(OrderListModel o1, OrderListModel o2) {
-                                    return o2.getPay_date().compareTo(o1.getPay_date());
-                                }
-                            });
-                            approveAdapter.setDataOrder(orderList);
-                            txtNotify.setText("");
-                        } else {
-                            txtNotify.setText("Không có đơn hàng nào");
-                        }
-                    }
-                } else {
-                    Log.e("Error", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<OrderListModel>> call, @NonNull Throwable t) {
-                Log.e("Fail", Objects.requireNonNull(t.getMessage()));
-            }
-        });
-    }
-
-    private void getListShipOrder() {
-        txtNotify.setText("Loading...");
-        approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "shiporder");
-        recyclerView.setAdapter(approveAdapter);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString("access_token", null);
-
-        OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
-
-        call.enqueue(new Callback<List<OrderListModel>>() {
-            @Override
-            public void onResponse(Call<List<OrderListModel>> call, Response<List<OrderListModel>> response) {
-                if (response.isSuccessful()) {
-                    List<OrderListModel> orders = response.body();
-                    List<OrderListModel> orderList = new ArrayList<>();
-                    if (orders != null && !orders.isEmpty()) {
-                        for (OrderListModel order : orders) {
-                            if ("đang giao hàng".equalsIgnoreCase(order.getGiao_hang())) {
-                                orderList.add(order);
-                            }
-                        }
-                        if (!orderList.isEmpty()) {
-                            Collections.sort(orderList, new Comparator<OrderListModel>() {
-                                @Override
-                                public int compare(OrderListModel o1, OrderListModel o2) {
-                                    return o2.getPay_date().compareTo(o1.getPay_date());
-                                }
-                            });
-                            approveAdapter.setDataOrder(orderList);
-                            txtNotify.setText("");
-                        } else {
-                            txtNotify.setText("Không có đơn hàng nào");
-                        }
-                    }
-                } else {
-                    Log.e("Error", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<OrderListModel>> call, @NonNull Throwable t) {
                 Log.e("Fail", Objects.requireNonNull(t.getMessage()));
             }
         });
@@ -409,15 +262,6 @@ public class ApproveActivity extends BaseActivity {
                 case 3:
                     getListLeaveClass();
                     break;
-                case 4:
-                    getListConfirmOrder();
-                    break;
-                case 5:
-                    getListGetOrder();
-                    break;
-                case 6:
-                    getListShipOrder();
-                    break;
                 default:
                     break;
             }
@@ -437,15 +281,6 @@ public class ApproveActivity extends BaseActivity {
                         case 3:
                             getListLeaveClass();
                             break;
-                        case 4:
-                            getListConfirmOrder();
-                            break;
-                        case 5:
-                            getListGetOrder();
-                            break;
-                        case 6:
-                            getListShipOrder();
-                            break;
                         default:
                             break;
                     }
@@ -458,5 +293,9 @@ public class ApproveActivity extends BaseActivity {
         } else {
             Log.e("ApproveActivity", "Invalid position: " + position);
         }
+    }
+
+    public void setEmptyList(){
+        txtNotify.setText("Không có yêu cầu nào");
     }
 }
