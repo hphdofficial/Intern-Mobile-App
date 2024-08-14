@@ -88,6 +88,7 @@ public class activity_items extends BaseActivity {
 
         loadLanguagePreference();
 
+
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
@@ -614,7 +615,8 @@ public class activity_items extends BaseActivity {
 
     private void loadLanguagePreference() {
         SharedPreferences preferences = getSharedPreferences("AppSettings", Activity.MODE_PRIVATE);
-        String language = preferences.getString("App_Language", "vi"); // mặc định là tiếng Viet
+//        String language = preferences.getString("App_Language", "vi"); // mặc định là tiếng Viet
+        String language = "vi";
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
