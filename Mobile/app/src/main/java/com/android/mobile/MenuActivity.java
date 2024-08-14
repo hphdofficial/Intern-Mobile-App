@@ -324,7 +324,6 @@ public class MenuActivity extends BaseActivity {
                         editor.putString("id_club_shared", clb.getId_club());
                         editor.apply();
                         String club = sharedPreferences.getString("id_club_shared",null);
-
                         if(club !=null){
 
 
@@ -345,6 +344,7 @@ public class MenuActivity extends BaseActivity {
                                     hideLoading();
                                 }
 
+
                                 @Override
                                 public void onFailure(Call<List<Class>> call, Throwable t) {
 
@@ -354,18 +354,15 @@ public class MenuActivity extends BaseActivity {
 
                                 }
                             });
-                        }else {
-
-                            ViewUserNotClub();
-                            hideLoading();
                         }
-                    } else {
-
+                    }
+                    else {
+                        ViewUserNotClub();
+                        hideLoading();
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("id_club_shared", null);
                         editor.apply();
                     }
-
                 }
 
                 @Override
