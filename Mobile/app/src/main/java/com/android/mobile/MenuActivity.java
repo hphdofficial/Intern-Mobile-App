@@ -342,20 +342,25 @@ public class MenuActivity extends BaseActivity {
 
                                     String myClass = sharedPreferences.getString("id_class_shared",null);
                                     RemoveViewUser();
-
+                                    hideLoading();
                                 }
 
                                 @Override
                                 public void onFailure(Call<List<Class>> call, Throwable t) {
+
                                     editor.putString("id_class_shared",null);
                                     ViewUserNotRegister();
+                                    hideLoading();
 
                                 }
                             });
                         }else {
+
                             ViewUserNotClub();
+                            hideLoading();
                         }
                     } else {
+
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("id_club_shared", null);
                         editor.apply();
@@ -365,11 +370,14 @@ public class MenuActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<Club> call, Throwable t) {
+                    hideLoading();
                 }
             });
 
         }else {
+
             RemoveViewHLV();
+            hideLoading();
         }
     }
     private LinearLayout btn_lythuyet;
@@ -537,7 +545,6 @@ public class MenuActivity extends BaseActivity {
                 } else {
                  //   showNoNewsMessage();
                 }
-                hideLoading();
             }
 
             @Override
@@ -546,9 +553,7 @@ public class MenuActivity extends BaseActivity {
               //  Toast.makeText(ActivityNews.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
+        
     }
     public void CreateItemP(List<ProductSaleModel> list){
         hotP.removeAllViews();

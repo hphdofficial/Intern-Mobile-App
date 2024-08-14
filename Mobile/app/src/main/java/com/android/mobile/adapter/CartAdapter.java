@@ -92,9 +92,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         String formattedPrice = currencyFormat.format(Double.parseDouble(productList.get(position).getUnitPrice()));
         holder.txtPriceProduct.setText(formattedPrice);
         holder.txtPriceProduct.setPaintFlags(holder.txtPriceProduct.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
         float percent = Float.parseFloat(productList.get(position).getSale().toString());
         int intPercent = (int) (percent * 100);
         int txtProductPriceSale = Integer.parseInt(productList.get(position).getUnitPrice()) - (Integer.parseInt(productList.get(position).getUnitPrice()) * intPercent) / 100;
+
         String formattedPriceSale = currencyFormat.format(Double.parseDouble(String.valueOf(txtProductPriceSale)));
         holder.txtPriceSale.setText(formattedPriceSale);
         holder.txtSale.setText("-" + intPercent + "%");
