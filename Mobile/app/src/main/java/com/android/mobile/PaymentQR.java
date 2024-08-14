@@ -75,7 +75,6 @@ public class PaymentQR extends BaseActivity {
         bank = findViewById(R.id.bank);
         bank.setText(bank.getText() + "Techcombank");
         author.setText(author.getText() + "Huỳnh Hữu Lợi");
-        buttonGenerateQRCode.setVisibility(View.GONE);
 
         buttonGenerateQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
