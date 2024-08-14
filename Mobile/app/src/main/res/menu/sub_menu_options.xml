@@ -9,7 +9,7 @@
 
         <item
             android:id="@+id/btn_home"
-            android:icon="@drawable/infor1"
+            android:icon="@drawable/house"
             android:title="Trang chủ" />
         <item
             android:id="@+id/btn_self"
