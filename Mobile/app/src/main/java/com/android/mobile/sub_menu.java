@@ -332,6 +332,12 @@ public class sub_menu extends Fragment {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        // Xóa thông tin CLB và lớp học khi đăng xuất
+        editor.remove("id_club_shared");
+        editor.remove("name_clb");
+        editor.remove("id_class_shared");
+        editor.remove("name_class");
+
         // Kiểm tra nếu checkbox lưu mật khẩu không được chọn
         if (!sharedPreferences.getBoolean("checkbox_save_password", false)) {
             editor.clear(); // Xóa tất cả thông tin đăng nhập
@@ -348,6 +354,8 @@ public class sub_menu extends Fragment {
         startActivity(intent);
         getActivity().finish();
     }
+
+
 
 
     private void loadUserData() {
