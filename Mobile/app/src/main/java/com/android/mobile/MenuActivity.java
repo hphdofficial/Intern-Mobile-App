@@ -162,9 +162,9 @@ public class MenuActivity extends BaseActivity {
         //click image
 
 
-        // Get id_club_shared and id_class_shared
-        getMyClub();
-        getMyClass();
+//        // Get id_club_shared and id_class_shared
+//        getMyClub();
+//        getMyClass();
 
         // Gọi phương thức loadUserData để hiển thị thông tin người dùng
       //  loadUserData();
@@ -322,6 +322,7 @@ public class MenuActivity extends BaseActivity {
                         Club clb = response.body();
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("id_club_shared", clb.getId_club());
+                        editor.putString("name_clb", clb.getTen());
                         editor.apply();
                         String club = sharedPreferences.getString("id_club_shared",null);
                         if(club !=null){
@@ -336,8 +337,10 @@ public class MenuActivity extends BaseActivity {
                                 public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
                                     List<Class> classs = response.body();
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("name_class",classs.get(0).getTen());
                                     editor.putString("id_class_shared", classs.get(0).getId() != 0 ? String.valueOf(classs.get(0).getId()) : null);
                                     editor.apply();
+
 
                                     String myClass = sharedPreferences.getString("id_class_shared",null);
                                     RemoveViewUser();
@@ -868,16 +871,17 @@ public class MenuActivity extends BaseActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (sharedPreferences.getString("id_class_shared", null) != null) {
                     Intent intent = new Intent(getApplicationContext(), DetailClassActivity.class);
                     intent.putExtra("id_class", sharedPreferences.getString("id_class_shared", null));
                     startActivity(intent);
                 } else {
                     if (sharedPreferences.getString("id_club_shared", null) != null) {
-                        Toast.makeText(MenuActivity.this, "Bạn chưa đăng ký lớp học nào", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MenuActivity.this, "Bạn chưa đăng ký lớp học nào", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), ClassActivity.class));
                     } else {
-                        Toast.makeText(MenuActivity.this, "Bạn phải tham gia câu lạc bộ trước tiên", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MenuActivity.this, "Bạn phải tham gia câu lạc bộ trước tiên", Toast.LENGTH_SHORT).show();
                     }
                 }
 //                String token = sharedPreferences.getString("access_token", null);

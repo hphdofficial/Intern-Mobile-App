@@ -246,6 +246,9 @@ public class sub_menu extends Fragment {
                     item.setVisible(false);
                     MenuItem item2 =  menu.findItem(R.id.btn_register_up);
                     item2.setVisible(false);
+                    MenuItem item3 =  menu.findItem(R.id.btn_registerclass);
+                    item3.setVisible(false);
+
                     //  RemoveViewUser();
                 }else {
                     MenuItem item =  menu.findItem(R.id.btn_club);

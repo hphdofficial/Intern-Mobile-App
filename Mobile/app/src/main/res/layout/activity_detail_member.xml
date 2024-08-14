@@ -82,17 +82,66 @@
                 app:layout_constraintStart_toEndOf="@id/avatarCard"
                 app:layout_constraintTop_toBottomOf="@id/button_edit_info" />
 
+
+            <!-- CLB Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/clubCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/avatarCard">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/clubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="Câu lạc bộ của bạn"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/clubInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="Đang tải..." />
+
+                    <Button
+                        android:id="@+id/btnDetailClb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Xem chi tiết CLB"/>
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
             <!-- Class Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/classCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:visibility="gone"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/avatarCard">
+                app:layout_constraintTop_toBottomOf="@id/clubCard">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,7 +165,15 @@
                         android:layout_height="wrap_content"
                         android:padding="4dp"
                         android:text="Đang tải..." />
+                    <Button
+                        android:id="@+id/btnDetailClass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Xem chi tiết lớp"/>
                 </LinearLayout>
+
+
             </androidx.cardview.widget.CardView>
 
             <!-- User Info Card -->

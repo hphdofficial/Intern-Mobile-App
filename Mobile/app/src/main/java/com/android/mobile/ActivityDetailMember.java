@@ -19,6 +19,7 @@ import android.content.Context;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -40,9 +41,12 @@ import retrofit2.Response;
 
 public class ActivityDetailMember extends BaseActivity {
 
-    private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue, textViewChieucaoValue, textViewCannangValue, classInfo;
+    private TextView textViewUsernameValue, textViewTenValue, textViewEmailValue, textViewDienthoaiValue, textViewDiachiValue, textViewGioitinhValue, textViewNgaysinhValue, textViewLastloginValue, textViewHotengiamhoValue, textViewDienthoaiGiamhoValue, textViewChieucaoValue, textViewCannangValue, classInfo, clubInfo;
     private ImageView imageViewAvatar;
-    private Button buttonEditPassword, buttonEditInfo;
+    private Button buttonEditPassword, buttonEditInfo,btnDetailClass, btnDetailClub;
+
+    private CardView cardViewClub,classCard;
+
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
     private static final int REQUEST_CODE_GALLERY = 100;
@@ -94,6 +98,13 @@ public class ActivityDetailMember extends BaseActivity {
         buttonEditPassword = findViewById(R.id.button_edit_password);
         buttonEditInfo = findViewById(R.id.button_edit_info);
 
+        btnDetailClass = findViewById(R.id.btnDetailClass);
+        btnDetailClub = findViewById(R.id.btnDetailClb);
+
+        classCard = findViewById(R.id.classCard);
+        cardViewClub = findViewById(R.id.clubCard);
+
+        clubInfo = findViewById(R.id.clubInfo);
         classInfo = findViewById(R.id.classInfo);
 
         imageViewAvatar.setOnClickListener(this::showPopupMenu);
@@ -122,45 +133,85 @@ public class ActivityDetailMember extends BaseActivity {
         // Fetch profile information
         fetchProfileInformation();
         // Fetch class information
-        fetchClassInformation();
+//        fetchClassInformation();
+
+        showClub();
+
     }
 
-    private void fetchClassInformation() {
-        String token = sharedPreferences.getString("access_token", null);
-        if (token != null) {
-            UserApiService apiService = ApiServiceProvider.getUserApiService();
-            Call<List<ClassModelTest>> call = apiService.getUserRegisteredClasses("Bearer " + token);
-            call.enqueue(new Callback<List<ClassModelTest>>() {
-                @Override
-                public void onResponse(Call<List<ClassModelTest>> call, Response<List<ClassModelTest>> response) {
-                    if (response.isSuccessful()) {
-                        List<ClassModelTest> classes = response.body();
-                        if (classes != null && !classes.isEmpty()) {
-                            ClassModelTest classModel = classes.get(0);
-                            String classDetails = "Tên: " + classModel.getTen() + "\n" +
-                                    "Thời gian: " + classModel.getThoigian() + "\n" +
-                                    "Giá tiền: " + classModel.getGiatien() + "\n" +
-                                    "Điện thoại: " + classModel.getDienthoai() + "\n" +
-                                    "CLB: " + classModel.getClub() + "\n" +
-                                    "Giảng viên: " + classModel.getGiangvien();
-                            classInfo.setText(classDetails);
-                        } else {
-                            classInfo.setText("Bạn chưa đăng ký khóa học nào.");
-                        }
-                    } else {
-                        classInfo.setText("Bạn chưa đăng ký khóa học nào.");
-                    }
-                }
+    private void showClub() {
+        SharedPreferences abc = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String myClub = abc.getString("name_clb",null);
+        btnDetailClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DetailClassActivity.class);
+                intent.putExtra("id_class", abc.getString("id_class_shared", null));
+                startActivity(intent);
+            }
+        });
+        btnDetailClub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DetailClubActivity.class);
+                intent.putExtra("id_club", abc.getString("id_club_shared", null));
+                startActivity(intent);
+            }
+        });
+        if (myClub != null) {
+            String nameClass = abc.getString("name_class",null);
+            if (nameClass != null) {
+                classInfo.setText("Lớp của bạn: "+nameClass);
+                classCard.setVisibility(View.VISIBLE);
 
-                @Override
-                public void onFailure(Call<List<ClassModelTest>> call, Throwable t) {
-                    classInfo.setText("Bạn chưa đăng ký khóa học nào.");
-                }
-            });
-        } else {
-            classInfo.setText("Chưa đăng nhập");
+            }
+            else {
+                classCard.setVisibility(View.GONE);
+            }
+            clubInfo.setText("Câu lạc bộ của bạn: "+myClub);
+            cardViewClub.setVisibility(View.VISIBLE);
+        }
+        else {
+            cardViewClub.setVisibility(View.GONE);
         }
     }
+
+//    private void fetchClassInformation() {
+//        String token = sharedPreferences.getString("access_token", null);
+//        if (token != null) {
+//            UserApiService apiService = ApiServiceProvider.getUserApiService();
+//            Call<List<ClassModelTest>> call = apiService.getUserRegisteredClasses("Bearer " + token);
+//            call.enqueue(new Callback<List<ClassModelTest>>() {
+//                @Override
+//                public void onResponse(Call<List<ClassModelTest>> call, Response<List<ClassModelTest>> response) {
+//                    if (response.isSuccessful()) {
+//                        List<ClassModelTest> classes = response.body();
+//                        if (classes != null && !classes.isEmpty()) {
+//                            ClassModelTest classModel = classes.get(0);
+//                            String classDetails = "Tên: " + classModel.getTen() + "\n" +
+//                                    "Thời gian: " + classModel.getThoigian() + "\n" +
+//                                    "Giá tiền: " + classModel.getGiatien() + "\n" +
+//                                    "Điện thoại: " + classModel.getDienthoai() + "\n" +
+//                                    "CLB: " + classModel.getClub() + "\n" +
+//                                    "Giảng viên: " + classModel.getGiangvien();
+//                            classInfo.setText(classDetails);
+//                        } else {
+//                            classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+//                        }
+//                    } else {
+//                        classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<List<ClassModelTest>> call, Throwable t) {
+//                    classInfo.setText("Bạn chưa đăng ký khóa học nào.");
+//                }
+//            });
+//        } else {
+//            classInfo.setText("Chưa đăng nhập");
+//        }
+//    }
 
 
     private void showPopupMenu(View v) {
