@@ -218,6 +218,8 @@ public class activity_item_detail extends BaseActivity {
             public void onResponse(Call<ProductModel> call, Response<ProductModel> response) {
                 if(response.isSuccessful()){
                     ProductModel product = response.body();
+                    myContentE.putString("categoryName", product.getCategoryName());
+                    myContentE.apply();
                     txtItemName.setText(product.getProductName());
                     txtItemPrice.setText(product.getUnitPrice() + " VND");
                     txtItemInStock.setText(product.getUnitsInStock() +"");
@@ -228,7 +230,6 @@ public class activity_item_detail extends BaseActivity {
                         imageItem.setImageResource(R.drawable.logo_vovinam);
                     }else{
                         Picasso.get().load(image).placeholder(R.drawable.logo_vovinam).into(imageItem);
-
                     }
 
                     String sale = product.getSale();
