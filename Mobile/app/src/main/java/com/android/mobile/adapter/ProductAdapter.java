@@ -1,6 +1,7 @@
 package com.android.mobile.adapter;
 
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.mobile.R;
 import com.android.mobile.models.Product;
 import com.android.mobile.models.ProductModel;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemViewHolder> {
+    Context context;
 
     private List<ProductModel> list ;
-    public ProductAdapter(List<ProductModel> list ){
+    public ProductAdapter(Context context, List<ProductModel> list ){
+        this.context = context;
         this.list = list;
     }
     @NonNull
@@ -40,6 +44,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
 //        holder.supplier_product.setText(item.getSupplier());
 //        holder.price_product.setText("Giá tiền: "+item.getPrice()+"");
 //        holder.quantity_product.setText("x"+item.getQuantity()+"");
+        Glide.with(context)
+                .load(item.getImage_link())
+                .error(R.drawable.product)
+                .into(holder.image_product);
         holder.name_product.setText(item.getProductName());
         holder.type_product.setText("Loại: " + item.getCategoryName());
         holder.supplier_product.setText("Nhà cung cấp: " + item.getSupplierName());

@@ -231,6 +231,15 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                 if (response.isSuccessful() && response.body() != null) {
                     filteredNewsList.clear();
                     filteredNewsList.addAll(response.body());
+
+                    // Sắp xếp tin tức theo thứ tự mới nhất lên đầu
+                    Collections.sort(filteredNewsList, new Comparator<NewsModel>() {
+                        @Override
+                        public int compare(NewsModel o1, NewsModel o2) {
+                            return Long.compare(o2.getNgaytao(), o1.getNgaytao()); // Sắp xếp giảm dần
+                        }
+                    });
+
                     adapter.notifyDataSetChanged();
                     checkIfNoNews();
                 } else {

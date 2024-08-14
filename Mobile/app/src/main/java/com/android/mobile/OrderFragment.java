@@ -95,15 +95,22 @@ public class OrderFragment extends Fragment {
                             imgNotify.setVisibility(View.VISIBLE);
                             txtNotify.setText("Bạn chưa có đơn hàng nào cả");
                         }
+                    } else {
+                        imgNotify.setVisibility(View.VISIBLE);
+                        txtNotify.setText("Bạn chưa có đơn hàng nào cả");
                     }
                 } else {
                     Log.e("Error", response.message());
+                    imgNotify.setVisibility(View.VISIBLE);
+                    txtNotify.setText("Không thể tải danh sách đơn hàng. Vui lòng thử lại.");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<OrderListModel>> call, @NonNull Throwable t) {
                 Log.e("Fail", Objects.requireNonNull(t.getMessage()));
+                imgNotify.setVisibility(View.VISIBLE);
+                txtNotify.setText("Lỗi kết nối. Vui lòng thử lại.");
             }
         });
     }

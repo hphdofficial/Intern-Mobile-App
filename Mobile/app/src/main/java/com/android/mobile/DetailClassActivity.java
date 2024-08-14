@@ -292,14 +292,16 @@ public class DetailClassActivity extends BaseActivity {
                     isPending = false;
                     setupButton();
                     btnLeaveClassPending.setEnabled(true);
-                    Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu rời câu lạc bộ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu rời lớp học", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(DetailClassActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
                     Log.e("Error", response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
+                Toast.makeText(DetailClassActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
                 Log.e("Fail", t.getMessage());
             }
         });

@@ -84,6 +84,7 @@ public class ProductModel implements Parcelable {
         quantity = in.readInt();
         CategoryName = in.readString();
         SupplierName = in.readString();
+        sale = in.readString();
     }
 
     public static final Creator<ProductModel> CREATOR = new Creator<ProductModel>() {
@@ -210,5 +211,6 @@ public class ProductModel implements Parcelable {
         dest.writeInt(quantity);
         dest.writeString(CategoryName);
         dest.writeString(SupplierName);
+        dest.writeString(sale);
     }
 }

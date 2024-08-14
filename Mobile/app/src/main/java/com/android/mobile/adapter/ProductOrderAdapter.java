@@ -80,9 +80,17 @@ public class ProductOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else {
             OrderListModel.DetailCart product = (OrderListModel.DetailCart) items.get(position);
             ProductViewHolder productViewHolder = (ProductViewHolder) holder;
-            productViewHolder.textViewName.setText(product.getProduct().getProductName());
-            productViewHolder.textViewAmount.setText(String.format("%,.0f VND", product.getProduct().getUnitPrice()));
+
+            // Tính toán giá sau khi giảm giá
+            double unitPrice = product.getProduct().getUnitPrice();
+            String sale = product.getProduct().getSale();
+            double percent = sale != null ? Double.parseDouble(sale) : 0;
+            double priceAfterDiscount = unitPrice - (unitPrice * percent);
+            // Hiển thị giá sau khi giảm
+            productViewHolder.textViewAmount.setText(String.format("%,.0f VND", priceAfterDiscount));
+
             productViewHolder.textViewQuantity.setText("x " + product.getQuantity());
+
 
             Glide.with(context)
                     .load(product.getProduct().getLink_image())

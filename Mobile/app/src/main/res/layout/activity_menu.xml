@@ -12,149 +12,141 @@
     <!-- Icon bên trái -->
 
 
-
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/fragment_container"
-    tools:ignore="MissingConstraints">
-
-    <LinearLayout
-        android:paddingBottom="20dp"
-
-        android:id="@+id/linearinfor"
-        android:orientation="vertical"
-        android:background="#fff"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-
-<!--        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
-
-            android:layout_height="wrap_content">
-
-        </LinearLayout>-->
-
-
-        <!--<androidx.constraintlayout.widget.ConstraintLayout
-=======
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
->>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
-
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/fragment_container"
-        tools:ignore="MissingConstraints">
+        android:layout_centerInParent="true">
 
         <LinearLayout
-            android:paddingBottom="20dp"
-
-<<<<<<< HEAD
-            &lt;!&ndash; Avatar người dùng &ndash;&gt;
-
-            &lt;!&ndash; Tên người dùng &ndash;&gt;
-            <androidx.cardview.widget.CardView
-                android:id="@+id/img_avatar"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                app:cardCornerRadius="75dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-=======
             android:id="@+id/linearinfor"
-            android:background="@drawable/background_blue1"
+
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.constraintlayout.widget.ConstraintLayout
-
-                android:id="@+id/user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:padding="16dp"
->>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
-
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="MissingConstraints">
+            android:layout_height="wrap_content"
+            android:background="#E6FFFF"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 
+            <!--        <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center"
 
-                Tên người dùng -->
+                        android:layout_height="wrap_content">
 
-
-    </LinearLayout>
-    <TextView
-        android:layout_marginTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sản phẩm bán chạy"
-        android:background="@color/white"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="#FF0000"
-        android:id="@+id/productsale"
-        app:layout_constraintTop_toBottomOf="@id/linearinfor"></TextView>
-
-    <com.google.android.flexbox.FlexboxLayout
+                    </LinearLayout>-->
 
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:flexWrap="wrap"
-        app:alignItems="stretch"
-        app:flexDirection="row"
-        android:id="@+id/hotP"
-        app:layout_constraintTop_toBottomOf="@+id/productsale"
-        android:background="@color/white"
-        app:justifyContent="center">
-        <!-- Các phần tử con ở đây -->
+            <!--<androidx.constraintlayout.widget.ConstraintLayout
+    =======
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+    >>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
 
-    </com.google.android.flexbox.FlexboxLayout>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_container"
+            tools:ignore="MissingConstraints">
 
-    <ScrollView
-        android:id="@+id/text1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/hotP"
-        android:layout_height="wrap_content">
+            <LinearLayout
+                android:paddingBottom="20dp"
+
+    <<<<<<< HEAD
+                &lt;!&ndash; Avatar người dùng &ndash;&gt;
+
+                &lt;!&ndash; Tên người dùng &ndash;&gt;
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/img_avatar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="75dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+    =======
+                android:id="@+id/linearinfor"
+                android:background="@drawable/background_blue1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:padding="16dp"
+    >>>>>>> b9da2d2bea427e56e786d0a93b8ac685bb92a32c
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="MissingConstraints">
+
+
+
+                    Tên người dùng -->
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/productsale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:background="#E6FFFF"
+            android:paddingVertical="10dp"
+            android:text="Sản phẩm bán chạy"
+            android:textColor="#FF0000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/linearinfor" />
 
         <com.google.android.flexbox.FlexboxLayout
 
-            android:paddingTop="10dp"
-            android:layout_marginTop="10dp"
+
+            android:id="@+id/hotP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:flexWrap="wrap"
+            android:paddingVertical="10dp"
+            android:background="#E6FFFF"
             app:alignItems="stretch"
             app:flexDirection="row"
-            android:id="@+id/menu"
-
-            android:background="@color/white"
-            app:justifyContent="center">
+            app:flexWrap="wrap"
+            app:justifyContent="center"
+            app:layout_constraintTop_toBottomOf="@+id/productsale">
             <!-- Các phần tử con ở đây -->
 
         </com.google.android.flexbox.FlexboxLayout>
-    </ScrollView>
+
+        <ScrollView
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/hotP">
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:background="@color/white"
+                app:alignItems="stretch"
+                app:flexDirection="row"
+                app:flexWrap="wrap"
+                app:justifyContent="center">
+                <!-- Các phần tử con ở đây -->
+            </com.google.android.flexbox.FlexboxLayout>
+        </ScrollView>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <FrameLayout
@@ -162,7 +154,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints" />
-
 
 
 </RelativeLayout>
