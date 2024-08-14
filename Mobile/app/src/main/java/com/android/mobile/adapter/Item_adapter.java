@@ -17,12 +17,22 @@ import com.android.mobile.activity_item_detail;
 import com.android.mobile.models.ProductModel;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
     Context context;
 
     List<ProductModel> ProductList;
+
+//    // Sử dụng HashSet để loại bỏ các phần tử trùng lặp
+//
+//    Set<ProductModel> uniqueProductModel = new HashSet<>(ProductList);
+//
+//    List<ProductModel> UniqueProductList = new ArrayList<>(uniqueProductModel);
 
     public Item_adapter(Context context, List<ProductModel> ProductList) {
         this.context = context;
