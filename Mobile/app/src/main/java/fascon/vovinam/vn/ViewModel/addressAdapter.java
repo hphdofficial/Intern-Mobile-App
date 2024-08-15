@@ -31,6 +31,7 @@ public class addressAdapter extends RecyclerView.Adapter<addressAdapter.ViewHold
     private TextView address;
     private RadioButton get;
     private Button delete;
+    private TextView phone;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -53,6 +54,7 @@ public class addressAdapter extends RecyclerView.Adapter<addressAdapter.ViewHold
         get = view.findViewById(R.id.get);
         delete = view.findViewById(R.id.delete);
         position = view.findViewById(R.id.position);
+        phone = view.findViewById(R.id.phone);
         return new ViewHolder(view);
     }
 
@@ -62,6 +64,7 @@ public class addressAdapter extends RecyclerView.Adapter<addressAdapter.ViewHold
                 int slection = clubList.get(it).getSelection();
 
                 address.setText(name);
+                phone.setText(clubList.get(it).getPhone());
                 if(slection == 1){
                     get.setChecked(true);
                 }else {

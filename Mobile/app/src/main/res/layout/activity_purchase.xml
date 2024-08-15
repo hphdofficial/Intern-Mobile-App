@@ -19,15 +19,15 @@
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
         <LinearLayout
-            android:layout_marginLeft="50px"
-            android:layout_marginRight="50px"
+
             android:orientation="horizontal"
             android:layout_width="0dp"
+            android:layout_marginRight="20px"
             android:layout_weight="1"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_width="80px"
-                android:layout_height="80px"
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
                 android:background="@drawable/checkin">
 
             </ImageView>

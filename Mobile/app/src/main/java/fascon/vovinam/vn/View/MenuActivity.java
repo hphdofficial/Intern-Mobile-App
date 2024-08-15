@@ -1,4 +1,7 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.Model.addressModel;
+import fascon.vovinam.vn.R;
 
 import android.Manifest;
 import android.animation.ArgbEvaluator;
@@ -15,6 +18,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -66,6 +70,7 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -167,6 +172,7 @@ public class MenuActivity extends BaseActivity {
         setEventClick();
         RemoveView();
         ShowMenu();
+        createList();
 
         // Get current location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MenuActivity.this);
@@ -392,10 +398,10 @@ public class MenuActivity extends BaseActivity {
         btn_register = CreateLinearLayout(btn_register,"Đăng ký lớp học","images");
         btn_product = CreateLinearLayout(btn_product,"Sản phẩm","product");
         btn_cart  = CreateLinearLayout(btn_cart,"Giỏ hàng","cart1");
-        btn_order_status = CreateLinearLayout(btn_order_status,"Duyệt đơn hàng","imaghe");
+        btn_order_status = CreateLinearLayout(btn_order_status,"Duyệt đơn hàng mới","imaghe");
         btn_approve = CreateLinearLayout(btn_approve,"Duyệt yêu cầu","imaghe");
         btn_history  = CreateLinearLayout(btn_history,"Lịch sử mua hàng","history6");
-        btn_class = CreateLinearLayout(btn_class,"Lớp giảng dạy","tick");
+        btn_class = CreateLinearLayout(btn_class,"Điểm danh lớp học","tick");
         btn_historyclass1 = CreateLinearLayout(btn_historyclass1,"Lịch sử đăng ký môn học","imaghe");
 
         btn_sup = CreateLinearLayout(btn_sup,"Nhà cung cấp","house");
@@ -435,6 +441,29 @@ public class MenuActivity extends BaseActivity {
         menu.removeView(btn_club);
 
         menu.removeView(btn_register);
+        menu.removeView(btn_cart);
+
+        menu.removeView(btn_new);
+        menu.removeView(btn_product);
+        menu.removeView(btn_sup);
+        menu.removeView(btn_history);
+
+
+    }
+    public void createList(){
+        List<addressModel> list = new ArrayList<>();
+        SharedPreferences sharedPreferences = getSharedPreferences("myAddress", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list",null);
+        if(json == null){
+            addressModel m = new addressModel("Long An","0000000000",1);
+            list.add(m);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            String j = gson.toJson(list);
+            editor.putString("list", j);
+            editor.apply();
+        }
 
     }
     private LinearLayout CreateLinearLayout(LinearLayout linear, String content, String linkImage){
@@ -443,7 +472,7 @@ public class MenuActivity extends BaseActivity {
                 0, // Width sẽ được xác định bởi layout_flexBasisPercent
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-
+        int screenWidth = getScreenWidth(this);
         linear.setGravity(Gravity.CENTER);
         layoutParams.setMargins(10,0,10,10);
         layoutParams.setFlexBasisPercent(0.30f); // Chiếm 1/3 chiều rộng (33%)
@@ -452,10 +481,10 @@ public class MenuActivity extends BaseActivity {
         CardView cardView = new CardView(this);
         cardView.setId(View.generateViewId());
         cardView.setLayoutParams(new ViewGroup.LayoutParams(
-                250,250
+                screenWidth/4-10,screenWidth/4-10
         ));
         cardView.setCardElevation(4);
-        cardView.setRadius(250); // Thiết lập corner radius
+        cardView.setRadius(screenWidth/4-10); // Thiết lập corner radius
 
         // Tạo ImageView và thêm vào CardView
         ImageView imageView = new ImageView(this);
@@ -491,6 +520,10 @@ public class MenuActivity extends BaseActivity {
 
         // cái 2
 
+    }
+    public static int getScreenWidth(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.widthPixels;
     }
 
     public static String decodeRoleFromToken(String jwtToken) {

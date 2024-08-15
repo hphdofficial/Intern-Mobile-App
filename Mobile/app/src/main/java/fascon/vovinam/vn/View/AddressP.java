@@ -43,6 +43,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
     private LinearLayout layout1;
     private EditText text;
     private Button btn_add;
+    private EditText text_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +65,6 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
         fragmentTransaction.commit();
 
         // tạo mẫu
-        createList();
         adapter = new addressAdapter(this, list);
         recyclerView = findViewById(R.id.recycler_shipping_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -73,6 +73,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
         layout1 = findViewById(R.id.layout1);
         text = findViewById(R.id.text_add);
         btn_add = findViewById(R.id.add_address1);
+        text_phone = findViewById(R.id.text_phone);
 
 
         //get list address
@@ -95,7 +96,12 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
                 layout1.setVisibility(View.GONE);
                 addAddress.setVisibility(View.VISIBLE);
                 String s = text.getText().toString();
-                if(s.length()> 0){
+                String phone = text_phone.getText().toString();
+
+                if(phone.length() != 10){
+                    Toast.makeText(getApplicationContext(),"Số điện thoại không hợp lệ",Toast.LENGTH_SHORT).show();
+                }
+                if(s.length()> 0 && phone.length() == 10){
                     SharedPreferences sharedPreferences = getSharedPreferences("myAddress", Context.MODE_PRIVATE);
                     Gson gson = new Gson();
                     String json = sharedPreferences.getString("list",null);
@@ -107,7 +113,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
 
 
                         // thay doi data
-                        addressModel a = new addressModel(s,0);
+                        addressModel a = new addressModel(s,phone,0);
 
                         list.add(a);
 
@@ -190,21 +196,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
             Toast.makeText(this, "Selected location: " + latitude + ", " + longitude, Toast.LENGTH_LONG).show();
         }
     }
-    public void createList(){
-        SharedPreferences sharedPreferences = getSharedPreferences("myAddress", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("list",null);
-        if(json == null){
-            addressModel m = new addressModel("Long An",1);
-            list.add(m);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            String j = gson.toJson(list);
-            editor.putString("list", j);
-            editor.apply();
-        }
-
-    }
     @Override
     public void onItemClick(int position) {
 

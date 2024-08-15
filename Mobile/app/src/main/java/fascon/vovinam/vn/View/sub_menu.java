@@ -185,6 +185,34 @@ public class sub_menu extends Fragment {
                     //Đã đăng ký lớp học (Học viên)
 //                    startActivity(new Intent(getContext(), activity_member_checkin.class));
                 }
+                if(id == R.id.btn_historypay){
+
+                    //Các lớp học giảng viên đang dạy điểm danh
+                    startActivity(new Intent(getContext(), OrderActivity.class));
+                    //Đã đăng ký lớp học (Học viên)
+//                    startActivity(new Intent(getContext(), activity_member_checkin.class));
+                }
+                if(id == R.id.btn_cart){
+
+                    //Các lớp học giảng viên đang dạy điểm danh
+                    startActivity(new Intent(getContext(), CartActivity.class));
+                    //Đã đăng ký lớp học (Học viên)
+//                    startActivity(new Intent(getContext(), activity_member_checkin.class));
+                }
+                if(id == R.id.btn_sup){
+
+                    //Các lớp học giảng viên đang dạy điểm danh
+                    startActivity(new Intent(getContext(), SupplierActivity.class));
+                    //Đã đăng ký lớp học (Học viên)
+//                    startActivity(new Intent(getContext(), activity_member_checkin.class));
+                }
+                if(id == R.id.btn_findclub){
+
+                    //Các lớp học giảng viên đang dạy điểm danh
+                    startActivity(new Intent(getContext(), ClubActivity.class));
+                    //Đã đăng ký lớp học (Học viên)
+//                    startActivity(new Intent(getContext(), activity_member_checkin.class));
+                }
                 if(id == R.id.btn_logout){
 
                     logout();
@@ -254,7 +282,11 @@ public class sub_menu extends Fragment {
                     item1.setVisible(false);
                     // ViewUserNotRegister();
                 }
+
+
             }else {
+                MenuItem item5 =  menu.findItem(R.id.btn_findclub);
+                item5.setVisible(false);
                 MenuItem item =  menu.findItem(R.id.btn_registerclass);
                 item.setVisible(false);
                 MenuItem item1 =  menu.findItem(R.id.btn_class);
@@ -262,11 +294,25 @@ public class sub_menu extends Fragment {
                 MenuItem item2 =  menu.findItem(R.id.btn_register_up);
                 item2.setVisible(false);
 
+                MenuItem item3 =  menu.findItem(R.id.btn_cart);
+                item3.setVisible(false);
+
+                MenuItem item4 =  menu.findItem(R.id.btn_sup);
+                item4.setVisible(false);
+
             }
         }else {
+
+            MenuItem item5 =  menu.findItem(R.id.btn_findclub);
+            item5.setVisible(false);
             MenuItem item =  menu.findItem(R.id.btn_registerclass);
             item.setVisible(false);
-
+            MenuItem item1 =  menu.findItem(R.id.btn_historypay);
+            item1.setVisible(false);
+            MenuItem item4 =  menu.findItem(R.id.btn_sup);
+            item4.setVisible(false);
+            MenuItem item6 =  menu.findItem(R.id.btn_cart);
+            item6.setVisible(false);
             //  RemoveViewHLV();
         }
     }
@@ -301,6 +347,7 @@ public class sub_menu extends Fragment {
     private TextView txt_name;
     private  TextView txt_age;
     private  ImageView image_avatar_sub;
+
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         MenuItem item = menu.findItem(R.id.btn_self);

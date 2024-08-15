@@ -2,6 +2,7 @@ package fascon.vovinam.vn.Model;
 
 public class addressModel {
     private String address;
+    private String phone;
     private int selection;
 
     public String getAddress() {
@@ -20,8 +21,17 @@ public class addressModel {
         this.selection = selection;
     }
 
-    public addressModel(String address, int selection) {
+    public addressModel(String address, String phone, int selection) {
         this.address = address;
+        this.phone = phone;
         this.selection = selection;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

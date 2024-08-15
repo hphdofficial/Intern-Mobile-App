@@ -20,6 +20,10 @@
             android:icon="@drawable/booklt2"
             android:title="Lý thuyết võ thuật" />
         <item
+            android:id="@+id/btn_findclub"
+            android:icon="@drawable/club3"
+            android:title="Tìm câu lạc bộ" />
+        <item
             android:id="@+id/btn_club"
             android:icon="@drawable/club3"
             android:title="Câu lạc bộ" />
@@ -27,6 +31,10 @@
             android:id="@+id/btn_registerclass"
             android:icon="@drawable/re2"
             android:title="Đăng ký lớp học võ" />
+        <item
+            android:id="@+id/btn_cart"
+            android:icon="@drawable/cart1"
+            android:title="Giỏ hàng" />
         <item
             android:id="@+id/btn_class"
             android:icon="@drawable/class2"
@@ -39,6 +47,15 @@
             android:id="@+id/btn_register_up"
             android:icon="@drawable/logout2"
             android:title="Đai võ" />
+        <item
+            android:id="@+id/btn_historypay"
+            android:icon="@drawable/history6"
+            android:title="Lịch sử mua hàng" />
+
+        <item
+            android:id="@+id/btn_sup"
+            android:icon="@drawable/house"
+            android:title="Nhà cung cấp" />
         <item
             android:id="@+id/btn_inforsoftware"
             android:icon="@drawable/logo"
