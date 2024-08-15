@@ -8,7 +8,7 @@
     android:background="@android:color/white"
     android:layout_marginBottom="8dp"
     android:elevation="2dp"
-    tools:context=".adapter.ReviewAdapter">
+    tools:context=".ViewModel.ReviewAdapter">
 
     <ImageView
         android:id="@+id/user_avatar"

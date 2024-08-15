@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.android.mobile",
+  "applicationId": "fascon.vovinam.vn",
   "variantName": "release",
   "elements": [
     {

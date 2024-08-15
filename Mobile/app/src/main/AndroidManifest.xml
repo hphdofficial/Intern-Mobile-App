@@ -44,223 +44,223 @@
             android:value="YOUR_TERMINAL_ID" />
 
         <activity
-            android:name=".ApproveOrderActivity"
+            android:name=".View.ApproveOrderActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ApproveActivity"
+            android:name=".View.ApproveActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".OrderActivity"
+            android:name=".View.OrderActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ThankYouDialogFragment"
+            android:name=".View.ThankYouDialogFragment"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ClubMapsFragment"
+            android:name=".View.ClubMapsFragment"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddressP"
+            android:name=".View.AddressP"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".adapter.ProductOrderAdapter"
+            android:name=".ViewModel.ProductOrderAdapter"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".OrderDetailFragment"
+            android:name=".View.OrderDetailFragment"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HistoryRegisterClass"
+            android:name=".View.HistoryRegisterClass"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity_teacher_checkin"
+            android:name=".View.activity_teacher_checkin"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FragmentWriteReviewActivity"
+            android:name=".View.FragmentWriteReviewActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".NewsDetailActivity"
+            android:name=".View.NewsDetailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UpdateInfoMember"
+            android:name=".View.UpdateInfoMember"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UpdatePassword"
+            android:name=".View.UpdatePassword"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".adapter.SupplierAdapter"
+            android:name=".ViewModel.SupplierAdapter"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SupplierActivity"
+            android:name=".View.SupplierActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ResetPasswordActivity"
+            android:name=".View.ResetPasswordActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".View.ForgotPasswordActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Belt_Payment"
+            android:name=".View.Belt_Payment"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Register_belt"
+            android:name=".View.Register_belt"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Purchase"
+            android:name=".View.Purchase"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".adapter.ItemSupplierProductAdapter"
+            android:name=".ViewModel.ItemSupplierProductAdapter"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SupplierProductActivity"
+            android:name=".View.SupplierProductActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".adapter.ArticleAdapter"
+            android:name=".ViewModel.ArticleAdapter"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".adapter.ReviewAdapter"
+            android:name=".ViewModel.ReviewAdapter"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ReviewActivity"
+            android:name=".View.ReviewActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SupplierInfoActivity"
+            android:name=".View.SupplierInfoActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity_item_detail"
+            android:name=".View.activity_item_detail"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity_items"
+            android:name=".View.activity_items"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CartActivity"
+            android:name=".View.CartActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EnterOtpActivity"
+            android:name=".View.EnterOtpActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".View.SignupActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity_member_checkin"
+            android:name=".View.activity_member_checkin"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ActivityDetailTeacher"
+            android:name=".View.ActivityDetailTeacher"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ActivityDetailMember"
+            android:name=".View.ActivityDetailMember"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ViewImageActivity"
+            android:name=".View.ViewImageActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ActivityReplaceCamera"
+            android:name=".View.ActivityReplaceCamera"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ImageSelectActivity"
+            android:name=".View.ImageSelectActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".profiletest"
+            android:name=".View.profiletest"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ActivityNews"
+            android:name=".View.ActivityNews"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PaymentQR"
+            android:name=".View.PaymentQR"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".payment"
+            android:name=".View.payment"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterClass"
+            android:name=".View.RegisterClass"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MenuActivity"
+            android:name=".View.MenuActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ClassActivity"
+            android:name=".View.ClassActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DetailClassActivity"
+            android:name=".View.DetailClassActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DetailClubActivity"
+            android:name=".View.DetailClubActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AboutActivity"
+            android:name=".View.AboutActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ClubActivity"
+            android:name=".View.ClubActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity_checkin"
+            android:name=".View.activity_checkin"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MyClassActivity"
+            android:name=".View.MyClassActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity_item_chapter"
+            android:name=".View.activity_item_chapter"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity_chapters"
+            android:name=".View.activity_chapters"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity_lessons"
+            android:name=".View.activity_lessons"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".StartActivity"
+            android:name=".View.StartActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

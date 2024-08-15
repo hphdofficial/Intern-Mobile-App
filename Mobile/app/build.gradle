@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.android.mobile'
+    namespace 'fascon.vovinam.vn'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.android.mobile"
+        applicationId "fascon.vovinam.vn"
         minSdk 26
         targetSdk 34
         versionCode 1

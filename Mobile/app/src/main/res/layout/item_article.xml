@@ -7,7 +7,7 @@
     android:id="@+id/main"
     android:orientation="vertical"
     android:layout_marginBottom="8dp"
-    tools:context=".adapter.ArticleAdapter">
+    tools:context=".ViewModel.ArticleAdapter">
 
     <!-- Title Section -->
     <TextView
