@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -22,6 +23,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONObject;
+
 import fascon.vovinam.vn.ViewModel.BaseActivity;
 import fascon.vovinam.vn.ViewModel.NewsAdapter;
 import fascon.vovinam.vn.Model.NewsModel;
@@ -29,6 +32,7 @@ import fascon.vovinam.vn.Model.ClubModel;
 import fascon.vovinam.vn.Model.network.ApiServiceProvider;
 import fascon.vovinam.vn.Model.services.NewsApiService;
 
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,8 +57,9 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private BlankFragment loadingFragment;
     private ArrayAdapter<ClubModel> spinnerAdapter;
     private List<ClubModel> clubList = new ArrayList<>();
-    private TextView noNewsText; // TextView hiển thị khi không có thông báo nào
-    private boolean isFirstLoad = true; // Cờ để kiểm tra lần tải đầu tiên
+    private TextView noNewsText;
+    private boolean isFirstLoad = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +105,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
 
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -109,8 +113,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         // Thiết lập Spinner và tải danh sách câu lạc bộ
@@ -139,9 +142,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Không làm gì cả
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         // Tải tất cả tin tức lần đầu tiên
@@ -176,11 +177,36 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             }
         });
     }
+    public static String decodeRoleFromToken(String jwtToken) {
+        try {
+            // Tách token thành các phần: header, payload, và signature
+            String[] parts = jwtToken.split("\\.");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid JWT token format");
+            }
 
+            // Phần payload là phần thứ 2
+            String payload = parts[1];
+
+            // Giải mã payload từ Base64Url
+            byte[] decodedBytes = Base64.decode(payload, Base64.URL_SAFE);
+            String decodedPayload = new String(decodedBytes, StandardCharsets.UTF_8);
+
+            // Chuyển đổi payload thành JSONObject
+            JSONObject jsonObject = new JSONObject(decodedPayload);
+
+            // Trích xuất role từ payload
+            return jsonObject.getString("role");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     private void fetchAllNews() {
         showLoading();
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<NewsModel>> call = apiService.getAllNews(); // Sử dụng API mới để lấy tất cả tin tức
+        Call<List<NewsModel>> call = apiService.getAnouncements(); // Gọi API lấy các bài báo mới nhất
         call.enqueue(new Callback<List<NewsModel>>() {
             @Override
             public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
@@ -188,22 +214,34 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                 if (response.isSuccessful() && response.body() != null) {
                     newsList.clear(); // Xóa dữ liệu cũ
 
-                    // Thêm tất cả tin tức vào danh sách
-                    newsList.addAll(response.body());
-
+                    // Kiểm tra vai trò người dùng để lọc các bài báo
+                    if (isCoach()) {
+                        // Nếu là HLV, chỉ hiển thị các bài báo có type là "giang-vien"
+                        for (NewsModel news : response.body()) {
+                            if ("giang-vien".equals(news.getType())) {
+                                newsList.add(news);
+                            }
+                        }
+                    } else {
+                        // Nếu không phải HLV, hiển thị tất cả bài báo trừ "giang-vien"
+                        for (NewsModel news : response.body()) {
+                            if (!"giang-vien".equals(news.getType())) {
+                                newsList.add(news);
+                            }
+                        }
+                    }
 
                     // Sắp xếp tin tức theo thứ tự mới nhất lên đầu
                     Collections.sort(newsList, new Comparator<NewsModel>() {
                         @Override
                         public int compare(NewsModel o1, NewsModel o2) {
-                            // Giả sử ngaytao là trường thời gian lưu trữ theo UNIX timestamp
-                            return Long.compare(o2.getNgaytao(), o1.getNgaytao()); // Sắp xếp giảm dần
+                            return Long.compare(o2.getNgaytao(), o1.getNgaytao()); // Sắp xếp giảm dần theo ngày tạo
                         }
                     });
 
-                    filterNews(searchEditText.getText().toString()); // Lọc theo tìm kiếm
+                    filterNews(searchEditText.getText().toString()); // Lọc theo tìm kiếm nếu có
                 } else {
-                    showNoNewsMessage();
+                    showNoNewsMessage(); // Hiển thị thông báo nếu không có tin tức
                 }
             }
 
@@ -215,6 +253,23 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
         });
     }
 
+    private boolean isCoach() {
+        // Đảm bảo sharedPreferences được khởi tạo
+        if (sharedPreferences == null) {
+            sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        }
+
+        String token = sharedPreferences.getString("access_token", null);
+        if (token == null) {
+            // Trường hợp không tìm thấy token
+            return false;
+        }
+
+        String role = decodeRoleFromToken(token);
+        return role != null && role.contains("1");
+    }
+
+
     private void fetchNewsByClub(int clubId) {
         showLoading();
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
@@ -225,7 +280,23 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                 hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     filteredNewsList.clear();
-                    filteredNewsList.addAll(response.body());
+
+                    // Kiểm tra vai trò người dùng để lọc các bài báo
+                    if (isCoach()) {
+                        // Nếu là HLV, chỉ hiển thị các bài báo có type là "giang-vien"
+                        for (NewsModel news : response.body()) {
+                            if ("giang-vien".equals(news.getType())) {
+                                filteredNewsList.add(news);
+                            }
+                        }
+                    } else {
+                        // Nếu không phải HLV, hiển thị tất cả bài báo trừ "giang-vien"
+                        for (NewsModel news : response.body()) {
+                            if (!"giang-vien".equals(news.getType())) {
+                                filteredNewsList.add(news);
+                            }
+                        }
+                    }
 
                     // Sắp xếp tin tức theo thứ tự mới nhất lên đầu
                     Collections.sort(filteredNewsList, new Comparator<NewsModel>() {
@@ -250,6 +321,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
         });
     }
 
+
     private void showLoading() {
         if (loadingFragment == null) {
             loadingFragment = new BlankFragment();
@@ -258,11 +330,12 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     }
 
     private void hideLoading() {
-        if (loadingFragment != null) {
-            loadingFragment.dismiss();
+        if (loadingFragment != null && loadingFragment.isAdded()) { // Kiểm tra fragment đã được thêm vào FragmentManager chưa
+            loadingFragment.dismissAllowingStateLoss(); // Dùng dismissAllowingStateLoss thay vì dismiss để tránh IllegalStateException
             loadingFragment = null;
         }
     }
+
 
     private void searchNews(String query) {
         if (query.isEmpty()) {
@@ -295,6 +368,8 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             });
         }
     }
+
+
 
     private void filterNews(String query) {
         filteredNewsList.clear();
