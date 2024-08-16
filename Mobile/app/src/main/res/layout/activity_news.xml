@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -77,20 +76,30 @@
             android:spinnerMode="dropdown" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/no_news_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Chưa có thông báo nào"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:visibility="gone"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/itemNews"
+    <!-- FrameLayout chứa RecyclerView và TextView -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/club_layout"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp">
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/itemNews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!-- TextView hiển thị khi không có thông báo -->
+        <TextView
+            android:id="@+id/no_news_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Chưa có thông báo nào"
+            android:layout_marginTop="-50dp"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:visibility="gone"/>
+    </FrameLayout>
+
 </RelativeLayout>
