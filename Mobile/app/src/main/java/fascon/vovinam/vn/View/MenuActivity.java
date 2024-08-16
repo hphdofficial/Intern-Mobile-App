@@ -413,14 +413,13 @@ public class MenuActivity extends BaseActivity {
     public void RemoveView(){
         menu.removeView(btn_lythuyet);
         menu.removeView(btn_historyclass1);
-
+        menu.removeView(btn_register);
         menu.removeView(btn_logout);
     }
     public void RemoveViewUser(){
         menu.removeView(btn_order_status);
         menu.removeView(btn_club);
         menu.removeView(btn_class);
-        menu.removeView(btn_register);
         menu.removeView(btn_approve);
     }
     public void ViewUserNotRegister(){
@@ -432,17 +431,12 @@ public class MenuActivity extends BaseActivity {
     }
     public void ViewUserNotClub(){
         menu.removeView(btn_order_status);
-        menu.removeView(btn_register);
         menu.removeView(btn_class);
         menu.removeView(btn_approve);
-
     }
     public void RemoveViewHLV(){
         menu.removeView(btn_club);
-
-        menu.removeView(btn_register);
         menu.removeView(btn_cart);
-
         menu.removeView(btn_new);
         menu.removeView(btn_product);
         menu.removeView(btn_sup);

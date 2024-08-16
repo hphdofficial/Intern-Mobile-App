@@ -264,6 +264,8 @@ public class sub_menu extends Fragment {
         String role = decodeRoleFromToken(token);
         if(role.contains("0")){
             String club = sharedPreferences.getString("id_club_shared",null);
+            MenuItem itemz =  menu.findItem(R.id.btn_registerclass);
+            itemz.setVisible(false);
             if(club !=null){
                 String myClass = sharedPreferences.getString("id_class_shared",null);
                 if(myClass != null){
@@ -271,8 +273,6 @@ public class sub_menu extends Fragment {
                     item.setVisible(false);
                     MenuItem item2 =  menu.findItem(R.id.btn_register_up);
                     item2.setVisible(false);
-                    MenuItem item3 =  menu.findItem(R.id.btn_registerclass);
-                    item3.setVisible(false);
 
                     //  RemoveViewUser();
                 }else {
