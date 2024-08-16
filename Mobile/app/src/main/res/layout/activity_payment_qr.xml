@@ -56,7 +56,7 @@ android:id="@+id/stk"
             android:layout_below="@+id/imageViewQRCode"
             android:textAlignment="center"
             android:textColor="@color/beautiful_color"
-            android:text="Cảm ơn đã mua sản phẩm của chung1 tôi vui lòng quét QR để thanh toán">
+            android:text="Cảm ơn đã mua sản phẩm của chúng tôi vui lòng quét QR để thanh toán">
 
         </TextView>
 
