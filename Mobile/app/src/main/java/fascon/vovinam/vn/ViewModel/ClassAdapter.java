@@ -21,6 +21,7 @@ import java.util.List;
 public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> {
     Context context;
     private List<Class> classList;
+    private String idClub = null;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
@@ -35,9 +36,10 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
         }
     }
 
-    public ClassAdapter(Context context, List<Class> data) {
+    public ClassAdapter(Context context, List<Class> data, String idClub) {
         this.context = context;
         this.classList = data;
+        this.idClub = idClub;
     }
 
     @Override
@@ -56,6 +58,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
                 Intent intent = new Intent(context, DetailClassActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("id_class", String.valueOf(classList.get(position).getId()));
+                bundle.putString("id_club", idClub);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }

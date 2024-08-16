@@ -1,4 +1,8 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.Model.Club;
+import fascon.vovinam.vn.Model.services.ClubApiService;
+import fascon.vovinam.vn.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -40,8 +44,9 @@ public class DetailClassActivity extends BaseActivity {
     private Button btnJoinClassPending;
     private Button btnCancelClassPending;
     private Button btnLeaveClassPending;
-    private Button btnDirectClass;
+    //    private Button btnDirectClass;
     private String idClass = null;
+    private String idClub = null;
     private List<Class> listClassPending = new ArrayList<>();
     private boolean isPending = false;
     private String name = "";
@@ -79,13 +84,14 @@ public class DetailClassActivity extends BaseActivity {
         btnJoinClassPending = findViewById(R.id.btn_join_class_pending);
         btnCancelClassPending = findViewById(R.id.btn_cancel_class_pending);
         btnLeaveClassPending = findViewById(R.id.btn_leave_class_pending);
-        btnDirectClass = findViewById(R.id.btn_direct_class);
+//        btnDirectClass = findViewById(R.id.btn_direct_class);
 
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
                 idClass = bundle.getString("id_class");
+                idClub = bundle.getString("id_club");
             }
         }
 
@@ -110,12 +116,12 @@ public class DetailClassActivity extends BaseActivity {
             }
         });
 
-        btnDirectClass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                directJoinedClass();
-            }
-        });
+//        btnDirectClass.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                directJoinedClass();
+//            }
+//        });
 
         getDetailClass();
     }
@@ -125,10 +131,8 @@ public class DetailClassActivity extends BaseActivity {
 
         getListClassPending();
 
-        String token = sharedPreferences.getString("access_token", null);
-
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<Class> call = service.getDetailClassofClub("Bearer" + token, Integer.parseInt(idClass));
+        Call<Class> call = service.getDetailClassofClub(Integer.parseInt(idClass));
 
         call.enqueue(new Callback<Class>() {
             @Override
@@ -200,7 +204,7 @@ public class DetailClassActivity extends BaseActivity {
             btnJoinClassPending.setVisibility(isPending ? View.GONE : View.VISIBLE);
             btnCancelClassPending.setVisibility(isPending ? View.VISIBLE : View.GONE);
         } else if (!idClass.equals(idClassShared)) {
-            btnDirectClass.setVisibility(View.VISIBLE);
+//            btnDirectClass.setVisibility(View.VISIBLE);
         } else {
             btnLeaveClassPending.setVisibility(View.VISIBLE);
         }
@@ -208,34 +212,47 @@ public class DetailClassActivity extends BaseActivity {
 
     public void joinClassPending() {
         btnJoinClassPending.setEnabled(false);
-        Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_LONG).show();
+
+        isPending = true;
+        setupButton();
+        btnJoinClassPending.setEnabled(true);
+        Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("id_class", idClass);
+        intent.putExtra("name", name);
+        intent.putExtra("nameClass", nameClass);
+        intent.putExtra("idClass", idClass);
+        intent.putExtras(bundle);
+        startActivity(intent);
 
         String token = sharedPreferences.getString("access_token", null);
-
-        ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<ReponseModel> call = service.joinClassPending("Bearer" + token, Integer.parseInt(idClass));
+        ClubApiService service = ApiServiceProvider.getClubApiService();
+        Club data = new Club(idClub);
+        Call<ReponseModel> call = service.joinClub("Bearer" + token, data);
 
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                if (response.isSuccessful()) {
-                    isPending = true;
-                    setupButton();
-                    btnJoinClassPending.setEnabled(true);
+                ClassApiService service = ApiServiceProvider.getClassApiService();
+                Call<ReponseModel> callclass = service.joinClassPending("Bearer" + token, Integer.parseInt(idClass));
 
-                    Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("id_class", idClass);
-                    intent.putExtra("name", name);
-                    intent.putExtra("nameClass", nameClass);
-                    intent.putExtra("idClass", idClass);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                callclass.enqueue(new Callback<ReponseModel>() {
+                    @Override
+                    public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                        if (response.isSuccessful()) {
+                        } else {
+                            Log.e("Error", response.message());
+                        }
+                    }
 
-                    Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.e("Error", response.message());
-                }
+                    @Override
+                    public void onFailure(Call<ReponseModel> call, Throwable t) {
+                        Log.e("Fail", t.getMessage());
+                    }
+                });
             }
 
             @Override
@@ -247,10 +264,14 @@ public class DetailClassActivity extends BaseActivity {
 
     public void cancelClassPending() {
         btnCancelClassPending.setEnabled(false);
-        Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_LONG).show();
+
+        isPending = false;
+        setupButton();
+        btnCancelClassPending.setEnabled(true);
+        Toast.makeText(DetailClassActivity.this, "Đã hủy yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
 
         String token = sharedPreferences.getString("access_token", null);
-
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<ReponseModel> call = service.cancelClassPending("Bearer" + token, Integer.parseInt(idClass));
 
@@ -258,10 +279,19 @@ public class DetailClassActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 if (response.isSuccessful()) {
-                    isPending = false;
-                    setupButton();
-                    btnCancelClassPending.setEnabled(true);
-                    Toast.makeText(DetailClassActivity.this, "Đã hủy yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
+
+                    ClubApiService service = ApiServiceProvider.getClubApiService();
+                    Call<ReponseModel> callclub = service.leaveClub("Bearer" + token);
+                    callclub.enqueue(new Callback<ReponseModel>() {
+                        @Override
+                        public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReponseModel> call, Throwable t) {
+                            Log.e("Fail", t.getMessage());
+                        }
+                    });
                 } else {
                     Log.e("Error", response.message());
                 }

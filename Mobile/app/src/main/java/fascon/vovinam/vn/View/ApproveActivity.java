@@ -69,9 +69,7 @@ public class ApproveActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         String[] options = {
-                "Yêu cầu tham gia câu lạc bộ",
                 "Yêu cầu đăng ký lớp học",
-                "Yêu cầu rời câu lạc bộ",
                 "Yêu cầu rời lớp học"
         };
 
@@ -247,15 +245,9 @@ public class ApproveActivity extends BaseActivity {
             spinnerOptions.setOnItemSelectedListener(null);
             switch (position) {
                 case 0:
-                    getListJoinClub();
-                    break;
-                case 1:
                     getListJoinClass();
                     break;
-                case 2:
-                    getListLeaveClub();
-                    break;
-                case 3:
+                case 1:
                     getListLeaveClass();
                     break;
                 default:
@@ -266,15 +258,9 @@ public class ApproveActivity extends BaseActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     switch (position) {
                         case 0:
-                            getListJoinClub();
-                            break;
-                        case 1:
                             getListJoinClass();
                             break;
-                        case 2:
-                            getListLeaveClub();
-                            break;
-                        case 3:
+                        case 1:
                             getListLeaveClass();
                             break;
                         default:

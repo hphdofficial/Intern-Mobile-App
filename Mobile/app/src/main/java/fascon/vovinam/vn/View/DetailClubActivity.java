@@ -1,4 +1,6 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -37,14 +39,15 @@ public class DetailClubActivity extends BaseActivity {
     private TextView txtAddressClub;
     private TextView txtPhoneClub;
     private TextView txtManagerClub;
-    private Button btnJoinClubPending;
-    private Button btnCancelClubPending;
-    private Button btnLeaveClubPending;
-    private Button btnDirectClub;
+    //    private Button btnJoinClubPending;
+//    private Button btnCancelClubPending;
+//    private Button btnLeaveClubPending;
+//    private Button btnDirectClub;
+//    private List<Club> listClubPending = new ArrayList<>();
+//    private boolean isPending = false;
     private String idClub = null;
-    private List<Club> listClubPending = new ArrayList<>();
-    private boolean isPending = false;
     private BlankFragment loadingFragment;
+    private Button btnListClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +77,11 @@ public class DetailClubActivity extends BaseActivity {
         txtAddressClub = findViewById(R.id.txtAddressDetailClub);
         txtPhoneClub = findViewById(R.id.txtPhoneDetailClub);
         txtManagerClub = findViewById(R.id.txtManagerDetailClub);
-        btnJoinClubPending = findViewById(R.id.btn_join_club_pending);
-        btnCancelClubPending = findViewById(R.id.btn_cancel_club_pending);
-        btnLeaveClubPending = findViewById(R.id.btn_leave_club_pending);
-        btnDirectClub = findViewById(R.id.btn_direct_club);
+//        btnJoinClubPending = findViewById(R.id.btn_join_club_pending);
+//        btnCancelClubPending = findViewById(R.id.btn_cancel_club_pending);
+//        btnLeaveClubPending = findViewById(R.id.btn_leave_club_pending);
+//        btnDirectClub = findViewById(R.id.btn_direct_club);
+        btnListClass = findViewById(R.id.button_list_class);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -87,31 +91,55 @@ public class DetailClubActivity extends BaseActivity {
             }
         }
 
-        btnJoinClubPending.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                joinClubPending();
-            }
-        });
+//        btnJoinClubPending.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                joinClubPending();
+//            }
+//        });
+//
+//        btnCancelClubPending.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                cancelClubPending();
+//            }
+//        });
+//
+//        btnLeaveClubPending.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                leaveClubPending();
+//            }
+//        });
+//
+//        btnDirectClub.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                directJoinedClub();
+//            }
+//        });
 
-        btnCancelClubPending.setOnClickListener(new View.OnClickListener() {
+        btnListClass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelClubPending();
-            }
-        });
+//                String token = sharedPreferences.getString("access_token", null);
+//                ClubApiService service = ApiServiceProvider.getClubApiService();
+//                Call<ReponseModel> call = service.joinClubPending("Bearer" + token, Integer.parseInt(idClub));
+//                call.enqueue(new Callback<ReponseModel>() {
+//                    @Override
+//                    public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<ReponseModel> call, Throwable t) {
+//                    }
+//                });
 
-        btnLeaveClubPending.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                leaveClubPending();
-            }
-        });
-
-        btnDirectClub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                directJoinedClub();
+                Intent intent = new Intent(DetailClubActivity.this, ClassActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("id_club", idClub);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
@@ -121,7 +149,7 @@ public class DetailClubActivity extends BaseActivity {
     public void getDetailClub() {
         showLoading();
 
-        getListClubPending();
+//        getListClubPending();
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<Club> call = service.getDetailClub(Integer.parseInt(idClub));
@@ -129,6 +157,8 @@ public class DetailClubActivity extends BaseActivity {
         call.enqueue(new Callback<Club>() {
             @Override
             public void onResponse(Call<Club> call, Response<Club> response) {
+                hideLoading();
+
                 if (response.isSuccessful()) {
                     Club clb = response.body();
                     txtNameClub.setText(clb.getTen());
@@ -150,153 +180,153 @@ public class DetailClubActivity extends BaseActivity {
         });
     }
 
-    public void getListClubPending() {
-        String token = sharedPreferences.getString("access_token", null);
+//    public void getListClubPending() {
+//        String token = sharedPreferences.getString("access_token", null);
+//
+//        ClubApiService service = ApiServiceProvider.getClubApiService();
+//        Call<List<Club>> call = service.getListClubPending("Bearer" + token);
+//
+//        call.enqueue(new Callback<List<Club>>() {
+//            @Override
+//            public void onResponse(Call<List<Club>> call, Response<List<Club>> response) {
+//                hideLoading();
+//
+//                if (response.isSuccessful()) {
+//                    listClubPending = response.body();
+//                    if (!listClubPending.isEmpty()) {
+//                        for (Club clb : listClubPending) {
+//                            if (clb.getId_club().equals(idClub)) {
+//                                isPending = true;
+//                                break;
+//                            }
+//                            isPending = false;
+//                        }
+//                    }
+//                    setupButton();
+//                } else {
+//                    Log.e("Error", response.message());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Club>> call, Throwable t) {
+//                hideLoading();
+//
+//                Log.e("Fail", t.getMessage());
+//            }
+//        });
+//    }
 
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<List<Club>> call = service.getListClubPending("Bearer" + token);
+//    public void setupButton() {
+//        String idClubShared = sharedPreferences.getString("id_club_shared", null);
+//
+//        if (idClubShared == null) {
+//            btnJoinClubPending.setVisibility(isPending ? View.GONE : View.VISIBLE);
+//            btnCancelClubPending.setVisibility(isPending ? View.VISIBLE : View.GONE);
+//        } else if (!idClub.equals(idClubShared)) {
+//            btnDirectClub.setVisibility(View.VISIBLE);
+//        } else {
+//            btnLeaveClubPending.setVisibility(View.VISIBLE);
+//        }
+//    }
 
-        call.enqueue(new Callback<List<Club>>() {
-            @Override
-            public void onResponse(Call<List<Club>> call, Response<List<Club>> response) {
-                hideLoading();
+//    public void joinClubPending() {
+//        btnJoinClubPending.setEnabled(false);
+//        Toast.makeText(DetailClubActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
+//
+//        String token = sharedPreferences.getString("access_token", null);
+//
+//        ClubApiService service = ApiServiceProvider.getClubApiService();
+//        Call<ReponseModel> call = service.joinClubPending("Bearer" + token, Integer.parseInt(idClub));
+//
+//        call.enqueue(new Callback<ReponseModel>() {
+//            @Override
+//            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+//                if (response.isSuccessful()) {
+//                    isPending = true;
+//                    setupButton();
+//                    btnJoinClubPending.setEnabled(true);
+//                    Toast.makeText(DetailClubActivity.this, "Đã gửi yêu cầu tham gia", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Log.e("Error", response.message());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ReponseModel> call, Throwable t) {
+//                Log.e("Fail", t.getMessage());
+//            }
+//        });
+//    }
 
-                if (response.isSuccessful()) {
-                    listClubPending = response.body();
-                    if (!listClubPending.isEmpty()) {
-                        for (Club clb : listClubPending) {
-                            if (clb.getId_club().equals(idClub)) {
-                                isPending = true;
-                                break;
-                            }
-                            isPending = false;
-                        }
-                    }
-                    setupButton();
-                } else {
-                    Log.e("Error", response.message());
-                }
-            }
+//    public void cancelClubPending() {
+//        btnCancelClubPending.setEnabled(false);
+//        Toast.makeText(DetailClubActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
+//
+//        String token = sharedPreferences.getString("access_token", null);
+//
+//        ClubApiService service = ApiServiceProvider.getClubApiService();
+//        Call<ReponseModel> call = service.cancelClubPending("Bearer" + token, Integer.parseInt(idClub));
+//
+//        call.enqueue(new Callback<ReponseModel>() {
+//            @Override
+//            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+//                if (response.isSuccessful()) {
+//                    isPending = false;
+//                    setupButton();
+//                    btnCancelClubPending.setEnabled(true);
+//                    Toast.makeText(DetailClubActivity.this, "Đã hủy yêu cầu tham gia", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Log.e("Error", response.message());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ReponseModel> call, Throwable t) {
+//                Log.e("Fail", t.getMessage());
+//            }
+//        });
+//    }
 
-            @Override
-            public void onFailure(Call<List<Club>> call, Throwable t) {
-                hideLoading();
+//    private void leaveClubPending() {
+//        btnLeaveClubPending.setEnabled(false);
+//        Toast.makeText(DetailClubActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
+//
+//        String token = sharedPreferences.getString("access_token", null);
+//
+//        ClubApiService service = ApiServiceProvider.getClubApiService();
+//        Call<ReponseModel> call = service.leaveClubPending("Bearer" + token);
+//
+//        call.enqueue(new Callback<ReponseModel>() {
+//            @Override
+//            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+//                if (response.isSuccessful()) {
+//                    isPending = false;
+//                    setupButton();
+//                    btnLeaveClubPending.setEnabled(true);
+//                    btnLeaveClubPending.setVisibility(View.GONE);
+//                    Toast.makeText(DetailClubActivity.this, "Đã gửi yêu cầu rời câu lạc bộ", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(DetailClubActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
+//                    Log.e("Error", response.message());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ReponseModel> call, Throwable t) {
+//                Toast.makeText(DetailClubActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
+//                Log.e("Fail", t.getMessage());
+//            }
+//        });
+//    }
 
-                Log.e("Fail", t.getMessage());
-            }
-        });
-    }
-
-    public void setupButton() {
-        String idClubShared = sharedPreferences.getString("id_club_shared", null);
-
-        if (idClubShared == null) {
-            btnJoinClubPending.setVisibility(isPending ? View.GONE : View.VISIBLE);
-            btnCancelClubPending.setVisibility(isPending ? View.VISIBLE : View.GONE);
-        } else if (!idClub.equals(idClubShared)) {
-            btnDirectClub.setVisibility(View.VISIBLE);
-        } else {
-            btnLeaveClubPending.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void joinClubPending() {
-        btnJoinClubPending.setEnabled(false);
-        Toast.makeText(DetailClubActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
-
-        String token = sharedPreferences.getString("access_token", null);
-
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<ReponseModel> call = service.joinClubPending("Bearer" + token, Integer.parseInt(idClub));
-
-        call.enqueue(new Callback<ReponseModel>() {
-            @Override
-            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                if (response.isSuccessful()) {
-                    isPending = true;
-                    setupButton();
-                    btnJoinClubPending.setEnabled(true);
-                    Toast.makeText(DetailClubActivity.this, "Đã gửi yêu cầu tham gia", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.e("Error", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ReponseModel> call, Throwable t) {
-                Log.e("Fail", t.getMessage());
-            }
-        });
-    }
-
-    public void cancelClubPending() {
-        btnCancelClubPending.setEnabled(false);
-        Toast.makeText(DetailClubActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
-
-        String token = sharedPreferences.getString("access_token", null);
-
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<ReponseModel> call = service.cancelClubPending("Bearer" + token, Integer.parseInt(idClub));
-
-        call.enqueue(new Callback<ReponseModel>() {
-            @Override
-            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                if (response.isSuccessful()) {
-                    isPending = false;
-                    setupButton();
-                    btnCancelClubPending.setEnabled(true);
-                    Toast.makeText(DetailClubActivity.this, "Đã hủy yêu cầu tham gia", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.e("Error", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ReponseModel> call, Throwable t) {
-                Log.e("Fail", t.getMessage());
-            }
-        });
-    }
-
-    private void leaveClubPending() {
-        btnLeaveClubPending.setEnabled(false);
-        Toast.makeText(DetailClubActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
-
-        String token = sharedPreferences.getString("access_token", null);
-
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<ReponseModel> call = service.leaveClubPending("Bearer" + token);
-
-        call.enqueue(new Callback<ReponseModel>() {
-            @Override
-            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                if (response.isSuccessful()) {
-                    isPending = false;
-                    setupButton();
-                    btnLeaveClubPending.setEnabled(true);
-                    btnLeaveClubPending.setVisibility(View.GONE);
-                    Toast.makeText(DetailClubActivity.this, "Đã gửi yêu cầu rời câu lạc bộ", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(DetailClubActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
-                    Log.e("Error", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ReponseModel> call, Throwable t) {
-                Toast.makeText(DetailClubActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
-                Log.e("Fail", t.getMessage());
-            }
-        });
-    }
-
-    public void directJoinedClub() {
-        Intent intent = new Intent(DetailClubActivity.this, DetailClubActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("id_club", sharedPreferences.getString("id_club_shared", null));
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
+//    public void directJoinedClub() {
+//        Intent intent = new Intent(DetailClubActivity.this, DetailClubActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("id_club", sharedPreferences.getString("id_club_shared", null));
+//        intent.putExtras(bundle);
+//        startActivity(intent);
+//    }
 
 //    public void getMyClub() {
 //        String token = sharedPreferences.getString("access_token", null);

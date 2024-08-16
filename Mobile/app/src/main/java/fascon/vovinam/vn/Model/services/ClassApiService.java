@@ -19,9 +19,19 @@ public interface ClassApiService {
     );
 
     @GET("/api/clubs/classes/getdetail")
-    Call<Class> getDetailClassofClub(
+    Call<Class> getDetailClass(
             @Header("Authorization") String token,
             @Query("id_class") int classId
+    );
+
+    @GET("/api/classes/by-id")
+    Call<Class> getDetailClassofClub(
+            @Query("id_class") int classId
+    );
+
+    @GET("/api/classes/by-club")
+    Call<List<Class>> getListClassofClub(
+            @Query("id_club") int clubId
     );
 
     @GET("/api/user/classes")

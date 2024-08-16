@@ -1,8 +1,15 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
 
+import fascon.vovinam.vn.Model.ReponseModel;
+import fascon.vovinam.vn.Model.services.ClubApiService;
+import fascon.vovinam.vn.R;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -23,6 +30,7 @@ import fascon.vovinam.vn.Model.services.ClassApiService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +42,7 @@ public class ClassActivity extends BaseActivity {
     private List<Class> classList = new ArrayList<>();
     private SearchView searchView;
     private BlankFragment loadingFragment;
+    private String idClub = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +65,15 @@ public class ClassActivity extends BaseActivity {
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
 
-        adapter = new ClassAdapter(this, classList);
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                idClub = bundle.getString("id_club");
+            }
+        }
+
+        adapter = new ClassAdapter(this, classList, idClub);
         recyclerView = findViewById(R.id.recycler_class);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -77,11 +94,29 @@ public class ClassActivity extends BaseActivity {
         });
         showLoading();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        String token = sharedPreferences.getString("access_token", null);
+//        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+//        String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdm92aW5hbW1vaS00YmVkYjZkZDFjMDUuaGVyb2t1YXBwLmNvbS9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcyMzgxMDY4NywiZXhwIjoxNzIzODk3MDg3LCJuYmYiOjE3MjM4MTA2ODcsImp0aSI6IktldnN6dktQT1BCS0ttVU8iLCJzdWIiOiIyOTMiLCJwcnYiOiIxMDY2NmI2ZDAzNThiMTA4YmY2MzIyYTg1OWJkZjk0MmFmYjg4ZjAyIiwibWVtYmVyX2lkIjoyOTMsInJvbGUiOjF9.4meCsHv5Ma7wVdr7lpOGQuAmpBuSHJNAiejsIaB9SjQ";
+//        String idMember = sharedPreferences.getString("member_id", null);
+//
+//        ClubApiService service = ApiServiceProvider.getClubApiService();
+//        Call<ReponseModel> call = service.approveJoinClub("Bearer " + accessToken, Integer.parseInt(idMember), Integer.parseInt(idClub));
+//        call.enqueue(new Callback<ReponseModel>() {
+//            @SuppressLint("NotifyDataSetChanged")
+//            @Override
+//            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ReponseModel> call, Throwable t) {
+//            }
+//        });
 
+        getListClass();
+    }
+
+    private void getListClass(){
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<List<Class>> call = service.getClassofClub("Bearer" + token);
+        Call<List<Class>> call = service.getListClassofClub(Integer.parseInt(idClub));
 
         call.enqueue(new Callback<List<Class>>() {
             @Override
@@ -91,14 +126,11 @@ public class ClassActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<Class> classes = response.body();
                     adapter.setData(classes);
-                    if (!classes.isEmpty()) {
-                        Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
+                    if (classes.isEmpty()) {
+                        Toast.makeText(ClassActivity.this, "Không có lớp học nào đang mở", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
-                    System.err.println("Response error: " + response.errorBody());
+                    Log.e("Error", response.message());
                 }
             }
 
@@ -106,10 +138,46 @@ public class ClassActivity extends BaseActivity {
             public void onFailure(Call<List<Class>> call, Throwable t) {
                 hideLoading();
 
-                t.printStackTrace();
+                Log.e("Fail", t.getMessage());
             }
         });
     }
+
+
+//    private void getListClass(){
+//        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+//        String token = sharedPreferences.getString("access_token", null);
+//
+//        ClassApiService service = ApiServiceProvider.getClassApiService();
+//        Call<List<Class>> call = service.getClassofClub("Bearer" + token);
+//
+//        call.enqueue(new Callback<List<Class>>() {
+//            @Override
+//            public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+//                hideLoading();
+//
+//                if (response.isSuccessful()) {
+//                    List<Class> classes = response.body();
+//                    adapter.setData(classes);
+//                    if (!classes.isEmpty()) {
+//                        Toast.makeText(ClassActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(ClassActivity.this, "Không có lớp học nào thuộc câu lạc bộ bạn tham gia", Toast.LENGTH_SHORT).show();
+//                    System.err.println("Response error: " + response.errorBody());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Class>> call, Throwable t) {
+//                hideLoading();
+//
+//                t.printStackTrace();
+//            }
+//        });
+//    }
 
     public void searchClass(String text) {
         showLoading();
