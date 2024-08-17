@@ -226,6 +226,7 @@ public class activity_checkin extends BaseActivity {
                     Gson gson = new Gson();
                     Type BooleanType = new TypeToken<Boolean>() {}.getType();
                     in_time_class = gson.fromJson(jsonObject.get("in_class_time"), BooleanType);
+                    System.out.println("Time class true: "+ in_time_class);
                     if(in_time_class){
                         btnDiemDanh.setVisibility(View.VISIBLE);
                     }else{
