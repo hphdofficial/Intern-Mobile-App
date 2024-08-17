@@ -20,7 +20,11 @@ import fascon.vovinam.vn.Model.services.UserApiService;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -185,6 +189,19 @@ public class SignupActivity extends BaseActivity {
             return;
         }
 
+        // Kiểm tra ngày sinh có hợp lệ không (phải trước ngày hiện tại)
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date birthDate = dateFormat.parse(ngaysinh);
+            if (birthDate.after(new Date())) {
+                Toast.makeText(SignupActivity.this, "Ngày sinh phải trước ngày hiện tại.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (ParseException e) {
+            Toast.makeText(SignupActivity.this, "Ngày sinh không hợp lệ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Kiểm tra chiều cao và cân nặng
         int chieucao, cannang;
         try {
@@ -261,7 +278,11 @@ public class SignupActivity extends BaseActivity {
                             Toast.makeText(SignupActivity.this, "Email đã tồn tại.", Toast.LENGTH_SHORT).show();
                         } else if (errors.has("dienthoai")) {
                             Toast.makeText(SignupActivity.this, "Số điện thoại đã tồn tại.", Toast.LENGTH_SHORT).show();
-                        } else {
+                        }
+                        else if (errors.has("ngaysinh")) {
+                            Toast.makeText(SignupActivity.this, "Ngày sinh không hợp lệ: " + errors.getJSONArray("ngaysinh").getString(0), Toast.LENGTH_SHORT).show();
+                        }
+                        else {
                             Toast.makeText(SignupActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {

@@ -160,7 +160,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
 
                     // Thêm mục "Tất cả" vào đầu danh sách
                     ClubModel allClubs = new ClubModel();
-                    allClubs.setId(0); // ID giả định cho "Tất cả"
+                    allClubs.setId(0);
                     allClubs.setTen("Tất cả");
                     clubList.add(allClubs);
 
@@ -214,32 +214,42 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                 if (response.isSuccessful() && response.body() != null) {
                     newsList.clear(); // Xóa dữ liệu cũ
 
+                    // Lấy câu lạc bộ hiện tại được chọn
+                    ClubModel selectedClub = (ClubModel) clubSpinner.getSelectedItem();
+                    int selectedClubId = 0; // Giá trị mặc định nếu không có câu lạc bộ nào được chọn
+
+                    if (selectedClub != null) {
+                        selectedClubId = selectedClub.getId(); // Lấy ID câu lạc bộ nếu không null
+                    } else {
+                        Toast.makeText(ActivityNews.this, "Không tìm thấy câu lạc bộ", Toast.LENGTH_SHORT).show();
+                    }
+
                     // Kiểm tra vai trò người dùng để lọc các bài báo
                     if (isCoach()) {
-                        // Nếu là HLV, chỉ hiển thị các bài báo có type là "giang-vien"
+                        // Nếu là HLV, chỉ hiển thị các bài báo có type là "giang-vien" và thuộc câu lạc bộ được chọn
                         for (NewsModel news : response.body()) {
-                            if ("giang-vien".equals(news.getType())) {
+                            if ("giang-vien".equals(news.getType()) && (selectedClubId == 0 || news.getId_club() == selectedClubId)) {
                                 newsList.add(news);
                             }
                         }
                     } else {
                         // Nếu không phải HLV, hiển thị tất cả bài báo trừ "giang-vien"
                         for (NewsModel news : response.body()) {
-                            if (!"giang-vien".equals(news.getType())) {
+                            if (!"giang-vien".equals(news.getType()) && (selectedClubId == 0 || news.getId_club() == selectedClubId)) {
                                 newsList.add(news);
                             }
                         }
                     }
 
                     // Sắp xếp tin tức theo thứ tự mới nhất lên đầu
-                    Collections.sort(newsList, new Comparator<NewsModel>() {
-                        @Override
-                        public int compare(NewsModel o1, NewsModel o2) {
-                            return Long.compare(o2.getNgaytao(), o1.getNgaytao()); // Sắp xếp giảm dần theo ngày tạo
-                        }
-                    });
+                    Collections.sort(newsList, (o1, o2) -> Long.compare(o2.getNgaytao(), o1.getNgaytao()));
 
-                    filterNews(searchEditText.getText().toString()); // Lọc theo tìm kiếm nếu có
+                    // Lọc theo tìm kiếm nếu có
+                    filterNews(searchEditText.getText().toString());
+
+                    // Cập nhật danh sách tin tức
+                    adapter.notifyDataSetChanged();
+                    checkIfNoNews(); // Kiểm tra nếu không có tin tức
                 } else {
                     showNoNewsMessage(); // Hiển thị thông báo nếu không có tin tức
                 }
@@ -252,6 +262,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             }
         });
     }
+
 
     private boolean isCoach() {
         // Đảm bảo sharedPreferences được khởi tạo
@@ -283,16 +294,16 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
 
                     // Kiểm tra vai trò người dùng để lọc các bài báo
                     if (isCoach()) {
-                        // Nếu là HLV, chỉ hiển thị các bài báo có type là "giang-vien"
+                        // Nếu là HLV, chỉ hiển thị các bài báo có type là "giang-vien" và id_club khớp với clubId
                         for (NewsModel news : response.body()) {
-                            if ("giang-vien".equals(news.getType())) {
+                            if ("giang-vien".equals(news.getType()) && news.getId_club() == clubId) {
                                 filteredNewsList.add(news);
                             }
                         }
                     } else {
                         // Nếu không phải HLV, hiển thị tất cả bài báo trừ "giang-vien"
                         for (NewsModel news : response.body()) {
-                            if (!"giang-vien".equals(news.getType())) {
+                            if (!"giang-vien".equals(news.getType()) && news.getId_club() == clubId) {
                                 filteredNewsList.add(news);
                             }
                         }
@@ -320,6 +331,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             }
         });
     }
+
 
 
     private void showLoading() {
