@@ -1,5 +1,9 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
 
+import fascon.vovinam.vn.R;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -25,6 +29,7 @@ import fascon.vovinam.vn.Model.MapsElement;
 import fascon.vovinam.vn.Model.MapsResponse;
 import fascon.vovinam.vn.Model.network.ApiServiceProvider;
 import fascon.vovinam.vn.Model.services.ClubApiService;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -78,9 +83,14 @@ public class ClubMapsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         if (getArguments() != null) {
             latitude = getArguments().getDouble(ARG_LATITUDE);
             longitude = getArguments().getDouble(ARG_LONGITUDE);
+        } else if (sharedPreferences.getString("location_lat", null) != null && sharedPreferences.getString("location_long", null) != null) {
+            latitude = Double.parseDouble(sharedPreferences.getString("location_lat", null));
+            longitude = Double.parseDouble(sharedPreferences.getString("location_long", null));
+            isCurrent = true;
         } else {
             latitude = 10.76833026;
             longitude = 106.67583063;

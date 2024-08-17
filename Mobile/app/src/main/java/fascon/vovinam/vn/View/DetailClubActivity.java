@@ -1,5 +1,7 @@
 package fascon.vovinam.vn.View;
 
+import fascon.vovinam.vn.Model.Class;
+import fascon.vovinam.vn.Model.services.ClassApiService;
 import fascon.vovinam.vn.R;
 
 import android.content.Context;
@@ -18,6 +20,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import fascon.vovinam.vn.ViewModel.BaseActivity;
 import fascon.vovinam.vn.Model.Club;
@@ -28,6 +32,7 @@ import fascon.vovinam.vn.Model.services.ClubApiService;
 import java.util.ArrayList;
 import java.util.List;
 
+import fascon.vovinam.vn.ViewModel.ClassAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +53,9 @@ public class DetailClubActivity extends BaseActivity {
     private String idClub = null;
     private BlankFragment loadingFragment;
     private Button btnListClass;
+    private RecyclerView recyclerView;
+    private ClassAdapter adapter;
+    private List<Class> classList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +79,11 @@ public class DetailClubActivity extends BaseActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
         fragmentTransaction.commit();
+
+        adapter = new ClassAdapter(this, classList, idClub);
+        recyclerView = findViewById(R.id.recycler_class);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         txtNameClub = findViewById(R.id.txtNameDetailClub);
         txtDesClub = findViewById(R.id.txtDesDetailClub);
@@ -144,6 +157,7 @@ public class DetailClubActivity extends BaseActivity {
         });
 
         getDetailClub();
+        getListClass();
     }
 
     public void getDetailClub() {
@@ -173,6 +187,35 @@ public class DetailClubActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<Club> call, Throwable t) {
+                hideLoading();
+
+                Log.e("Fail", t.getMessage());
+            }
+        });
+    }
+
+    private void getListClass(){
+        ClassApiService service = ApiServiceProvider.getClassApiService();
+        Call<List<Class>> call = service.getListClassofClub(Integer.parseInt(idClub));
+
+        call.enqueue(new Callback<List<Class>>() {
+            @Override
+            public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                hideLoading();
+
+                if (response.isSuccessful()) {
+                    List<Class> classes = response.body();
+                    adapter.setData(classes);
+                    if (classes.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Không có lớp học nào đang mở", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.e("Error", response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Class>> call, Throwable t) {
                 hideLoading();
 
                 Log.e("Fail", t.getMessage());
