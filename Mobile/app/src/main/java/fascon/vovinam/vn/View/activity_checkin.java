@@ -50,7 +50,7 @@ public class activity_checkin extends BaseActivity {
 
     private Checkin_adapter checkinAdapter;
     private BlankFragment loadingFragment;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +76,15 @@ public class activity_checkin extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Giao diện điểm danh");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Attendance interface");
+                myContentE.apply();
+                txtDate.setText("Day: "+formattedDate);
+            }
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -177,8 +186,13 @@ public class activity_checkin extends BaseActivity {
                             Intent intent1 = new Intent(activity_checkin.this, activity_teacher_checkin.class);
                             intent1.putExtra("id", idClass);
                             startActivity(intent1);
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    Toast.makeText(activity_checkin.this, "Roll attendance successful", Toast.LENGTH_SHORT).show();
 
-                            Toast.makeText(activity_checkin.this, "Điểm danh thành công", Toast.LENGTH_SHORT).show();
+                                }
+                            }else                             Toast.makeText(activity_checkin.this, "Điểm danh thành công", Toast.LENGTH_SHORT).show();
+
                         }else {
                             try {
                                 // Xử lý phản hồi lỗi từ server
@@ -208,8 +222,46 @@ public class activity_checkin extends BaseActivity {
 
             }
         });
+        textView19 = findViewById(R.id.textView19);
+        textView9 = findViewById(R.id.textView9);
+        textView6 = findViewById(R.id.textView6);
+        textView7 = findViewById(R.id.textView7);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                btnHistory.setText("History checkin");
+                textView19.setText("Checkin");
+                textView9.setText("Code");
+                textView6.setText("Name");
+                textView7.setText("Present");
+                btnDiemDanh.setText("Save");
+            }
+        }
     }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
+    private TextView textView7;
+    private TextView textView6;
+    private TextView textView19;
+    private TextView textView9;
     private void fetchMemberForCheckin(int idClass, String token){
         showLoading();
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();

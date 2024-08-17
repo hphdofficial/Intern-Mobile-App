@@ -2,6 +2,7 @@ package fascon.vovinam.vn.ViewModel;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +56,14 @@ public class HistoryClassAdapter extends RecyclerView.Adapter<HistoryClassAdapte
     private TextView nameClass;
     private TextView current;
     private TextView price;
-
+    private String languageS;
     private ConstraintLayout item_belt;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+
 
         id.setText("Chi tiết hóa đơn số " +chapterList.get(i).getIdBill());
         nameClass.setText("Tên lớp: " + chapterList.get(i).getNameClass());
@@ -68,6 +73,19 @@ public class HistoryClassAdapter extends RecyclerView.Adapter<HistoryClassAdapte
             current.setText("Trạng thái: hoàn thành");
         }
         price.setText("Tổng thanh toán: "+chapterList.get(i).getPrice().toString());
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                id.setText("Details bill " +chapterList.get(i).getIdBill());
+                nameClass.setText("Class: " + chapterList.get(i).getNameClass());
+                date.setText("Date create: " + chapterList.get(i).getDate());
+                if(chapterList.get(i).getStatus().contains("chua"))
+                    current.setText("Status: not payment");else {
+                    current.setText("Status: success");
+                }
+                price.setText("Tổng thanh toán: "+chapterList.get(i).getPrice().toString());
+            }
+        }
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

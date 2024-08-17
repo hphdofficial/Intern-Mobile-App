@@ -35,7 +35,7 @@ public class Belt_Payment extends BaseActivity {
 
     private int idBelt;
     private int idCurrent;
-
+    private String languageS;
     private TextView change_class;
     private TextView status_class;
     private TextView money;
@@ -48,6 +48,7 @@ public class Belt_Payment extends BaseActivity {
     private  TextView date_learn;
     private ImageView qrcode;
     private LinearLayout linear1;
+    private TextView satus;
     private BlankFragment loadingFragment;
     private void showLoading() {
         loadingFragment = new BlankFragment();
@@ -73,6 +74,7 @@ public class Belt_Payment extends BaseActivity {
         change_class = findViewById(R.id.change_class);
         status_class = findViewById(R.id.status);
         money = findViewById(R.id.total);
+        satus = findViewById(R.id.status_class);
         date = findViewById(R.id.date1);
         image = findViewById(R.id.image);
         color = findViewById(R.id.color);
@@ -87,6 +89,17 @@ public class Belt_Payment extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Thông tin đai");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Belt Information");
+                myContentE.apply();
+                buttonRegister.setText("Scan qr to pay registration fee");
+                satus.setText("Description");
+
+            }
+        }
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -125,8 +138,18 @@ public class Belt_Payment extends BaseActivity {
                         linear1.setVisibility(View.GONE);
                         if(idBelt >idCurrent+1 ){
                             date_learn.setText("Tình trạng: chưa thi");
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    date_learn.setText("Status: not yet tested");
+                                }
+                            }
                         }else {
                             date_learn.setText("Tình trạng: đã thi");
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    date_learn.setText("Status: passed exam");
+                                }
+                            }
                         }
                     }else {
 
@@ -141,6 +164,12 @@ public class Belt_Payment extends BaseActivity {
                                 "&addInfo=" + "Dang ky dai");
                         date.setText(" chờ thông báo về email");
                         date_learn.setText("Tình trạng: chưa thi");
+                        if(languageS!= null){
+                            if(languageS.contains("en")){
+                                date.setText(" Wait for email notification");
+                                date_learn.setText("Status: not yet tested");
+                            }
+                        }
 
                     }
 
@@ -148,6 +177,13 @@ public class Belt_Payment extends BaseActivity {
                     danhxung.setText("Danh xưng:\t " + de.getDanhXung());
                     color.setText("Màu đai:\t " + de.getColer());
                     change_class.setText("Thông tin đai " + de.getTen());
+                       if(languageS!= null){
+                           if(languageS.contains("en")){
+                               danhxung.setText("Title:\t " + de.getDanhXung());
+                               color.setText("Belt color:\t " + de.getColer());
+                               change_class.setText("Belt infor: " + de.getTen());
+                           }
+                       }
                     Picasso.get().load(de.getLink()).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(image);
 
                     hideLoading();
@@ -164,6 +200,27 @@ public class Belt_Payment extends BaseActivity {
         });
 
 
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
     }
     public void displayQRCode(String qrCodeUrl) {
         ImageView qrCodeImageView = findViewById(R.id.qrcode);

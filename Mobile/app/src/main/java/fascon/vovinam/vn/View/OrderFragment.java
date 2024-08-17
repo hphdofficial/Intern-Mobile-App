@@ -37,7 +37,7 @@ public class OrderFragment extends Fragment {
     private String statusOrder;
     private ImageView imgNotify;
     private TextView txtNotify;
-
+    private String languageS;
     public OrderFragment(String statusOrder) {
         this.statusOrder = statusOrder;
     }
@@ -45,6 +45,8 @@ public class OrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
+        SharedPreferences shared = getContext().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
+        languageS = shared.getString("language",null);
 
         apiService = ApiServiceProvider.getOrderApiService();
         imgNotify = view.findViewById(R.id.img_notify);
@@ -93,10 +95,20 @@ public class OrderFragment extends Fragment {
                         } else {
                             imgNotify.setVisibility(View.VISIBLE);
                             txtNotify.setText("Bạn chưa có đơn hàng nào cả");
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    txtNotify.setText("You don't have any orders yet");
+                                }
+                            }
                         }
                     } else {
                         imgNotify.setVisibility(View.VISIBLE);
                         txtNotify.setText("Bạn chưa có đơn hàng nào cả");
+                        if(languageS!= null){
+                            if(languageS.contains("en")){
+                                txtNotify.setText("You don't have any orders yet");
+                            }
+                        }
                     }
                 } else {
                     Log.e("Error", response.message());

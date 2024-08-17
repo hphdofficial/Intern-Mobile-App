@@ -59,7 +59,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private List<ClubModel> clubList = new ArrayList<>();
     private TextView noNewsText;
     private boolean isFirstLoad = true;
-
+    private String languageS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,14 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Tin tức và thông báo");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "News and Notification");
+                myContentE.apply();
+            }
+        }
         // Chèn fragment tiêu đề
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -144,10 +151,17 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-
+        club_label = findViewById(R.id.club_label);
         // Tải tất cả tin tức lần đầu tiên
         fetchAllNews();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                searchEditText.setHint("Enter find news");
+                club_label.setText("Filter by club");
+            }
+        }
     }
+    private TextView club_label;
 
     private void fetchClubs() {
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
@@ -162,6 +176,11 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                     ClubModel allClubs = new ClubModel();
                     allClubs.setId(0); // ID giả định cho "Tất cả"
                     allClubs.setTen("Tất cả");
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            allClubs.setTen("All");
+                        }
+                    }
                     clubList.add(allClubs);
 
                     clubList.addAll(response.body());
@@ -415,5 +434,26 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
         intent.putExtra("NewsContent", news.getNoidungvi());
         intent.putExtra("NewsImage", news.getPhoto());
         startActivity(intent);
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
     }
 }

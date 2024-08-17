@@ -10,7 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -43,7 +45,28 @@ public class ClassActivity extends BaseActivity {
     private SearchView searchView;
     private BlankFragment loadingFragment;
     private String idClub = null;
+    private String languageS;
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,11 +77,18 @@ public class ClassActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách lớp học");
         myContentE.apply();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "List Class");
+                myContentE.apply();
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -112,6 +142,11 @@ public class ClassActivity extends BaseActivity {
 //        });
 
         getListClass();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                searchView.setQueryHint("Search...");
+            }
+        }
     }
 
     private void getListClass(){

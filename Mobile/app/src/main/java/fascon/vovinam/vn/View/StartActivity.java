@@ -26,7 +26,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StartActivity extends BaseActivity {
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     private Button btn_login;
     private Button btn_register;
     private EditText editEmail;
@@ -35,8 +55,11 @@ public class StartActivity extends BaseActivity {
     private ImageView iconPasswordVisibility;
     private CheckBox checkboxSavePassword;
     private boolean isPasswordVisible = false;
+    private TextView title;
 
+    private TextView subtitle;
     private BlankFragment loadingFragment;
+    private String languageS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +68,7 @@ public class StartActivity extends BaseActivity {
 
         // Reset id
         SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         SharedPreferences.Editor edit = shared.edit();
         edit.putString("id_club_shared", null);
         edit.putString("id_class_shared", null);
@@ -88,6 +112,20 @@ public class StartActivity extends BaseActivity {
         forgotPassword = findViewById(R.id.forgotPassword);
         iconPasswordVisibility = findViewById(R.id.iconPasswordVisibility);
         checkboxSavePassword = findViewById(R.id.checkbox_save_password);
+        subtitle = findViewById(R.id.subtitle);
+        title = findViewById(R.id.title);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                title.setText("Login");
+                editEmail.setHint("Email, Phone, Account");
+                editPassword.setHint("Password");
+                checkboxSavePassword.setText("Save Password");
+                forgotPassword.setText("Forgot Password");
+                btn_login.setText("Login");
+                btn_register.setText("Register");
+                subtitle.setText("Log in to continue using the application");
+            }
+        }
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +214,9 @@ public class StartActivity extends BaseActivity {
                             clearCredentials();
                             saveCheckboxState(false); // Lưu trạng thái của checkbox
                         }
+
                         Toast.makeText(StartActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                         finish(); // Đóng StartActivity để người dùng không quay lại trang đăng nhập
                     }

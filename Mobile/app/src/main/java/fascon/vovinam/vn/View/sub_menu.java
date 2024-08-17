@@ -1,4 +1,7 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.Model.Checkin;
+import fascon.vovinam.vn.R;
 
 
 import android.content.Context;
@@ -33,6 +36,10 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import retrofit2.Call;
@@ -96,7 +103,18 @@ public class sub_menu extends Fragment {
 
 
 
+    public void setText(TextView text){
 
+        String s = sharedPreferences.getString("language",null);
+        if(s != null){
+            if(s.contains("vn")){
+                text.setText("VN");
+            }else {
+                text.setText("ENG");
+            }
+        }
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -106,7 +124,7 @@ public class sub_menu extends Fragment {
 
         // Initialize SharedPreferences
         sharedPreferences = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-
+        languageS = sharedPreferences.getString("language",null);
         // Initialize views
 /*        textViewName = rootView.findViewById(R.id.textViewName);
         textViewBirthday = rootView.findViewById(R.id.txt_content);*/
@@ -135,6 +153,11 @@ public class sub_menu extends Fragment {
         // xét icon item đủ màu
         navigationView.setItemIconTintList(null);
         Menu menu = navigationView.getMenu();
+
+        MenuItem menuItem = menu.findItem(R.id.btn_language);
+        View actionView = menuItem.getActionView();
+        TextView textView = actionView.findViewById(R.id.languageText);
+        setText(textView);
         ShowMenu(menu);
 
         String token = sharedPreferences.getString("access_token", null);
@@ -179,9 +202,16 @@ public class sub_menu extends Fragment {
                     startActivity(new Intent(getContext(),  AboutActivity.class));
                 }
                 if(id == R.id.btn_class){
-
+                    SharedPreferences shared = requireContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+                    String token = shared.getString("access_token", null);
+                    String role = decodeRoleFromToken(token);
+                    if(role.contains("0")){
+                        startActivity(new Intent(getContext(), activity_member_checkin.class));
+                    }else {
+                        startActivity(new Intent(getContext(), MyClassActivity.class));
+                    }
                     //Các lớp học giảng viên đang dạy điểm danh
-                    startActivity(new Intent(getContext(), MyClassActivity.class));
+
                     //Đã đăng ký lớp học (Học viên)
 //                    startActivity(new Intent(getContext(), activity_member_checkin.class));
                 }
@@ -213,12 +243,20 @@ public class sub_menu extends Fragment {
                     //Đã đăng ký lớp học (Học viên)
 //                    startActivity(new Intent(getContext(), activity_member_checkin.class));
                 }
+                if(id == R.id.btn_product){
+
+                    //Các lớp học giảng viên đang dạy điểm danh
+                    startActivity(new Intent(getContext(), activity_items.class));
+                    //Đã đăng ký lớp học (Học viên)
+//                    startActivity(new Intent(getContext(), activity_member_checkin.class));
+                }
                 if(id == R.id.btn_logout){
 
                     logout();
                 }
 
                 if(id == R.id.btn_language){
+
                 }
                 // Close the navigation drawer
                return true;
@@ -248,6 +286,11 @@ public class sub_menu extends Fragment {
 
         txt_name.setText(name);
         txt_age.setText(age+" tuổi");
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                txt_age.setText(age+" age");
+            }
+        }
         String avatarUrl = infor.getString("avatar",null);
       //  Toast.makeText(getContext(),avatarUrl,Toast.LENGTH_SHORT).show();
 
@@ -256,9 +299,46 @@ public class sub_menu extends Fragment {
         } else {
             image_avatar_sub.setImageResource(R.drawable.photo3x4); // Ảnh mặc định
         }
+        if(languageS != null){
+            if(languageS.contains("en")){
+                for (int i = 0; i < menu.size(); i++) {
+                    menuItem = menu.getItem(i);
+                    String title = menuItem.getTitle().toString();
+                    menuItem.setTitle(TranslateText(title,1));
+                }
+            }
+        }
 
         return rootView;
     }
+    public String TranslateText(String text, int k){
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.language);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            String s = "";
+            while ((line = reader.readLine()) != null) {
+                if(line.contains(text)){
+                    String temp[] = line.split(",");
+                    if(k == 0){
+                        s =  temp[0];
+                    } else s= temp[1];
+                    break;
+                }
+
+            }
+
+            reader.close();
+            return s;
+            // Use the fileContent string
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private String languageS = null;
     public void ShowMenu(Menu menu){
         String token = sharedPreferences.getString("access_token", null);
         String role = decodeRoleFromToken(token);
@@ -271,8 +351,7 @@ public class sub_menu extends Fragment {
                 if(myClass != null){
                     MenuItem item = menu.findItem(R.id.btn_club);
                     item.setVisible(false);
-                    MenuItem item2 =  menu.findItem(R.id.btn_register_up);
-                    item2.setVisible(false);
+
 
                     //  RemoveViewUser();
                 }else {
@@ -280,8 +359,12 @@ public class sub_menu extends Fragment {
                     item.setVisible(false);
                     MenuItem item1 =  menu.findItem(R.id.btn_class);
                     item1.setVisible(false);
+                    MenuItem item2 =  menu.findItem(R.id.btn_register_up);
+                    item2.setVisible(false);
                     // ViewUserNotRegister();
                 }
+                MenuItem itemaa = menu.findItem(R.id.btn_class);
+                itemaa.setTitle("Xem điểm danh");
 
 
             }else {
@@ -293,16 +376,13 @@ public class sub_menu extends Fragment {
                 item1.setVisible(false);
                 MenuItem item2 =  menu.findItem(R.id.btn_register_up);
                 item2.setVisible(false);
-
-                MenuItem item3 =  menu.findItem(R.id.btn_cart);
-                item3.setVisible(false);
-
                 MenuItem item4 =  menu.findItem(R.id.btn_sup);
                 item4.setVisible(false);
 
             }
         }else {
-
+            MenuItem itemaa = menu.findItem(R.id.btn_class);
+            itemaa.setTitle("Lớp giảng dạy");
             MenuItem item5 =  menu.findItem(R.id.btn_findclub);
             item5.setVisible(false);
             MenuItem item =  menu.findItem(R.id.btn_registerclass);
@@ -313,6 +393,10 @@ public class sub_menu extends Fragment {
             item4.setVisible(false);
             MenuItem item6 =  menu.findItem(R.id.btn_cart);
             item6.setVisible(false);
+            MenuItem item7 =  menu.findItem(R.id.btn_product);
+            item7.setVisible(false);
+            MenuItem item2 =  menu.findItem(R.id.btn_register_up);
+            item2.setVisible(false);
             //  RemoveViewHLV();
         }
     }

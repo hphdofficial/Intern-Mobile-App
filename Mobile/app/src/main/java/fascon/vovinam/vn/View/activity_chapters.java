@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
@@ -26,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class activity_chapters extends BaseActivity {
-
+    private String languageS;
     List<Belt> belts = new ArrayList<>();
     private BlankFragment loadingFragment;
     @Override
@@ -69,7 +71,14 @@ public class activity_chapters extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách lý thuyết");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "List Theories");
+                myContentE.apply();
+            }
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -82,7 +91,27 @@ public class activity_chapters extends BaseActivity {
 
 
     }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     private void showLoading() {
         loadingFragment = new BlankFragment();
         loadingFragment.show(getSupportFragmentManager(), "loading");

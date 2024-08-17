@@ -78,4 +78,9 @@
         <item>Bản đồ</item>
         <item>Danh sách</item>
     </string-array>
+
+    <string-array name="viewaa">
+        <item>Map</item>
+        <item>List</item>
+    </string-array>
 </resources>

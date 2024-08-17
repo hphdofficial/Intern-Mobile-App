@@ -36,6 +36,7 @@
             <TableRow>
 
                 <TextView
+                    android:id="@+id/textViewNgaysinhLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="none"
@@ -62,6 +63,7 @@
             <TableRow>
 
                 <TextView
+                    android:id="@+id/textViewTenLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="none"
@@ -88,6 +90,7 @@
             <TableRow>
 
                 <TextView
+                    android:id="@+id/textViewDienthoaiLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="none"
@@ -114,6 +117,7 @@
             <TableRow>
 
                 <TextView
+                    android:id="@+id/textViewDiachiLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="none"
@@ -140,6 +144,7 @@
             <TableRow>
 
                 <TextView
+                    android:id="@+id/textViewGioitinhLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="none"

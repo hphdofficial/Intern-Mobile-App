@@ -39,7 +39,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     private List<ProductModel> productList;
     private CartActivity cartActivity;
     private Boolean isViewMode = false;
-
+    private String languageS;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtNameProduct;
         public TextView txtPriceProduct;
@@ -66,6 +66,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             btnRemoveCart = view.findViewById(R.id.btn_remove_cart);
             btnIncreaseQuantity = view.findViewById(R.id.button_increase);
             btnDecreaseQuantity = view.findViewById(R.id.button_decrease);
+
         }
     }
 
@@ -78,6 +79,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     @Override
     public CartAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -104,6 +106,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.txtNameSupplier.setText("Nhà cung cấp " + productList.get(position).getSupplierName());
         holder.txtCategory.setText("Thể loại: " + productList.get(position).getCategoryName());
 
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+
+        if(languageS != null){
+            if (languageS.contains("en")){
+                holder.txtNameSupplier.setText("Supplier " + productList.get(position).getSupplierName());
+                holder.txtCategory.setText("Type: " + productList.get(position).getCategoryName());
+                holder.btnRemoveCart.setText("Delete");
+            }
+        }
         if (isViewMode) {
             holder.btnRemoveCart.setVisibility(View.GONE);
             holder.btnIncreaseQuantity.setVisibility(View.GONE);

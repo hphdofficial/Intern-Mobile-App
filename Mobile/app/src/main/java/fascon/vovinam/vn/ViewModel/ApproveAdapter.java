@@ -101,11 +101,16 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         throw new IllegalArgumentException("Invalid viewType: " + this.viewType);
     }
-
+    private String languageS;
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         if (holder instanceof ClubClassViewHolder) {
+
+
+
             ApproveModel itemClubClass = approveListClubClass.get(position);
             ClubClassViewHolder clubClassViewHolder = (ClubClassViewHolder) holder;
             switch (viewType) {
@@ -116,6 +121,14 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
                     clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.BLUE);
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            clubClassViewHolder.txtApprove.setText("Request to join");
+                            clubClassViewHolder.txtClubClass.setText("Club: " + itemClubClass.getTen_club());
+                            clubClassViewHolder.txtMember.setText("Requester: " + itemClubClass.getTen());
+                            clubClassViewHolder.txtTime.setText("Requested time: " + itemClubClass.getCreated_at());
+                        }
+                    }
                     break;
                 case "joinclass":
                     clubClassViewHolder.txtApprove.setTextColor(Color.BLUE);
@@ -124,6 +137,14 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen_member());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
                     clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.BLUE);
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            clubClassViewHolder.txtApprove.setText("Request to join");
+                            clubClassViewHolder.txtClubClass.setText("Class: " + itemClubClass.getTen_class());
+                            clubClassViewHolder.txtMember.setText("Requester: " + itemClubClass.getTen_member());
+                            clubClassViewHolder.txtTime.setText("Requested time: " + itemClubClass.getCreated_at());
+                        }
+                    }
                     break;
                 case "leaveclub":
                     clubClassViewHolder.txtApprove.setTextColor(Color.RED);
@@ -132,6 +153,14 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
                     clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.RED);
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            clubClassViewHolder.txtApprove.setText("Request to leave");
+                            clubClassViewHolder.txtClubClass.setText("Club: " + itemClubClass.getTen_club());
+                            clubClassViewHolder.txtMember.setText("Requester: " + itemClubClass.getTen());
+                            clubClassViewHolder.txtTime.setText("Requested time: " + itemClubClass.getCreated_at());
+                        }
+                    }
                     break;
                 case "leaveclass":
                     clubClassViewHolder.txtApprove.setTextColor(Color.RED);
@@ -140,6 +169,14 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
                     clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.RED);
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            clubClassViewHolder.txtApprove.setText("Request to leave");
+                            clubClassViewHolder.txtClubClass.setText("Class: " + itemClubClass.getClass_name());
+                            clubClassViewHolder.txtMember.setText("Requester: " + itemClubClass.getTen());
+                            clubClassViewHolder.txtTime.setText("Requested time: " + itemClubClass.getCreated_at());
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -171,12 +208,22 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             OrderListModel itemOrder = approveListOrder.get(position);
             OrderViewHolder orderViewHolder = (OrderViewHolder) holder;
             orderViewHolder.txtIdOrder.setText("Đơn hàng " + itemOrder.getTxn_ref());
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    orderViewHolder.txtIdOrder.setText("Order " + itemOrder.getTxn_ref());
+                }
+            }
             orderViewHolder.txtStatusOrder.setText(itemOrder.getGiao_hang().substring(0, 1).toUpperCase() + itemOrder.getGiao_hang().substring(1).toLowerCase());
             double totalPrice = 0;
             for (OrderListModel.DetailCart cart : itemOrder.getDetail_carts()) {
                 totalPrice += cart.getProduct().getUnitPrice() * cart.getQuantity();
             }
             orderViewHolder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    orderViewHolder.totalPrice.setText(String.format("Sum money: %,.0f VND", totalPrice));
+                }
+            }
             OrderListModel finalItemOrder = itemOrder;
             orderViewHolder.btnApproveOrder.setOnClickListener(new View.OnClickListener() {
                 @Override

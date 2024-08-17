@@ -3,6 +3,7 @@ package fascon.vovinam.vn.ViewModel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import java.util.List;
 
 public class Adapter_Register_belt extends RecyclerView.Adapter<Adapter_Register_belt.ViewHolder>{
     Context context;
-
+    private String languageS;
     BeltModel b;
     List<Belt> chapterList = new ArrayList<>();
 
@@ -46,6 +47,9 @@ public class Adapter_Register_belt extends RecyclerView.Adapter<Adapter_Register
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_belt, viewGroup, false);
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+
          name = view.findViewById(R.id.name);
          status = view.findViewById(R.id.status);
          image = view.findViewById(R.id.imgBelt);
@@ -71,6 +75,11 @@ public class Adapter_Register_belt extends RecyclerView.Adapter<Adapter_Register
 
         if(Integer.parseInt(b.getId()) == chapterList.get(i).getId()){
             current.setText("Đai hiện tại");
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    current.setText("Current belt");
+                }
+            }
         }
         else {
             current.setText("");

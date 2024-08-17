@@ -1,5 +1,6 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -64,6 +65,7 @@ public class ClubMapsFragment extends Fragment {
     private double longitude;
     private static boolean isCurrent = false;
     private BlankFragment loadingFragment;
+    private String languageS;
 
     public static ClubMapsFragment newInstance(double latitude, double longitude, boolean current) {
         ClubMapsFragment fragment = new ClubMapsFragment();
@@ -78,6 +80,7 @@ public class ClubMapsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             latitude = getArguments().getDouble(ARG_LATITUDE);
             longitude = getArguments().getDouble(ARG_LONGITUDE);
@@ -87,14 +90,16 @@ public class ClubMapsFragment extends Fragment {
         }
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
         map = rootView.findViewById(R.id.map);
-
-        ViewCompat.setOnApplyWindowInsetsListener(rootView.findViewById(R.id.main), (v, insets) -> {
+        SharedPreferences shared = getActivity().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+             ViewCompat.setOnApplyWindowInsetsListener(rootView.findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -130,8 +135,13 @@ public class ClubMapsFragment extends Fragment {
             startMarker.setPosition(startPoint);
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             startMarker.setIcon(resizeDrawable(getResources().getDrawable(R.drawable.icons8_marker_48), 60, 80));
-            startMarker.setTitle("Vị trí hiện tại của bạn");
 
+            startMarker.setTitle("Vị trí hiện tại của bạn");
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    startMarker.setTitle("Your current location");
+                }
+            }
             CustomInfoWindow infoWindow = new CustomInfoWindow(map, "current");
             startMarker.setInfoWindow(infoWindow);
 
@@ -302,7 +312,13 @@ public class ClubMapsFragment extends Fragment {
             marker.setPosition((GeoPoint) item.getPoint());
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             marker.setIcon(pDefaultMarker);
+
             marker.setTitle("Tên câu lạc bộ: " + item.getTitle() + "\n" + "Địa chỉ: " + item.getSnippet());
+            if(languageS != null){
+                if(languageS.contains("en")){
+                    marker.setTitle("Club name: " + item.getTitle() + "\n" + "Address: " + item.getSnippet());
+                }
+            }
 
             CustomInfoWindow infoWindow = new CustomInfoWindow(map, item.getUid());
             marker.setInfoWindow(infoWindow);

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -44,6 +45,7 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
     private EditText text;
     private Button btn_add;
     private EditText text_phone;
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,14 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Địa chỉ giao hàng");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Delivery address");
+                myContentE.apply();
+            }
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
@@ -155,6 +165,14 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
             }
         });
        // getAddress();
+        if(languageS != null){
+            if(languageS.contains("en")){
+                addAddress.setText("Add shipping address");
+                btn_add.setText("Add");
+                text.setHint("Enter Address");
+                text_phone.setHint("Enter Phone");
+            }
+        }
     }
     private ActivityResultLauncher<Intent> mapActivityResultLauncher;
     public void getAddress(){
@@ -202,5 +220,26 @@ public class AddressP extends BaseActivity implements addressAdapter.ItemClickLi
 
         // Go back to the previous activity
         finish();
+    }
+    private TextView text1;
+    public void onMenuItemClick(View view) {
+        text1 = findViewById(R.id.languageText);
+        String language = text1.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text1.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text1.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
     }
 }

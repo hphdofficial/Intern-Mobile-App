@@ -6,6 +6,7 @@ import fascon.vovinam.vn.Model.CartResponse;
 import fascon.vovinam.vn.Model.ClassModelT;
 import fascon.vovinam.vn.Model.DetailsBelt;
 import fascon.vovinam.vn.Model.HistoryClassModel;
+import fascon.vovinam.vn.Model.ProductSaleDownModel;
 import fascon.vovinam.vn.Model.ProductSaleModel;
 import fascon.vovinam.vn.Model.StatusOrther;
 import fascon.vovinam.vn.Model.StatusRegister;
@@ -67,6 +68,9 @@ public interface PaymentAPI {
 
     @GET("api/getTopSellingProducts")
     Call<List<ProductSaleModel>> GetSaleProduct();
+
+    @GET("api/sale-products")
+    Call<List<ProductSaleDownModel>> GetSaleDownProduct();
 
 
 }

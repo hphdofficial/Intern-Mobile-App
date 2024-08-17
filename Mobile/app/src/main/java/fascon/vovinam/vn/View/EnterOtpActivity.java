@@ -1,10 +1,12 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,13 +34,15 @@ public class EnterOtpActivity extends BaseActivity {
     private ImageView img_back;
 
     private TextView tvResendOTP;
-
+    private String languageS;
     private BlankFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_otp);
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
 
         email = getIntent().getStringExtra("email");
 
@@ -186,8 +190,28 @@ public class EnterOtpActivity extends BaseActivity {
                 Toast.makeText(EnterOtpActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
+        tv_enter_otp = findViewById(R.id.tv_enter_otp);
+        tv_notification = findViewById(R.id.tv_notification);
+        tv_phone_number = findViewById(R.id.tv_phone_number);
+        text11 = findViewById(R.id.text11);
+        btnVerify = findViewById(R.id.btnVerify);
+        if(languageS!=null){
+            if(languageS.contains("en")){
+                tv_notification.setText("The 6-digit code has been sent");
+                tv_enter_otp.setText("Enter code OTP");
+                tv_phone_number.setText("Sent to your email!");
+                text11.setText("Didn't receive OTP?");
+                tvResendOTP.setText("Again send code");
+                btnVerify.setText("Confirm");
 
+            }
+        }
+    }
+    private Button btnVerify;
+    private TextView text11;
+    private TextView tv_phone_number;
+    private TextView tv_notification;
+private TextView tv_enter_otp;
 
 
     private void resendOtp() {
@@ -218,5 +242,26 @@ public class EnterOtpActivity extends BaseActivity {
                 }
             }
         });
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
     }
 }

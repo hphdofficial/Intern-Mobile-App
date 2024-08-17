@@ -1,0 +1,37 @@
+chào,hello
+xin lỗi,sorry
+Duyệt yêu cầu,Browse requests
+Duyệt đơn hàng mới,Browse new orders
+Lịch sử mua hàng,Purchase history
+Điểm danh lớp học,Take class attendance
+Sản phẩm,Product
+Câu lạc bộ,Club
+Tin tức,News
+Đăng xuất,Logout
+Nhà cung cấp,Supplier
+Điểm danh lớp học,Take class attendance
+Hiển thị,Show
+Giá,Price
+Xem điểm danh,See attendance
+Lớp giảng dạy,Teaching class
+Tổng,Money
+Giảm giá,Discount
+Đã bán,Quantity sold
+Tuổi,Age
+Trang chủ,Home
+Thông tin cá nhân,Personal information
+Lý thuyết võ thuật,Martial arts theory
+Tìm câu lạc bộ,Find club
+Giỏ hàng,Cart
+Tin tức võ học,News
+Đai võ,Martial arts belt
+Lịch sử mua hàng,Purchase history
+Thông tin phần mềm,Software information
+Ngôn ngữ,Language
+Xem ảnh,Show Image
+Thay thế hình ảnh bằng thư viện,Replace images with gallery
+Thay thế hình ảnh bẳng camera,Replace images with camera
+Có vấn đề tim mạch,Have heart problems
+Có vấn đề về hô hấp,Have breathing problems
+Có vấn đề về xương khớp (từng bị gãy tay/chân hoặc trật khớp),Have bone and joint problems (ever broken arms/legs or dislocated joints)
+Hoàn toàn khỏe mạnh,Completely healthy

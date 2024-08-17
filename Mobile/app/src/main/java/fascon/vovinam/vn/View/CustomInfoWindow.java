@@ -1,6 +1,7 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,7 +18,7 @@ public class CustomInfoWindow extends InfoWindow {
     private final Animation fadeIn;
     private final Animation fadeOut;
     private String idClub;
-
+    private String languageS;
     public CustomInfoWindow(MapView mapView) {
         super(R.layout.custom_info_window, mapView);
         fadeIn = AnimationUtils.loadAnimation(mapView.getContext(), R.anim.fade_in);
@@ -29,6 +30,7 @@ public class CustomInfoWindow extends InfoWindow {
         fadeIn = AnimationUtils.loadAnimation(mapView.getContext(), R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(mapView.getContext(), R.anim.fade_out);
         this.idClub = idClub;
+
     }
 
     @Override
@@ -57,7 +59,13 @@ public class CustomInfoWindow extends InfoWindow {
 
         title.setText(marker.getTitle());
         snippet.setText(marker.getSnippet());
-
+        SharedPreferences shared = getView().getContext().getSharedPreferences("login_prefs", getView().getContext().MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS != null){
+            if (languageS.contains("en")){
+                btnDetailClubMaps.setText("View detail");
+            }
+        }
         btnDetailClubMaps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

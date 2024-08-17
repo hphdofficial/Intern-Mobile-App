@@ -48,7 +48,7 @@ public class DetailClubActivity extends BaseActivity {
     private String idClub = null;
     private BlankFragment loadingFragment;
     private Button btnListClass;
-
+private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +62,17 @@ public class DetailClubActivity extends BaseActivity {
 
         sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
 
+        languageS = sharedPreferences.getString("language",null);
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Chi tiết câu lạc bộ");
         myContentE.apply();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Club Detail");
+                myContentE.apply();
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -144,7 +151,29 @@ public class DetailClubActivity extends BaseActivity {
         });
 
         getDetailClub();
+        textViewNgaysinhLabel = findViewById(R.id.textViewNgaysinhLabel);
+        textViewTenLabel = findViewById(R.id.textViewTenLabel);
+        textViewDienthoaiLabel = findViewById(R.id.textViewDienthoaiLabel);
+        textViewDiachiLabel = findViewById(R.id.textViewDiachiLabel);
+        textViewGioitinhLabel = findViewById(R.id.textViewGioitinhLabel);
+        if(languageS != null){
+            if(languageS.contains("en")){
+
+                textViewTenLabel.setText("Manager");
+                textViewDienthoaiLabel.setText("Description");
+                textViewDiachiLabel.setText("Address");
+                textViewGioitinhLabel.setText("Contact information");
+                textViewNgaysinhLabel.setText("Club Name");
+
+                btnListClass.setText("Show List Class Opened");
+            }
+        }
     }
+    private TextView textViewTenLabel;
+    private TextView textViewDienthoaiLabel;
+    private TextView textViewDiachiLabel;
+    private TextView textViewGioitinhLabel;
+    private TextView textViewNgaysinhLabel;
 
     public void getDetailClub() {
         showLoading();
@@ -429,6 +458,27 @@ public class DetailClubActivity extends BaseActivity {
         if (loadingFragment != null) {
             loadingFragment.dismiss();
             loadingFragment = null;
+        }
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
     }
 }

@@ -35,12 +35,15 @@ public class ImageSelectActivity extends BaseActivity {
     private SharedPreferences sharedPreferences;
     private static final String NAME_SHARED = "login_prefs";
     private BlankFragment loadingFragment;
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_select);
         selectedImageView = findViewById(R.id.selectedImage);
         Button saveButton = findViewById(R.id.saveButton);
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
 
         sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
 
@@ -58,6 +61,11 @@ public class ImageSelectActivity extends BaseActivity {
         if (intent != null && intent.getStringExtra("imageUri") != null) {
             selectedImageUri = Uri.parse(intent.getStringExtra("imageUri"));
             selectedImageView.setImageURI(selectedImageUri);
+        }
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                saveButton.setText("Save");
+            }
         }
     }
 

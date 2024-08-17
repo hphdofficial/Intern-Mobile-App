@@ -42,6 +42,8 @@ public class activity_item_detail extends BaseActivity {
     private BlankFragment loadingFragment;
     TextView editQuantity;
     int quantityInStock;
+    private String languageS;
+
     private List<ProductModel> productList = new ArrayList<>();
     private Item_adapter itemAdapter;
     @Override
@@ -68,7 +70,14 @@ public class activity_item_detail extends BaseActivity {
         myContentE.putString("title", "Chi tiết dụng cụ");
         myContentE.putString("categoryName", categoryName);
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Product Detail");
+                myContentE.apply();
+            }
+        }
         ImageView imageItem = findViewById(R.id.imageItem);
         TextView txtItemName = findViewById(R.id.txtItemName);
         TextView txtItemPrice = findViewById(R.id.txtItemPrice);
@@ -179,7 +188,7 @@ public class activity_item_detail extends BaseActivity {
 
         //Fetch Tên nhà cung cấp
 
-        CatagoryApiService apiService2 = ApiServiceProvider.getCatagoryApiService();
+/*        CatagoryApiService apiService2 = ApiServiceProvider.getCatagoryApiService();
         apiService2.getSupplier(idSupplier).enqueue(new Callback<SupplierModelOption>() {
             @Override
             public void onResponse(Call<SupplierModelOption> call, Response<SupplierModelOption> response) {
@@ -206,7 +215,7 @@ public class activity_item_detail extends BaseActivity {
                 System.out.println("Active: Call Lỗi Category");
                 hideLoading();
             }
-        });
+        });*/
 
         //Fetch thông tin sản phẩm
         ProductApiService apiService = ApiServiceProvider.getProductApiService();
@@ -216,6 +225,14 @@ public class activity_item_detail extends BaseActivity {
                 if(response.isSuccessful()){
                     ProductModel product = response.body();
                     myContentE.putString("categoryName", product.getCategoryName());
+                    txtItemSupplier.setText(product.getSupplierName());
+
+                    // Thêm sự kiện onClickListener cho txtItemSupplier
+                    txtItemSupplier.setOnClickListener(view -> {
+                        Intent supplierIntent = new Intent(activity_item_detail.this, SupplierInfoActivity.class);
+                        supplierIntent.putExtra("SupplierID", product.getSupplierID());
+                        startActivity(supplierIntent);
+                    });
                     myContentE.apply();
                     txtItemName.setText(product.getProductName());
                     txtItemPrice.setText(product.getUnitPrice() + " VND");
@@ -262,10 +279,29 @@ public class activity_item_detail extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
-
-
+        textView= findViewById(R.id.textView);
+        textView16 = findViewById(R.id.textView16);
+        textView20 = findViewById(R.id.textView20);
+        textView21 = findViewById(R.id.textView21);
+        textView17 = findViewById(R.id.textView17);
+            if (languageS != null){
+                if(languageS.contains("en")){
+                    textView.setText("Quantity you want to buy");
+                    btnMua.setText("Add to cart");
+                    textView16.setText("Information");
+                    textView20.setText("Supplier");
+                    textView21.setText("Remaining");
+                    btnDanhGia.setText("Product reviews");
+                    textView17.setText("Similar products");
+                }
+            }
 
     }
+    private TextView textView;
+    private TextView textView16;
+    private TextView textView20;
+    private TextView textView21;
+    private  TextView textView17;
     private void incrementNumber() {
         String currentText = editQuantity.getText().toString();
         int currentNumber = Integer.parseInt(currentText);
@@ -326,5 +362,26 @@ public class activity_item_detail extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
     }
 }

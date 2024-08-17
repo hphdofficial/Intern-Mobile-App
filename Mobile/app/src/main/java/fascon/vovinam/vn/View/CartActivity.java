@@ -53,7 +53,7 @@ public class CartActivity extends BaseActivity {
     private BlankFragment loadingFragment;
     private ImageView imgNotify;
     private TextView txtNotify;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +69,14 @@ public class CartActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Giỏ hàng");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Cart");
+                myContentE.apply();
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -94,6 +102,11 @@ public class CartActivity extends BaseActivity {
         loadProductCart();
 
         btnPayCart = findViewById(R.id.btn_thanhtoan);
+        if(languageS != null){
+            if(languageS.contains("en")){
+                btnPayCart.setText("Order");
+            }
+        }
         btnPayCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,8 +115,34 @@ public class CartActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-    }
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                txtNotify.setText("Cart empty");
+            }
+        }
 
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     public void loadProductCart() {
         showLoading();
 
@@ -146,6 +185,11 @@ public class CartActivity extends BaseActivity {
                     }
 
                     txtSumQuantity.setText("Số lượng: " + products.size() + " sản phẩm");
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            txtSumQuantity.setText("Quantity: " + products.size() + " product");
+                        }
+                    }
 //                    updateTotalPrice(memberId);
 
                     productList = new ArrayList<>(products);
@@ -186,6 +230,12 @@ public class CartActivity extends BaseActivity {
                     NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
                     String formattedSumPrice = currencyFormat.format(totalPrice);
                     txtSumPrice.setText("Tổng tiền: " + formattedSumPrice);
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            txtSumPrice.setText("Sum money: " + formattedSumPrice);
+                        }
+
+                    }
                     Toast.makeText(CartActivity.this, "Cập nhật giỏ hàng thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     System.err.println("Response error: " + response.errorBody());

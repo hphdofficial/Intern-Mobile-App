@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ public class FragmentWriteReviewActivity extends DialogFragment {
     private OnReviewSubmittedListener listener;
 
     private BlankFragment loadingFragment;
+    private String languageS;
 
 
     public static FragmentWriteReviewActivity newInstance(int productId) {
@@ -66,11 +68,13 @@ public class FragmentWriteReviewActivity extends DialogFragment {
         super.onDetach();
         listener = null;
     }
-
+private TextView reviewP;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_write_review, container, false);
+        SharedPreferences shared = getContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
 
         if (getArguments() != null) {
             productId = getArguments().getInt(ARG_PRODUCT_ID);
@@ -79,9 +83,16 @@ public class FragmentWriteReviewActivity extends DialogFragment {
         ratingBar = view.findViewById(R.id.rating_bar);
         editReviewContent = view.findViewById(R.id.edit_review_content);
         btnSubmitReview = view.findViewById(R.id.btn_submit_review);
+        reviewP = view.findViewById(R.id.reviewP);
 
         btnSubmitReview.setOnClickListener(v -> submitReview());
-
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                reviewP.setText("Product reviews");
+                editReviewContent.setHint("Enter my review");
+                btnSubmitReview.setText("Send review");
+            }
+        }
         return view;
     }
 
@@ -117,6 +128,8 @@ public class FragmentWriteReviewActivity extends DialogFragment {
             Toast.makeText(getContext(), "Bạn cần đăng nhập để gửi đánh giá", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
 
         String reviewDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 

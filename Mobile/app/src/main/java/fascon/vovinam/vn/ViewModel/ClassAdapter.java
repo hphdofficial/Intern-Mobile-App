@@ -3,6 +3,7 @@ package fascon.vovinam.vn.ViewModel;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
             textView = view.findViewById(R.id.txt_name_class);
             textView1 = view.findViewById(R.id.txt_name_teacher);
             btnRegister = view.findViewById(R.id.btn_register_class);
+
         }
     }
 
@@ -41,6 +43,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
         this.classList = data;
         this.idClub = idClub;
     }
+    private String languageS;
 
     @Override
     public ClassAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -51,7 +54,16 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ClassAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.textView.setText(classList.get(position).getTen());
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+
         holder.textView1.setText("Giảng viên: " + classList.get(position).getGiangvien());
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                holder.textView1.setText("Lecturer: " + classList.get(position).getGiangvien());
+                holder.btnRegister.setText("Detail");
+            }
+        }
         holder.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -2,6 +2,7 @@ package fascon.vovinam.vn.ViewModel;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemViewHolder> {
     Context context;
-
+    private String languageS;
     private List<ProductModel> list ;
     public ProductAdapter(Context context, List<ProductModel> list ){
         this.context = context;
@@ -35,6 +36,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
     @Override
     public void onBindViewHolder(@NonNull ProductAdapter.ItemViewHolder holder, int position) {
         ProductModel item = list.get(position);
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
 
 //        holder.name_product.setText(item.getName());
 //        holder.type_product.setText(item.getType());
@@ -51,7 +54,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
         holder.price_product.setText("Giá tiền: " + item.getUnitPrice() + "");
         holder.quantity_product.setText("x" + item.getQuantity());
 
-
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                holder.type_product.setText("Type: " + item.getCategoryName());
+                holder.supplier_product.setText("Supplier: " + item.getSupplierName());
+                holder.price_product.setText("Price: " + item.getUnitPrice() + "");
+                holder.quantity_product.setText("x" + item.getQuantity());
+            }
+        }
         /*Picasso.get()
                 .load(holder.image_product)
                 .placeholder(placeholderResourceId) // Hình ảnh placeholder

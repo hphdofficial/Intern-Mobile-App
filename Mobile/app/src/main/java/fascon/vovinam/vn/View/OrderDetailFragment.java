@@ -1,5 +1,6 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class OrderDetailFragment extends DialogFragment {
             order = new Gson().fromJson(orderJson, OrderListModel.class);
         }
     }
+    private String languageS;
 
     @Nullable
     @Override
@@ -47,7 +49,28 @@ public class OrderDetailFragment extends DialogFragment {
         if (getDialog() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-
+        SharedPreferences shared = getContext().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        TextView textView14 = view.findViewById(R.id.textView14);
+        TextView textView_order_id_label = view.findViewById(R.id.textView_order_id_label);
+        TextView textView_txn_ref_label = view.findViewById(R.id.textView_txn_ref_label);
+        TextView textView_order_info_label = view.findViewById(R.id.textView_order_info_label);
+        TextView textView_order_amount_label = view.findViewById(R.id.textView_order_amount_label);
+        TextView textView_order_status_label = view.findViewById(R.id.textView_order_status_label);
+        TextView textView_order_pay_date_label = view.findViewById(R.id.textView_order_pay_date_label);
+        Button buttonClose = view.findViewById(R.id.button_close);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                textView14.setText("Order Information");
+                textView_order_id_label.setText("Order code:");
+                textView_txn_ref_label.setText("Transaction code:");
+                textView_order_info_label.setText("Order Information:");
+                textView_order_amount_label.setText("Sum money:");
+                textView_order_status_label.setText("Status:");
+                textView_order_pay_date_label.setText("Order date:");
+                buttonClose.setText("Close");
+            }
+        }
         TextView orderId = view.findViewById(R.id.order_id);
         TextView txnRef = view.findViewById(R.id.txn_ref);
         TextView orderInfo = view.findViewById(R.id.order_info);
@@ -55,7 +78,7 @@ public class OrderDetailFragment extends DialogFragment {
         TextView orderStatus = view.findViewById(R.id.order_status);
         TextView orderPayDate = view.findViewById(R.id.order_pay_date);
         ImageView qrCode = view.findViewById(R.id.qr_code); // ImageView để hiển thị QR code
-        Button buttonClose = view.findViewById(R.id.button_close);
+
 
         orderId.setText(String.format("%d", order.getId()));
         txnRef.setText(order.getTxn_ref());

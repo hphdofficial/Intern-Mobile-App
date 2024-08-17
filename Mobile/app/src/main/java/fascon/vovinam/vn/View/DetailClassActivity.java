@@ -52,7 +52,7 @@ public class DetailClassActivity extends BaseActivity {
     private String name = "";
     private String nameClass = "";
     private BlankFragment loadingFragment;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,11 +65,19 @@ public class DetailClassActivity extends BaseActivity {
         });
 
         sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
 
+        languageS = sharedPreferences.getString("language",null);
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Chi tiết lớp học");
         myContentE.apply();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Class Detail");
+                myContentE.apply();
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -124,6 +132,24 @@ public class DetailClassActivity extends BaseActivity {
 //        });
 
         getDetailClass();
+        textViewNgaysinhLabel = findViewById(R.id.textViewNgaysinhLabel);
+        textViewTenLabel = findViewById(R.id.textViewTenLabel);
+        textViewDienthoaiLabel = findViewById(R.id.textViewDienthoaiLabel);
+        textViewDiachiLabel = findViewById(R.id.textViewDiachiLabel);
+        textViewGioitinhLabel = findViewById(R.id.textViewGioitinhLabel);
+        if(languageS != null){
+            if(languageS.contains("en")){
+
+                textViewTenLabel.setText("Lecturer");
+                textViewDienthoaiLabel.setText("School schedule");
+                textViewDiachiLabel.setText("Address");
+                textViewGioitinhLabel.setText("Contact information");
+                textViewNgaysinhLabel.setText("Class Name");
+
+                btnCancelClassPending.setText("Cancel participation request");
+                btnLeaveClassPending.setText("Register to participate");
+            }
+        }
     }
 
     public void getDetailClass() {
@@ -159,6 +185,11 @@ public class DetailClassActivity extends BaseActivity {
             }
         });
     }
+    private TextView textViewTenLabel;
+    private TextView textViewDienthoaiLabel;
+    private TextView textViewDiachiLabel;
+    private TextView textViewGioitinhLabel;
+    private TextView textViewNgaysinhLabel;
 
     public void getListClassPending() {
         String token = sharedPreferences.getString("access_token", null);
@@ -422,6 +453,27 @@ public class DetailClassActivity extends BaseActivity {
         if (loadingFragment != null) {
             loadingFragment.dismiss();
             loadingFragment = null;
+        }
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
     }
 }

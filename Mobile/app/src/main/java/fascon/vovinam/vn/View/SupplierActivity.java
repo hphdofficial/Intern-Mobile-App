@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
@@ -25,12 +27,32 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SupplierActivity extends BaseActivity implements SupplierAdapter.OnSupplierClickListener {
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     private RecyclerView recyclerView;
     private SupplierAdapter adapter;
     private List<SupplierModel> supplierList;
     private BlankFragment loadingFragment;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +63,14 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách nhà cung cấp");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "List Supplier");
+                myContentE.apply();
+            }
+        }
         // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -61,7 +90,14 @@ public class SupplierActivity extends BaseActivity implements SupplierAdapter.On
 
         fetchSuppliers();
         NamePage();
+        title = findViewById(R.id.title);
+        if(languageS != null){
+            if(languageS.contains("en")){
+                title.setText("List of our suppliers");
+            }
+        }
     }
+    private TextView title;
 
     private void showLoading() {
         loadingFragment = new BlankFragment();

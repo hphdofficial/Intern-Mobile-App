@@ -73,7 +73,7 @@ public class activity_teacher_checkin extends BaseActivity {
     private TextView txtClassName;
     private Button btnFilter, btnExport;
     private static final int PERMISSION_REQUEST_CODE = 1;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +99,14 @@ public class activity_teacher_checkin extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Giao diện lịch sử điểm danh");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Attendance history interface");
+                myContentE.apply();
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -269,7 +277,24 @@ public class activity_teacher_checkin extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+        textView20 = findViewById(R.id.textView20);
+        textView9 = findViewById(R.id.textView9);
+        textView2 = findViewById(R.id.textView2);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                editTextDateEnd.setHint("Enter date end");
+                editTextDateStart.setHint("Enter date start");
+                textView20.setText("Day");
+                textView9.setText("Name");
+                textView2.setText("Time check in");
+                btnFilter.setText("Filter");
+                btnExport.setText("Export excel");
+            }
+        }
     }
+    private TextView textView20;
+    private TextView textView9;
+    private TextView textView2;
 
     private void filterCheckedByDate(String token ,String startDate, String endDate, int idClass){
         showLoading();
@@ -465,6 +490,27 @@ public class activity_teacher_checkin extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Lỗi khi lưu file Excel", Toast.LENGTH_LONG).show();
+        }
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
     }
 }

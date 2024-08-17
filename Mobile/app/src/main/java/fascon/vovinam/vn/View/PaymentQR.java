@@ -1,6 +1,7 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 
 public class PaymentQR extends BaseActivity {
 
-
+    private String languageS;
     private ImageView imageViewQRCode;
     private Button buttonGenerateQRCode;
     private TextView author;
@@ -59,6 +60,8 @@ public class PaymentQR extends BaseActivity {
         });
 
 
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
 
 
         imageViewQRCode = findViewById(R.id.imageViewQRCode);
@@ -84,8 +87,20 @@ public class PaymentQR extends BaseActivity {
 
                 "&addInfo=" + textPayment);
 
-
+        stk = findViewById(R.id.stk);
+        abc= findViewById(R.id.abc);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                author.setText("Account owner: " + "Huỳnh Hữu Lợi");
+                bank.setText("Bank name: " + "Techcombank");
+                stk.setText("Bank code: " + "0xxxxxxxx");
+                abc.setText("Thank you for purchasing our products, please scan the QR to pay");
+                buttonGenerateQRCode.setText("Back Home Page");
+            }
+        }
     }
+    private TextView stk;
+    private TextView abc;
     private void createPaymentRequest() {
         String amount = "10000"; // Số tiền thanh toán
         String orderId = "1"; // Mã đơn hàng của bạn
