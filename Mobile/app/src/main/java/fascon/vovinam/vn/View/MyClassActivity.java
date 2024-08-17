@@ -101,16 +101,10 @@ public class MyClassActivity extends BaseActivity {
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
-                    if(response.code() == 403){
-                        hideLoading();
-                        Toast.makeText(MyClassActivity.this, "Bạn không phải giảng viên." +
-                                " Đang chuyển qua lớp học cho học viên", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), activity_member_checkin.class));
 
-                    }else{
-                        Toast.makeText(MyClassActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
-                        hideLoading();
-                    }
+                    Toast.makeText(MyClassActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    hideLoading();
+
 
 
                 }
