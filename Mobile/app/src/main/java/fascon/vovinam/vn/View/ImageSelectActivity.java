@@ -19,6 +19,8 @@ import fascon.vovinam.vn.Model.network.ApiServiceProvider;
 import fascon.vovinam.vn.Model.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import java.io.File;
 
 import okhttp3.MediaType;
@@ -132,8 +134,6 @@ public class ImageSelectActivity extends BaseActivity {
                 call.enqueue(new Callback<ReponseModel>() {
                     @Override
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-
-
                         hideLoading();
                         if (response.isSuccessful()) {
                             Toast.makeText(ImageSelectActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
@@ -149,9 +149,25 @@ public class ImageSelectActivity extends BaseActivity {
                             setResult(Activity.RESULT_OK, resultIntent);
                             finish();
                         } else {
-                            Toast.makeText(ImageSelectActivity.this, "Upload thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                            try {
+                                // Chuyển chuỗi JSON từ errorBody thành JSONObject
+                                JSONObject errorObject = new JSONObject(response.errorBody().string());
+                                JSONObject errors = errorObject.getJSONObject("errors");
+
+                                // Hiển thị thông báo lỗi chi tiết cho trường avatar
+                                if (errors.has("avatar")) {
+                                    String errorMessage = errors.getJSONArray("avatar").getString(0);
+                                    Toast.makeText(ImageSelectActivity.this, "Chỉ chấp nhận tệp ảnh định dạng: jpeg, jpg, png.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ImageSelectActivity.this, "Upload thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                Toast.makeText(ImageSelectActivity.this, "Upload thất bại.", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
                         }
                     }
+
 
                     @Override
                     public void onFailure(Call<ReponseModel> call, Throwable t) {

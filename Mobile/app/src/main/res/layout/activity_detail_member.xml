@@ -20,8 +20,8 @@
             <!-- Avatar Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/avatarCard"
-                android:layout_width="100dp"
-                android:layout_height="140dp"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 app:cardCornerRadius="8dp"
@@ -29,30 +29,33 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <FrameLayout
-                    android:id="@+id/avatarFrame"
+            <FrameLayout
+                android:id="@+id/avatarFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageViewAvatar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/photo3x4" />
 
-                    <ImageView
-                        android:id="@+id/imageViewAvatar"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/photo3x4" />
+                <ImageView
+                    android:id="@+id/imageViewEditAvatar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="4dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:src="@drawable/edit" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
-                    <ImageView
-                        android:id="@+id/imageViewEditAvatar"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="end|bottom"
-                        android:layout_margin="4dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:src="@drawable/edit" />
-                </FrameLayout>
-            </androidx.cardview.widget.CardView>
 
-            <!-- Edit Info Button -->
+
+        <!-- Edit Info Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_edit_info"
                 android:layout_width="0dp"
@@ -320,7 +323,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="Chiều cao:"
+                        android:text="Chiều cao (m):"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
 
@@ -337,7 +340,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="Cân nặng:"
+                        android:text="Cân nặng (kg):"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
 
