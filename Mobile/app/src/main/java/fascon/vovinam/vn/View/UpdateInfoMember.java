@@ -297,8 +297,10 @@ public class UpdateInfoMember extends BaseActivity {
 
                             // Kết thúc activity hiện tại để quay lại ActivityDetailMember
                             finish();
+                        } else {
+                            // Xử lý khi phản hồi từ server không thành công
+                            handleErrorResponse(response);
                         }
-
                     }
 
                     @Override
@@ -321,23 +323,19 @@ public class UpdateInfoMember extends BaseActivity {
 
             // Kiểm tra lỗi trả về từ server
             if (errorObject.has("error")) {
-                String serverError = errorObject.getString("error");
-                if (serverError.contains("họ tên và số điện thoại phụ huynh")) {
-                    Toast.makeText(UpdateInfoMember.this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18 tuổi.", Toast.LENGTH_SHORT).show();
-                    return;
+                JSONObject errors = errorObject.getJSONObject("error");
+
+                if (errors.has("ngaysinh")) {
+                    Toast.makeText(UpdateInfoMember.this, "Ngày sinh phải là ngày trước hôm nay.", Toast.LENGTH_SHORT).show();
+                } else if (errors.has("username")) {
+                    Toast.makeText(UpdateInfoMember.this, "Tên tài khoản đã tồn tại.", Toast.LENGTH_SHORT).show();
+                } else if (errors.has("email")) {
+                    Toast.makeText(UpdateInfoMember.this, "Email đã tồn tại.", Toast.LENGTH_SHORT).show();
+                } else if (errors.has("dienthoai")) {
+                    Toast.makeText(UpdateInfoMember.this, "Số điện thoại đã tồn tại.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
-            }
-            JSONObject errors = errorObject.getJSONObject("error");
-            if (errors.has("username")) {
-                Toast.makeText(UpdateInfoMember.this, "Tên tài khoản đã tồn tại.", Toast.LENGTH_SHORT).show();
-            } else if (errors.has("email")) {
-                Toast.makeText(UpdateInfoMember.this, "Email đã tồn tại.", Toast.LENGTH_SHORT).show();
-            } else if (errors.has("dienthoai")) {
-                Toast.makeText(UpdateInfoMember.this, "Số điện thoại đã tồn tại.", Toast.LENGTH_SHORT).show();
-            } else if (errors.has("ngaysinh")) {
-                Toast.makeText(UpdateInfoMember.this, "Ngày sinh không đúng định dạng", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại.", Toast.LENGTH_SHORT).show();
