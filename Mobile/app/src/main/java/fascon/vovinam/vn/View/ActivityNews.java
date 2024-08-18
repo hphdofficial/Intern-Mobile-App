@@ -240,7 +240,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                     if (selectedClub != null) {
                         selectedClubId = selectedClub.getId(); // Lấy ID câu lạc bộ nếu không null
                     } else {
-                        Toast.makeText(ActivityNews.this, "Không tìm thấy câu lạc bộ", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ActivityNews.this, "Không tìm thấy câu lạc bộ", Toast.LENGTH_SHORT).show();
                     }
 
                     // Kiểm tra vai trò người dùng để lọc các bài báo

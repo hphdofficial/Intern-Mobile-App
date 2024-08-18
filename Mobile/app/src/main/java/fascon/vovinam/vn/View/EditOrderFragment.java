@@ -142,8 +142,8 @@ public class EditOrderFragment extends DialogFragment {
         Call<JsonObject> call = service.updateOrder("Bearer " + accessToken, request);
 
         Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
-        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
-        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
 
         call.enqueue(new Callback<JsonObject>() {
             @Override

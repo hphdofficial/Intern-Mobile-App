@@ -37,6 +37,7 @@ public class RegisterClass extends BaseActivity {
     private Button buttonRegister;
     private RadioGroup date_learn;
     private TextView name_class;
+    private int fee;
     private  RadioGroup note;
     private String noteText = "";
     private String classId = null;
@@ -122,6 +123,7 @@ public class RegisterClass extends BaseActivity {
             String name = extras.getString("name");
             String className = extras.getString("nameClass");
             classId = extras.getString("idClass");
+            fee = extras.getInt("fee");
             name_class.setText(name+" - " + className);
         }
 
@@ -239,14 +241,14 @@ public class RegisterClass extends BaseActivity {
                 RadioButton selectedRadioButton = findViewById(checkedId);
                 String selectedText = selectedRadioButton.getText().toString();
 
-               if(selectedText.contains("3")){
-                   money.setText("1.000.000đ");
-               }
-                if(selectedText.contains("6")){
-                    money.setText("1.950.000đ");
+                if (selectedText.contains("3")) {
+                    money.setText(fee * 3 + " đ");
                 }
-                if(selectedText.contains("12")){
-                    money.setText("3.800.000đ");
+                if (selectedText.contains("6")) {
+                    money.setText(fee * 6 + " đ");
+                }
+                if (selectedText.contains("12")) {
+                    money.setText(fee * 12 + " đ");
                 }
             }
         });
