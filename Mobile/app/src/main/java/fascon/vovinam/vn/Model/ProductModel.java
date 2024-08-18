@@ -32,12 +32,18 @@ public class ProductModel implements Parcelable {
     @SerializedName("link_image")
     private String image_link;
 
+    private int id_product;
     private int quantity;
     private String CategoryName;
     private String SupplierName;
 
     private String sale;
     private int noibat;
+
+    public ProductModel(int id_product, int quantity) {
+        this.id_product = id_product;
+        this.quantity = quantity;
+    }
 
     public ProductModel(String categoryID, String image_link, int productID, String productName, int supplierID, String unitPrice, int unitsInStock) {
         this.categoryID = categoryID;
@@ -100,6 +106,14 @@ public class ProductModel implements Parcelable {
             return new ProductModel[size];
         }
     };
+
+    public int getId_product() {
+        return id_product;
+    }
+
+    public void setId_product(int id_product) {
+        this.id_product = id_product;
+    }
 
     public int getNoibat() {
         return noibat;

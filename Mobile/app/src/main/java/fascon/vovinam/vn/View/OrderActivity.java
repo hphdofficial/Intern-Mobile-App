@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
@@ -73,5 +74,11 @@ public class OrderActivity extends BaseActivity {
     public void switchToTab(int tabPosition) {
         ViewPager2 viewPager = findViewById(R.id.viewPager);
         viewPager.setCurrentItem(tabPosition);
+
+        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("f" + viewPager.getCurrentItem());
+
+        if (currentFragment instanceof OrderFragment) {
+            ((OrderFragment) currentFragment).refreshData();
+        }
     }
 }
