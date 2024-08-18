@@ -210,10 +210,20 @@ public class UpdateInfoMember extends BaseActivity {
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                         hideLoading();
                         if (response.isSuccessful() && response.body() != null) {
+                            // Thông báo cập nhật thành công
                             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+
+                            // Tạo Intent để quay lại ActivityDetailMember và gửi thông tin cập nhật
                             Intent intent = new Intent(UpdateInfoMember.this, ActivityDetailMember.class);
+                            intent.putExtra("ngaysinh", editTextNgaysinh.getText().toString());
+                            intent.putExtra("hoten_giamho", editTextHotengiamho.getText().toString());
+                            intent.putExtra("dienthoai_giamho", editTextDienthoaigiamho.getText().toString());
+
+                            // Đặt flag để xóa các activity trước đó và bắt đầu activity mới
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+
+                            // Kết thúc activity hiện tại để quay lại ActivityDetailMember
                             finish();
                         } else {
                             handleErrorResponse(response);
@@ -226,6 +236,7 @@ public class UpdateInfoMember extends BaseActivity {
                         Toast.makeText(UpdateInfoMember.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
         } else {
             Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
@@ -236,6 +247,16 @@ public class UpdateInfoMember extends BaseActivity {
         try {
             String errorMessage = response.errorBody().string();
             JSONObject errorObject = new JSONObject(errorMessage);
+
+            // Kiểm tra lỗi trả về từ server
+            if (errorObject.has("error")) {
+                String serverError = errorObject.getString("error");
+                if (serverError.contains("họ tên và số điện thoại phụ huynh")) {
+                    Toast.makeText(UpdateInfoMember.this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18 tuổi.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
             JSONObject errors = errorObject.getJSONObject("error");
 
             if (errors.has("username")) {
@@ -254,8 +275,6 @@ public class UpdateInfoMember extends BaseActivity {
             e.printStackTrace();
         }
     }
-
-
 
 
     private boolean isValidInput() {
