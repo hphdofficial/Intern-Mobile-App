@@ -19,6 +19,16 @@ public class ProductSaleDownModel {
     private String nameSup;
     @SerializedName("sale")
     private String sale;
+    @SerializedName("tenenglish")
+    private String tenenglish;
+
+    public String getTenenglish() {
+        return tenenglish;
+    }
+
+    public void setTenenglish(String tenenglish) {
+        this.tenenglish = tenenglish;
+    }
 
     public String getName() {
         return name;

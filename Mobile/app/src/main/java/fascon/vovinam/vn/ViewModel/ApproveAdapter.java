@@ -84,6 +84,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             btnApproveOrder = view.findViewById(R.id.button_approve_order);
             btnDetailOrder = view.findViewById(R.id.button_detail_order);
             btnEditOrder = view.findViewById(R.id.button_edit_order);
+
         }
     }
 
@@ -175,6 +176,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.RED);
                     if(languageS!= null){
                         if(languageS.contains("en")){
+
                             clubClassViewHolder.txtApprove.setText("Request to leave");
                             clubClassViewHolder.txtClubClass.setText("Club: " + itemClubClass.getTen_club());
                             clubClassViewHolder.txtMember.setText("Requester: " + itemClubClass.getTen());
@@ -255,6 +257,9 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if(languageS!= null){
                 if(languageS.contains("en")){
                     orderViewHolder.totalPrice.setText(String.format("Sum money: %,.0f VND", totalPrice));
+                    orderViewHolder.btnApproveOrder.setText("Confirm");
+                    orderViewHolder.btnDetailOrder.setText("Details");
+                    orderViewHolder.btnEditOrder.setText("Edit");
                 }
             }
 

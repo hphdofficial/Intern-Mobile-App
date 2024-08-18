@@ -9,6 +9,15 @@ public class NewsModel {
     private long ngaytao;
     private int id_club; // Thêm trường id_club
     private String link_video;
+    private String tenen;
+
+    public String getTenen() {
+        return tenen;
+    }
+
+    public void setTenen(String tenen) {
+        this.tenen = tenen;
+    }
 
     // Getters and Setters
     public int getId() {

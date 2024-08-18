@@ -243,7 +243,16 @@ private TextView addessP;
 //            sum += value.getPrice()*value.getQuantity();
 //        }
         for (ProductModel value : productList) {
-            textPayment += value.getProductName() + "va";
+
+            if (languageS!= null){
+                if(languageS.contains("en")){
+                    textPayment += value.getEn() + "va";
+                }else {
+                    textPayment += value.getProductName() + "va";
+                }
+            }else {
+                textPayment += value.getProductName() + "va";
+            }
             sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
         }
         float dis = Float.parseFloat(discount.getText().toString().replace("đ", "").replace(".", ""));

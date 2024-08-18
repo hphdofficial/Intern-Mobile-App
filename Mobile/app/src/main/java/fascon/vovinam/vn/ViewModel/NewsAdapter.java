@@ -1,6 +1,7 @@
 package fascon.vovinam.vn.ViewModel;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     private List<NewsModel> newsList;
     private OnNewsClickListener listener;
-
+    private String languageS;
     public NewsAdapter(List<NewsModel> newsList, OnNewsClickListener listener) {
         this.newsList = newsList;
         this.listener = listener;
@@ -32,14 +33,22 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     @Override
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
+        SharedPreferences shared =   view.getContext().getSharedPreferences("login_prefs", view.getContext().MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         return new NewsViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
         NewsModel news = newsList.get(position);
-        holder.newsTitle.setText(news.getTenvi());
 
+
+        holder.newsTitle.setText(news.getTenvi());
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                holder.newsTitle.setText(news.getTenen());
+            }
+        }
         // Khai báo biến imageUrl trước khối if
         final String imageUrl;
 

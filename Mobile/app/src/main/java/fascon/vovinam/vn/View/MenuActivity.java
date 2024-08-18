@@ -713,6 +713,11 @@ public class MenuActivity extends BaseActivity {
                         100
                 ));
                 textView.setText(p.getName());
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        textView.setText(p.getTenenglish());
+                    }
+                }
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
@@ -937,6 +942,11 @@ public class MenuActivity extends BaseActivity {
                         100
                 ));
                 textView.setText(p.getName());
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        textView.setText(p.getTenenglish());
+                    }
+                }
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
@@ -1041,6 +1051,13 @@ public class MenuActivity extends BaseActivity {
                         textView.setPadding(10,5,0,0);
                         textView.setId(news.getId());
                         textView.setText("* "+news.getTenvi());
+
+                        if (s != null){
+                            if(s.contains("en")) {
+                                textView.setText("* "+news.getTenen());
+                            }
+
+                        }
                         textView.setTextColor(Color.RED);
                         textView.setTextSize(18);
                         String imageUrl = "http://tambinh.websinhvien.net/thumbs/340x280x1/upload/news/" + news.getPhoto();
@@ -1085,6 +1102,12 @@ public class MenuActivity extends BaseActivity {
                         textView.setId(news.getId());
                         textView.setText("* "+news.getTenvi());
                         textView.setTextColor(Color.RED);
+                        if (s != null){
+                            if(s.contains("en")) {
+                                textView.setText("* "+news.getTenen());
+                            }
+
+                        }
                         textView.setTextSize(18);
                         String imageUrl = "http://tambinh.websinhvien.net/thumbs/340x280x1/upload/news/" + news.getPhoto();
                         // event
