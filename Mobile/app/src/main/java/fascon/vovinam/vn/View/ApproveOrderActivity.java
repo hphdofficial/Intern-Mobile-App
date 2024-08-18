@@ -1,6 +1,7 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +42,7 @@ public class ApproveOrderActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private ApproveAdapter approveAdapter;
     private TextView txtNotify;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,14 @@ public class ApproveOrderActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Duyệt đơn hàng");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Approve new orders");
+                myContentE.apply();
+            }
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
@@ -74,6 +82,13 @@ public class ApproveOrderActivity extends BaseActivity {
                 "Đơn hàng chờ lấy hàng",
                 "Đơn hàng đang giao"
         };
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                options[0] = "Order awaiting confirmation";
+                options[1] = "Orders awaiting pickup";
+                options[2] = "Order is being delivered";
+            }
+        }
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -90,7 +105,7 @@ public class ApproveOrderActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken);
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
@@ -115,6 +130,11 @@ public class ApproveOrderActivity extends BaseActivity {
                             txtNotify.setText("");
                         } else {
                             txtNotify.setText("Không có đơn hàng nào");
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    txtNotify.setText("Not order");
+                                }
+                            }
                         }
                     }
                 } else {
@@ -138,7 +158,7 @@ public class ApproveOrderActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken);
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
@@ -186,7 +206,7 @@ public class ApproveOrderActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getListAllOrder("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken);
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
@@ -268,7 +288,27 @@ public class ApproveOrderActivity extends BaseActivity {
             Log.e("ApproveOrderActivity", "Invalid position: " + position);
         }
     }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     public void setEmptyList(){
         txtNotify.setText("Không có đơn hàng nào");
     }

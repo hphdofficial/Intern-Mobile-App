@@ -57,9 +57,16 @@ public class addressAdapter extends RecyclerView.Adapter<addressAdapter.ViewHold
         phone = view.findViewById(R.id.phone);
         return new ViewHolder(view);
     }
-
+    private String languageS;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int it) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                delete.setText("Delete");
+            }
+        }
                 String name = clubList.get(it).getAddress();
                 int slection = clubList.get(it).getSelection();
 

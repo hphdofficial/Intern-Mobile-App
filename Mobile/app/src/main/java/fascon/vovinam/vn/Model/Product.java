@@ -8,6 +8,7 @@ public class Product {
     private String supplier;
     private String type;
     private int quantity;
+    private int id_product;
 
     int ProductID;
     String ProductName;
@@ -23,6 +24,19 @@ public class Product {
         this.type = type;
         this.quantity = quantity;
         this.linkImage = linkImage;
+    }
+
+    public Product(int id_product, int quantity) {
+        this.id_product = id_product;
+        this.quantity = quantity;
+    }
+
+    public int getId_product() {
+        return id_product;
+    }
+
+    public void setId_product(int id_product) {
+        this.id_product = id_product;
     }
 
     public String getLinkImage() {

@@ -22,7 +22,10 @@ public interface NewsApiService {
     @GET("api/clubs/getall")
     Call<List<ClubModel>> getAllClubs();
 
-    @GET("api/news/filter-announcements-by-club/{id_club}")
+    @GET("api/news/filter-by-club/{id_club}")
     Call<List<NewsModel>> filterAnnouncementsByClub(@Path("id_club") int idClub);
 
+
+//    @GET("api/news/filter-announcements-by-club/{id_club}")
+//    Call<List<NewsModel>> filterAnnouncementsByClub(@Path("id_club") int idClub);
 }

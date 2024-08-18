@@ -1,9 +1,11 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +50,7 @@ public class activity_member_checkin extends BaseActivity {
 
     private int[] days;
     private TextView txtClassName;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,14 @@ public class activity_member_checkin extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Xem tình trạng điểm danh");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "View attendance check in");
+                myContentE.apply();
+            }
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
@@ -143,6 +153,7 @@ public class activity_member_checkin extends BaseActivity {
                                     }
 
 //                                    attendanceModels.addAll(attendanceModelAll);
+                                    attendanceModelAll.sort((event1, event2) -> event2.getDate().compareTo(event1.getDate()));
 
                                     checkedAdapter = new Checked_adapter(attendanceModelAll, getApplicationContext());
                                     RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
@@ -181,8 +192,23 @@ public class activity_member_checkin extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+        textView20 = findViewById(R.id.textView9);
+        textView9 = findViewById(R.id.textView2);
+        textView2 = findViewById(R.id.textView7);
+
+        if(languageS!= null){
+            if(languageS.contains("en")){
+
+                textView20.setText("Day");
+                textView9.setText("Name");
+                textView2.setText("Time check in");
+            }
+        }
 
     }
+    private TextView textView20;
+    private TextView textView9;
+    private TextView textView2;
 
     private void showLoading() {
         loadingFragment = new BlankFragment();
@@ -282,5 +308,26 @@ public class activity_member_checkin extends BaseActivity {
         }
 
         return startDate;
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
     }
 }

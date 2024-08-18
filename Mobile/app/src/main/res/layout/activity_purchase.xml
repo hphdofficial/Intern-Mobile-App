@@ -42,6 +42,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/addessP"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Địa chỉ giao hàng">
@@ -66,6 +67,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <TextView
+        android:id="@+id/listPa"
         android:layout_marginLeft="10dp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
@@ -111,6 +113,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
               <TextView
+                  android:id="@+id/chooseV"
                   android:layout_marginLeft="0dp"
                   android:layout_marginRight="10dp"
                   android:layout_width="0dp"
@@ -138,7 +141,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
               <TextView
-
+                  android:id="@+id/pp"
                   android:layout_marginRight="10dp"
                   android:layout_width="0dp"
                   android:layout_weight="12"
@@ -174,6 +177,7 @@
 
                   </ImageView>
                   <TextView
+                      android:id="@+id/detail"
                       android:layout_marginLeft="10dp"
                       android:layout_width="wrap_content"
                       android:layout_height="30dp"
@@ -194,6 +198,7 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content">
                   <TextView
+                      android:id="@+id/suma"
                       app:layout_constraintTop_toTopOf="parent"
                       app:layout_constraintStart_toStartOf="parent"
                       android:layout_width="wrap_content"
@@ -215,6 +220,7 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content">
                   <TextView
+                      android:id="@+id/sumD"
                       app:layout_constraintTop_toTopOf="parent"
                       app:layout_constraintStart_toStartOf="parent"
                       android:layout_width="wrap_content"
@@ -238,6 +244,7 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content">
                   <TextView
+                      android:id="@+id/sumT"
                       app:layout_constraintTop_toTopOf="parent"
                       app:layout_constraintStart_toStartOf="parent"
                       android:layout_width="wrap_content"
@@ -259,6 +266,7 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content">
                   <TextView
+                      android:id="@+id/sumPa"
                       app:layout_constraintTop_toTopOf="parent"
                       app:layout_constraintStart_toStartOf="parent"
                       android:layout_width="wrap_content"

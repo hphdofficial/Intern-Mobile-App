@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,7 +32,15 @@ import fascon.vovinam.vn.Model.network.ApiServiceProvider;
 import fascon.vovinam.vn.Model.services.UserApiService;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,7 +63,7 @@ public class ActivityDetailMember extends BaseActivity {
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 201;
 
     private BlankFragment loadingFragment;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +74,14 @@ public class ActivityDetailMember extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Thông tin thành viên");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "User Information");
+                myContentE.apply();
+            }
+        }
 
         // Chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -133,8 +151,57 @@ public class ActivityDetailMember extends BaseActivity {
 //        fetchClassInformation();
 
         showClub();
+        textViewUsernameLabel = findViewById(R.id.textViewUsernameLabel);
+        textViewTenLabel = findViewById(R.id.textViewTenLabel);
+        textViewDienthoaiLabel = findViewById(R.id.textViewDienthoaiLabel);
+        textViewDiachiLabel = findViewById(R.id.textViewDiachiLabel);
+        textViewGioitinhLabel = findViewById(R.id.textViewGioitinhLabel);
+        textViewNgaysinhLabel = findViewById(R.id.textViewNgaysinhLabel);
+        textViewChieucaoLabel = findViewById(R.id.textViewChieucaoLabel);
+        textViewCannangLabel = findViewById(R.id.textViewCannangLabel);
+        textViewHotengiamhoLabel = findViewById(R.id.textViewHotengiamhoLabel);
+        textViewDienthoaiGiamhoLabel = findViewById(R.id.textViewDienthoaiGiamhoLabel);
+        textViewLastloginLabel = findViewById(R.id.textViewLastloginLabel);
+        clubTitle = findViewById(R.id.clubTitle);
+        classTitle = findViewById(R.id.classTitle);
+
+        if(languageS != null){
+            if(languageS.contains("en")){
+                buttonEditInfo.setText("Edit Information");
+                buttonEditPassword.setText("Edit Password");
+                textViewUsernameLabel.setText("Login Name");
+                textViewTenLabel.setText("Name");
+                textViewDienthoaiLabel.setText("Phone");
+                textViewDiachiLabel.setText("Phone");
+                textViewGioitinhLabel.setText("Gender");
+                textViewNgaysinhLabel.setText("Birthday");
+                textViewChieucaoLabel.setText("Height");
+                textViewCannangLabel.setText("Weight");
+                textViewHotengiamhoLabel.setText("Guardian Name");
+                textViewDienthoaiGiamhoLabel.setText("Guardian Phone");
+                textViewLastloginLabel.setText("Last login");
+                clubTitle.setText("My Club");
+                classTitle.setText("Class Learned");
+                btnDetailClub.setText("Show Club Details");
+                btnDetailClass.setText("Show Class Detail");
+            }
+        }
 
     }
+private TextView textViewUsernameLabel;
+    private TextView textViewTenLabel;
+    private TextView textViewDienthoaiLabel;
+    private TextView textViewDiachiLabel;
+    private TextView textViewGioitinhLabel;
+    private TextView textViewNgaysinhLabel;
+    private TextView textViewChieucaoLabel;
+    private TextView textViewCannangLabel;
+    private TextView textViewHotengiamhoLabel;
+    private TextView textViewDienthoaiGiamhoLabel;
+    private TextView textViewLastloginLabel;
+    private TextView clubTitle;
+    private TextView classTitle;
+
 
     private void showClub() {
         SharedPreferences abc = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
@@ -160,12 +227,24 @@ public class ActivityDetailMember extends BaseActivity {
             if (nameClass != null) {
                 classInfo.setText("Lớp của bạn: "+nameClass);
                 classCard.setVisibility(View.VISIBLE);
+                if(languageS != null){
+                    if(languageS.contains("en")){
+                        classInfo.setText("My class: "+nameClass);
+                    }
+                }
 
             }
             else {
                 classCard.setVisibility(View.GONE);
             }
+
             clubInfo.setText("Câu lạc bộ của bạn: "+myClub);
+            if(languageS != null){
+                if(languageS.contains("en")){
+                    clubInfo.setText("My club: "+myClub);
+                }
+            }
+
             cardViewClub.setVisibility(View.VISIBLE);
         }
         else {
@@ -210,9 +289,55 @@ public class ActivityDetailMember extends BaseActivity {
 //        }
 //    }
 
+    public String TranslateText(String text, int k){
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.language);
 
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            String s = "";
+            while ((line = reader.readLine()) != null) {
+                if(line.contains(text)){
+                    String temp[] = line.split(",");
+                    if(k == 0){
+                        s =  temp[0];
+                    } else s= temp[1];
+                    break;
+                }
+
+            }
+
+            reader.close();
+            return s;
+            // Use the fileContent string
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     private void showPopupMenu(View v) {
+
         PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.getMenuInflater().inflate(R.menu.image_profile_menu, popupMenu.getMenu());
+        if(languageS!= null){
+            if(languageS.contains("en")){
+
+                Menu menu = popupMenu.getMenu();
+
+                for (int i = 0; i < menu.size(); i++) {
+                    // Get the MenuItem at the current index
+                    MenuItem menuItem = menu.getItem(i);
+
+                    // Get the title of the MenuItem
+                    String itemTitle = menuItem.getTitle().toString();
+                    menuItem.setTitle(TranslateText(itemTitle,1));
+
+
+                }
+            }
+        }
+
         popupMenu.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.menu_view_image) {
@@ -240,7 +365,6 @@ public class ActivityDetailMember extends BaseActivity {
                 return false;
             }
         });
-        popupMenu.inflate(R.menu.image_profile_menu);
         popupMenu.show();
     }
 
@@ -305,10 +429,24 @@ public class ActivityDetailMember extends BaseActivity {
                             textViewGioitinhValue.setText(profile.getGioitinh());
                             textViewNgaysinhValue.setText(profile.getNgaysinh());
                             textViewLastloginValue.setText(profile.getLastlogin());
-                            textViewHotengiamhoValue.setText(profile.getHotengiamho());
-                            textViewDienthoaiGiamhoValue.setText(profile.getDienthoai_giamho());
                             textViewChieucaoValue.setText(profile.getChieucao());
                             textViewCannangValue.setText(profile.getCannang());
+
+                            // Tính toán tuổi dựa trên ngày sinh
+                            int age = getAgeFromBirthdate(profile.getNgaysinh());
+
+                            if (age >= 18) {
+                                // Ẩn thông tin giám hộ nếu tuổi >= 18
+                                textViewHotengiamhoValue.setVisibility(View.GONE);
+                                textViewDienthoaiGiamhoValue.setVisibility(View.GONE);
+                            } else {
+                                // Hiển thị thông tin giám hộ nếu tuổi < 18
+                                textViewHotengiamhoValue.setText(profile.getHotengiamho());
+                                textViewDienthoaiGiamhoValue.setText(profile.getDienthoai_giamho());
+                                textViewHotengiamhoValue.setVisibility(View.VISIBLE);
+                                textViewDienthoaiGiamhoValue.setVisibility(View.VISIBLE);
+                            }
+
                             String avatarUrl = profile.getAvatarUrl();
                             if (avatarUrl != null) {
                                 Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageViewAvatar);
@@ -333,6 +471,25 @@ public class ActivityDetailMember extends BaseActivity {
             Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private int getAgeFromBirthdate(String birthdate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = sdf.parse(birthdate);
+            Calendar dob = Calendar.getInstance();
+            dob.setTime(date);
+            Calendar today = Calendar.getInstance();
+            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+            return age;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -399,5 +556,44 @@ public class ActivityDetailMember extends BaseActivity {
     }
 
 
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        String ngaysinh = intent.getStringExtra("ngaysinh");
+        if (ngaysinh != null) {
+            // Cập nhật trực tiếp thông tin ngày sinh từ Intent nếu có
+            textViewNgaysinhValue.setText(ngaysinh);
+            // Tính toán tuổi và ẩn hiện thông tin giám hộ
+            int age = getAgeFromBirthdate(ngaysinh);
+            if (age >= 18) {
+                textViewHotengiamhoValue.setVisibility(View.GONE);
+                textViewDienthoaiGiamhoValue.setVisibility(View.GONE);
+            } else {
+                textViewHotengiamhoValue.setVisibility(View.VISIBLE);
+                textViewDienthoaiGiamhoValue.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 }

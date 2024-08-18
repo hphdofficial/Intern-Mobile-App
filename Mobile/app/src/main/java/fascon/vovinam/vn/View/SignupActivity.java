@@ -2,14 +2,17 @@ package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import fascon.vovinam.vn.ViewModel.BaseActivity;
@@ -20,7 +23,11 @@ import fascon.vovinam.vn.Model.services.UserApiService;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,15 +38,38 @@ public class SignupActivity extends BaseActivity {
     private EditText editTextUsername, editTextPassword, editTextEmail, editTextTen, editTextChieucao, editTextCannang, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotenGiamho, editTextDienthoaiGiamho, edit_text_confirm_password;
     private RadioGroup radioGroupGender;
     private Button buttonSignUp;
+    private TextView text_view_signup;
+    private String languageS;
 
     private BlankFragment loadingFragment;
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         editTextUsername = findViewById(R.id.edit_text_username);
         editTextPassword = findViewById(R.id.edit_text_password);
 
@@ -56,6 +86,7 @@ public class SignupActivity extends BaseActivity {
         editTextDienthoaiGiamho = findViewById(R.id.edit_text_dienthoai_giamho);
         radioGroupGender = findViewById(R.id.radio_group_gender);
         buttonSignUp = findViewById(R.id.button_sign_up);
+        text_view_signup = findViewById(R.id.text_view_signup);
 
         editTextNgaysinh.setInputType(InputType.TYPE_NULL); // Disable keyboard input
         editTextNgaysinh.setOnClickListener(v -> {
@@ -89,7 +120,31 @@ public class SignupActivity extends BaseActivity {
         toggleConfirmPasswordVisibility.setOnClickListener(v -> {
             togglePasswordVisibility(confirmPasswordEditText, toggleConfirmPasswordVisibility);
         });
+        text_view_subtitle = findViewById(R.id.text_view_subtitle);
+        radio_button_male = findViewById(R.id.radio_button_male);
+        radio_button_female = findViewById(R.id.radio_button_female);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                text_view_signup.setText("Register");
+                text_view_subtitle.setText("Please Enter Your Personal Information");
+                editTextEmail.setHint("Enter Email");
+                editTextTen.setHint("Enter Name");
+                editTextChieucao.setHint("Enter Height");
+                editTextCannang.setHint("Enter Weight");
+                editTextDienthoai.setHint("Enter Phone");
+                editTextDiachi.setHint("Enter Address");
+                editTextNgaysinh.setHint("Birthday ((YYYY-MM-DD))");
+                editTextHotenGiamho.setHint("Guardian");
+                editTextDienthoaiGiamho.setHint("Phone Guardian");
+                radio_button_male.setText("Male");
+                radio_button_female.setText("Female");
+                buttonSignUp.setText("Sign Up");
+            }
+        }
+
     }
+    private RadioButton radio_button_male;
+    private RadioButton radio_button_female;
 
     private void showLoading() {
         if (loadingFragment == null) {
@@ -103,7 +158,9 @@ public class SignupActivity extends BaseActivity {
             loadingFragment.dismiss();
             loadingFragment = null;
         }
+
     }
+    private TextView text_view_subtitle;
 
 
     private void togglePasswordVisibility(EditText editText, ImageButton toggleButton) {
@@ -185,6 +242,19 @@ public class SignupActivity extends BaseActivity {
             return;
         }
 
+        // Kiểm tra ngày sinh có hợp lệ không (phải trước ngày hiện tại)
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date birthDate = dateFormat.parse(ngaysinh);
+            if (birthDate.after(new Date())) {
+                Toast.makeText(SignupActivity.this, "Ngày sinh phải trước ngày hiện tại.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (ParseException e) {
+            Toast.makeText(SignupActivity.this, "Ngày sinh không hợp lệ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Kiểm tra chiều cao và cân nặng
         int chieucao, cannang;
         try {
@@ -261,7 +331,11 @@ public class SignupActivity extends BaseActivity {
                             Toast.makeText(SignupActivity.this, "Email đã tồn tại.", Toast.LENGTH_SHORT).show();
                         } else if (errors.has("dienthoai")) {
                             Toast.makeText(SignupActivity.this, "Số điện thoại đã tồn tại.", Toast.LENGTH_SHORT).show();
-                        } else {
+                        }
+                        else if (errors.has("ngaysinh")) {
+                            Toast.makeText(SignupActivity.this, "Ngày sinh không hợp lệ: " + errors.getJSONArray("ngaysinh").getString(0), Toast.LENGTH_SHORT).show();
+                        }
+                        else {
                             Toast.makeText(SignupActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {

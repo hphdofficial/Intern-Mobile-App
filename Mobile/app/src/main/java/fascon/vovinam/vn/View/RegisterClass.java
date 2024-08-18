@@ -24,6 +24,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import fascon.vovinam.vn.ViewModel.BaseActivity;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 
 public class RegisterClass extends BaseActivity {
@@ -33,10 +37,33 @@ public class RegisterClass extends BaseActivity {
     private Button buttonRegister;
     private RadioGroup date_learn;
     private TextView name_class;
+    private int fee;
     private  RadioGroup note;
     private String noteText = "";
     private String classId = null;
     private BlankFragment loadingFragment;
+    private String languageS;
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +74,8 @@ public class RegisterClass extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         buttonRegister = findViewById(R.id.buttonRegister);
         name_class = findViewById(R.id.name_class);
         money = findViewById(R.id.total);
@@ -73,6 +102,13 @@ public class RegisterClass extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Đăng ký lớp học");
         myContentE.apply();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Register Class");
+                myContentE.apply();
+            }
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
@@ -87,6 +123,7 @@ public class RegisterClass extends BaseActivity {
             String name = extras.getString("name");
             String className = extras.getString("nameClass");
             classId = extras.getString("idClass");
+            fee = extras.getInt("fee");
             name_class.setText(name+" - " + className);
         }
 
@@ -130,9 +167,66 @@ public class RegisterClass extends BaseActivity {
         });
 
         eventClickRadio();
+        textViewUsernameLabel = findViewById(R.id.textViewUsernameLabel);
+        textViewTenLabel = findViewById(R.id.textViewTenLabel);
+        select_health = findViewById(R.id.select_health);
+        radio_button_3 = findViewById(R.id.radio_button_3);
+        textViewDiachiLabel = findViewById(R.id.textViewDiachiLabel);
+        radio_button_6 = findViewById(R.id.radio_button_6);
+        radio_button_12 = findViewById(R.id.radio_button_12);
+        if(languageS != null){
+            if(languageS.contains("en")){
+
+                textViewUsernameLabel.setText("Class Information");
+                textViewTenLabel.setText("Time Learn");
+                select_health.setText("Health Status");
+                textViewDiachiLabel.setText("Sum Money Payment");
+                buttonRegister.setText("Register");
+                radio_button_3.setText("3 Months");
+                radio_button_6.setText("6 Months");
+                radio_button_12.setText("12 Months");
+                for (CheckBox checkBox : checkbox) {
+                   checkBox.setText(TranslateText(checkBox.getText().toString(),1));
+                }
+            }
+        }
         // giả sử class được chọn là 1
 
     }
+    public String TranslateText(String text, int k){
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.language);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            String s = "";
+            while ((line = reader.readLine()) != null) {
+                if(line.contains(text)){
+                    String temp[] = line.split(",");
+                    if(k == 0){
+                        s =  temp[0];
+                    } else s= temp[1];
+                    break;
+                }
+
+            }
+
+            reader.close();
+            return s;
+            // Use the fileContent string
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private RadioButton radio_button_3;
+    private RadioButton radio_button_6;
+    private RadioButton radio_button_12;
+    private TextView textViewUsernameLabel;
+    private TextView textViewTenLabel;
+    private TextView select_health;
+    private TextView textViewDiachiLabel;
 
 
     public void eventClickRadio(){
@@ -147,14 +241,14 @@ public class RegisterClass extends BaseActivity {
                 RadioButton selectedRadioButton = findViewById(checkedId);
                 String selectedText = selectedRadioButton.getText().toString();
 
-               if(selectedText.contains("3")){
-                   money.setText("1.000.000đ");
-               }
-                if(selectedText.contains("6")){
-                    money.setText("1.950.000đ");
+                if (selectedText.contains("3")) {
+                    money.setText(fee * 3 + " đ");
                 }
-                if(selectedText.contains("12")){
-                    money.setText("3.800.000đ");
+                if (selectedText.contains("6")) {
+                    money.setText(fee * 6 + " đ");
+                }
+                if (selectedText.contains("12")) {
+                    money.setText(fee * 12 + " đ");
                 }
             }
         });

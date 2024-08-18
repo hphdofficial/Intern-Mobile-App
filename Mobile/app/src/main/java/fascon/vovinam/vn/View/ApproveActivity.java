@@ -1,6 +1,7 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +41,7 @@ public class ApproveActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private ApproveAdapter approveAdapter;
     private TextView txtNotify;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,14 @@ public class ApproveActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Duyệt yêu cầu");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Browse requests");
+                myContentE.apply();
+            }
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new titleFragment());
@@ -72,13 +80,39 @@ public class ApproveActivity extends BaseActivity {
                 "Yêu cầu đăng ký lớp học",
                 "Yêu cầu rời lớp học"
         };
+        if(languageS!= null){
+            if(languageS.contains("en")){
+               options[0] = "Class registration required";
+               options[1] = "Request to leave class";
+            }
+        }
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerOptions.setAdapter(spinnerAdapter);
         selectSpinnerItem(0);
     }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     private void getListJoinClub() {
         txtNotify.setText("Loading...");
         approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "joinclub");

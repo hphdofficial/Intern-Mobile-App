@@ -3,9 +3,11 @@ package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
@@ -25,7 +27,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UpdatePassword extends BaseActivity {
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     private EditText editTextEmail, editTextCurrentPassword, editTextPassword, editTextPasswordConfirmation;
     private Button buttonUpdatePassword;
 
@@ -34,18 +56,25 @@ public class UpdatePassword extends BaseActivity {
     private static final String NAME_SHARED = "login_prefs";
 
     private BlankFragment loadingFragment;
-
+        private String languageS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_password);
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Thay đổi mât khẩu");
         myContentE.apply();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Change Password");
+                myContentE.apply();
+            }
+        }
 
         // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -80,6 +109,20 @@ public class UpdatePassword extends BaseActivity {
         buttonToggleCurrentPasswordVisibility.setOnClickListener(v -> togglePasswordVisibility(editTextCurrentPassword, buttonToggleCurrentPasswordVisibility));
         buttonToggleNewPasswordVisibility.setOnClickListener(v -> togglePasswordVisibility(editTextPassword, buttonToggleNewPasswordVisibility));
         buttonTogglePasswordConfirmationVisibility.setOnClickListener(v -> togglePasswordVisibility(editTextPasswordConfirmation, buttonTogglePasswordConfirmationVisibility));
+
+
+        if(languageS != null){
+            if(languageS.contains("en")){
+
+
+                editTextEmail.setHint("Enter Email");
+                editTextCurrentPassword.setHint("Current Passoword");
+                editTextPassword.setHint("New Password");
+                editTextPasswordConfirmation.setHint("Confirm Password");
+
+                buttonUpdatePassword.setText("Update Password");
+            }
+        }
     }
 
     private void togglePasswordVisibility(EditText editText, ImageButton imageButton) {

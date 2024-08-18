@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -72,7 +73,28 @@ public class ClubActivity extends BaseActivity {
     private Spinner spinnerCity;
     private boolean mapsView = false;
     private BlankFragment loadingFragment;
+    private String languageS;
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +110,14 @@ public class ClubActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách câu lạc bộ");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "List Clubs");
+                myContentE.apply();
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -128,6 +158,11 @@ public class ClubActivity extends BaseActivity {
 
         viewOptionsSpinner = findViewById(R.id.spinner_view_options);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.view_options, android.R.layout.simple_spinner_item);
+        if(languageS != null){
+            if(languageS.contains("en")){
+                adapter = ArrayAdapter.createFromResource(this, R.array.viewaa, android.R.layout.simple_spinner_item);
+            }
+        }
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         viewOptionsSpinner.setAdapter(adapter);
         viewOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -172,6 +207,12 @@ public class ClubActivity extends BaseActivity {
         showListCountry();
         showListCity();
         loadListClubDefault();
+
+            if(languageS != null){
+                if(languageS.contains("en")){
+                    btnLocation.setText("Search around my location");
+                }
+            }
     }
 
     private void showSearchDialog() {
@@ -179,10 +220,19 @@ public class ClubActivity extends BaseActivity {
         dialog.setContentView(R.layout.dialog_search);
 
         dialog.setCanceledOnTouchOutside(false);
+        final TextView text_view_result = dialog.findViewById(R.id.text_view_result);
 
         final EditText editTextSearch = dialog.findViewById(R.id.edit_text_search);
         Button buttonOk = dialog.findViewById(R.id.button_ok);
 
+
+        if(languageS != null){
+            if(languageS.contains("en")){
+                text_view_result.setText("Search");
+                editTextSearch.setHint("Enter the club to search for");
+                buttonOk.setText("Start search");
+            }
+        }
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,7 +267,7 @@ public class ClubActivity extends BaseActivity {
                     List<Club> clubs = response.body();
                     clubListFragment.setData(clubs);
                     if (!clubs.isEmpty()) {
-                        Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ClubActivity.this, "Không có câu lạc bộ nào khớp với tìm kiếm", Toast.LENGTH_SHORT).show();
                     }
@@ -343,7 +393,7 @@ public class ClubActivity extends BaseActivity {
                     }.getType();
                     List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
                     clubListFragment.setData(clubs);
-                    Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                     }
@@ -496,7 +546,14 @@ public class ClubActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     List<CountryModel> countryList = response.body();
                     List<CountryModel> countries = new ArrayList<>();
+
                     countries.add(new CountryModel(0, "Quốc gia", "0", "0"));
+                    if(languageS != null){
+                        if(languageS.contains("en")){
+                            countries.clear();
+                            countries.add(new CountryModel(0, "Country", "0", "0"));
+                        }
+                    }
                     for (CountryModel country : countryList) {
                         countries.add(new CountryModel(country.getId(), country.getTen(), country.getMap_lat(), country.getMap_long()));
                     }
@@ -544,6 +601,12 @@ public class ClubActivity extends BaseActivity {
                     List<CityModel> cityList = response.body();
                     List<CityModel> cities = new ArrayList<>();
                     cities.add(new CityModel(0, "Thành phố", "0", "0"));
+                    if(languageS != null){
+                        if(languageS.contains("en")){
+                            cities.clear();
+                            cities.add(new CityModel(0, "City", "0", "0"));
+                        }
+                    }
                     for (CityModel city : cityList) {
                         cities.add(new CityModel(city.getId(), city.getTen(), city.getMap_lat(), city.getMap_long()));
                     }

@@ -7,6 +7,7 @@
 
         android:checkableBehavior="single">
 
+
         <item
             android:id="@+id/btn_home"
             android:icon="@drawable/house"
@@ -31,6 +32,10 @@
             android:id="@+id/btn_registerclass"
             android:icon="@drawable/re2"
             android:title="Đăng ký lớp học võ" />
+        <item
+            android:id="@+id/btn_product"
+            android:icon="@drawable/product"
+            android:title="Sản phẩm" />
         <item
             android:id="@+id/btn_cart"
             android:icon="@drawable/cart1"

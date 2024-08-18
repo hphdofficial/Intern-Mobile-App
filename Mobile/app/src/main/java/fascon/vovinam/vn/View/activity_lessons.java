@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
@@ -42,6 +44,7 @@ public class activity_lessons extends BaseActivity {
     private EditText search_edit_text;
     private BlankFragment loadingFragment;
     private String token;
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +53,9 @@ public class activity_lessons extends BaseActivity {
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Lý thuyết võ thuật");
-        myContentE.apply();
+
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         token = sharedPreferences.getString("access_token", null);
@@ -69,7 +73,12 @@ public class activity_lessons extends BaseActivity {
 
         search_edit_text = findViewById(R.id.search_edit_text);
         ImageButton search_button = findViewById(R.id.search_button);
-
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                search_edit_text.setHint("Find Theories");
+            }
+        }
         search_edit_text.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 SearchTheoryByName(search_edit_text.getText().toString());
@@ -236,6 +245,27 @@ public class activity_lessons extends BaseActivity {
         if (loadingFragment != null) {
             loadingFragment.dismiss();
             loadingFragment = null;
+        }
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
     }
 }

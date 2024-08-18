@@ -10,10 +10,12 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.Manifest;
@@ -36,6 +38,8 @@ import fascon.vovinam.vn.Model.AttendanceTeacher;
 import fascon.vovinam.vn.Model.ClassData;
 import fascon.vovinam.vn.Model.network.ApiServiceProvider;
 import fascon.vovinam.vn.Model.services.CheckinApiService;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -73,7 +77,7 @@ public class activity_teacher_checkin extends BaseActivity {
     private TextView txtClassName;
     private Button btnFilter, btnExport;
     private static final int PERMISSION_REQUEST_CODE = 1;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,9 +89,16 @@ public class activity_teacher_checkin extends BaseActivity {
             return insets;
         });
 
+        // Lấy ngày hiện tại
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = currentDate.format(formatter);
+        // Lấy ngày 1 tháng trước
+        LocalDate day1MonthBefore = getFirstDayOfPreviousMonth(currentDate);
+        String beforeFormattedDate = day1MonthBefore.format(formatter);
+        System.out.println("Day before: "+ beforeFormattedDate);
+
+
 
         txtClassName = findViewById(R.id.txtClassName);
 
@@ -99,6 +110,14 @@ public class activity_teacher_checkin extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Giao diện lịch sử điểm danh");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Attendance history interface");
+                myContentE.apply();
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -112,6 +131,66 @@ public class activity_teacher_checkin extends BaseActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
+
+        ImageButton btnShowFilter = findViewById(R.id.btnShowFilter);
+        btnShowFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View filterDialogView = LayoutInflater.from(activity_teacher_checkin.this).inflate(R.layout.bottom_sheet_dialog_filter_checkin, null);
+                BottomSheetDialog filterDialog = new BottomSheetDialog(activity_teacher_checkin.this);
+                filterDialog.setContentView(filterDialogView);
+                filterDialog.setCanceledOnTouchOutside(true);
+                filterDialog.setDismissWithAnimation(true);
+
+                Button btnFilterByName = filterDialog.findViewById(R.id.btnFilterNameMember);
+                Button btnFilterById = filterDialog.findViewById(R.id.btnFilterIdMember);
+                Button btnFilterBySDT = filterDialog.findViewById(R.id.btnFilterSDTMember);
+
+                EditText editFilterByName = filterDialog.findViewById(R.id.editTextNameMember);
+                EditText editFilterById = filterDialog.findViewById(R.id.editTextIdMember);
+                EditText editFilterBySDT = filterDialog.findViewById(R.id.editTextSDTMember);
+
+                btnFilterByName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String nameMember = editFilterByName.getText().toString();
+                        if(!nameMember.isEmpty()){
+                            filterCheckedByName("Bearer "+token, beforeFormattedDate, formattedDate, idClass, nameMember);
+                        }else{
+                            Toast.makeText(activity_teacher_checkin.this, "Nhập tên học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                btnFilterById.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if(!editFilterById.getText().toString().isEmpty()){
+                            int idMember = Integer.parseInt(editFilterById.getText().toString());
+                            filterCheckedById("Bearer "+token, beforeFormattedDate, formattedDate, idClass, idMember);
+                        }else{
+                            Toast.makeText(activity_teacher_checkin.this, "Nhập mã số học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                btnFilterBySDT.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String SDTMember = editFilterBySDT.getText().toString();
+                        System.out.println("SDT: "+SDTMember);
+                        if(!SDTMember.isEmpty()){
+                            filterCheckedBySDT("Bearer "+token, beforeFormattedDate, formattedDate, idClass, SDTMember);
+                        }else{
+                            Toast.makeText(activity_teacher_checkin.this, "Nhập SĐT học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                filterDialog.show();
+            }
+        });
 
         editTextDateEnd = findViewById(R.id.editTextDate3);
         editTextDateStart = findViewById(R.id.editTextDate2);
@@ -214,7 +293,7 @@ public class activity_teacher_checkin extends BaseActivity {
 
         showLoading();
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-        apiService.teacherViewCheckin("Bearer "+token, "2023-11-01", formattedDate, idClass).enqueue(new Callback<JsonObject>() {
+        apiService.teacherViewCheckin("Bearer "+token, beforeFormattedDate, formattedDate, idClass).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.isSuccessful()){
@@ -244,6 +323,7 @@ public class activity_teacher_checkin extends BaseActivity {
                                 for (String s : stringList){
                                     System.out.println("Date: "+ s);
                                 }
+                                listChecked.sort((event1, event2) -> event2.getDate().compareTo(event1.getDate()));
                             }
                             Checked_Teacher_adapter checkedTeacherAdapter = new Checked_Teacher_adapter(getApplicationContext(), listChecked);
                             RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
@@ -269,7 +349,24 @@ public class activity_teacher_checkin extends BaseActivity {
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
         });
+        textView20 = findViewById(R.id.textView20);
+        textView9 = findViewById(R.id.textView9);
+        textView2 = findViewById(R.id.textView2);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                editTextDateEnd.setHint("Enter date end");
+                editTextDateStart.setHint("Enter date start");
+                textView20.setText("Day");
+                textView9.setText("Name");
+                textView2.setText("Time check in");
+                btnFilter.setText("Filter");
+                btnExport.setText("Export excel");
+            }
+        }
     }
+    private TextView textView20;
+    private TextView textView9;
+    private TextView textView2;
 
     private void filterCheckedByDate(String token ,String startDate, String endDate, int idClass){
         showLoading();
@@ -302,10 +399,12 @@ public class activity_teacher_checkin extends BaseActivity {
                                         attendance.setDate(date);
                                         listChecked.add(attendance);
                                     }
+
                                 }
                                 for (String s : stringList){
                                     System.out.println("Date: "+ s);
                                 }
+                                listChecked.sort((event1, event2) -> event2.getDate().compareTo(event1.getDate()));
                             }
                             Checked_Teacher_adapter checkedTeacherAdapter = new Checked_Teacher_adapter(getApplicationContext(), listChecked);
                             RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
@@ -402,8 +501,6 @@ public class activity_teacher_checkin extends BaseActivity {
         datePickerDialog.show();
     }
 
-
-
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;
@@ -466,5 +563,231 @@ public class activity_teacher_checkin extends BaseActivity {
             e.printStackTrace();
             Toast.makeText(this, "Lỗi khi lưu file Excel", Toast.LENGTH_LONG).show();
         }
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
+
+    private void filterCheckedByName(String token ,String startDate, String endDate, int idClass, String name){
+        showLoading();
+        CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
+        apiService.teacherViewCheckinByName("Bearer "+ token, startDate, endDate, idClass, name).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.isSuccessful()){
+                    //Xóa list đang tồn tại
+                    listChecked.clear();
+                    JsonObject jsonObject = response.body();
+                    if(jsonObject!=null){
+                        Gson gson = new Gson();
+                        Type apiResponseType = new TypeToken<ApiResponse>(){}.getType();
+                        ApiResponse apiResponse = gson.fromJson(jsonObject, apiResponseType);
+
+                        if (apiResponse != null && "Thành công".equals(apiResponse.getSuccess())) {
+                            List<String> stringList = new ArrayList<>();
+                            List<ClassData> classDataList = apiResponse.getData();
+                            for (ClassData classData : classDataList) {
+                                //Tên lớp
+                                txtClassName.setText(classData.getClassName());
+
+                                for (Map.Entry<String, List<AttendanceTeacher>> entry : classData.getAttendance().entrySet()) {
+
+                                    String date = entry.getKey();
+                                    stringList.add(date);
+                                    List<AttendanceTeacher> attendanceList = entry.getValue();
+                                    for (AttendanceTeacher attendance : attendanceList) {
+                                        attendance.setDate(date);
+                                        listChecked.add(attendance);
+                                    }
+
+                                }
+                                for (String s : stringList){
+                                    System.out.println("Date: "+ s);
+                                }
+                                listChecked.sort((event1, event2) -> event2.getDate().compareTo(event1.getDate()));
+                            }
+                            Checked_Teacher_adapter checkedTeacherAdapter = new Checked_Teacher_adapter(getApplicationContext(), listChecked);
+                            RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                            recyclerView.setAdapter(checkedTeacherAdapter);
+
+                            hideLoading();
+                        }
+                    }
+
+
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+
+                    hideLoading();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                hideLoading();
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
+    }
+
+    private void filterCheckedById(String token ,String startDate, String endDate, int idClass, int idMember){
+        showLoading();
+        CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
+        apiService.teacherViewCheckinById("Bearer "+ token, startDate, endDate, idClass, idMember).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.isSuccessful()){
+                    //Xóa list đang tồn tại
+                    listChecked.clear();
+                    JsonObject jsonObject = response.body();
+                    if(jsonObject!=null){
+                        Gson gson = new Gson();
+                        Type apiResponseType = new TypeToken<ApiResponse>(){}.getType();
+                        ApiResponse apiResponse = gson.fromJson(jsonObject, apiResponseType);
+
+                        if (apiResponse != null && "Thành công".equals(apiResponse.getSuccess())) {
+                            List<String> stringList = new ArrayList<>();
+                            List<ClassData> classDataList = apiResponse.getData();
+                            for (ClassData classData : classDataList) {
+                                //Tên lớp
+                                txtClassName.setText(classData.getClassName());
+
+                                for (Map.Entry<String, List<AttendanceTeacher>> entry : classData.getAttendance().entrySet()) {
+
+                                    String date = entry.getKey();
+                                    stringList.add(date);
+                                    List<AttendanceTeacher> attendanceList = entry.getValue();
+                                    for (AttendanceTeacher attendance : attendanceList) {
+                                        attendance.setDate(date);
+                                        listChecked.add(attendance);
+                                    }
+
+                                }
+                                for (String s : stringList){
+                                    System.out.println("Date: "+ s);
+                                }
+                                listChecked.sort((event1, event2) -> event2.getDate().compareTo(event1.getDate()));
+                            }
+                            Checked_Teacher_adapter checkedTeacherAdapter = new Checked_Teacher_adapter(getApplicationContext(), listChecked);
+                            RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                            recyclerView.setAdapter(checkedTeacherAdapter);
+
+                            hideLoading();
+                        }
+                    }
+
+
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+
+                    hideLoading();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                hideLoading();
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
+    }
+
+    private void filterCheckedBySDT(String token ,String startDate, String endDate, int idClass, String SDT){
+        showLoading();
+        CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
+        apiService.teacherViewCheckinByPhone("Bearer "+ token, startDate, endDate, idClass, SDT).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.isSuccessful()){
+                    //Xóa list đang tồn tại
+                    listChecked.clear();
+                    JsonObject jsonObject = response.body();
+                    if(jsonObject!=null){
+                        Gson gson = new Gson();
+                        Type apiResponseType = new TypeToken<ApiResponse>(){}.getType();
+                        ApiResponse apiResponse = gson.fromJson(jsonObject, apiResponseType);
+
+                        if (apiResponse != null && "Thành công".equals(apiResponse.getSuccess())) {
+                            List<String> stringList = new ArrayList<>();
+                            List<ClassData> classDataList = apiResponse.getData();
+                            for (ClassData classData : classDataList) {
+                                //Tên lớp
+                                txtClassName.setText(classData.getClassName());
+
+                                for (Map.Entry<String, List<AttendanceTeacher>> entry : classData.getAttendance().entrySet()) {
+
+                                    String date = entry.getKey();
+                                    stringList.add(date);
+                                    List<AttendanceTeacher> attendanceList = entry.getValue();
+                                    for (AttendanceTeacher attendance : attendanceList) {
+                                        attendance.setDate(date);
+                                        listChecked.add(attendance);
+                                    }
+
+                                }
+                                for (String s : stringList){
+                                    System.out.println("Date: "+ s);
+                                }
+                                listChecked.sort((event1, event2) -> event2.getDate().compareTo(event1.getDate()));
+                            }
+                            Checked_Teacher_adapter checkedTeacherAdapter = new Checked_Teacher_adapter(getApplicationContext(), listChecked);
+                            RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                            recyclerView.setAdapter(checkedTeacherAdapter);
+
+                            hideLoading();
+                        }
+                    }
+
+
+                }else {
+                    System.out.println("Active: Call onResponse");
+                    Log.e("PostData", "Error: " + response.message());
+
+                    hideLoading();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                hideLoading();
+                System.out.println("Active: Call Onfail");
+                Log.e("PostData", "Failure: " + throwable.getMessage());
+            }
+        });
+    }
+
+    public static LocalDate getFirstDayOfPreviousMonth(LocalDate currentDate) {
+        // Lấy ngày đầu tiên của tháng hiện tại
+        LocalDate firstDayOfCurrentMonth = currentDate.withDayOfMonth(1);
+
+        // Trừ đi 1 tháng từ ngày đầu tiên của tháng hiện tại
+        LocalDate firstDayOfPreviousMonth = firstDayOfCurrentMonth.minusMonths(1);
+
+        return firstDayOfPreviousMonth;
     }
 }

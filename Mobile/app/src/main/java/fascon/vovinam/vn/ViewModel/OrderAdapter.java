@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import fascon.vovinam.vn.View.EditOrderFragment;
 import fascon.vovinam.vn.View.OrderActivity;
 import fascon.vovinam.vn.View.OrderDetailFragment;
 import fascon.vovinam.vn.R;
@@ -47,6 +48,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         public RecyclerView recyclerProductList;
         public Button buttonDetail;
         public Button buttonCancel;
+        public Button buttonEdit;
 
         public ViewHolder(View view) {
             super(view);
@@ -56,6 +58,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             recyclerProductList = view.findViewById(R.id.recycler_product_list);
             buttonDetail = view.findViewById(R.id.button_detail);
             buttonCancel = view.findViewById(R.id.button_cancel);
+            buttonEdit = view.findViewById(R.id.button_edit);
         }
     }
 
@@ -79,7 +82,16 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         holder.txtStatusOrder.setText(order.getGiao_hang().substring(0, 1).toUpperCase() + order.getGiao_hang().substring(1).toLowerCase());
 
         if (order.getGiao_hang().equals("chờ xác nhận")) {
+            holder.buttonEdit.setVisibility(View.VISIBLE);
             holder.buttonCancel.setVisibility(View.VISIBLE);
+            holder.buttonEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                    EditOrderFragment dialogFragment = EditOrderFragment.newInstance(order);
+                    dialogFragment.show(fragmentManager, "OrderDetailsDialogFragment");
+                }
+            });
             holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -134,7 +146,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             String sale = cart.getProduct().getSale();
             double percent = sale != null ? Double.parseDouble(sale) : 0;
             double priceAfterDiscount = unitPrice - (unitPrice * percent);
-
             totalPrice += priceAfterDiscount * cart.getQuantity();
         }
         holder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));

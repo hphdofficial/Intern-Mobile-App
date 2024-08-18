@@ -50,7 +50,9 @@ public class activity_checkin extends BaseActivity {
 
     private Checkin_adapter checkinAdapter;
     private BlankFragment loadingFragment;
-
+    private boolean in_time_class = false;
+    private Button btnDiemDanh;
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +78,15 @@ public class activity_checkin extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Giao diện điểm danh");
         myContentE.apply();
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Attendance interface");
+                myContentE.apply();
+                txtDate.setText("Day: "+formattedDate);
+            }
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -108,7 +119,7 @@ public class activity_checkin extends BaseActivity {
             }
         });
 
-        Button btnDiemDanh = findViewById(R.id.btnDiemDanh);
+        btnDiemDanh = findViewById(R.id.btnDiemDanh);
         String finalFormattedDate = formattedDate;
         btnDiemDanh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,10 +135,14 @@ public class activity_checkin extends BaseActivity {
                 currentTime = LocalTime.now();
                 // Định dạng thời gian theo kiểu 24 giờ
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
                 // Chuyển đổi thời gian hiện tại sang chuỗi theo định dạng đã cho
                 String formattedTime = currentTime.format(formatter);
 
+
+                // Lấy thời gian 1 tiếng sau so với giờ hiện tại
+                LocalTime oneHourLater = currentTime.plusHours(1);
+                // Chuyển đổi thời gian sang chuỗi theo định dạng đã cho
+                String beforeFormattedTime = oneHourLater.format(formatter);
                 System.out.println("Time: " + formattedTime);
 
 
@@ -157,7 +172,7 @@ public class activity_checkin extends BaseActivity {
                     System.out.println(checkin.getId());
                     attendee.setIn(formattedTime);
 //                    attendee.setIn("18:08");
-                    attendee.setOut("20:30");
+                    attendee.setOut(beforeFormattedTime);
                     attendees.add(attendee);
                 }
 
@@ -177,8 +192,13 @@ public class activity_checkin extends BaseActivity {
                             Intent intent1 = new Intent(activity_checkin.this, activity_teacher_checkin.class);
                             intent1.putExtra("id", idClass);
                             startActivity(intent1);
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    Toast.makeText(activity_checkin.this, "Roll attendance successful", Toast.LENGTH_SHORT).show();
 
-                            Toast.makeText(activity_checkin.this, "Điểm danh thành công", Toast.LENGTH_SHORT).show();
+                                }
+                            }else                             Toast.makeText(activity_checkin.this, "Điểm danh thành công", Toast.LENGTH_SHORT).show();
+
                         }else {
                             try {
                                 // Xử lý phản hồi lỗi từ server
@@ -208,8 +228,46 @@ public class activity_checkin extends BaseActivity {
 
             }
         });
+        textView19 = findViewById(R.id.textView19);
+        textView9 = findViewById(R.id.textView9);
+        textView6 = findViewById(R.id.textView6);
+        textView7 = findViewById(R.id.textView7);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                btnHistory.setText("History checkin");
+                textView19.setText("Checkin");
+                textView9.setText("Code");
+                textView6.setText("Name");
+                textView7.setText("Present");
+                btnDiemDanh.setText("Save");
+            }
+        }
     }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
+    private TextView textView7;
+    private TextView textView6;
+    private TextView textView19;
+    private TextView textView9;
     private void fetchMemberForCheckin(int idClass, String token){
         showLoading();
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
@@ -219,6 +277,14 @@ public class activity_checkin extends BaseActivity {
                 if(response.isSuccessful()){
                     JsonObject jsonObject = response.body();
                     Gson gson = new Gson();
+                    Type BooleanType = new TypeToken<Boolean>() {}.getType();
+                    in_time_class = gson.fromJson(jsonObject.get("in_class_time"), BooleanType);
+                    System.out.println("Time class true: "+ in_time_class);
+                    if(in_time_class){
+                        btnDiemDanh.setVisibility(View.VISIBLE);
+                    }else{
+                        btnDiemDanh.setVisibility(View.INVISIBLE);
+                    }
                     Type checkinMemberListType = new TypeToken<List<CheckinMemberModel>>() {}.getType();
                     List<CheckinMemberModel> checkinMembers = gson.fromJson(jsonObject.get("data"), checkinMemberListType);
                     if(checkinMembers == null){

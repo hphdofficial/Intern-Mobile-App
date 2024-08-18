@@ -68,7 +68,28 @@ public class Purchase extends BaseActivity {
     private TextView address;
     private List<ProductModel> productList;
     private BlankFragment loadingFragment;
+    private String languageS;
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +113,14 @@ public class Purchase extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Thanh toán");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Payment");
+                myContentE.apply();
+            }
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -122,9 +150,40 @@ public class Purchase extends BaseActivity {
         });
 
         // địa chỉ
+        listPa = findViewById(R.id.listPa);
+        addessP = findViewById(R.id.addessP);
+        chooseV = findViewById(R.id.chooseV);
+        pp = findViewById(R.id.pp);
+        detail = findViewById(R.id.detail);
+        suma = findViewById(R.id.suma);
+        sumD = findViewById(R.id.sumD);
+        sumT = findViewById(R.id.sumT);
+        sumPa = findViewById(R.id.sumPa);
 
-
+        if(languageS!= null ){
+            if(languageS.contains("en")){
+                addessP.setText("Delivery address");
+                listPa.setText("List product");
+                chooseV.setText("Choose code voucher");
+                pp.setText("Payment method");
+                detail.setText("Payment details");
+                suma.setText("Total cost of product");
+                sumD.setText("Money discount");
+                sumT.setText("Money transport");
+                sumPa.setText("Sum payment");
+                btn_payment.setText("Payment");
+            }
+        }
     }
+private TextView addessP;
+    private TextView listPa;
+    private TextView chooseV;
+    private TextView pp;
+    private TextView detail;
+    private TextView suma;
+    private TextView sumD;
+    private TextView sumT;
+    private TextView sumPa;
 
     private void showLoading() {
         loadingFragment = new BlankFragment();
@@ -435,10 +494,19 @@ public class Purchase extends BaseActivity {
     public void CreatePayment() {
         paymentSpinner = findViewById(R.id.paymentww);
         paymentList = new ArrayList<>();
+
         // Thêm dữ liệu mẫu vào danh sách voucher
         paymentList.add("Thanh toán trực tiếp");
         paymentList.add("Thanh toán thẻ");
         paymentList.add("Thanh toán Qr");
+        if(languageS != null){
+            if(languageS.contains("en")){
+                paymentList.clear();
+                paymentList.add("Direct payment");
+                paymentList.add("Card payment");
+                paymentList.add("Payment Qr");
+            }
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.layout_textviewsize, paymentList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         paymentSpinner.setAdapter(adapter);

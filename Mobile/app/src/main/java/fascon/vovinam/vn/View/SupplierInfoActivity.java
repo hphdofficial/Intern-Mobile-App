@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +25,30 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SupplierInfoActivity extends BaseActivity {
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     private int supplierID;
     private BlankFragment loadingFragment;
+    private String languageS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +65,14 @@ public class SupplierInfoActivity extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Thông tin nhà cung cấp");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Supplier Information");
+                myContentE.apply();
+            }
+        }
         // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -113,6 +142,11 @@ public class SupplierInfoActivity extends BaseActivity {
         phoneTextView.setText(supplier.getPhone());
         emailTextView.setText(supplier.getEmail());
 
+        if(languageS != null){
+            if(languageS.contains("en")){
+                btnViewAllProducts.setText("Show all product from supplier");
+            }
+        }
         btnViewAllProducts.setOnClickListener(view -> {
             Intent productIntent = new Intent(SupplierInfoActivity.this, SupplierProductActivity.class);
             productIntent.putExtra("SupplierID", supplierID); // Pass the SupplierID to the next activity

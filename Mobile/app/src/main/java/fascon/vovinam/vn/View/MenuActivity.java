@@ -1,5 +1,6 @@
 package fascon.vovinam.vn.View;
 
+import fascon.vovinam.vn.Model.ProductSaleDownModel;
 import fascon.vovinam.vn.Model.addressModel;
 import fascon.vovinam.vn.R;
 
@@ -26,8 +27,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +62,8 @@ import fascon.vovinam.vn.Model.services.ClubApiService;
 import fascon.vovinam.vn.Model.services.NewsApiService;
 import fascon.vovinam.vn.Model.services.PaymentAPI;
 import fascon.vovinam.vn.Model.services.UserApiService;
+
+import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -73,8 +80,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.math3.analysis.function.Max;
+import org.apache.poi.ss.formula.functions.T;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -103,7 +116,7 @@ public class MenuActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
-
+        languageS = sharedPreferences.getString("language",null);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_menu);
@@ -131,6 +144,9 @@ public class MenuActivity extends BaseActivity {
                 .into(imageView);*/
 
         linearinfor = findViewById(R.id.linearinfor);
+        sale = findViewById(R.id.sale);
+        productsale1 = findViewById(R.id.productsale1);
+        test1 = findViewById(R.id.test1);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -138,7 +154,15 @@ public class MenuActivity extends BaseActivity {
         // Thêm hoặc thay thế Fragment mới
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Trang Chính");
+        if(languageS == null){
+            myContentE.putString("title", "Trang Chính");
+        }
+        else if(languageS.contains("en")){
+            myContentE.putString("title", "Main Page");
+        }else {
+            myContentE.putString("title", "Trang Chính");
+        }
+
         myContentE.apply();
 
 
@@ -165,6 +189,8 @@ public class MenuActivity extends BaseActivity {
       //  loadUserData();
         hotP = findViewById(R.id.hotP);
         menu = findViewById(R.id.menu);
+        saleOp = findViewById(R.id.saleOp);
+        qick = findViewById(R.id.qick);
         getListNew();
         getProductP();
 
@@ -172,7 +198,16 @@ public class MenuActivity extends BaseActivity {
         setEventClick();
         RemoveView();
         ShowMenu();
+
+        String token = sharedPreferences.getString("access_token", null);
+        String role = decodeRoleFromToken(token);
+
         createList();
+
+        createListSaleProduct();
+        CreateSale2();
+        CreateSale();
+
 
         // Get current location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MenuActivity.this);
@@ -185,6 +220,34 @@ public class MenuActivity extends BaseActivity {
 
 
     }
+    private LinearLayout productsale1;
+    private LinearLayout test1;
+    public void createListSaleProduct(){
+        String token = sharedPreferences.getString("access_token", null);
+        String role = decodeRoleFromToken(token);
+        if(role.contains("0")){
+            PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+            Call<List<ProductSaleDownModel>> call = apiService.GetSaleDownProduct();
+            call.enqueue(new Callback<List<ProductSaleDownModel>>() {
+                @Override
+                public void onResponse(Call<List<ProductSaleDownModel>> call, Response<List<ProductSaleDownModel>> response) {
+                    if(response.isSuccessful()){
+                        List<ProductSaleDownModel> list = response.body();
+                        CreateItemSale(list,9);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ProductSaleDownModel>> call, Throwable t) {
+
+                }
+            });
+
+
+        }
+    }
+
+
 
     private void getCurrentLocation() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -195,14 +258,18 @@ public class MenuActivity extends BaseActivity {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
                         if (locationResult == null) {
-                            Toast.makeText(MenuActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(MenuActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
-                            Toast.makeText(MenuActivity.this, "Truy cập vị trí hiện tại thành công", Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("location_lat", String.valueOf(location.getLatitude()));
+                            editor.putString("location_long", String.valueOf(location.getLongitude()));
+                            editor.apply();
+//                            Toast.makeText(MenuActivity.this, "Truy cập vị trí hiện tại thành công", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MenuActivity.this, "Không lấy được vị trí hiện tại", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(MenuActivity.this, "Không lấy được vị trí hiện tại", Toast.LENGTH_SHORT).show();
                         }
                         fusedLocationProviderClient.removeLocationUpdates(this);
                     }
@@ -253,7 +320,7 @@ public class MenuActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 getCurrentLocation();
             } else {
-                Toast.makeText(this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -265,39 +332,43 @@ public class MenuActivity extends BaseActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkLocationSettings();
             } else {
-                Toast.makeText(this, "Bạn đã từ chối truy cập vị trí hiện tại", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Bạn đã từ chối truy cập vị trí hiện tại", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private FlexboxLayout hotP;
+    private LinearLayout hotP;
     private FlexboxLayout menu;
+    private LinearLayout sale;
     private List<ProductSaleModel> listP = new ArrayList<>();
     private List<NewsModel> listNew = new ArrayList<>();
     private List<LinearLayout> listMenu = new ArrayList<>();
 
 
     public void getProductP(){
-        PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-        Call<List<ProductSaleModel>> call = apiService.GetSaleProduct();
+        String token = sharedPreferences.getString("access_token", null);
+        String role = decodeRoleFromToken(token);
+        if(role.contains("0")) {
+            PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+            Call<List<ProductSaleModel>> call = apiService.GetSaleProduct();
 
-        call.enqueue(new Callback<List<ProductSaleModel>>() {
-            @Override
-            public void onResponse(Call<List<ProductSaleModel>> call, Response<List<ProductSaleModel>> response) {
-                if(response.isSuccessful()){
-                    listP = response.body();
-                    CreateItemP(listP);
+            call.enqueue(new Callback<List<ProductSaleModel>>() {
+                @Override
+                public void onResponse(Call<List<ProductSaleModel>> call, Response<List<ProductSaleModel>> response) {
+                    if (response.isSuccessful()) {
+                        listP = response.body();
+                        CreateItemP(listP, 9);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<ProductSaleModel>> call, Throwable t) {
+                @Override
+                public void onFailure(Call<List<ProductSaleModel>> call, Throwable t) {
 
-            }
-        });
-
+                }
+            });
 
 
+        }
 
 
 
@@ -306,7 +377,8 @@ public class MenuActivity extends BaseActivity {
         String token = sharedPreferences.getString("access_token", null);
         String role = decodeRoleFromToken(token);
         if(role.contains("0")){
-
+            productsale1.setVisibility(View.VISIBLE);
+            test1.setVisibility(View.VISIBLE);
             // call club
             ClubApiService service = ApiServiceProvider.getClubApiService();
             Call<Club> call = service.getDetailClubMember("Bearer" + token);
@@ -371,7 +443,8 @@ public class MenuActivity extends BaseActivity {
             });
 
         }else {
-
+            productsale1.setVisibility(View.GONE);
+            test1.setVisibility(View.GONE);
             RemoveViewHLV();
             hideLoading();
         }
@@ -415,6 +488,13 @@ public class MenuActivity extends BaseActivity {
         menu.removeView(btn_historyclass1);
         menu.removeView(btn_register);
         menu.removeView(btn_logout);
+        menu.removeView(btn_product);
+        menu.removeView(btn_cart);
+        menu.removeView(btn_new);
+        menu.removeView(btn_sup);
+        menu.removeView(btn_history);
+        menu.removeView(btn_club);
+//        menu.removeView(btn_logout);
     }
     public void RemoveViewUser(){
         menu.removeView(btn_order_status);
@@ -435,12 +515,6 @@ public class MenuActivity extends BaseActivity {
         menu.removeView(btn_approve);
     }
     public void RemoveViewHLV(){
-        menu.removeView(btn_club);
-        menu.removeView(btn_cart);
-        menu.removeView(btn_new);
-        menu.removeView(btn_product);
-        menu.removeView(btn_sup);
-        menu.removeView(btn_history);
 
 
     }
@@ -460,6 +534,7 @@ public class MenuActivity extends BaseActivity {
         }
 
     }
+    private String languageS = null;
     private LinearLayout CreateLinearLayout(LinearLayout linear, String content, String linkImage){
         linear = new LinearLayout(this);
         FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(
@@ -502,7 +577,17 @@ public class MenuActivity extends BaseActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 150
         ));
-        textView.setText(content);
+
+        String tran = "";
+                if(languageS == null){
+                     tran = TranslateText(content,0);
+                }
+                else if(languageS.contains("en")){
+                     tran = TranslateText(content,1);
+                }else {
+                    tran = TranslateText(content,0);
+                }
+        textView.setText(tran);
         textView.setTextColor(Color.BLACK);
         textView.setTextSize(17);
         linear.addView(cardView);
@@ -572,17 +657,251 @@ public class MenuActivity extends BaseActivity {
         });
         
     }
-    public void CreateItemP(List<ProductSaleModel> list){
-        hotP.removeAllViews();
-        int count = 1;
+
+    public void CreateItemSale(List<ProductSaleDownModel> list, int size ){
+        sale.removeAllViews();
+        int screenWidth = getScreenWidth(this);
+        int count = 0;
         if(list.size()>0){
-            while (count <= list.size() && count<=3){
-                ProductSaleModel p = list.get(list.size()-count);
+            while (count < list.size() && count<size){
+                ProductSaleDownModel p = list.get(count);
 
 
                 LinearLayout linear = new LinearLayout(this);
                 FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(
-                        0, // Width sẽ được xác định bởi layout_flexBasisPercent
+                        screenWidth/3-10,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                layoutParams.setFlexShrink(0);
+                linear.setGravity(Gravity.CENTER);
+                layoutParams.setMargins(10,0,10,10);
+                layoutParams.setFlexBasisPercent(0.30f); // Chiếm 1/3 chiều rộng (33%)
+                linear.setLayoutParams(layoutParams);
+                linear.setOrientation(LinearLayout.VERTICAL);
+                CardView cardView = new CardView(this);
+                cardView.setId(View.generateViewId());
+                cardView.setLayoutParams(new ViewGroup.LayoutParams(
+                        150,150
+                ));
+                cardView.setCardElevation(4);
+                //  cardView.setRadius(150); // Thiết lập corner radius
+
+                // Tạo ImageView và thêm vào CardView
+                ImageView imageView = new ImageView(this);
+                imageView.setId(View.generateViewId());
+                imageView.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                ));
+                String imageName = p.getLinkImage(); // Tên tệp hình ảnh mà bạn muốn đặt
+                if(imageName.length()> 10){
+
+                    Picasso.get()
+                            .load(imageName)
+                            .placeholder(placeholderResourceId ) // Hình ảnh placeholder
+                            .error(placeholderResourceId) // Hình ảnh sẽ hiển thị nếu tải lỗi
+                            .into(imageView);
+                }
+
+
+                cardView.addView(imageView);
+
+
+                // tạo văn bản
+                TextView textView = new TextView(this);
+
+                textView.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+                textView.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        100
+                ));
+                textView.setText(p.getName());
+                textView.setTextColor(Color.BLUE);
+                textView.setTextSize(12);
+
+                TextView textView1 = new TextView(this);
+
+                textView1.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+
+                textView1.setText("Giá: " + String.format("%,.0f đ", p.getPrice()));
+                textView1.setTextColor(Color.GRAY);
+                textView1.setTextSize(12);
+
+                TextView textView2 = new TextView(this);
+
+                textView2.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+                String down = Double.parseDouble(p.getSale())*100+"";
+                down = down.replace(".0","");
+                Double money = p.getPrice() - Double.parseDouble(down)/100*p.getPrice();
+
+                textView2.setText("Giảm giá: "+down+"% " + "\n Tổng: " + String.format("%,.0f đ", money));
+                textView2.setTextColor(Color.RED);
+                textView2.setTextSize(12);
+
+                if(languageS != null){
+                    if(languageS.contains("en")){
+                        textView1.setText(TranslateText("Giá",1)+": " + String.format("%,.0f đ", p.getPrice()));
+                        textView2.setText(TranslateText("Giảm giá",1)+": "+down+"% " + "\n"+ TranslateText("Tổng",1)+":"  + String.format("%,.0f đ", money));
+                    }
+                }
+                linear.addView(cardView);
+                linear.addView(textView);
+                linear.addView(textView1);
+                linear.addView(textView2);
+
+                linear.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent iten = new Intent(getApplicationContext(),activity_item_detail.class);
+                        iten.putExtra("id",p.getId());
+                        iten.putExtra("IDSupplier",0);
+                        iten.putExtra("categoryName",p.getNameSup());
+                        startActivity(iten);
+                    }
+                });
+
+
+
+
+                sale.addView(linear);
+
+                count = count+1;
+
+            }
+
+            //setContentView(linearinfor);
+        }
+    }
+    private int max = Integer.MAX_VALUE;
+    private int max1= Integer.MAX_VALUE;
+    private Spinner saleOp;
+    private Spinner qick;
+    public void CreateSale() {
+
+        List<String> list = new ArrayList<>();
+        // Thêm dữ liệu mẫu vào danh sách voucher
+        if(languageS == null){
+            list.add("Hiển thị 9");
+            list.add("Hiển thị 30");
+            list.add("Hiển thị tất cả");
+        }else if(languageS.contains("en")){
+            list.add("Show 9");
+            list.add("Show 30");
+            list.add("Show all");
+        }else {
+            list.add("Hiển thị 9");
+            list.add("Hiển thị 30");
+            list.add("Hiển thị tất cả");
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.layout_textviewsize, list);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        saleOp.setAdapter(adapter);
+        saleOp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedItem = adapterView.getItemAtPosition(i).toString();
+
+                if(selectedItem.contains("9"))
+                    max1 = 10;
+                else
+                if(selectedItem.contains("30"))
+                    max1 = 30;
+                else
+                    max1 = Integer.MAX_VALUE;
+                PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+                Call<List<ProductSaleDownModel>> call = apiService.GetSaleDownProduct();
+                call.enqueue(new Callback<List<ProductSaleDownModel>>() {
+                    @Override
+                    public void onResponse(Call<List<ProductSaleDownModel>> call, Response<List<ProductSaleDownModel>> response) {
+                        if(response.isSuccessful()){
+                            List<ProductSaleDownModel> list = response.body();
+                            CreateItemSale(list,max1);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<ProductSaleDownModel>> call, Throwable t) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+    public void CreateSale2() {
+
+        List<String> list = new ArrayList<>();
+        // Thêm dữ liệu mẫu vào danh sách voucher
+        if(languageS == null){
+            list.add("Hiển thị 9");
+            list.add("Hiển thị 30");
+            list.add("Hiển thị tất cả");
+        }else if(languageS.contains("en")){
+            list.add("Show 9");
+            list.add("Show 30");
+            list.add("Show all");
+        }else {
+            list.add("Hiển thị 9");
+            list.add("Hiển thị 30");
+            list.add("Hiển thị tất cả");
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.layout_textviewsize, list);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        qick.setAdapter(adapter);
+        qick.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedItem = adapterView.getItemAtPosition(i).toString();
+
+                if(selectedItem.contains("9"))
+                    max = 10;
+                else
+                if(selectedItem.contains("30"))
+                    max = 30;
+                else
+                    max = Integer.MAX_VALUE;
+
+                PaymentAPI apiService = APIServicePayment.getPaymentApiService();
+                Call<List<ProductSaleModel>> call = apiService.GetSaleProduct();
+
+                call.enqueue(new Callback<List<ProductSaleModel>>() {
+                    @Override
+                    public void onResponse(Call<List<ProductSaleModel>> call, Response<List<ProductSaleModel>> response) {
+                        if(response.isSuccessful()){
+                            listP = response.body();
+                            CreateItemP(listP,max);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<ProductSaleModel>> call, Throwable t) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+    public void CreateItemP(List<ProductSaleModel> list,int size){
+        hotP.removeAllViews();
+        int screenWidth = getScreenWidth(this);
+        int count = 0;
+        if(list.size()>0){
+            while (count < list.size() && count<=size){
+                ProductSaleModel p = list.get(count);
+                LinearLayout linear = new LinearLayout(this);
+                FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(
+                        screenWidth/3-10, // Width sẽ được xác định bởi layout_flexBasisPercent
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
                 linear.setGravity(Gravity.CENTER);
@@ -606,8 +925,9 @@ public class MenuActivity extends BaseActivity {
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 ));
                 String imageName = p.getLinkImage(); // Tên tệp hình ảnh mà bạn muốn đặt
-                Picasso.get().load(imageName).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageView);
-
+                if(imageName.length()> 10) {
+                    Picasso.get().load(imageName).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageView);
+                }
                 cardView.addView(imageView);
 
 
@@ -636,7 +956,12 @@ public class MenuActivity extends BaseActivity {
                 textView2.setText("Đã bán: "+p.getQuantity());
                 textView2.setTextColor(Color.GRAY);
                 textView2.setTextSize(12);
-
+                if(languageS != null){
+                    if(languageS.contains("en")){
+                        textView1.setText("Price: " + String.format("%,.0f đ", p.getPrice()));
+                        textView2.setText(TranslateText("Đã bán",1)+": "+p.getQuantity());
+                    }
+                }
                 linear.addView(cardView);
                 linear.addView(textView);
                 linear.addView(textView1);
@@ -671,7 +996,19 @@ public class MenuActivity extends BaseActivity {
         linearinfor.removeAllViews();
         TextView t = new TextView(getApplicationContext());
 
-        t.setText("Thông báo" + " (NEW)");
+        String s = sharedPreferences.getString("language",null);
+        if (s != null){
+            if(s.contains("en")){
+                t.setText("Notification" + " (NEW)");
+            }
+            else {
+                t.setText("Thông báo" + " (NEW)");
+            }
+
+        }
+        else {
+            t.setText("Thông báo" + " (NEW)");
+        }
         t.setTextColor(Color.RED);
         t.setTextSize(20);
         // Áp dụng animation chữ chạy
@@ -815,9 +1152,20 @@ public class MenuActivity extends BaseActivity {
         text = findViewById(R.id.languageText);
         String language = text.getText()+"";
         if(view.getId() == R.id.btn_change){
+
+           SharedPreferences.Editor edit =  sharedPreferences.edit();
+
             if(language.contains("VN")){
+                edit.putString("language","en");
                 text.setText("ENG");
-            }else text.setText("VN");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
     }
     @SuppressLint("RestrictedApi")
@@ -836,7 +1184,7 @@ public class MenuActivity extends BaseActivity {
 
     private ImageView img_avatar_menu;
     private ImageView test;
-    private ImageView test1;
+
     private ImageView test2;
     private ImageView test3;
     private ImageView test4;
@@ -1121,6 +1469,7 @@ public class MenuActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         loadUserData();
+        SetLanguage();
     }
     private void showLoading() {
         loadingFragment = new BlankFragment();
@@ -1131,5 +1480,72 @@ public class MenuActivity extends BaseActivity {
             loadingFragment.dismiss();
             loadingFragment = null;
         }
+    }
+
+    public void SetLanguage(){
+
+        SharedPreferences shared = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+       String s = shared.getString("language",null);
+       if(s == null){
+//           Toast.makeText(getApplicationContext(),"abc",Toast.LENGTH_SHORT).show();
+           translateVN();
+       }else if(s.contains("en")){
+           translateEng();
+       }else {
+           translateVN();
+       }
+    }
+    public void translateEng(){
+
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Main Page");
+        myContentE.apply();
+        TextView test = findViewById(R.id.test);
+        test.setText("Discounted products");
+
+        TextView productsale = findViewById(R.id.productsale);
+        productsale.setText("Best selling product");
+
+
+    }
+    public String TranslateText(String text, int k){
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.language);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            String s = "";
+            while ((line = reader.readLine()) != null) {
+                if(line.contains(text)){
+                    String temp[] = line.split(",");
+                    if(k == 0){
+                        s =  temp[0];
+                    } else s= temp[1];
+                    break;
+                }
+
+            }
+
+            reader.close();
+            return s;
+            // Use the fileContent string
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public void translateVN(){
+        SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myContentE = myContent.edit();
+        myContentE.putString("title", "Trang chính");
+        myContentE.apply();
+        TextView test = findViewById(R.id.test);
+        test.setText("Sản phẩm giảm giá");
+
+        TextView productsale = findViewById(R.id.productsale);
+        productsale.setText("Sản phẩm bán chạy");
+
     }
 }

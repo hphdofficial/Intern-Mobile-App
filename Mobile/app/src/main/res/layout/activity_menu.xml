@@ -13,11 +13,15 @@
     <!-- Icon bên trái -->
 
 
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_below="@+id/fragment_container"
+    android:layout_height="wrap_content">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/disabled_button"
-        android:layout_below="@+id/fragment_container"
+
         android:layout_centerInParent="true">
 
         <LinearLayout
@@ -94,55 +98,130 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/productsale"
+      <LinearLayout
+          android:background="@color/white"
+         android:id="@+id/productsale1"
+          android:layout_width="match_parent"
+          app:layout_constraintTop_toBottomOf="@id/linearinfor"
+          android:layout_height="wrap_content">
+          <TextView
+              android:id="@+id/productsale"
+              android:layout_width="0dp"
+              android:layout_weight="10"
+              android:layout_height="wrap_content"
+              android:paddingLeft="20dp"
+              android:layout_marginTop="10dp"
+              android:background="@color/white"
+              android:paddingVertical="10dp"
+              android:text="Sản phẩm bán chạy"
+              android:textColor="#FF0000"
+              android:textSize="18sp"
+              android:textStyle="bold"
+              />
+          <Spinner
+              android:id="@+id/qick"
+              android:layout_marginRight="5dp"
+              android:layout_width="0dp"
+              android:layout_marginTop="10dp"
+              android:layout_weight="5"
+              android:layout_height="match_parent"
+
+              android:spinnerMode="dropdown" />
+      </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/zzz"
+            android:scrollbars="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:paddingVertical="10dp"
-            android:text="Sản phẩm bán chạy"
-            android:textColor="#FF0000"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/linearinfor" />
-
-        <com.google.android.flexbox.FlexboxLayout
+            app:layout_constraintTop_toBottomOf="@+id/productsale1"
+            android:fillViewport="true">
+            <LinearLayout
 
 
-            android:id="@+id/hotP"
+                android:id="@+id/hotP"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                >
+                <!-- Các phần tử con ở đây -->
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+ <LinearLayout
+     android:background="@color/white"
+     android:id="@+id/test1"
+     app:layout_constraintTop_toBottomOf="@id/zzz"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal">
+     <TextView
+         android:id="@+id/test"
+         android:layout_width="0dp"
+         android:layout_weight="10"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="10dp"
+         android:background="@color/white"
+         android:paddingVertical="10dp"
+         android:paddingLeft="20dp"
+         android:text="Sản phẩm giảm giá"
+         android:textColor="#FF0000"
+         android:textSize="18sp"
+         android:textStyle="bold"
+
+         />
+     <Spinner
+
+         android:textAlignment="center"
+         android:id="@+id/saleOp"
+         android:layout_marginRight="5dp"
+         android:layout_width="0dp"
+         android:layout_weight="5"
+         android:layout_marginTop="10dp"
+         android:layout_height="match_parent"
+         android:spinnerMode="dropdown" />
+ </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/za"
+            android:scrollbars="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
             android:background="@color/white"
-            app:alignItems="stretch"
-            app:flexDirection="row"
-            app:flexWrap="wrap"
-            app:justifyContent="center"
-            app:layout_constraintTop_toBottomOf="@+id/productsale">
-            <!-- Các phần tử con ở đây -->
 
-        </com.google.android.flexbox.FlexboxLayout>
+            app:layout_constraintTop_toBottomOf="@+id/test1"
+            >
+
+            <LinearLayout
+                android:id="@+id/sale"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+
+
+
+        </HorizontalScrollView>
 
         <ScrollView
             android:id="@+id/text1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/white"
             android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hotP">
+            app:layout_constraintTop_toBottomOf="@+id/za"
+           >
 
             <com.google.android.flexbox.FlexboxLayout
                 android:id="@+id/menu"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:paddingTop="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+
                 android:background="@color/white"
                 app:alignItems="stretch"
                 app:flexDirection="row"
@@ -154,6 +233,7 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
 
 
     <FrameLayout

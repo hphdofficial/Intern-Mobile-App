@@ -3,10 +3,12 @@ package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 import android.content.Context;
@@ -32,7 +34,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UpdateInfoMember extends BaseActivity {
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     private EditText editTextUsername, editTextEmail, editTextTen, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotengiamho, editTextDienthoaigiamho, editTextChieucao, editTextCannang;
     private RadioGroup radioGroupGioitinh;
     private RadioButton radioNam, radioNu;
@@ -41,18 +63,26 @@ public class UpdateInfoMember extends BaseActivity {
     private static final String NAME_SHARED = "login_prefs";
 
     private BlankFragment loadingFragment;
-
+    private String languageS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_info_member);
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
+
         myContentE.putString("title", "Chỉnh sửa thông tin");
         myContentE.apply();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Edit Information");
+                myContentE.apply();
+            }
+        }
 
         // chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -105,6 +135,25 @@ public class UpdateInfoMember extends BaseActivity {
         sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
 
         buttonUpdateInfo.setOnClickListener(v -> updateInfo());
+
+        if(languageS != null){
+            if(languageS.contains("en")){
+
+                editTextUsername.setText("Login name");
+                editTextEmail.setHint("Enter Email");
+                editTextTen.setHint("Enter Name");
+                editTextChieucao.setHint("Enter Height");
+                editTextCannang.setHint("Enter Weight");
+                editTextDienthoai.setHint("Enter Phone");
+                editTextDiachi.setHint("Enter Address");
+                editTextNgaysinh.setHint("Birthday ((YYYY-MM-DD))");
+                editTextHotengiamho.setHint("Guardian");
+                editTextDienthoaigiamho.setHint("Phone Guardian");
+                radioNam.setText("Male");
+                radioNu.setText("Female");
+                buttonUpdateInfo.setText("Update Information");
+            }
+        }
     }
 
 
@@ -161,10 +210,20 @@ public class UpdateInfoMember extends BaseActivity {
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                         hideLoading();
                         if (response.isSuccessful() && response.body() != null) {
+                            // Thông báo cập nhật thành công
                             Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+
+                            // Tạo Intent để quay lại ActivityDetailMember và gửi thông tin cập nhật
                             Intent intent = new Intent(UpdateInfoMember.this, ActivityDetailMember.class);
+                            intent.putExtra("ngaysinh", editTextNgaysinh.getText().toString());
+                            intent.putExtra("hoten_giamho", editTextHotengiamho.getText().toString());
+                            intent.putExtra("dienthoai_giamho", editTextDienthoaigiamho.getText().toString());
+
+                            // Đặt flag để xóa các activity trước đó và bắt đầu activity mới
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+
+                            // Kết thúc activity hiện tại để quay lại ActivityDetailMember
                             finish();
                         } else {
                             handleErrorResponse(response);
@@ -177,6 +236,7 @@ public class UpdateInfoMember extends BaseActivity {
                         Toast.makeText(UpdateInfoMember.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
         } else {
             Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
@@ -187,6 +247,16 @@ public class UpdateInfoMember extends BaseActivity {
         try {
             String errorMessage = response.errorBody().string();
             JSONObject errorObject = new JSONObject(errorMessage);
+
+            // Kiểm tra lỗi trả về từ server
+            if (errorObject.has("error")) {
+                String serverError = errorObject.getString("error");
+                if (serverError.contains("họ tên và số điện thoại phụ huynh")) {
+                    Toast.makeText(UpdateInfoMember.this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18 tuổi.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
             JSONObject errors = errorObject.getJSONObject("error");
 
             if (errors.has("username")) {
@@ -205,8 +275,6 @@ public class UpdateInfoMember extends BaseActivity {
             e.printStackTrace();
         }
     }
-
-
 
 
     private boolean isValidInput() {

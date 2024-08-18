@@ -2,6 +2,7 @@ package fascon.vovinam.vn.ViewModel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
     Context context;
-
+    private String languageS;
     List<ProductModel> ProductList;
 
 //    // Sử dụng HashSet để loại bỏ các phần tử trùng lặp
@@ -44,6 +45,8 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         String txtItemName = ProductList.get(i).getProductName();
         viewHolder.txtProductName.setText(txtItemName);
 
@@ -63,6 +66,12 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
             viewHolder.txtAmazing.setVisibility(View.INVISIBLE);
         }else{
             viewHolder.txtAmazing.setVisibility(View.VISIBLE);
+        }
+        if(languageS != null){
+            if(languageS.contains("en")){
+                viewHolder.txtProductInStock.setText("Remaining: "+txtProductInStock);
+                viewHolder.txtAmazing.setText("Outstanding!");
+            }
         }
 
         String sale = ProductList.get(i).getSale();

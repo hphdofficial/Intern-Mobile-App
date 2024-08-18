@@ -38,7 +38,7 @@ public class payment extends BaseActivity {
     private View borderView;*/
     private Button payment;
     private ImageView sub_menu;
-
+    private String languageS;
 
     private TextView textViewFeeAmount;
     private TextView textViewHealthStatus;
@@ -47,7 +47,31 @@ public class payment extends BaseActivity {
     String id_class = null;
     private String link = null;
     private ImageView qrcode;
+    private TextView Title;
+    private TextView textViewHealthStatusLabel;
+    private  TextView textViewInstructor;
+    private TextView textViewCourseFee;
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +81,8 @@ public class payment extends BaseActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
+        }); SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
 
 /*        frameLayout = findViewById(R.id.frameLayout);
         imageView = findViewById(R.id.payment_momo);
@@ -68,9 +93,22 @@ public class payment extends BaseActivity {
         textViewDOB = findViewById(R.id.textViewDOB);*/
         textViewFeeAmount = findViewById(R.id.textViewFeeAmount);
         textViewHealthStatus = findViewById(R.id.textViewHealthStatus);
+        textViewHealthStatusLabel = findViewById(R.id.textViewHealthStatusLabel);
         textViewClass = findViewById(R.id.textViewClass);
         textViewInstructorName = findViewById(R.id.textViewInstructorName);
+        textViewInstructor = findViewById(R.id.textViewInstructor);
+        textViewCourseFee = findViewById(R.id.textViewCourseFee);
         qrcode = findViewById(R.id.qrcode);
+        Title = findViewById(R.id.Title);
+        if(languageS != null){
+            if(languageS.contains("en")){
+                Title.setText("Register Information");
+                textViewHealthStatusLabel.setText("Health Status");
+                textViewInstructor.setText("Lecturer");
+                textViewCourseFee.setText("Payment amount");
+                payment.setText("Direct payment");
+            }
+        }
 
 
         SharedPreferences infor = getSharedPreferences("infor", Context.MODE_PRIVATE);
@@ -93,6 +131,11 @@ public class payment extends BaseActivity {
 
             textViewHealthStatus.setText(note);
             textViewClass.setText("Lớp học: \n"+className);
+            if(languageS != null){
+                if(languageS.contains("en")){
+                    textViewClass.setText("Class: \n"+className);
+                }
+            }
             textViewInstructorName.setText(teacherName);
             textViewFeeAmount.setText(money.toString()+" VND");
             total = money.toString();

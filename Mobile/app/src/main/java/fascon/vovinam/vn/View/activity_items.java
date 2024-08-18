@@ -2,6 +2,7 @@ package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -65,7 +67,7 @@ public class activity_items extends BaseActivity {
     private int min_price;
     private int max_price;
     private BlankFragment loadingFragment;
-
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +88,14 @@ public class activity_items extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách dụng cụ");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "List Product");
+                myContentE.apply();
+            }
+        }
         ImageButton btnFilter = findViewById(R.id.btnFilter);
 
         Button btnAll = findViewById(R.id.btn_all);
@@ -300,7 +309,15 @@ public class activity_items extends BaseActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.commit();
 
-
+        if(languageS != null){
+            if(languageS.contains("en")){
+                searchView.setHint("Find Product");
+                btnAll.setText("Show All");
+                btnAmazing.setText("Outstanding");
+                btnNew.setText("New");
+                btnSale.setText("Sale");
+            }
+        }
     }
 
     private void performSearch() {
@@ -614,5 +631,26 @@ public class activity_items extends BaseActivity {
         Configuration config = new Configuration();
         config.locale = locale;
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+    }
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
     }
 }

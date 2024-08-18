@@ -1,8 +1,11 @@
 package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +34,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ReviewActivity extends BaseActivity implements FragmentWriteReviewActivity.OnReviewSubmittedListener {
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
 
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
     private RecyclerView reviewsRecyclerView;
     private ReviewAdapter reviewAdapter;
     private List<ReviewModel> allReviews;
@@ -42,7 +65,7 @@ public class ReviewActivity extends BaseActivity implements FragmentWriteReviewA
     private TextView[] filterButtons;
 
     private BlankFragment loadingFragment;
-
+    private String languageS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +78,14 @@ public class ReviewActivity extends BaseActivity implements FragmentWriteReviewA
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Đánh giá sản phẩm");
         myContentE.apply();
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Product Reviews");
+                myContentE.apply();
+            }
+        }
         // Chèn fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -120,6 +150,19 @@ public class ReviewActivity extends BaseActivity implements FragmentWriteReviewA
             FragmentWriteReviewActivity fragment = FragmentWriteReviewActivity.newInstance(productId);
             fragment.show(getSupportFragmentManager(), "WriteReview");
         });
+
+        if(languageS != null){
+            if(languageS.contains("en")){
+                filterAll.setText("All");
+                filter5Star.setText("5 stars");
+                filter4Star.setText("4 stars");
+                filter3Star.setText("3 stars");
+                filter2Star.setText("2 stars");
+                filter1Star.setText("1 stars");
+                Button write =  findViewById(R.id.btn_write_review);
+               write.setText("Write review");
+            }
+        }
     }
 
 
