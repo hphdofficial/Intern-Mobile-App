@@ -159,7 +159,7 @@
         android:id="@+id/payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Thanh toán trực tiếp"
+        android:text="Thanh toán trực tuyến"
 
         android:layout_below="@+id/relativeLayout2">
     </Button>

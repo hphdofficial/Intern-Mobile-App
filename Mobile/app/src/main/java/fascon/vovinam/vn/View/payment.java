@@ -106,7 +106,7 @@ public class payment extends BaseActivity {
                 textViewHealthStatusLabel.setText("Health Status");
                 textViewInstructor.setText("Lecturer");
                 textViewCourseFee.setText("Payment amount");
-                payment.setText("Direct payment");
+                payment.setText("payment online ");
             }
         }
 

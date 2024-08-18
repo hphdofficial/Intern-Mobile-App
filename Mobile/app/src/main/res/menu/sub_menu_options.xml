@@ -17,6 +17,10 @@
             android:icon="@drawable/infor1"
             android:title="Thông tin cá nhân" />
         <item
+            android:id="@+id/btn_class"
+            android:icon="@drawable/class2"
+            android:title="Lớp học" />
+        <item
             android:id="@+id/btn_lythuyet"
             android:icon="@drawable/booklt2"
             android:title="Lý thuyết võ thuật" />
@@ -41,9 +45,10 @@
             android:icon="@drawable/cart1"
             android:title="Giỏ hàng" />
         <item
-            android:id="@+id/btn_class"
-            android:icon="@drawable/class2"
-            android:title="Lớp học" />
+            android:id="@+id/btn_historypay"
+            android:icon="@drawable/history6"
+            android:title="Lịch sử mua hàng" />
+
         <item
             android:id="@+id/btn_infor"
             android:icon="@drawable/new2"
@@ -52,10 +57,7 @@
             android:id="@+id/btn_register_up"
             android:icon="@drawable/logout2"
             android:title="Đai võ" />
-        <item
-            android:id="@+id/btn_historypay"
-            android:icon="@drawable/history6"
-            android:title="Lịch sử mua hàng" />
+
 
         <item
             android:id="@+id/btn_sup"

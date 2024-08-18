@@ -226,11 +226,18 @@ public class RegisterClass extends BaseActivity {
     private TextView select_health;
     private TextView textViewDiachiLabel;
 
-
+    private Double moneyn = 0.0;
     public void eventClickRadio(){
 
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
 
+
+        if (extras != null) {
+            // Lấy dữ liệu từ Bundle
+           moneyn = extras.getDouble("class_fee");
+        }
         date_learn.clearCheck();
         date_learn.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -240,13 +247,13 @@ public class RegisterClass extends BaseActivity {
                 String selectedText = selectedRadioButton.getText().toString();
 
                if(selectedText.contains("3")){
-                   money.setText("1.000.000đ");
+                   money.setText(moneyn*3+"đ");
                }
                 if(selectedText.contains("6")){
-                    money.setText("1.950.000đ");
+                    money.setText(moneyn*3+"đ");
                 }
                 if(selectedText.contains("12")){
-                    money.setText("3.800.000đ");
+                    money.setText(moneyn*6+"đ");
                 }
             }
         });
