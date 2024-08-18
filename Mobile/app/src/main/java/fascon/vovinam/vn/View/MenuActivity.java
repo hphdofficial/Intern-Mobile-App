@@ -1487,7 +1487,7 @@ public class MenuActivity extends BaseActivity {
         SharedPreferences shared = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
        String s = shared.getString("language",null);
        if(s == null){
-           Toast.makeText(getApplicationContext(),"abc",Toast.LENGTH_SHORT).show();
+//           Toast.makeText(getApplicationContext(),"abc",Toast.LENGTH_SHORT).show();
            translateVN();
        }else if(s.contains("en")){
            translateEng();

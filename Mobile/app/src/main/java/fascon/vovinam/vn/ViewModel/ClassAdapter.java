@@ -67,7 +67,8 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
         holder.txtFee.setText("Học phí: " + formattedFee);
         if(languageS!= null){
             if(languageS.contains("en")){
-                holder.textView1.setText("Lecturer: " + classList.get(position).getGiangvien());
+                holder.txtTime.setText("Time: " + classList.get(position).getThoigian());
+                holder.txtFee.setText("Fee: " + formattedFee);
                 holder.btnRegister.setText("Detail");
             }
         }

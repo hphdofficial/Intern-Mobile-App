@@ -1,4 +1,6 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import fascon.vovinam.vn.ViewModel.MyClassAdapter;
 import fascon.vovinam.vn.Model.ClassModel;
 import fascon.vovinam.vn.Model.network.ApiServiceProvider;
 import fascon.vovinam.vn.Model.services.CheckinApiService;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -38,18 +41,19 @@ public class MyClassActivity extends BaseActivity {
     private String languageS;
     private BlankFragment loadingFragment;
     private TextView text;
+
     public void onMenuItemClick(View view) {
         text = findViewById(R.id.languageText);
-        String language = text.getText()+"";
-        if(view.getId() == R.id.btn_change){
+        String language = text.getText() + "";
+        if (view.getId() == R.id.btn_change) {
             SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
-            SharedPreferences.Editor edit =  sga.edit();
+            SharedPreferences.Editor edit = sga.edit();
 
-            if(language.contains("VN")){
-                edit.putString("language","en");
+            if (language.contains("VN")) {
+                edit.putString("language", "en");
                 text.setText("ENG");
-            }else {
-                edit.putString("language","vn");
+            } else {
+                edit.putString("language", "vn");
                 text.setText("VN");
             }
             edit.apply();
@@ -58,6 +62,7 @@ public class MyClassActivity extends BaseActivity {
             startActivity(intent);
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,9 +84,9 @@ public class MyClassActivity extends BaseActivity {
         myContentE.putString("title", "Những lớp đang dạy");
         myContentE.apply();
         SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        languageS = shared.getString("language",null);
-        if(languageS!= null){
-            if(languageS.contains("en")){
+        languageS = shared.getString("language", null);
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 myContentE.putString("title", "Classes being taught");
                 myContentE.apply();
             }
@@ -100,24 +105,25 @@ public class MyClassActivity extends BaseActivity {
         FetchClassesForTeacher();
     }
 
-    private void FetchClassesForTeacher(){
+    private void FetchClassesForTeacher() {
         showLoading();
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-        apiService.getTeacherClasses("Bearer "+token).enqueue(new Callback<JsonObject>() {
+        apiService.getTeacherClasses("Bearer " + token).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     JsonObject jsonObject = response.body();
                     Gson gson = new Gson();
-                    Type classListType = new TypeToken<List<ClassModel>>() {}.getType();
+                    Type classListType = new TypeToken<List<ClassModel>>() {
+                    }.getType();
                     List<ClassModel> classes = gson.fromJson(jsonObject.get("data"), classListType);
-                    if(classes == null){
-                     //   Toast.makeText(MyClassActivity.this, "Không có lớp học vào thời điểm hiện tại", Toast.LENGTH_SHORT).show();
+                    if (classes == null) {
+                        //   Toast.makeText(MyClassActivity.this, "Không có lớp học vào thời điểm hiện tại", Toast.LENGTH_SHORT).show();
                         hideLoading();
-                    }else{
-                        for (ClassModel classSample : classes){
+                    } else {
+                        for (ClassModel classSample : classes) {
                             Log.e("PostData", "Success: " + classSample.getTen());
                         }
                         MyClassAdapter classAdapter = new MyClassAdapter(getApplicationContext(), classes);
@@ -129,19 +135,19 @@ public class MyClassActivity extends BaseActivity {
                     }
 
 
-                }else {
+                } else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
-                    if(response.code() == 403){
+                    if (response.code() == 403) {
                         hideLoading();
 
                         startActivity(new Intent(getApplicationContext(), activity_member_checkin.class));
 
-                    Toast.makeText(MyClassActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
-                    hideLoading();
+                        Toast.makeText(MyClassActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                        hideLoading();
 
 
-
+                    }
                 }
             }
 
@@ -159,6 +165,7 @@ public class MyClassActivity extends BaseActivity {
         loadingFragment = new BlankFragment();
         loadingFragment.show(getSupportFragmentManager(), "loading");
     }
+
     private void hideLoading() {
         if (loadingFragment != null) {
             loadingFragment.dismiss();
