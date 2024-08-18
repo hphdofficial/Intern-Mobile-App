@@ -34,6 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Trạng thái"
+                android:textStyle="bold"
                 android:textColor="@color/default_red_color"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -62,6 +63,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0">
+
+                <Button
+                    android:id="@+id/button_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/orange_button_color"
+                    android:text="Sửa đơn hàng"
+                    android:visibility="gone"
+                    app:cornerRadius="15dp" />
 
                 <Button
                     android:id="@+id/button_cancel"

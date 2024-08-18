@@ -37,6 +37,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -425,10 +429,24 @@ private TextView textViewUsernameLabel;
                             textViewGioitinhValue.setText(profile.getGioitinh());
                             textViewNgaysinhValue.setText(profile.getNgaysinh());
                             textViewLastloginValue.setText(profile.getLastlogin());
-                            textViewHotengiamhoValue.setText(profile.getHotengiamho());
-                            textViewDienthoaiGiamhoValue.setText(profile.getDienthoai_giamho());
                             textViewChieucaoValue.setText(profile.getChieucao());
                             textViewCannangValue.setText(profile.getCannang());
+
+                            // Tính toán tuổi dựa trên ngày sinh
+                            int age = getAgeFromBirthdate(profile.getNgaysinh());
+
+                            if (age >= 18) {
+                                // Ẩn thông tin giám hộ nếu tuổi >= 18
+                                textViewHotengiamhoValue.setVisibility(View.GONE);
+                                textViewDienthoaiGiamhoValue.setVisibility(View.GONE);
+                            } else {
+                                // Hiển thị thông tin giám hộ nếu tuổi < 18
+                                textViewHotengiamhoValue.setText(profile.getHotengiamho());
+                                textViewDienthoaiGiamhoValue.setText(profile.getDienthoai_giamho());
+                                textViewHotengiamhoValue.setVisibility(View.VISIBLE);
+                                textViewDienthoaiGiamhoValue.setVisibility(View.VISIBLE);
+                            }
+
                             String avatarUrl = profile.getAvatarUrl();
                             if (avatarUrl != null) {
                                 Picasso.get().load(avatarUrl).placeholder(R.drawable.photo3x4).error(R.drawable.photo3x4).into(imageViewAvatar);
@@ -453,6 +471,25 @@ private TextView textViewUsernameLabel;
             Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private int getAgeFromBirthdate(String birthdate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = sdf.parse(birthdate);
+            Calendar dob = Calendar.getInstance();
+            dob.setTime(date);
+            Calendar today = Calendar.getInstance();
+            int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+            return age;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -538,6 +575,25 @@ private TextView textViewUsernameLabel;
             Intent intent = getIntent();
             finish();
             startActivity(intent);
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        String ngaysinh = intent.getStringExtra("ngaysinh");
+        if (ngaysinh != null) {
+            // Cập nhật trực tiếp thông tin ngày sinh từ Intent nếu có
+            textViewNgaysinhValue.setText(ngaysinh);
+            // Tính toán tuổi và ẩn hiện thông tin giám hộ
+            int age = getAgeFromBirthdate(ngaysinh);
+            if (age >= 18) {
+                textViewHotengiamhoValue.setVisibility(View.GONE);
+                textViewDienthoaiGiamhoValue.setVisibility(View.GONE);
+            } else {
+                textViewHotengiamhoValue.setVisibility(View.VISIBLE);
+                textViewDienthoaiGiamhoValue.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

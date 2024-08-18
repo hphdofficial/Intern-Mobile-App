@@ -50,6 +50,8 @@ public class activity_checkin extends BaseActivity {
 
     private Checkin_adapter checkinAdapter;
     private BlankFragment loadingFragment;
+    private boolean in_time_class = false;
+    private Button btnDiemDanh;
     private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +119,7 @@ public class activity_checkin extends BaseActivity {
             }
         });
 
-        Button btnDiemDanh = findViewById(R.id.btnDiemDanh);
+        btnDiemDanh = findViewById(R.id.btnDiemDanh);
         String finalFormattedDate = formattedDate;
         btnDiemDanh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,10 +135,14 @@ public class activity_checkin extends BaseActivity {
                 currentTime = LocalTime.now();
                 // Định dạng thời gian theo kiểu 24 giờ
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
                 // Chuyển đổi thời gian hiện tại sang chuỗi theo định dạng đã cho
                 String formattedTime = currentTime.format(formatter);
 
+
+                // Lấy thời gian 1 tiếng sau so với giờ hiện tại
+                LocalTime oneHourLater = currentTime.plusHours(1);
+                // Chuyển đổi thời gian sang chuỗi theo định dạng đã cho
+                String beforeFormattedTime = oneHourLater.format(formatter);
                 System.out.println("Time: " + formattedTime);
 
 
@@ -166,7 +172,7 @@ public class activity_checkin extends BaseActivity {
                     System.out.println(checkin.getId());
                     attendee.setIn(formattedTime);
 //                    attendee.setIn("18:08");
-                    attendee.setOut("20:30");
+                    attendee.setOut(beforeFormattedTime);
                     attendees.add(attendee);
                 }
 
@@ -271,6 +277,14 @@ public class activity_checkin extends BaseActivity {
                 if(response.isSuccessful()){
                     JsonObject jsonObject = response.body();
                     Gson gson = new Gson();
+                    Type BooleanType = new TypeToken<Boolean>() {}.getType();
+                    in_time_class = gson.fromJson(jsonObject.get("in_class_time"), BooleanType);
+                    System.out.println("Time class true: "+ in_time_class);
+                    if(in_time_class){
+                        btnDiemDanh.setVisibility(View.VISIBLE);
+                    }else{
+                        btnDiemDanh.setVisibility(View.INVISIBLE);
+                    }
                     Type checkinMemberListType = new TypeToken<List<CheckinMemberModel>>() {}.getType();
                     List<CheckinMemberModel> checkinMembers = gson.fromJson(jsonObject.get("data"), checkinMemberListType);
                     if(checkinMembers == null){

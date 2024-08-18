@@ -17,7 +17,9 @@ import fascon.vovinam.vn.View.DetailClassActivity;
 import fascon.vovinam.vn.R;
 import fascon.vovinam.vn.Model.Class;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> {
     Context context;
@@ -25,14 +27,16 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
     private String idClub = null;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public TextView textView1;
+        public TextView txtName;
+        public TextView txtTime;
+        public TextView txtFee;
         public Button btnRegister;
 
         public ViewHolder(View view) {
             super(view);
-            textView = view.findViewById(R.id.txt_name_class);
-            textView1 = view.findViewById(R.id.txt_name_teacher);
+            txtName = view.findViewById(R.id.txt_name_class);
+            txtTime = view.findViewById(R.id.txt_time);
+            txtFee = view.findViewById(R.id.txt_fee);
             btnRegister = view.findViewById(R.id.btn_register_class);
 
         }
@@ -53,14 +57,18 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ClassAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.textView.setText(classList.get(position).getTen());
+        holder.txtName.setText(classList.get(position).getTen());
         SharedPreferences shared = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         languageS = shared.getString("language",null);
 
-        holder.textView1.setText("Giảng viên: " + classList.get(position).getGiangvien());
+        holder.txtTime.setText("Thời gian: " + classList.get(position).getThoigian());
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedFee = currencyFormat.format(classList.get(position).getGiatien());
+        holder.txtFee.setText("Học phí: " + formattedFee);
         if(languageS!= null){
             if(languageS.contains("en")){
-                holder.textView1.setText("Lecturer: " + classList.get(position).getGiangvien());
+                holder.txtTime.setText("Time: " + classList.get(position).getThoigian());
+                holder.txtFee.setText("Fee: " + formattedFee);
                 holder.btnRegister.setText("Detail");
             }
         }

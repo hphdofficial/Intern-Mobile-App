@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,12 +28,17 @@ import fascon.vovinam.vn.Model.services.ClassApiService;
 import fascon.vovinam.vn.Model.services.ClubApiService;
 import fascon.vovinam.vn.Model.services.OrderApiService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import fascon.vovinam.vn.View.EditOrderFragment;
+import fascon.vovinam.vn.View.OrderDetailFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,16 +70,20 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView txtIdOrder;
         public TextView txtStatusOrder;
         public RecyclerView recyclerProductList;
-        public Button btnApproveOrder;
         public TextView totalPrice;
+        public Button btnApproveOrder;
+        public Button btnDetailOrder;
+        public Button btnEditOrder;
 
         public OrderViewHolder(View view) {
             super(view);
             txtIdOrder = view.findViewById(R.id.txt_id_order);
             txtStatusOrder = view.findViewById(R.id.txt_status_order);
             recyclerProductList = view.findViewById(R.id.recycler_product_list);
-            btnApproveOrder = view.findViewById(R.id.button_approve_order);
             totalPrice = view.findViewById(R.id.total_price);
+            btnApproveOrder = view.findViewById(R.id.button_approve_order);
+            btnDetailOrder = view.findViewById(R.id.button_detail_order);
+            btnEditOrder = view.findViewById(R.id.button_edit_order);
         }
     }
 
@@ -135,7 +146,16 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtApprove.setText("Yêu cầu tham gia");
                     clubClassViewHolder.txtClubClass.setText("Lớp học: " + itemClubClass.getTen_class());
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen_member());
-                    clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
+                    SimpleDateFormat inputFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    SimpleDateFormat outputFormat1 = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                    Date date1 = null;
+                    try {
+                        date1 = inputFormat1.parse(itemClubClass.getCreated_at());
+                        String formattedDate = outputFormat1.format(date1);
+                        clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + formattedDate);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
                     clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.BLUE);
                     if(languageS!= null){
                         if(languageS.contains("en")){
@@ -167,7 +187,16 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtApprove.setText("Yêu cầu rời");
                     clubClassViewHolder.txtClubClass.setText("Lớp học: " + itemClubClass.getClass_name());
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
-                    clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
+                    SimpleDateFormat inputFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
+                    SimpleDateFormat outputFormat2 = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                    Date date2 = null;
+                    try {
+                        date2 = inputFormat2.parse(itemClubClass.getCreated_at());
+                        String formattedDate = outputFormat2.format(date2);
+                        clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + formattedDate);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
                     clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.RED);
                     if(languageS!= null){
                         if(languageS.contains("en")){
@@ -216,7 +245,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             orderViewHolder.txtStatusOrder.setText(itemOrder.getGiao_hang().substring(0, 1).toUpperCase() + itemOrder.getGiao_hang().substring(1).toLowerCase());
             double totalPrice = 0;
             for (OrderListModel.DetailCart cart : itemOrder.getDetail_carts()) {
-                totalPrice += cart.getProduct().getUnitPrice() * cart.getQuantity();
+                double unitPrice = cart.getProduct().getUnitPrice();
+                String sale = cart.getProduct().getSale();
+                double percent = sale != null ? Double.parseDouble(sale) : 0;
+                double priceAfterDiscount = unitPrice - (unitPrice * percent);
+                totalPrice += priceAfterDiscount * cart.getQuantity();
             }
             orderViewHolder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
             if(languageS!= null){
@@ -224,6 +257,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     orderViewHolder.totalPrice.setText(String.format("Sum money: %,.0f VND", totalPrice));
                 }
             }
+
             OrderListModel finalItemOrder = itemOrder;
             orderViewHolder.btnApproveOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -244,6 +278,27 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 }
             });
+
+            orderViewHolder.btnDetailOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                    OrderDetailFragment dialogFragment = OrderDetailFragment.newInstance(itemOrder);
+                    dialogFragment.show(fragmentManager, "OrderDetailsDialogFragment");
+                }
+            });
+
+            if (viewType.equals("confirmorder")) {
+                orderViewHolder.btnEditOrder.setVisibility(View.VISIBLE);
+                orderViewHolder.btnEditOrder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                            FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                            EditOrderFragment dialogFragment = EditOrderFragment.newInstance(itemOrder);
+                            dialogFragment.show(fragmentManager, "OrderDetailsDialogFragment");
+                    }
+                });
+            }
 
             Map<String, List<OrderListModel.DetailCart>> supplierProductMap = new LinkedHashMap<>();
             for (OrderListModel.DetailCart detailCart : itemOrder.getDetail_carts()) {

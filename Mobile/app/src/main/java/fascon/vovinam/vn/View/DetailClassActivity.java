@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,14 +22,18 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import org.json.JSONObject;
+
 import fascon.vovinam.vn.ViewModel.BaseActivity;
 import fascon.vovinam.vn.Model.Class;
 import fascon.vovinam.vn.Model.ReponseModel;
 import fascon.vovinam.vn.Model.network.ApiServiceProvider;
 import fascon.vovinam.vn.Model.services.ClassApiService;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +56,7 @@ public class DetailClassActivity extends BaseActivity {
     private boolean isPending = false;
     private String name = "";
     private String nameClass = "";
+    private int fee = 0;
     private BlankFragment loadingFragment;
     private String languageS;
     @Override
@@ -103,6 +109,7 @@ public class DetailClassActivity extends BaseActivity {
             }
         }
 
+
         btnJoinClassPending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +139,7 @@ public class DetailClassActivity extends BaseActivity {
 //        });
 
         getDetailClass();
+
         textViewNgaysinhLabel = findViewById(R.id.textViewNgaysinhLabel);
         textViewTenLabel = findViewById(R.id.textViewTenLabel);
         textViewDienthoaiLabel = findViewById(R.id.textViewDienthoaiLabel);
@@ -167,6 +175,7 @@ public class DetailClassActivity extends BaseActivity {
                     Class dataClass = response.body();
                     nameClass = dataClass.getTen();
                     name = dataClass.getGiangvien();
+                    fee = dataClass.getHocPhi();
                     txtNameClass.setText(dataClass.getTen());
                     txtTeacherClass.setText(dataClass.getGiangvien());
                     txtAddressClass.setText(dataClass.getClub());
@@ -229,16 +238,23 @@ public class DetailClassActivity extends BaseActivity {
     }
 
     public void setupButton() {
-        String idClassShared = sharedPreferences.getString("id_class_shared", null);
-
-        if (idClassShared == null) {
-            btnJoinClassPending.setVisibility(isPending ? View.GONE : View.VISIBLE);
-            btnCancelClassPending.setVisibility(isPending ? View.VISIBLE : View.GONE);
-        } else if (!idClass.equals(idClassShared)) {
-//            btnDirectClass.setVisibility(View.VISIBLE);
+        if (!Objects.equals(decodeRoleFromToken(sharedPreferences.getString("access_token", null)), "0")){
+            btnJoinClassPending.setVisibility(View.GONE);
+            btnCancelClassPending.setVisibility(View.GONE);
+            btnLeaveClassPending.setVisibility(View.GONE);
         } else {
-            btnLeaveClassPending.setVisibility(View.VISIBLE);
+            String idClassShared = sharedPreferences.getString("id_class_shared", null);
+
+            if (idClassShared == null) {
+                btnJoinClassPending.setVisibility(isPending ? View.GONE : View.VISIBLE);
+                btnCancelClassPending.setVisibility(isPending ? View.VISIBLE : View.GONE);
+            } else if (!idClass.equals(idClassShared)) {
+//            btnDirectClass.setVisibility(View.VISIBLE);
+            } else {
+                btnLeaveClassPending.setVisibility(View.VISIBLE);
+            }
         }
+
     }
 
     public void joinClassPending() {
@@ -256,34 +272,21 @@ public class DetailClassActivity extends BaseActivity {
         intent.putExtra("name", name);
         intent.putExtra("nameClass", nameClass);
         intent.putExtra("idClass", idClass);
+        intent.putExtra("fee", fee);
         intent.putExtras(bundle);
         startActivity(intent);
 
         String token = sharedPreferences.getString("access_token", null);
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Club data = new Club(idClub);
-        Call<ReponseModel> call = service.joinClub("Bearer" + token, data);
+        ClassApiService service = ApiServiceProvider.getClassApiService();
+        Call<ReponseModel> callclass = service.joinClassPending("Bearer" + token, Integer.parseInt(idClass));
 
-        call.enqueue(new Callback<ReponseModel>() {
+        callclass.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                ClassApiService service = ApiServiceProvider.getClassApiService();
-                Call<ReponseModel> callclass = service.joinClassPending("Bearer" + token, Integer.parseInt(idClass));
-
-                callclass.enqueue(new Callback<ReponseModel>() {
-                    @Override
-                    public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                        if (response.isSuccessful()) {
-                        } else {
-                            Log.e("Error", response.message());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ReponseModel> call, Throwable t) {
-                        Log.e("Fail", t.getMessage());
-                    }
-                });
+                if (response.isSuccessful()) {
+                } else {
+                    Log.e("Error", response.message());
+                }
             }
 
             @Override
@@ -310,19 +313,6 @@ public class DetailClassActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 if (response.isSuccessful()) {
-
-                    ClubApiService service = ApiServiceProvider.getClubApiService();
-                    Call<ReponseModel> callclub = service.leaveClub("Bearer" + token);
-                    callclub.enqueue(new Callback<ReponseModel>() {
-                        @Override
-                        public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                        }
-
-                        @Override
-                        public void onFailure(Call<ReponseModel> call, Throwable t) {
-                            Log.e("Fail", t.getMessage());
-                        }
-                    });
                 } else {
                     Log.e("Error", response.message());
                 }
@@ -351,6 +341,7 @@ public class DetailClassActivity extends BaseActivity {
                     isPending = false;
                     setupButton();
                     btnLeaveClassPending.setEnabled(true);
+                    btnLeaveClassPending.setVisibility(View.GONE);
                     Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu rời lớp học", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(DetailClassActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
@@ -474,6 +465,33 @@ public class DetailClassActivity extends BaseActivity {
             Intent intent = getIntent();
             finish();
             startActivity(intent);
+        }
+    }
+
+    public static String decodeRoleFromToken(String jwtToken) {
+        try {
+            // Tách token thành các phần: header, payload, và signature
+            String[] parts = jwtToken.split("\\.");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid JWT token format");
+            }
+
+            // Phần payload là phần thứ 2
+            String payload = parts[1];
+
+            // Giải mã payload từ Base64Url
+            byte[] decodedBytes = Base64.decode(payload, Base64.URL_SAFE);
+            String decodedPayload = new String(decodedBytes, StandardCharsets.UTF_8);
+
+            // Chuyển đổi payload thành JSONObject
+            JSONObject jsonObject = new JSONObject(decodedPayload);
+
+            // Trích xuất role từ payload
+            return jsonObject.getString("role");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

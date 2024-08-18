@@ -203,7 +203,7 @@ public class ClubActivity extends BaseActivity {
 
         spinnerCountry = findViewById(R.id.spinner_country);
         spinnerCity = findViewById(R.id.spinner_city);
-
+        label_view_options = findViewById(R.id.label_view_options);
         showListCountry();
         showListCity();
         loadListClubDefault();
@@ -211,9 +211,11 @@ public class ClubActivity extends BaseActivity {
             if(languageS != null){
                 if(languageS.contains("en")){
                     btnLocation.setText("Search around my location");
+                    label_view_options.setText("View");
                 }
             }
     }
+    private TextView label_view_options;
 
     private void showSearchDialog() {
         final Dialog dialog = new Dialog(ClubActivity.this);
@@ -267,7 +269,7 @@ public class ClubActivity extends BaseActivity {
                     List<Club> clubs = response.body();
                     clubListFragment.setData(clubs);
                     if (!clubs.isEmpty()) {
-                        Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ClubActivity.this, "Không có câu lạc bộ nào khớp với tìm kiếm", Toast.LENGTH_SHORT).show();
                     }
@@ -393,7 +395,7 @@ public class ClubActivity extends BaseActivity {
                     }.getType();
                     List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
                     clubListFragment.setData(clubs);
-                    Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                     }

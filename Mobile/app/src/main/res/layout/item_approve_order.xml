@@ -36,6 +36,7 @@
                 android:text="Trạng thái"
                 android:textColor="@color/default_red_color"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -53,37 +54,64 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <HorizontalScrollView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="vertical"
+                android:layout_marginTop="60dp"
+                android:fillViewport="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0">
 
-                <Button
-                    android:id="@+id/button_approve_order"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
-                    android:backgroundTint="@color/default_blue_color"
-                    android:text="Duyệt đơn hàng"
-                    app:cornerRadius="15dp" />
+                    android:orientation="horizontal"
+                    android:gravity="end">
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/button_edit_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:backgroundTint="#009BFF"
+                        android:text="Chỉnh sửa"
+                        android:visibility="gone"
+                        app:cornerRadius="15dp" />
+
+                    <Button
+                        android:id="@+id/button_approve_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:backgroundTint="#009BFF"
+                        android:text="Xác nhận"
+                        app:cornerRadius="15dp" />
+
+                    <Button
+                        android:id="@+id/button_detail_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#009BFF"
+                        android:text="Chi tiết"
+                        app:cornerRadius="15dp" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
 
             <TextView
                 android:id="@+id/total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
+                android:layout_marginTop="20dp"
                 android:text="Tổng tiền: 0 VND"
                 android:textColor="@color/default_red_color"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

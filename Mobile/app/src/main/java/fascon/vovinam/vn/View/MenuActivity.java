@@ -258,14 +258,18 @@ public class MenuActivity extends BaseActivity {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
                         if (locationResult == null) {
-                            Toast.makeText(MenuActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(MenuActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
-                            Toast.makeText(MenuActivity.this, "Truy cập vị trí hiện tại thành công", Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("location_lat", String.valueOf(location.getLatitude()));
+                            editor.putString("location_long", String.valueOf(location.getLongitude()));
+                            editor.apply();
+//                            Toast.makeText(MenuActivity.this, "Truy cập vị trí hiện tại thành công", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MenuActivity.this, "Không lấy được vị trí hiện tại", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(MenuActivity.this, "Không lấy được vị trí hiện tại", Toast.LENGTH_SHORT).show();
                         }
                         fusedLocationProviderClient.removeLocationUpdates(this);
                     }
@@ -316,7 +320,7 @@ public class MenuActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 getCurrentLocation();
             } else {
-                Toast.makeText(this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -328,7 +332,7 @@ public class MenuActivity extends BaseActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkLocationSettings();
             } else {
-                Toast.makeText(this, "Bạn đã từ chối truy cập vị trí hiện tại", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Bạn đã từ chối truy cập vị trí hiện tại", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -487,6 +491,7 @@ public class MenuActivity extends BaseActivity {
         menu.removeView(btn_sup);
         menu.removeView(btn_history);
         menu.removeView(btn_club);
+//        menu.removeView(btn_logout);
     }
     public void RemoveViewUser(){
         menu.removeView(btn_order_status);
@@ -1530,7 +1535,6 @@ public class MenuActivity extends BaseActivity {
         SharedPreferences shared = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
        String s = shared.getString("language",null);
        if(s == null){
-
            translateVN();
        }else if(s.contains("en")){
            translateEng();

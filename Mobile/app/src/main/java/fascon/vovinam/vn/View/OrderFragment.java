@@ -131,4 +131,8 @@ public class OrderFragment extends Fragment {
         super.onResume();
         fetchListOrder();
     }
+
+    public void refreshData() {
+        fetchListOrder();
+    }
 }

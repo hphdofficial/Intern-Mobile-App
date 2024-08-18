@@ -81,6 +81,8 @@ public class ProductOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             OrderListModel.DetailCart product = (OrderListModel.DetailCart) items.get(position);
             ProductViewHolder productViewHolder = (ProductViewHolder) holder;
 
+            productViewHolder.textViewName.setText(product.getProduct().getProductName());
+
             // Tính toán giá sau khi giảm giá
             double unitPrice = product.getProduct().getUnitPrice();
             String sale = product.getProduct().getSale();

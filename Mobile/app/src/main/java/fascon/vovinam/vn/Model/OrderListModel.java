@@ -31,7 +31,7 @@ public class OrderListModel {
             private int ProductID;
             private String ProductName;
             private int SupplierID;
-            private double UnitPrice;
+            private int UnitPrice;
             private int UnitsInStock;
             private String CategoryName;
             private String link_image;
@@ -62,11 +62,11 @@ public class OrderListModel {
                 SupplierID = supplierID;
             }
 
-            public double getUnitPrice() {
+            public int getUnitPrice() {
                 return UnitPrice;
             }
 
-            public void setUnitPrice(double unitPrice) {
+            public void setUnitPrice(int unitPrice) {
                 UnitPrice = unitPrice;
             }
 
