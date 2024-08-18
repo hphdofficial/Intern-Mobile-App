@@ -260,30 +260,16 @@ public class DetailClassActivity extends BaseActivity {
         startActivity(intent);
 
         String token = sharedPreferences.getString("access_token", null);
-        ClubApiService service = ApiServiceProvider.getClubApiService();
-        Club data = new Club(idClub);
-        Call<ReponseModel> call = service.joinClub("Bearer" + token, data);
+        ClassApiService service = ApiServiceProvider.getClassApiService();
+        Call<ReponseModel> callclass = service.joinClassPending("Bearer" + token, Integer.parseInt(idClass));
 
-        call.enqueue(new Callback<ReponseModel>() {
+        callclass.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                ClassApiService service = ApiServiceProvider.getClassApiService();
-                Call<ReponseModel> callclass = service.joinClassPending("Bearer" + token, Integer.parseInt(idClass));
-
-                callclass.enqueue(new Callback<ReponseModel>() {
-                    @Override
-                    public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                        if (response.isSuccessful()) {
-                        } else {
-                            Log.e("Error", response.message());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ReponseModel> call, Throwable t) {
-                        Log.e("Fail", t.getMessage());
-                    }
-                });
+                if (response.isSuccessful()) {
+                } else {
+                    Log.e("Error", response.message());
+                }
             }
 
             @Override
@@ -310,19 +296,6 @@ public class DetailClassActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 if (response.isSuccessful()) {
-
-                    ClubApiService service = ApiServiceProvider.getClubApiService();
-                    Call<ReponseModel> callclub = service.leaveClub("Bearer" + token);
-                    callclub.enqueue(new Callback<ReponseModel>() {
-                        @Override
-                        public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                        }
-
-                        @Override
-                        public void onFailure(Call<ReponseModel> call, Throwable t) {
-                            Log.e("Fail", t.getMessage());
-                        }
-                    });
                 } else {
                     Log.e("Error", response.message());
                 }
@@ -351,6 +324,7 @@ public class DetailClassActivity extends BaseActivity {
                     isPending = false;
                     setupButton();
                     btnLeaveClassPending.setEnabled(true);
+                    btnLeaveClassPending.setVisibility(View.GONE);
                     Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu rời lớp học", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(DetailClassActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();

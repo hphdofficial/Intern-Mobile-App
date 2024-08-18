@@ -267,7 +267,7 @@ public class ClubActivity extends BaseActivity {
                     List<Club> clubs = response.body();
                     clubListFragment.setData(clubs);
                     if (!clubs.isEmpty()) {
-                        Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ClubActivity.this, "Không có câu lạc bộ nào khớp với tìm kiếm", Toast.LENGTH_SHORT).show();
                     }
@@ -393,7 +393,7 @@ public class ClubActivity extends BaseActivity {
                     }.getType();
                     List<Club> clubs = gson.fromJson(jsonObject.get("clubs"), clubListType);
                     clubListFragment.setData(clubs);
-                    Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
                         Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
                     }
