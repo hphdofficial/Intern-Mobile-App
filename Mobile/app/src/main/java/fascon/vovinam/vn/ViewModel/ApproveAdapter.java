@@ -17,6 +17,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import fascon.vovinam.vn.Model.ProductModel;
+import fascon.vovinam.vn.View.AddItemFragment;
 import fascon.vovinam.vn.View.ApproveActivity;
 import fascon.vovinam.vn.View.ApproveOrderActivity;
 import fascon.vovinam.vn.R;
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import fascon.vovinam.vn.View.ChangeClassFragment;
 import fascon.vovinam.vn.View.EditOrderFragment;
 import fascon.vovinam.vn.View.OrderDetailFragment;
 import retrofit2.Call;
@@ -54,7 +57,9 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView txtClubClass;
         public TextView txtMember;
         public TextView txtTime;
-        public Button btnApproveRequest;
+        public Button btnAcceptRequest;
+        public Button btnDenyRequest;
+        public Button btnChangeRequest;
 
         public ClubClassViewHolder(View view) {
             super(view);
@@ -62,7 +67,9 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtClubClass = view.findViewById(R.id.txt_name_clubclass);
             txtMember = view.findViewById(R.id.txt_name_member);
             txtTime = view.findViewById(R.id.txt_time_request);
-            btnApproveRequest = view.findViewById(R.id.button_approve_request);
+            btnAcceptRequest = view.findViewById(R.id.button_accept_request);
+            btnDenyRequest = view.findViewById(R.id.button_deny_request);
+            btnChangeRequest = view.findViewById(R.id.button_change_request);
         }
     }
 
@@ -120,8 +127,6 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         languageS = shared.getString("language",null);
         if (holder instanceof ClubClassViewHolder) {
 
-
-
             ApproveModel itemClubClass = approveListClubClass.get(position);
             ClubClassViewHolder clubClassViewHolder = (ClubClassViewHolder) holder;
             switch (viewType) {
@@ -131,7 +136,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtClubClass.setText("Câu lạc bộ: " + itemClubClass.getTen_club());
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
-                    clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.BLUE);
+//                    clubClassViewHolder.btnAcceptRequest.setBackgroundColor(Color.BLUE);
                     if(languageS!= null){
                         if(languageS.contains("en")){
                             clubClassViewHolder.txtApprove.setText("Request to join");
@@ -156,7 +161,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
-                    clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.BLUE);
+//                    clubClassViewHolder.btnAcceptRequest.setBackgroundColor(Color.BLUE);
                     if(languageS!= null){
                         if(languageS.contains("en")){
                             clubClassViewHolder.txtApprove.setText("Request to join");
@@ -172,7 +177,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtClubClass.setText("Câu lạc bộ: " + itemClubClass.getTen_club());
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
-                    clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.RED);
+//                    clubClassViewHolder.btnAcceptRequest.setBackgroundColor(Color.RED);
                     if(languageS!= null){
                         if(languageS.contains("en")){
                             clubClassViewHolder.txtApprove.setText("Request to leave");
@@ -187,7 +192,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtApprove.setText("Yêu cầu rời");
                     clubClassViewHolder.txtClubClass.setText("Lớp học: " + itemClubClass.getClass_name());
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
-                    SimpleDateFormat inputFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
+                    SimpleDateFormat inputFormat2 = getMatchingFormat(itemClubClass.getCreated_at());
                     SimpleDateFormat outputFormat2 = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
                     Date date2 = null;
                     try {
@@ -197,7 +202,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
-                    clubClassViewHolder.btnApproveRequest.setBackgroundColor(Color.RED);
+//                    clubClassViewHolder.btnAcceptRequest.setBackgroundColor(Color.RED);
                     if(languageS!= null){
                         if(languageS.contains("en")){
                             clubClassViewHolder.txtApprove.setText("Request to leave");
@@ -206,27 +211,58 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             clubClassViewHolder.txtTime.setText("Requested time: " + itemClubClass.getCreated_at());
                         }
                     }
+                    clubClassViewHolder.btnDenyRequest.setVisibility(View.GONE);
+                    clubClassViewHolder.btnChangeRequest.setVisibility(View.GONE);
                     break;
                 default:
                     break;
             }
 
-            clubClassViewHolder.btnApproveRequest.setOnClickListener(new View.OnClickListener() {
+            clubClassViewHolder.btnAcceptRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clubClassViewHolder.btnApproveRequest.setEnabled(false);
+                    clubClassViewHolder.btnAcceptRequest.setEnabled(false);
+                    clubClassViewHolder.btnDenyRequest.setEnabled(false);
+                    clubClassViewHolder.btnChangeRequest.setEnabled(false);
                     switch (viewType) {
-                        case "joinclub":
-                            approveJoinClub(position, itemClubClass.getId_member(), itemClubClass.getId_club(), clubClassViewHolder.btnApproveRequest);
-                            break;
                         case "joinclass":
-                            approveJoinClass(position, itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
-                            break;
-                        case "leaveclub":
-                            approveLeaveClub(position, itemClubClass.getId_member(), itemClubClass.getId_club(), clubClassViewHolder.btnApproveRequest);
+                            approveJoinClass(position, itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnAcceptRequest, clubClassViewHolder.btnDenyRequest, clubClassViewHolder.btnChangeRequest);
                             break;
                         case "leaveclass":
-                            approveLeaveClass(position, itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnApproveRequest);
+                            approveLeaveClass(position, itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnAcceptRequest, clubClassViewHolder.btnDenyRequest, clubClassViewHolder.btnChangeRequest);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+            clubClassViewHolder.btnDenyRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clubClassViewHolder.btnAcceptRequest.setEnabled(false);
+                    clubClassViewHolder.btnDenyRequest.setEnabled(false);
+                    clubClassViewHolder.btnChangeRequest.setEnabled(false);
+                    switch (viewType) {
+                        case "joinclass":
+                            denyJoinClass(position, itemClubClass.getId_member(), itemClubClass.getId_class(), clubClassViewHolder.btnAcceptRequest, clubClassViewHolder.btnDenyRequest, clubClassViewHolder.btnChangeRequest);
+                            break;
+                        case "leaveclass":
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+            clubClassViewHolder.btnChangeRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switch (viewType) {
+                        case "joinclass":
+                            FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                            ChangeClassFragment changeClassFragment = new ChangeClassFragment(itemClubClass.getId_member(), itemClubClass.getId_class());
+                            changeClassFragment.show(fragmentManager, "ChangeClassFragment");
+                            break;
+                        case "leaveclass":
                             break;
                         default:
                             break;
@@ -380,7 +416,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveJoinClass(int position, int idMember, int idClass, Button button) {
+    private void approveJoinClass(int position, int idMember, int idClass, Button button1, Button button2, Button button3) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
@@ -393,7 +429,9 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                button.setEnabled(true);
+                button1.setEnabled(true);
+                button2.setEnabled(true);
+                button3.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Duyệt tham gia lớp học thành công", Toast.LENGTH_SHORT).show();
                     approveListClubClass.remove(position);
@@ -411,7 +449,9 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
-                button.setEnabled(true);
+                button1.setEnabled(true);
+                button2.setEnabled(true);
+                button3.setEnabled(true);
                 Log.e("Fail", Objects.requireNonNull(t.getMessage()));
             }
         });
@@ -454,7 +494,7 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void approveLeaveClass(int position, int idMember, int idClass, Button button) {
+    private void approveLeaveClass(int position, int idMember, int idClass, Button button1, Button button2, Button button3) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
@@ -467,7 +507,9 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
-                button.setEnabled(true);
+                button1.setEnabled(true);
+                button2.setEnabled(true);
+                button3.setEnabled(true);
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Duyệt rời lớp học thành công", Toast.LENGTH_SHORT).show();
                     approveListClubClass.remove(position);
@@ -480,7 +522,50 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
-                button.setEnabled(true);
+                button1.setEnabled(true);
+                button2.setEnabled(true);
+                button3.setEnabled(true);
+                Log.e("Fail", Objects.requireNonNull(t.getMessage()));
+            }
+        });
+    }
+
+    private void denyJoinClass(int position, int idMember, int idClass, Button button1, Button button2, Button button3) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString("access_token", null);
+
+        ClassApiService service = ApiServiceProvider.getClassApiService();
+        Call<ReponseModel> call = service.denyJoinClass("Bearer " + accessToken, idMember, idClass);
+
+        Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+
+        call.enqueue(new Callback<ReponseModel>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
+                button1.setEnabled(true);
+                button2.setEnabled(true);
+                button3.setEnabled(true);
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Đã từ chối tham gia lớp học", Toast.LENGTH_SHORT).show();
+                    approveListClubClass.remove(position);
+                    notifyDataSetChanged();
+                    if (approveListClubClass.isEmpty()) {
+                        if (context instanceof ApproveActivity) {
+                            ((ApproveActivity) context).setEmptyList();
+                        }
+                    }
+                    Log.i("Success", response.message());
+                } else {
+                    Log.e("Error", response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReponseModel> call, Throwable t) {
+                button1.setEnabled(true);
+                button2.setEnabled(true);
+                button3.setEnabled(true);
                 Log.e("Fail", Objects.requireNonNull(t.getMessage()));
             }
         });
@@ -609,4 +694,24 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         approveListOrder.addAll(data);
         notifyDataSetChanged();
     }
+
+    public SimpleDateFormat getMatchingFormat(String dateString) {
+        SimpleDateFormat inputFormat21 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
+        SimpleDateFormat inputFormat22 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        SimpleDateFormat[] formats = new SimpleDateFormat[]{inputFormat21, inputFormat22};
+
+        // Thử với từng định dạng
+        for (SimpleDateFormat format : formats) {
+            format.setLenient(false); // Không cho phép định dạng không chính xác
+            try {
+                format.parse(dateString); // Nếu parse thành công, trả về định dạng đó
+                return format;
+            } catch (ParseException e) {
+                // Bỏ qua lỗi và tiếp tục với định dạng tiếp theo
+            }
+        }
+        return null; // Không có định dạng nào khớp
+    }
+
 }

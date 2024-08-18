@@ -75,6 +75,9 @@ public class ClubActivity extends BaseActivity {
     private BlankFragment loadingFragment;
     private String languageS;
     private TextView text;
+    private int country = 0;
+    private int city = 0;
+
     public void onMenuItemClick(View view) {
         text = findViewById(R.id.languageText);
         String language = text.getText()+"";
@@ -189,6 +192,7 @@ public class ClubActivity extends BaseActivity {
                             mapsView = false;
                             spinnerCountry.setSelection(0);
                             spinnerCity.setSelection(0);
+                            showListCityDefault();
                         }
                         break;
                 }
@@ -205,7 +209,7 @@ public class ClubActivity extends BaseActivity {
         spinnerCity = findViewById(R.id.spinner_city);
 
         showListCountry();
-        showListCity();
+        showListCityDefault();
         loadListClubDefault();
 
             if(languageS != null){
@@ -214,6 +218,7 @@ public class ClubActivity extends BaseActivity {
                 }
             }
     }
+
 
     private void showSearchDialog() {
         final Dialog dialog = new Dialog(ClubActivity.this);
@@ -569,6 +574,9 @@ public class ClubActivity extends BaseActivity {
                             String longitude = selectedCountry.getMap_long();
                             if (position > 0) {
 //                                Toast.makeText(ClubActivity.this, "Selected: " + selectedCountry.getTen(), Toast.LENGTH_SHORT).show();
+                                showListCity(countryId);
+                                country = countryId;
+                                city = 0;
                                 loadClubListByCountry(countryId, latitude, longitude);
                                 spinnerCity.setSelection(0);
                             }
@@ -590,9 +598,9 @@ public class ClubActivity extends BaseActivity {
         });
     }
 
-    public void showListCity() {
+    public void showListCity(int countryId) {
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<List<CityModel>> call = service.getListCity(230);
+        Call<List<CityModel>> call = service.getListCity(countryId);
 
         call.enqueue(new Callback<List<CityModel>>() {
             @Override
@@ -622,8 +630,9 @@ public class ClubActivity extends BaseActivity {
                             String longitude = selectedCity.getMap_long();
                             if (position > 0) {
 //                                Toast.makeText(ClubActivity.this, "Selected: " + selectedCity.getTen(), Toast.LENGTH_SHORT).show();
+                               city = cityId;
                                 loadClubListByCity(cityId, latitude, longitude);
-                                spinnerCountry.setSelection(0);
+//                                spinnerCountry.setSelection(0);
                             }
                         }
 
@@ -643,8 +652,23 @@ public class ClubActivity extends BaseActivity {
         });
     }
 
+
+    private void showListCityDefault() {
+        List<CityModel> cities = new ArrayList<>();
+        cities.add(new CityModel(0, "Thành phố", "0", "0"));
+        if(languageS != null){
+            if(languageS.contains("en")){
+                cities.clear();
+                cities.add(new CityModel(0, "City", "0", "0"));
+            }
+        }
+        ArrayAdapter<CityModel> adapter = new ArrayAdapter<>(ClubActivity.this, android.R.layout.simple_spinner_item, cities);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCity.setAdapter(adapter);
+    }
+
     private void switchToMapsFragment(double latitude, double longitude, boolean current) {
-        ClubMapsFragment mapsFragment = ClubMapsFragment.newInstance(latitude, longitude, current);
+        ClubMapsFragment mapsFragment = ClubMapsFragment.newInstance(latitude, longitude, current, country, city);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container_club, mapsFragment);
         transaction.commit();
