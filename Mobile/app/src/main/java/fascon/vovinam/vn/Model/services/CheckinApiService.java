@@ -36,4 +36,25 @@ public interface CheckinApiService {
     @GET("api/teacher/classes/getdetail")
     Call<JsonObject> getClassMembers(@Header("Authorization") String token,
                                      @Query("id_class") int idClass);
+
+    @POST("api/teacher/view-checkin-by-id")
+    Call<JsonObject> teacherViewCheckinById(@Header("Authorization") String token,
+                                        @Query("start_date") String start,
+                                        @Query("end_date") String end,
+                                        @Query("id_class") int id,
+                                            @Query("member_id") int idMember);
+
+    @POST("api/teacher/view-checkin-by-name")
+    Call<JsonObject> teacherViewCheckinByName(@Header("Authorization") String token,
+                                        @Query("start_date") String start,
+                                        @Query("end_date") String end,
+                                        @Query("id_class") int id,
+                                              @Query("member_name") String name);
+
+    @POST("api/teacher/view-checkin-by-phone")
+    Call<JsonObject> teacherViewCheckinByPhone(@Header("Authorization") String token,
+                                        @Query("start_date") String start,
+                                        @Query("end_date") String end,
+                                        @Query("id_class") int id,
+                                               @Query("member_phone") String sdt);
 }

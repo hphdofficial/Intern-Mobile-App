@@ -137,10 +137,9 @@ public class MyClassActivity extends BaseActivity {
 
                         startActivity(new Intent(getApplicationContext(), activity_member_checkin.class));
 
-                    }else{
-                        Toast.makeText(MyClassActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
-                        hideLoading();
-                    }
+                    Toast.makeText(MyClassActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    hideLoading();
+
 
 
                 }
