@@ -235,11 +235,11 @@ public class activity_item_detail extends BaseActivity {
                     });
                     myContentE.apply();
                     txtItemName.setText(product.getProductName());
-                    if(languageS!= null){
+                   /* if(languageS!= null){
                         if(languageS.contains("en")){
                             txtItemName.setText(product.getEn());
                         }
-                    }
+                    }*/
                     txtItemPrice.setText(product.getUnitPrice() + " VND");
                     txtItemInStock.setText(product.getUnitsInStock() +"");
                     quantityInStock = product.getUnitsInStock();

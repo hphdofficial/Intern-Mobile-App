@@ -805,7 +805,7 @@ public class MenuActivity extends BaseActivity {
                 String selectedItem = adapterView.getItemAtPosition(i).toString();
 
                 if(selectedItem.contains("9"))
-                    max1 = 10;
+                    max1 = 9;
                 else
                 if(selectedItem.contains("30"))
                     max1 = 30;
@@ -862,7 +862,7 @@ public class MenuActivity extends BaseActivity {
                 String selectedItem = adapterView.getItemAtPosition(i).toString();
 
                 if(selectedItem.contains("9"))
-                    max = 10;
+                    max = 9;
                 else
                 if(selectedItem.contains("30"))
                     max = 30;

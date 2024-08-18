@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.json.JSONObject;
 
 import fascon.vovinam.vn.ViewModel.BaseActivity;
@@ -71,7 +72,7 @@ public class DetailClassActivity extends BaseActivity {
         });
 
         sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
+
 
         languageS = sharedPreferences.getString("language",null);
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
@@ -176,6 +177,10 @@ public class DetailClassActivity extends BaseActivity {
                     nameClass = dataClass.getTen();
                     name = dataClass.getGiangvien();
                     fee = dataClass.getHocPhi();
+                    SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+                    SharedPreferences.Editor myContentE = sga.edit();
+                    myContentE.putFloat("fee", dataClass.getGiatien());
+                    myContentE.apply();
                     txtNameClass.setText(dataClass.getTen());
                     txtTeacherClass.setText(dataClass.getGiangvien());
                     txtAddressClass.setText(dataClass.getClub());
@@ -272,6 +277,7 @@ public class DetailClassActivity extends BaseActivity {
         intent.putExtra("name", name);
         intent.putExtra("nameClass", nameClass);
         intent.putExtra("idClass", idClass);
+
         intent.putExtra("fee", fee);
         intent.putExtras(bundle);
         startActivity(intent);

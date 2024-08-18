@@ -125,10 +125,17 @@ public class payment extends BaseActivity {
         if (extras != null) {
             // Lấy dữ liệu từ Bundle
             String className = extras.getString("className");
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    if(className.contains("Lớp")){
+                        className = className.replace("Lớp","Class");
+                    }
+                }
+            }
             String teacherName = extras.getString("teacherName");
             Double money = extras.getDouble("money");
             String note =  extras.getString("note");
-
+            String formattedNumber = String.format("%.0f", money);
             textViewHealthStatus.setText(note);
             textViewClass.setText("Lớp học: \n"+className);
             if(languageS != null){
@@ -137,7 +144,7 @@ public class payment extends BaseActivity {
                 }
             }
             textViewInstructorName.setText(teacherName);
-            textViewFeeAmount.setText(money.toString()+" VND");
+            textViewFeeAmount.setText(formattedNumber+" VND");
             total = money.toString();
         }
         displayQRCode("https://api.vietqr.io/image/970425-0937759311-cG4PADy.jpg&amount=" + total+

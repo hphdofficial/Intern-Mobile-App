@@ -20,6 +20,7 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemViewHolder> {
     Context context;
+
     private String languageS;
     private List<ProductModel> list ;
     public ProductAdapter(Context context, List<ProductModel> list ){
@@ -56,6 +57,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ItemView
 
         if(languageS!= null){
             if(languageS.contains("en")){
+                /*holder.name_product.setText(item.getEn());*/
                 holder.type_product.setText("Type: " + item.getCategoryName());
                 holder.supplier_product.setText("Supplier: " + item.getSupplierName());
                 holder.price_product.setText("Price: " + item.getUnitPrice() + "");
