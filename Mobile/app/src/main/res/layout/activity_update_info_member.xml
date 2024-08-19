@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_light"
-    tools:context=".UpdateInfoMember">
+    tools:context=".View.UpdateInfoMember">
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -79,7 +79,7 @@
                     android:id="@+id/edit_text_ten"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Tên" />
+                    android:hint="Họ và Tên" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -94,7 +94,7 @@
                     android:id="@+id/edit_text_dienthoai"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Điện thoại"
+                    android:hint="Điện thoại (*)"
                     android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -198,7 +198,9 @@
                     android:id="@+id/edit_text_chieucao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Chiều cao" />
+                    android:hint="Chiều cao (m)"
+                    android:inputType="numberDecimal"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -213,7 +215,8 @@
                     android:id="@+id/edit_text_cannang"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cân nặng" />
+                    android:hint="Cân nặng (kg)"
+                    android:inputType="phone"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton

@@ -98,12 +98,18 @@ public class SignupActivity extends BaseActivity {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
                     SignupActivity.this,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
-                        String formattedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
-                        editTextNgaysinh.setText(formattedDate);
+                        // Hiển thị ngày theo định dạng Ngày/Tháng/Năm
+                        String displayDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                        editTextNgaysinh.setText(displayDate);
+
+                        // Lưu ngày theo định dạng Năm-Tháng-Ngày để gửi lên server
+                        String serverDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
+                        editTextNgaysinh.setTag(serverDate); // Lưu vào tag của EditText
                     },
                     year, month, day);
             datePickerDialog.show();
         });
+
 
         buttonSignUp.setOnClickListener(v -> registerUser());
 
@@ -182,7 +188,11 @@ public class SignupActivity extends BaseActivity {
         String ten = editTextTen.getText().toString().trim();
         String dienthoai = editTextDienthoai.getText().toString().trim();
         String diachi = editTextDiachi.getText().toString().trim();
-        String ngaysinh = editTextNgaysinh.getText().toString().trim();
+
+        // Lấy ngày sinh từ Tag (định dạng yyyy-MM-dd)
+        String ngaysinh = editTextNgaysinh.getTag() != null ? editTextNgaysinh.getTag().toString() : "";
+
+
         String hoten_giamho = editTextHotenGiamho.getText().toString().trim();
         String dienthoai_giamho = editTextDienthoaiGiamho.getText().toString().trim();
         String confirmPasswordEditText = edit_text_confirm_password.getText().toString().trim();
@@ -230,6 +240,17 @@ public class SignupActivity extends BaseActivity {
             return;
         }
 
+        // Kiểm tra định dạng số điện thoại hợp lệ
+        if (!Patterns.PHONE.matcher(dienthoai).matches()) {
+            Toast.makeText(SignupActivity.this, "Số điện thoại không hợp lệ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Kiểm tra độ dài số điện thoại (tối đa 11 chữ số)
+        if (dienthoai.length() < 10 || dienthoai.length() > 11) {
+            Toast.makeText(SignupActivity.this, "Số điện thoại phải có từ 10 đến 11 chữ số.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Kiểm tra địa chỉ
         if (diachi.isEmpty()) {
             Toast.makeText(SignupActivity.this, "Vui lòng nhập địa chỉ.", Toast.LENGTH_SHORT).show();
@@ -254,16 +275,36 @@ public class SignupActivity extends BaseActivity {
             Toast.makeText(SignupActivity.this, "Ngày sinh không hợp lệ.", Toast.LENGTH_SHORT).show();
             return;
         }
-
         // Kiểm tra chiều cao và cân nặng
-        int chieucao, cannang;
+        float chieucao;
         try {
-            chieucao = Integer.parseInt(editTextChieucao.getText().toString().trim());
-            cannang = Integer.parseInt(editTextCannang.getText().toString().trim());
+            chieucao = Float.parseFloat(editTextChieucao.getText().toString().trim());
+
+            // Kiểm tra nếu chiều cao không nằm trong khoảng hợp lệ
+            if (chieucao < 0.5 || chieucao > 4) {
+                Toast.makeText(SignupActivity.this, "Vui lòng nhập chiều cao hợp lệ trong khoảng 0.5 - 4.0 mét.", Toast.LENGTH_SHORT).show();
+                return;
+            }
         } catch (NumberFormatException e) {
-            Toast.makeText(SignupActivity.this, "Chiều cao và cân nặng phải là số hợp lệ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignupActivity.this, "Vui lòng nhập chiều cao hợp lệ (ví dụ: 1.58).", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Kiểm tra cân nặng
+        int cannang;
+        try {
+            cannang = Integer.parseInt(editTextCannang.getText().toString().trim());
+
+            // Kiểm tra nếu cân nặng không nằm trong khoảng hợp lệ
+            if (cannang < 10 || cannang > 400) {
+                Toast.makeText(SignupActivity.this, "Vui lòng nhập cân nặng hợp lệ (từ 10kg đến 400kg).", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(SignupActivity.this, "Cân nặng phải là số hợp lệ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         // Kiểm tra giới tính
         if (gioitinh.isEmpty()) {
@@ -281,11 +322,20 @@ public class SignupActivity extends BaseActivity {
             age--;
         }
 
-        if (age < 18 && (hoten_giamho.isEmpty() || dienthoai_giamho.isEmpty())) {
-            Toast.makeText(SignupActivity.this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // Kiểm tra số điện thoại giám hộ (chỉ khi dưới 18 tuổi)
+        if (age < 18) {
+            if (hoten_giamho.isEmpty() || dienthoai_giamho.isEmpty()) {
+                Toast.makeText(SignupActivity.this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            // Kiểm tra độ dài số điện thoại giám hộ (tối đa 11 chữ số)
+            if (dienthoai_giamho.length() < 10 || dienthoai_giamho.length() > 11) {
+                Toast.makeText(SignupActivity.this, "Số điện thoại giám hộ phải có từ 10 đến 11 chữ số.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
         // Tạo đối tượng RegisterModel và gửi yêu cầu đăng ký
         RegisterModel request = new RegisterModel();
         request.setUsername(username);
