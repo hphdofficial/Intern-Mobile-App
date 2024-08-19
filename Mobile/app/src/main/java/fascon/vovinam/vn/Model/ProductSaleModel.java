@@ -18,6 +18,16 @@ public class ProductSaleModel {
     private int categoryId;
     @SerializedName("SupplierName")
     private String nameSup;
+    @SerializedName("tenenglish")
+    private String tenenglish;
+
+    public String getTenenglish() {
+        return tenenglish;
+    }
+
+    public void setTenenglish(String tenenglish) {
+        this.tenenglish = tenenglish;
+    }
 
     public String getNameSup() {
         return nameSup;

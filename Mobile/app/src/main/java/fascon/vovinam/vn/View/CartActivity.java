@@ -180,7 +180,7 @@ public class CartActivity extends BaseActivity {
                         }
                         if (!found) {
                             ProductModel product = item.getProduct();
-                            products.add(new ProductModel(product.getProductID(), product.getProductName(), product.getUnitPrice(), product.getImage_link(), product.getCategoryName(), product.getSupplierName(), product.getSale(), item.getQuantity()));
+                            products.add(new ProductModel(product.getEn(),product.getProductID(), product.getProductName(), product.getUnitPrice(), product.getImage_link(), product.getCategoryName(), product.getSupplierName(), product.getSale(), item.getQuantity()));
                         }
                     }
 

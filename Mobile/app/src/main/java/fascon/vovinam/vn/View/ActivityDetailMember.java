@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -427,7 +428,22 @@ private TextView textViewUsernameLabel;
                             textViewDienthoaiValue.setText(profile.getDienthoai());
                             textViewDiachiValue.setText(profile.getDiachi());
                             textViewGioitinhValue.setText(profile.getGioitinh());
-                            textViewNgaysinhValue.setText(profile.getNgaysinh());
+
+
+                            // Chuyển đổi ngày sinh từ yyyy-MM-dd sang dd/MM/yyyy
+                            String ngaysinh = profile.getNgaysinh();
+                            try {
+                                SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                                SimpleDateFormat displayFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                                Date date = originalFormat.parse(ngaysinh);
+                                String formattedDate = displayFormat.format(date);
+                                textViewNgaysinhValue.setText(formattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                textViewNgaysinhValue.setText(ngaysinh); // Hiển thị ngày sinh như ban đầu nếu có lỗi
+                            }
+
+
                             textViewLastloginValue.setText(profile.getLastlogin());
                             textViewChieucaoValue.setText(profile.getChieucao());
                             textViewCannangValue.setText(profile.getCannang());
@@ -473,9 +489,9 @@ private TextView textViewUsernameLabel;
     }
 
     private int getAgeFromBirthdate(String birthdate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
-            Date date = sdf.parse(birthdate);
+            Date date = sdf.parse(birthdate); // Sử dụng định dạng yyyy-MM-dd để tính tuổi
             Calendar dob = Calendar.getInstance();
             dob.setTime(date);
             Calendar today = Calendar.getInstance();
@@ -489,6 +505,8 @@ private TextView textViewUsernameLabel;
             return 0;
         }
     }
+
+
 
 
     @Override
@@ -582,11 +600,11 @@ private TextView textViewUsernameLabel;
         super.onResume();
         Intent intent = getIntent();
         String ngaysinh = intent.getStringExtra("ngaysinh");
+
         if (ngaysinh != null) {
-            // Cập nhật trực tiếp thông tin ngày sinh từ Intent nếu có
-            textViewNgaysinhValue.setText(ngaysinh);
-            // Tính toán tuổi và ẩn hiện thông tin giám hộ
+            // Sử dụng định dạng gốc yyyy-MM-dd để tính tuổi
             int age = getAgeFromBirthdate(ngaysinh);
+
             if (age >= 18) {
                 textViewHotengiamhoValue.setVisibility(View.GONE);
                 textViewDienthoaiGiamhoValue.setVisibility(View.GONE);
@@ -594,6 +612,21 @@ private TextView textViewUsernameLabel;
                 textViewHotengiamhoValue.setVisibility(View.VISIBLE);
                 textViewDienthoaiGiamhoValue.setVisibility(View.VISIBLE);
             }
+
+            // Chuyển đổi định dạng ngày sinh để hiển thị
+            try {
+                SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                SimpleDateFormat displayFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date date = serverFormat.parse(ngaysinh);
+                String formattedDate = displayFormat.format(date);
+                textViewNgaysinhValue.setText(formattedDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                textViewNgaysinhValue.setText(ngaysinh); // Hiển thị ngày sinh như ban đầu nếu có lỗi
+            }
         }
     }
+
+
+
 }

@@ -154,11 +154,11 @@ public class activity_member_checkin extends BaseActivity {
 
 //                                    attendanceModels.addAll(attendanceModelAll);
                                     attendanceModelAll.sort((event1, event2) -> event2.getDate().compareTo(event1.getDate()));
-
                                     checkedAdapter = new Checked_adapter(attendanceModelAll, getApplicationContext());
                                     RecyclerView recyclerView = findViewById(R.id.recycler_checkin);
                                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                                     recyclerView.setAdapter(checkedAdapter);
+
 
                                     txtSoNgayHienDien.setText(checkedAdapter.getItemCount() + " Ngày");
                                     hideLoading();

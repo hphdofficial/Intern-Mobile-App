@@ -28,6 +28,16 @@ public class ProductModel implements Parcelable {
 
     @SerializedName("CategoryID")
     private String categoryID;
+    @SerializedName("tenenglish")
+    private String en;
+
+    public String getEn() {
+        return en;
+    }
+
+    public void setEn(String en) {
+        this.en = en;
+    }
 
     @SerializedName("link_image")
     private String image_link;
@@ -56,6 +66,16 @@ public class ProductModel implements Parcelable {
     }
 
     public ProductModel(int productID, String productName, String unitPrice, String image_link, String categoryName, String supplierName, String sale, int quantity) {
+        this.productID = productID;
+        this.productName = productName;
+        this.unitPrice = unitPrice;
+        this.image_link = image_link;
+        this.quantity = quantity;
+        this.CategoryName = categoryName;
+        this.SupplierName = supplierName;
+        this.sale = sale;
+    }
+    public ProductModel(String en,int productID, String productName, String unitPrice, String image_link, String categoryName, String supplierName, String sale, int quantity) {
         this.productID = productID;
         this.productName = productName;
         this.unitPrice = unitPrice;

@@ -69,16 +69,20 @@ public class ClubMapsFragment extends Fragment {
     private double latitude;
     private double longitude;
     private static boolean isCurrent = false;
+    private static int countryId = 0;
+    private static int cityId = 0;
     private BlankFragment loadingFragment;
     private String languageS;
 
-    public static ClubMapsFragment newInstance(double latitude, double longitude, boolean current) {
+    public static ClubMapsFragment newInstance(double latitude, double longitude, boolean current, int country, int city) {
         ClubMapsFragment fragment = new ClubMapsFragment();
         Bundle args = new Bundle();
         args.putDouble(ARG_LATITUDE, latitude);
         args.putDouble(ARG_LONGITUDE, longitude);
         fragment.setArguments(args);
         isCurrent = current;
+        countryId = country;
+        cityId = city;
         return fragment;
     }
 
@@ -263,6 +267,15 @@ public class ClubMapsFragment extends Fragment {
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
+
+        if (isCurrent) {
+            call = service.getListClubMap3(latitude + ", " + longitude);
+        } else if (countryId != 0 && cityId == 0) {
+            call = service.getListClubMap1(countryId);
+        } else if (countryId != 0 && cityId != 0) {
+            call = service.getListClubMap2(countryId, cityId);
+        }
+
 
         call.enqueue(new Callback<JsonObject>() {
             @Override

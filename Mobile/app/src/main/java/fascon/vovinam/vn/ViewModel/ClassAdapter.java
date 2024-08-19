@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import fascon.vovinam.vn.Model.services.OnItemClickListener;
 import fascon.vovinam.vn.View.DetailClassActivity;
 import fascon.vovinam.vn.R;
 import fascon.vovinam.vn.Model.Class;
@@ -25,12 +27,16 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
     Context context;
     private List<Class> classList;
     private String idClub = null;
+    private boolean isChangeClass;
+    private OnItemClickListener listener;
+    private int selectedPosition = RecyclerView.NO_POSITION;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtName;
         public TextView txtTime;
         public TextView txtFee;
         public Button btnRegister;
+        public Button btnChangeClass;
 
         public ViewHolder(View view) {
             super(view);
@@ -38,7 +44,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
             txtTime = view.findViewById(R.id.txt_time);
             txtFee = view.findViewById(R.id.txt_fee);
             btnRegister = view.findViewById(R.id.btn_register_class);
-
+            btnChangeClass = view.findViewById(R.id.btn_change_class);
         }
     }
 
@@ -47,6 +53,14 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
         this.classList = data;
         this.idClub = idClub;
     }
+
+    public ClassAdapter(Context context, List<Class> data, boolean isChangeClass, OnItemClickListener listener) {
+        this.context = context;
+        this.classList = data;
+        this.isChangeClass = isChangeClass;
+        this.listener = listener;
+    }
+
     private String languageS;
 
     @Override
@@ -65,22 +79,60 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedFee = currencyFormat.format(classList.get(position).getGiatien());
         holder.txtFee.setText("Học phí: " + formattedFee);
+        if (isChangeClass) {
+            holder.txtFee.setText("Học phí: 500.000 đ");
+        }
         if(languageS!= null){
             if(languageS.contains("en")){
                 holder.txtTime.setText("Time: " + classList.get(position).getThoigian());
                 holder.txtFee.setText("Fee: " + formattedFee);
+                if (isChangeClass) {
+                    holder.txtFee.setText("Fee: 500.000 VND");
+                }
                 holder.btnRegister.setText("Detail");
             }
         }
-        holder.btnRegister.setOnClickListener(new View.OnClickListener() {
+        if (!isChangeClass) {
+            holder.btnRegister.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, DetailClassActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id_class", String.valueOf(classList.get(position).getId()));
+                    bundle.putString("id_club", idClub);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
+        } else {
+            holder.btnRegister.setVisibility(View.GONE);
+            holder.btnChangeClass.setVisibility(View.GONE);
+            holder.btnChangeClass.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+        if (selectedPosition == position) {
+            holder.itemView.setBackgroundColor(Color.LTGRAY);
+        } else {
+            holder.itemView.setBackgroundColor(Color.WHITE);
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DetailClassActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("id_class", String.valueOf(classList.get(position).getId()));
-                bundle.putString("id_club", idClub);
-                intent.putExtras(bundle);
-                context.startActivity(intent);
+                int previousSelectedPosition = selectedPosition;
+                selectedPosition = holder.getAdapterPosition();
+
+                notifyItemChanged(previousSelectedPosition);
+                notifyItemChanged(selectedPosition);
+
+                if (listener != null) {
+                    listener.onItemClick(position, classList.get(position).getId());
+                }
             }
         });
     }

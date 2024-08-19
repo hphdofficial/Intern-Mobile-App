@@ -5,8 +5,10 @@ public class CheckinMemberModel {
     private String ten;
     private String begin_date;
     private boolean isChecked;
+    private boolean ableCheck;
 
-    public CheckinMemberModel(String begin_date, int id, boolean isChecked, String ten) {
+    public CheckinMemberModel(boolean ableCheck, String begin_date, int id, boolean isChecked, String ten) {
+        this.ableCheck = false;
         this.begin_date = begin_date;
         this.id = id;
         this.isChecked = false;
@@ -46,5 +48,13 @@ public class CheckinMemberModel {
 
     public void setTen(String ten) {
         this.ten = ten;
+    }
+
+    public boolean isAbleCheck() {
+        return ableCheck;
+    }
+
+    public void setAbleCheck(boolean ableCheck) {
+        this.ableCheck = ableCheck;
     }
 }

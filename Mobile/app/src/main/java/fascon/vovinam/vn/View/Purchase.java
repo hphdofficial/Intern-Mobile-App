@@ -243,7 +243,16 @@ private TextView addessP;
 //            sum += value.getPrice()*value.getQuantity();
 //        }
         for (ProductModel value : productList) {
-            textPayment += value.getProductName() + "va";
+
+            if (languageS!= null){
+                if(languageS.contains("en")){
+                    textPayment += value.getEn() + "va";
+                }else {
+                    textPayment += value.getProductName() + "va";
+                }
+            }else {
+                textPayment += value.getProductName() + "va";
+            }
             sum += Integer.parseInt(value.getUnitPrice()) * value.getQuantity();
         }
         float dis = Float.parseFloat(discount.getText().toString().replace("đ", "").replace(".", ""));
@@ -298,18 +307,40 @@ private TextView addessP;
                     if (response.isSuccessful()) {
                         StatusRegister status = response.body();
                         if (status.getStatus().contains("thành công")) {
-                            Toast.makeText(getApplicationContext(), "Thanh toán thành công, mã hóa đơn " + arr[0], Toast.LENGTH_SHORT).show();
+                            if(languageS!= null){
+                                if (languageS.contains("en")){
+                                    Toast.makeText(getApplicationContext(), "Payment Ok, bill code: "+ arr[0], Toast.LENGTH_SHORT).show();
+                                }else {
+                                    Toast.makeText(getApplicationContext(), "Thanh toán thành công, mã hóa đơn " + arr[0], Toast.LENGTH_SHORT).show();
+
+                                }
+                            }else {
+                                Toast.makeText(getApplicationContext(), "Thanh toán thành công, mã hóa đơn " + arr[0], Toast.LENGTH_SHORT).show();
+
+                            }
                             startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                         } else {
                             Toast.makeText(getApplicationContext(), "Thanh toán thát bại", Toast.LENGTH_SHORT).show();
                         }
                     }
-                    Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+                    if(languageS!= null){
+                        if (languageS.contains("en")){
+                            Toast.makeText(getApplicationContext(), "Payment fail", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getApplicationContext(), "Thanh toán thất bại ", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else {
+                        Toast.makeText(getApplicationContext(), "Thanh toán thất bại ", Toast.LENGTH_SHORT).show();
+
+                    }
+
+
                 }
 
                 @Override
                 public void onFailure(Call<StatusRegister> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "fail nn", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "error 404", Toast.LENGTH_SHORT).show();
                 }
             });
             Log.e("stats", link);
@@ -338,7 +369,15 @@ private TextView addessP;
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                 if (response.isSuccessful()) {
 
-                                    Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                 if(languageS!= null){
+                                     if (languageS.contains("en")){
+                                         Toast.makeText(getApplicationContext(), "order successfully", Toast.LENGTH_SHORT).show();
+                                     }else {
+                                         Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                     }
+                                 }else {
+                                     Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                 }
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Đặt hàng thất bại vì k có hàng", Toast.LENGTH_SHORT).show();
 
@@ -364,7 +403,7 @@ private TextView addessP;
                         inten.putExtra("amount", to);
                         inten.putExtra("textPayment", textPayment);
                         startActivity(inten);
-                    } else if (selectedValue.contains("thẻ"))
+                    } else if (selectedValue.contains("thẻ")|| selectedValue.contains("Card"))
                         getLink();
                     else {
                         call.enqueue(new Callback<ResponseBody>() {
@@ -372,8 +411,15 @@ private TextView addessP;
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                 if (response.isSuccessful()) {
 
-                                    Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
-                                } else {
+                                    if(languageS!= null){
+                                        if (languageS.contains("en")){
+                                            Toast.makeText(getApplicationContext(), "order successfully", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }else {
+                                        Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                    }                                } else {
                                     Toast.makeText(getApplicationContext(), "Đặt hàng thất bại vì k có hàng", Toast.LENGTH_SHORT).show();
 
                                 }
@@ -486,7 +532,16 @@ private TextView addessP;
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "fails", Toast.LENGTH_SHORT).show();
+                if(languageS!= null){
+                    if (languageS.contains("en")){
+                        Toast.makeText(getApplicationContext(), "payment error", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getApplicationContext(), "Thanh toán thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(), "Thanh toán thất bại", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

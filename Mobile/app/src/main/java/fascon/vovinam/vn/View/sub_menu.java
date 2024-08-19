@@ -387,14 +387,6 @@ public class sub_menu extends Fragment {
             item5.setVisible(false);
             MenuItem item =  menu.findItem(R.id.btn_registerclass);
             item.setVisible(false);
-            MenuItem item1 =  menu.findItem(R.id.btn_historypay);
-            item1.setVisible(false);
-            MenuItem item4 =  menu.findItem(R.id.btn_sup);
-            item4.setVisible(false);
-            MenuItem item6 =  menu.findItem(R.id.btn_cart);
-            item6.setVisible(false);
-            MenuItem item7 =  menu.findItem(R.id.btn_product);
-            item7.setVisible(false);
             MenuItem item2 =  menu.findItem(R.id.btn_register_up);
             item2.setVisible(false);
             //  RemoveViewHLV();

@@ -142,6 +142,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 holder.txtNameSupplier.setText("Supplier " + productList.get(position).getSupplierName());
                 holder.txtCategory.setText("Type: " + productList.get(position).getCategoryName());
                 holder.btnRemoveCart.setText("Delete");
+              /*  holder.txtNameProduct.setText(productList.get(position).getEn());*/
             }
         }
         if (isViewMode) {

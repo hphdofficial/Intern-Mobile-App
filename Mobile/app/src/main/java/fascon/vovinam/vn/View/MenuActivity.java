@@ -435,7 +435,6 @@ public class MenuActivity extends BaseActivity {
                         editor.apply();
                     }
                 }
-
                 @Override
                 public void onFailure(Call<Club> call, Throwable t) {
                     hideLoading();
@@ -443,8 +442,6 @@ public class MenuActivity extends BaseActivity {
             });
 
         }else {
-            productsale1.setVisibility(View.GONE);
-            test1.setVisibility(View.GONE);
             RemoveViewHLV();
             hideLoading();
         }
@@ -716,6 +713,11 @@ public class MenuActivity extends BaseActivity {
                         100
                 ));
                 textView.setText(p.getName());
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        textView.setText(p.getTenenglish());
+                    }
+                }
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
@@ -803,7 +805,7 @@ public class MenuActivity extends BaseActivity {
                 String selectedItem = adapterView.getItemAtPosition(i).toString();
 
                 if(selectedItem.contains("9"))
-                    max1 = 10;
+                    max1 = 9;
                 else
                 if(selectedItem.contains("30"))
                     max1 = 30;
@@ -860,7 +862,7 @@ public class MenuActivity extends BaseActivity {
                 String selectedItem = adapterView.getItemAtPosition(i).toString();
 
                 if(selectedItem.contains("9"))
-                    max = 10;
+                    max = 9;
                 else
                 if(selectedItem.contains("30"))
                     max = 30;
@@ -940,6 +942,11 @@ public class MenuActivity extends BaseActivity {
                         100
                 ));
                 textView.setText(p.getName());
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        textView.setText(p.getTenenglish());
+                    }
+                }
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
@@ -1026,50 +1033,114 @@ public class MenuActivity extends BaseActivity {
                 t.setTextColor(color);
             }
         });
-
+        String token = sharedPreferences.getString("access_token", null);
+        String role = decodeRoleFromToken(token);
         // Bắt đầu animation
         colorAnimator.start();
 
         linearinfor.addView(t);
         int count = 1;
+        int k = 0;
         if(list.size()>0){
-            while (list.size()>0 && count<=3){
+            if(role.contains("0")){
+                while (count<=list.size()  && k < 3){
 
-                NewsModel news = list.get(list.size()-count);
-                TextView textView = new TextView(getApplicationContext());
-                textView.setPadding(10,5,0,0);
-                textView.setId(news.getId());
-                textView.setText("* "+news.getTenvi());
-                textView.setTextColor(Color.RED);
-                textView.setTextSize(18);
-                String imageUrl = "http://tambinh.websinhvien.net/thumbs/340x280x1/upload/news/" + news.getPhoto();
-                // event
-                textView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), NewsDetailActivity.class);
-                        intent.putExtra("NewsTitle", news.getTenvi());
-                        intent.putExtra("NewsContent", news.getNoidungvi());
-                        intent.putExtra("NewsImage", imageUrl); // Pass the full image URL
-                        startActivity(intent);
+                    NewsModel news = list.get(list.size()-count);
+                    if(!news.getType().contains("giang-vien")){
+                        TextView textView = new TextView(getApplicationContext());
+                        textView.setPadding(10,5,0,0);
+                        textView.setId(news.getId());
+                        textView.setText("* "+news.getTenvi());
+
+                        if (s != null){
+                            if(s.contains("en")) {
+                                textView.setText("* "+news.getTenen());
+                            }
+
+                        }
+                        textView.setTextColor(Color.RED);
+                        textView.setTextSize(18);
+                        String imageUrl = "http://tambinh.websinhvien.net/thumbs/340x280x1/upload/news/" + news.getPhoto();
+                        // event
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getApplicationContext(), NewsDetailActivity.class);
+                                intent.putExtra("NewsTitle", news.getTenvi());
+                                intent.putExtra("NewsContent", news.getNoidungvi());
+                                intent.putExtra("NewsImage", imageUrl); // Pass the full image URL
+                                startActivity(intent);
+                            }
+                        });
+                        linearinfor.addView(textView);
+                        k+=1;
+                        ObjectAnimator colorAnim = ObjectAnimator.ofInt(
+                                textView, "textColor",
+                                Color.RED, Color.BLUE, Color.GREEN
+                        );
+
+                        // Sử dụng ArgbEvaluator để chuyển đổi màu mượt mà
+                        colorAnim.setEvaluator(new ArgbEvaluator());
+                        colorAnim.setDuration(3000);
+
                     }
-                });
 
-                linearinfor.addView(textView);
+                    count = count+1;
+                    // Thiết lập thời gian chuyển đổi màu
 
-                ObjectAnimator colorAnim = ObjectAnimator.ofInt(
-                        textView, "textColor",
-                        Color.RED, Color.BLUE, Color.GREEN
-                );
 
-                // Sử dụng ArgbEvaluator để chuyển đổi màu mượt mà
-                colorAnim.setEvaluator(new ArgbEvaluator());
+                }
+            }else{
+                k = 0;
+                while (count<=list.size() && k<3){
 
-                // Thiết lập thời gian chuyển đổi màu
-                colorAnim.setDuration(3000);
-                count = count+1;
+                    NewsModel news = list.get(list.size()-count);
+                    if(news.getType().contains("giang-vien")){
 
+                        TextView textView = new TextView(getApplicationContext());
+                        textView.setPadding(10,5,0,0);
+                        textView.setId(news.getId());
+                        textView.setText("* "+news.getTenvi());
+                        textView.setTextColor(Color.RED);
+                        if (s != null){
+                            if(s.contains("en")) {
+                                textView.setText("* "+news.getTenen());
+                            }
+
+                        }
+                        textView.setTextSize(18);
+                        String imageUrl = "http://tambinh.websinhvien.net/thumbs/340x280x1/upload/news/" + news.getPhoto();
+                        // event
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getApplicationContext(), NewsDetailActivity.class);
+                                intent.putExtra("NewsTitle", news.getTenvi());
+                                intent.putExtra("NewsContent", news.getNoidungvi());
+                                intent.putExtra("NewsImage", imageUrl); // Pass the full image URL
+                                startActivity(intent);
+                            }
+                        });
+                        linearinfor.addView(textView);
+                        k+=1;
+                        ObjectAnimator colorAnim = ObjectAnimator.ofInt(
+                                textView, "textColor",
+                                Color.RED, Color.BLUE, Color.GREEN
+                        );
+
+                        // Sử dụng ArgbEvaluator để chuyển đổi màu mượt mà
+                        colorAnim.setEvaluator(new ArgbEvaluator());
+                        colorAnim.setDuration(3000);
+
+                    }
+
+                    count = count+1;
+                    // Thiết lập thời gian chuyển đổi màu
+
+
+                }
             }
+
 
             //setContentView(linearinfor);
         }
@@ -1487,7 +1558,6 @@ public class MenuActivity extends BaseActivity {
         SharedPreferences shared = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
        String s = shared.getString("language",null);
        if(s == null){
-//           Toast.makeText(getApplicationContext(),"abc",Toast.LENGTH_SHORT).show();
            translateVN();
        }else if(s.contains("en")){
            translateEng();

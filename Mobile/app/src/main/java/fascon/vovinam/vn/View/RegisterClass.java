@@ -64,6 +64,7 @@ public class RegisterClass extends BaseActivity {
             startActivity(intent);
         }
     }
+    private EditText textz;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +82,7 @@ public class RegisterClass extends BaseActivity {
         money = findViewById(R.id.total);
         note = findViewById(R.id.radioGroup);
         date_learn = findViewById(R.id.radio_group_gender);
+        textz = findViewById(R.id.textz);
 
         CheckBox checkBoxOption1 = findViewById(R.id.checkBoxOption1);
         CheckBox checkBoxOption3 = findViewById(R.id.checkBoxOption3);
@@ -122,6 +124,13 @@ public class RegisterClass extends BaseActivity {
             // Lấy dữ liệu từ Bundle
             String name = extras.getString("name");
             String className = extras.getString("nameClass");
+          if(languageS!= null){
+              if(languageS.contains("en")){
+                  if(className.contains("Lớp")){
+                      className = className.replace("Lớp","Class");
+                  }
+              }
+          }
             classId = extras.getString("idClass");
             fee = extras.getInt("fee");
             name_class.setText(name+" - " + className);
@@ -155,7 +164,12 @@ public class RegisterClass extends BaseActivity {
                     if(checkBox.isChecked()){
                             String selectedText = checkBox.getText().toString();
                             noteText = noteText + selectedText + "\n";
+
                     }
+
+                }
+                if(checkBoxOption5.isChecked()){
+                    noteText = noteText + textz.getText()+"abc";
                 }
                 itent.putExtra("note",noteText);
                 if(total >0 )
@@ -174,6 +188,7 @@ public class RegisterClass extends BaseActivity {
         textViewDiachiLabel = findViewById(R.id.textViewDiachiLabel);
         radio_button_6 = findViewById(R.id.radio_button_6);
         radio_button_12 = findViewById(R.id.radio_button_12);
+        checkBoxOption5 = findViewById(R.id.checkBoxOption5);
         if(languageS != null){
             if(languageS.contains("en")){
 
@@ -185,6 +200,7 @@ public class RegisterClass extends BaseActivity {
                 radio_button_3.setText("3 Months");
                 radio_button_6.setText("6 Months");
                 radio_button_12.setText("12 Months");
+                checkBoxOption5.setText("Other");
                 for (CheckBox checkBox : checkbox) {
                    checkBox.setText(TranslateText(checkBox.getText().toString(),1));
                 }
@@ -193,6 +209,7 @@ public class RegisterClass extends BaseActivity {
         // giả sử class được chọn là 1
 
     }
+    private CheckBox checkBoxOption5;
     public String TranslateText(String text, int k){
         try {
             InputStream inputStream = getResources().openRawResource(R.raw.language);
@@ -228,8 +245,12 @@ public class RegisterClass extends BaseActivity {
     private TextView select_health;
     private TextView textViewDiachiLabel;
 
-
+    private Double moneyn = 0.0;
     public void eventClickRadio(){
+
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
 
 
 
@@ -240,16 +261,20 @@ public class RegisterClass extends BaseActivity {
                 // Xử lý khi một RadioButton được chọn
                 RadioButton selectedRadioButton = findViewById(checkedId);
                 String selectedText = selectedRadioButton.getText().toString();
+                SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+                Float a = sga.getFloat("fee",0);
+                    if (selectedText.contains("3")) {
+                        money.setText(a * 3 + " đ");
+                    }
+                    if (selectedText.contains("6")) {
+                        money.setText(a * 6 + " đ");
+                    }
+                    if (selectedText.contains("12")) {
+                        money.setText(a * 12 + " đ");
 
-                if (selectedText.contains("3")) {
-                    money.setText(fee * 3 + " đ");
-                }
-                if (selectedText.contains("6")) {
-                    money.setText(fee * 6 + " đ");
-                }
-                if (selectedText.contains("12")) {
-                    money.setText(fee * 12 + " đ");
-                }
+                    }
+
+
             }
         });
     }

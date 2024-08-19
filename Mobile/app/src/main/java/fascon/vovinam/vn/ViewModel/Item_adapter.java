@@ -71,6 +71,7 @@ public class Item_adapter extends RecyclerView.Adapter<Item_adapter.ViewHolder>{
             if(languageS.contains("en")){
                 viewHolder.txtProductInStock.setText("Remaining: "+txtProductInStock);
                 viewHolder.txtAmazing.setText("Outstanding!");
+                viewHolder.txtProductName.setText(ProductList.get(i).getEn());
             }
         }
 

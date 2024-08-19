@@ -45,6 +45,7 @@ public interface UserApiService {
 
     @Multipart
     @POST("api/upload/avatar")
+    @Headers("Accept: application/json")
     Call<ReponseModel> uploadAvatar(
             @Header("Authorization") String token,
             @Part MultipartBody.Part avatar

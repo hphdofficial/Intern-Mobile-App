@@ -35,8 +35,8 @@
         android:id="@+id/txt_name_clubclass"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
         android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
         android:maxLines="2"
         android:text="Name"
         android:textSize="18sp"
@@ -48,8 +48,8 @@
         android:id="@+id/txt_name_member"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:maxLines="2"
         android:text="Member"
@@ -62,25 +62,62 @@
         android:id="@+id/txt_time_request"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:maxLines="2"
         android:text="Time"
         android:textSize="18sp"
-        android:layout_marginStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageViewProductCart"
         app:layout_constraintTop_toBottomOf="@+id/txt_name_member" />
 
-    <Button
-        android:id="@+id/button_approve_request"
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/default_blue_color"
-        android:layout_marginTop="15dp"
-        android:text="Duyệt"
-        app:cornerRadius="15dp"
+        android:layout_marginTop="20dp"
+        android:fillViewport="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_time_request" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_time_request">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="126dp">
+
+            <Button
+                android:id="@+id/button_change_request"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="#009688"
+                android:text="Chuyển lớp"
+                app:cornerRadius="15dp" />
+
+            <Button
+                android:id="@+id/button_deny_request"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="#F44336"
+                android:text="Từ chối"
+                app:cornerRadius="15dp" />
+
+            <Button
+                android:id="@+id/button_accept_request"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#0037FF"
+                android:text="Chấp nhận"
+                app:cornerRadius="15dp" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

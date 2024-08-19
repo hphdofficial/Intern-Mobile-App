@@ -129,7 +129,6 @@ public class Belt_Payment extends BaseActivity {
             @Override
             public void onResponse(Call<List<DetailsBelt>> call, Response<List<DetailsBelt>> response) {
                    if(response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"true",Toast.LENGTH_SHORT).show();
                     List<DetailsBelt> list = response.body();
                        DetailsBelt  de = list.get(0);
                     if(idBelt  > idCurrent+1 || idBelt <= idCurrent){

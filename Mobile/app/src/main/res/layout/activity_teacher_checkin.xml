@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:ems="10"
-                android:hint="@string/hint_search_edit_start_date"
+                android:hint="Nhập ngày bắt đầu"
                 android:inputType="date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -91,7 +91,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:padding="8dp"
-                            android:text="@string/tbl_header_text_date"
+                            android:text="Ngày"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -102,7 +102,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:padding="8dp"
-                            android:text="@string/tbl_header_text_nameAttendee"
+                            android:text="Tên"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -113,7 +113,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:padding="8dp"
-                            android:text="@string/tbl_header_text_timeIn"
+                            android:text="Điểm danh lúc"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -144,7 +144,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="@string/btn_text_export_excel"
+                android:text="Xuất Excel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -156,7 +156,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:hint="@string/hint_search_edit_end_date"
+                android:hint="Nhập ngày kết thúc"
                 android:inputType="date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextDate2" />
@@ -166,7 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="@string/btn_text_filter"
+                android:text="Lọc"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

@@ -52,6 +52,7 @@ public class activity_checkin extends BaseActivity {
     private BlankFragment loadingFragment;
     private boolean in_time_class = false;
     private Button btnDiemDanh;
+    private TextView textViewNotify;
     private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +119,7 @@ public class activity_checkin extends BaseActivity {
                 startActivity(intent1);
             }
         });
-
+        textViewNotify = findViewById(R.id.textNotify);
         btnDiemDanh = findViewById(R.id.btnDiemDanh);
         String finalFormattedDate = formattedDate;
         btnDiemDanh.setOnClickListener(new View.OnClickListener() {
@@ -279,10 +280,13 @@ public class activity_checkin extends BaseActivity {
                     Gson gson = new Gson();
                     Type BooleanType = new TypeToken<Boolean>() {}.getType();
                     in_time_class = gson.fromJson(jsonObject.get("in_class_time"), BooleanType);
+//                    in_time_class = true;
                     System.out.println("Time class true: "+ in_time_class);
                     if(in_time_class){
+                        textViewNotify.setVisibility(View.INVISIBLE);
                         btnDiemDanh.setVisibility(View.VISIBLE);
                     }else{
+                        textViewNotify.setVisibility(View.VISIBLE);
                         btnDiemDanh.setVisibility(View.INVISIBLE);
                     }
                     Type checkinMemberListType = new TypeToken<List<CheckinMemberModel>>() {}.getType();
@@ -291,9 +295,12 @@ public class activity_checkin extends BaseActivity {
                         Toast.makeText(activity_checkin.this, "Lớp chưa có thành viên", Toast.LENGTH_SHORT).show();
                         hideLoading();
                     }else{
-                        for (CheckinMemberModel memberSample : checkinMembers){
-                            Log.e("PostData", "Success: " + memberSample.getTen());
+                        if(in_time_class){
+                            for (CheckinMemberModel memberSample : checkinMembers){
+                                memberSample.setAbleCheck(true);
+                            }
                         }
+
 
                         checkinAdapter = new Checkin_adapter(getApplicationContext(), checkinMembers);
                         RecyclerView recyclerView = findViewById(R.id.recycler_checkin);

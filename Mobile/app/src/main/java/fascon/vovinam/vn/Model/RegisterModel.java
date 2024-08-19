@@ -11,7 +11,7 @@ public class RegisterModel {
     private String ngaysinh;
     private String hotengiamho;
     private String dienthoai_giamho;
-    private int chieucao;
+    private float chieucao; // Đổi từ int sang float
     private int cannang;
 
     // Getters and setters...
@@ -95,11 +95,11 @@ public class RegisterModel {
         this.dienthoai_giamho = dienthoai_giamho;
     }
 
-    public int getChieucao() {
+    public float getChieucao() {
         return chieucao;
     }
 
-    public void setChieucao(int chieucao) {
+    public void setChieucao(float chieucao) {
         this.chieucao = chieucao;
     }
 
