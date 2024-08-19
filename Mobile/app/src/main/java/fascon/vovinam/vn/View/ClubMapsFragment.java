@@ -266,14 +266,16 @@ public class ClubMapsFragment extends Fragment {
         showLoading();
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<JsonObject> call = null;
+        Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
+
         if (isCurrent) {
             call = service.getListClubMap3(latitude + ", " + longitude);
         } else if (countryId != 0 && cityId == 0) {
             call = service.getListClubMap1(countryId);
-        } else {
+        } else if (countryId != 0 && cityId != 0) {
             call = service.getListClubMap2(countryId, cityId);
         }
+
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
