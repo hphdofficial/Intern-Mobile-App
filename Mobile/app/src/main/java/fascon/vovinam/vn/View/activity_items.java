@@ -369,7 +369,7 @@ public class activity_items extends BaseActivity {
             }
         });
 
-        if(!min_price_str.isEmpty() && !max_price_str.isEmpty()){
+        if(!min_price_str.isEmpty() && !max_price_str.isEmpty() && min_price_str.length() < 9 && max_price_str.length() < 9){
             min_price = Integer.parseInt(min_price_str);
             max_price = Integer.parseInt(max_price_str);
             apiService.getFilterByPrice(min_price, max_price).enqueue(new Callback<List<ProductModel>>() {
@@ -399,6 +399,9 @@ public class activity_items extends BaseActivity {
                     Log.e("PostData", "Failure: " + throwable.getMessage());
                 }
             });
+        }if(min_price_str.length() > 8 || max_price_str.length() > 8){
+            Toast.makeText(this, "Giá tiền nhập vào quá lớn, vui lòng nhập lại", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         int SupplierID = 0;
