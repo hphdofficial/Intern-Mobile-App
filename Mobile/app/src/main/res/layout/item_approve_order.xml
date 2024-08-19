@@ -75,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
-                        android:backgroundTint="#009BFF"
+                        android:backgroundTint="#0037FF"
                         android:text="Chỉnh sửa"
                         android:visibility="gone"
                         app:cornerRadius="15dp" />
@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
-                        android:backgroundTint="#009BFF"
+                        android:backgroundTint="#0037FF"
                         android:text="Xác nhận"
                         app:cornerRadius="15dp" />
 
@@ -93,7 +93,7 @@
                         android:id="@+id/button_detail_order"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#009BFF"
+                        android:backgroundTint="#0037FF"
                         android:text="Chi tiết"
                         app:cornerRadius="15dp" />
 

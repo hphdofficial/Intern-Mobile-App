@@ -1,5 +1,7 @@
 package fascon.vovinam.vn.Model.services;
 
+import com.google.gson.JsonObject;
+
 import fascon.vovinam.vn.Model.ApproveModel;
 import fascon.vovinam.vn.Model.Class;
 import fascon.vovinam.vn.Model.ReponseModel;
@@ -93,5 +95,25 @@ public interface ClassApiService {
             @Header("Authorization") String token,
             @Query("id_member") int memberId,
             @Query("id_class") int classId
+    );
+
+    @POST("/api/coach/classes/disapprove-join")
+    Call<ReponseModel> denyJoinClass(
+            @Header("Authorization") String token,
+            @Query("id_member") int memberId,
+            @Query("id_class") int classId
+    );
+
+    @POST("/api/coach/classes/update-pending")
+    Call<ReponseModel> changeJoinClass(
+            @Header("Authorization") String token,
+            @Query("id_member") int memberId,
+            @Query("old_class_id") int oldClassId,
+            @Query("new_class_id") int newClassId
+    );
+
+    @GET("/api/teacher/classes/getall")
+    Call<JsonObject> getCoachClass(
+            @Header("Authorization") String token
     );
 }

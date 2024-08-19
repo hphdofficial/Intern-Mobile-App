@@ -164,6 +164,7 @@ public class DetailClassActivity extends BaseActivity {
     public void getDetailClass() {
         showLoading();
 
+        getMyClass();
         getListClassPending();
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
@@ -214,8 +215,6 @@ public class DetailClassActivity extends BaseActivity {
         call.enqueue(new Callback<List<Class>>() {
             @Override
             public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
-                hideLoading();
-
                 if (response.isSuccessful()) {
                     listClassPending = response.body();
                     if (!listClassPending.isEmpty()) {
@@ -231,6 +230,7 @@ public class DetailClassActivity extends BaseActivity {
                 } else {
                     Log.e("Error", response.message());
                 }
+                hideLoading();
             }
 
             @Override
@@ -371,30 +371,31 @@ public class DetailClassActivity extends BaseActivity {
         startActivity(intent);
     }
 
-//    public void getMyClass() {
-//        String token = sharedPreferences.getString("access_token", null);
-//
-//        ClassApiService service = ApiServiceProvider.getClassApiService();
-//        Call<Class> call = service.getDetailClassMember("Bearer" + token);
-//
-//        call.enqueue(new Callback<Class>() {
-//            @Override
-//            public void onResponse(Call<Class> call, Response<Class> response) {
-//                if (response.isSuccessful()) {
-//                    Class classs = response.body();
-//
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putString("id_class_shared", String.valueOf(classs != null ? classs.getId() : null));
-//                    editor.apply();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Class> call, Throwable t) {
-//                Toast.makeText(DetailClassActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    public void getMyClass() {
+        String token = sharedPreferences.getString("access_token", null);
+
+        ClassApiService service = ApiServiceProvider.getClassApiService();
+        Call<List<Class>> call = service.getDetailClassMember("Bearer" + token);
+
+        call.enqueue(new Callback<List<Class>>() {
+            @Override
+            public void onResponse(Call<List<Class>> call, Response<List<Class>> response) {
+                List<Class> classs = response.body();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id_class_shared", classs.get(0).getId() != 0 ? String.valueOf(classs.get(0).getId()) : null);
+                editor.apply();
+            }
+
+            @Override
+            public void onFailure(Call<List<Class>> call, Throwable t) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id_class_shared", null);
+                editor.apply();
+
+                hideLoading();
+            }
+        });
+    }
 
 //    public void registerClass() {
 //        Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
