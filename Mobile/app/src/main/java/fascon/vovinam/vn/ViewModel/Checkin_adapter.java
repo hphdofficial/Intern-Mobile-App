@@ -40,6 +40,14 @@ public class Checkin_adapter extends RecyclerView.Adapter<Checkin_adapter.ViewHo
         int txtMemberID = memberList.get(i).getId();
         viewHolder.txtMemberID.setText(txtMemberID+"");
 
+        boolean ableCheck = memberList.get(i).isAbleCheck();
+
+        if(ableCheck){
+            viewHolder.checkBox.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.checkBox.setVisibility(View.INVISIBLE);
+        }
+
         viewHolder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             checkinMemberModel.setChecked(isChecked);
         });
