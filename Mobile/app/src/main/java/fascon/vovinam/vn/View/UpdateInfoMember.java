@@ -343,6 +343,7 @@ public class UpdateInfoMember extends BaseActivity {
         }
     }
 
+
     private boolean isValidInput() {
         String hoten_giamho = editTextHotengiamho.getText().toString().trim();
         String dienthoai_giamho = editTextDienthoaigiamho.getText().toString().trim();
@@ -352,6 +353,17 @@ public class UpdateInfoMember extends BaseActivity {
             Toast.makeText(this, "Họ tên không được để trống", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        if (TextUtils.isEmpty(editTextUsername.getText().toString().trim())) {
+            Toast.makeText(this, "Tên đăng nhập không được để trống", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(editTextEmail.getText().toString().trim())) {
+            Toast.makeText(this, "Email không được để trống", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         if (TextUtils.isEmpty(editTextDiachi.getText().toString().trim())) {
             Toast.makeText(this, "Địa chỉ không được để trống", Toast.LENGTH_SHORT).show();
             return false;
@@ -398,11 +410,9 @@ public class UpdateInfoMember extends BaseActivity {
             return false;
         }
 
-        // Kiểm tra tuổi và thông tin giám hộ
         int age = getAgeFromBirthdate(ngaysinh);
         Log.d("Age", "Calculated age: " + age);
         if (age < 18) {
-            // Kiểm tra thông tin giám hộ
             if (hoten_giamho.isEmpty() || dienthoai_giamho.isEmpty()) {
                 Toast.makeText(this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", Toast.LENGTH_SHORT).show();
                 return false;
@@ -413,13 +423,11 @@ public class UpdateInfoMember extends BaseActivity {
                 return false;
             }
         } else {
-            // Xóa thông tin giám hộ nếu người dùng trên 18 tuổi
             editTextHotengiamho.setText("");
             editTextDienthoaigiamho.setText("");
         }
         return true;
     }
-
 
 
     private int getAgeFromBirthdate(String birthdate) {
