@@ -167,8 +167,14 @@ public class activity_teacher_checkin extends BaseActivity {
                     public void onClick(View view) {
 
                         if(!editFilterById.getText().toString().isEmpty()){
-                            int idMember = Integer.parseInt(editFilterById.getText().toString());
-                            filterCheckedById("Bearer "+token, beforeFormattedDate, formattedDate, idClass, idMember);
+                            if(editFilterById.getText().toString().length() < 9){
+                                int idMember = Integer.parseInt(editFilterById.getText().toString());
+                                filterCheckedById("Bearer "+token, beforeFormattedDate, formattedDate, idClass, idMember);
+                            }else{
+                                Toast.makeText(activity_teacher_checkin.this, "Nhập số ký tự quá dài, mời nhập lại", Toast.LENGTH_SHORT).show();
+
+                            }
+
                         }else{
                             Toast.makeText(activity_teacher_checkin.this, "Nhập mã số học viên để tiếp tục", Toast.LENGTH_SHORT).show();
                         }
