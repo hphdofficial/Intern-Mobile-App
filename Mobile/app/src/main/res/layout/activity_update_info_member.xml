@@ -7,6 +7,7 @@
     android:background="@color/background_light"
     tools:context=".View.UpdateInfoMember">
 
+    <!-- Container for Fragment (Optional) -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
@@ -14,6 +15,7 @@
         android:layout_alignParentTop="true"
         tools:ignore="MissingConstraints" />
 
+    <!-- ScrollView to make the form scrollable -->
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -37,84 +39,116 @@
                 android:layout_marginBottom="24dp"
                 android:src="@drawable/logostartmain" />
 
+            <!-- Label and Input for Username -->
+            <TextView
+                android:id="@+id/text_view_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên đăng nhập"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Tên đăng nhập" />
+                    android:hint="" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Label and Input for Email -->
+            <TextView
+                android:id="@+id/text_view_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email" />
+                    android:hint="" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Label and Input for Full Name -->
+            <TextView
+                android:id="@+id/text_view_ten"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Họ và Tên"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_ten"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Họ và Tên" />
+                    android:hint="" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Label and Input for Phone -->
+            <TextView
+                android:id="@+id/text_view_dienthoai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Điện thoại (*)"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_dienthoai"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Điện thoại (*)"
+                    android:hint=""
                     android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Label and Input for Address -->
+            <TextView
+                android:id="@+id/text_view_diachi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Địa chỉ"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_diachi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Địa chỉ" />
+                    android:hint="" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Label for Gender -->
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/text_view_gioitinh"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Giới tính"
@@ -140,85 +174,116 @@
                     android:text="Nữ" />
             </RadioGroup>
 
+            <!-- Label and Input for Birthdate -->
+            <TextView
+                android:id="@+id/text_view_ngaysinh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ngày sinh"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_ngaysinh"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ngày sinh" />
+                    android:hint=""
+                    android:inputType="date" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Label and Input for Guardian Name -->
+            <TextView
+                android:id="@+id/text_view_hotengiamho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Họ tên giám hộ"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_hotengiamho"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Họ tên giám hộ" />
+                    android:hint="" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Label and Input for Guardian Phone -->
+            <TextView
+                android:id="@+id/text_view_dienthoaigiamho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Điện thoại giám hộ"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_dienthoaigiamho"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Điện thoại giám hộ"
-                    android:inputType="phone"/>
+                    android:hint=""
+                    android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Label and Input for Height -->
+            <TextView
+                android:id="@+id/text_view_chieucao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chiều cao (m)"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_chieucao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Chiều cao (m)"
-                    android:inputType="numberDecimal"
-                    />
+                    android:hint=""
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Label and Input for Weight -->
+            <TextView
+                android:id="@+id/text_view_cannang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cân nặng (kg)"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_text_cannang"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cân nặng (kg)"
-                    android:inputType="phone"/>
+                    android:hint=""
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Submit Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_update_info"
                 android:layout_width="match_parent"

@@ -126,6 +126,7 @@
                         android:id="@+id/btnDetailClb"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        app:cornerRadius="8dp"
                         android:padding="5dp"
                         app:backgroundTint="@color/colorPrimary"
                         android:text="Xem chi tiết CLB"/>
@@ -173,6 +174,7 @@
                         android:id="@+id/btnDetailClass"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        app:cornerRadius="8dp"
                         android:padding="5dp"
                         app:backgroundTint="@color/colorPrimary"
                         android:text="Xem chi tiết lớp"/>

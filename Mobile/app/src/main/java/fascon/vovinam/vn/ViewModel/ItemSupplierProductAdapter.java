@@ -2,6 +2,7 @@ package fascon.vovinam.vn.ViewModel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,16 +46,32 @@ public class ItemSupplierProductAdapter extends RecyclerView.Adapter<ItemSupplie
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         ProductModel product = productList.get(i);
 
-        viewHolder.txtItemName.setText(product.getProductName());
+        // Lấy ngôn ngữ từ SharedPreferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String languageS = sharedPreferences.getString("language", "vn");
+
+        // Hiển thị tên sản phẩm dựa trên ngôn ngữ
+        if (languageS != null && languageS.contains("en")) {
+            viewHolder.txtItemName.setText(product.getEn());
+        } else {
+            viewHolder.txtItemName.setText(product.getProductName());
+        }
+
         viewHolder.txtItemPrice.setText(product.getUnitPrice() + " VND");
 
-        // Fetch supplier name
+        // Lấy tên nhà cung cấp và hiển thị dựa trên ngôn ngữ
         SupplierApiService apiService = ApiServiceProvider.getSupplierApiService();
         apiService.getSupplier(product.getSupplierID()).enqueue(new Callback<SupplierModel>() {
             @Override
             public void onResponse(Call<SupplierModel> call, Response<SupplierModel> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    viewHolder.txtItemSupplier.setText(response.body().getSupplierName());
+                    SupplierModel supplier = response.body();
+
+                    if (languageS != null && languageS.contains("en")) {
+                        viewHolder.txtItemSupplier.setText(supplier.getTenen()); // Hiển thị tên nhà cung cấp bằng tiếng Anh
+                    } else {
+                        viewHolder.txtItemSupplier.setText(supplier.getSupplierName()); // Hiển thị tên nhà cung cấp mặc định (tiếng Việt)
+                    }
                 } else {
                     viewHolder.txtItemSupplier.setText("Unknown Supplier");
                 }

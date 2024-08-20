@@ -37,6 +37,28 @@ public class EnterOtpActivity extends BaseActivity {
     private String languageS;
     private BlankFragment loadingFragment;
 
+    private TextView text;
+    public void onMenuItemClick(View view) {
+        text = findViewById(R.id.languageText);
+        String language = text.getText()+"";
+        if(view.getId() == R.id.btn_change){
+            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor edit =  sga.edit();
+
+            if(language.contains("VN")){
+                edit.putString("language","en");
+                text.setText("ENG");
+            }else {
+                edit.putString("language","vn");
+                text.setText("VN");
+            }
+            edit.apply();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +101,8 @@ public class EnterOtpActivity extends BaseActivity {
                 resendOtp();
             }
         });
+        // Cập nhật ngôn ngữ cho TextViews
+        updateLanguageForTextViews();
     }
 
     private void showLoading() {
@@ -140,45 +164,84 @@ public class EnterOtpActivity extends BaseActivity {
         inputCode1.requestFocus();
     }
 
+    private void showToastBasedOnLanguage(String messageVN, String messageEN) {
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(EnterOtpActivity.this, messageEN, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(EnterOtpActivity.this, messageVN, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateLanguageForTextViews() {
+        tv_enter_otp = findViewById(R.id.tv_enter_otp);
+        tv_notification = findViewById(R.id.tv_notification);
+        tv_phone_number = findViewById(R.id.tv_phone_number);
+        text11 = findViewById(R.id.text11);
+        btnVerify = findViewById(R.id.btnVerify);
+
+        if (languageS != null && languageS.contains("en")) {
+            tv_notification.setText("The 6-digit code has been sent");
+            tv_enter_otp.setText("Enter code OTP");
+            tv_phone_number.setText("Sent to your email!");
+            text11.setText("Didn't receive OTP?");
+            tvResendOTP.setText("Resend code");
+            btnVerify.setText("Confirm");
+        } else {
+            tv_notification.setText("Mã 6 chữ số đã được gửi");
+            tv_enter_otp.setText("Nhập mã OTP");
+            tv_phone_number.setText("Đã gửi đến email của bạn!");
+            text11.setText("Chưa nhận được OTP?");
+            tvResendOTP.setText("Gửi lại mã");
+            btnVerify.setText("Xác nhận");
+        }
+    }
+
+
+
 
     private void verifyOtp() {
+        // Lấy OTP từ các trường nhập liệu
         String otp = inputCode1.getText().toString() + inputCode2.getText().toString() +
                 inputCode3.getText().toString() + inputCode4.getText().toString() +
                 inputCode5.getText().toString() + inputCode6.getText().toString();
 
+        // Kiểm tra độ dài của OTP
         if (otp.length() != 6) {
-            Toast.makeText(this, "Mã OTP phải là 6 chữ số", Toast.LENGTH_SHORT).show();
+            showToastBasedOnLanguage("Mã OTP phải là 6 chữ số", "OTP must be 6 digits");
             return;
         }
 
+        // Tạo yêu cầu xác thực OTP
         VerifyOtpModel request = new VerifyOtpModel(email, otp);
         UserApiService apiService = ApiServiceProvider.getUserApiService();
         showLoading(); // Hiển thị loading trước khi thực hiện gọi API
+
         Call<ReponseModel> call = apiService.verifyOtp(request);
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(EnterOtpActivity.this, "OTP đã được xác thực", Toast.LENGTH_SHORT).show();
+                    // OTP xác thực thành công, chuyển sang ResetPasswordActivity
+                    showToastBasedOnLanguage("OTP đã được xác thực", "OTP has been verified");
                     Intent intent = new Intent(EnterOtpActivity.this, ResetPasswordActivity.class);
                     intent.putExtra("email", email);
                     intent.putExtra("otp", otp);
                     startActivity(intent);
                 } else {
                     try {
-                        // Xử lý phản hồi lỗi từ server
+                        // Xử lý lỗi từ server
                         String errorMessage = response.errorBody().string();
                         JSONObject errorObject = new JSONObject(errorMessage);
                         String error = errorObject.optString("error");
 
                         if (response.code() == 400 && error.equals("Không đúng hoặc hết thời gian OTP.")) {
-                            Toast.makeText(EnterOtpActivity.this, "Mã OTP không chính xác hoặc đã hết hạn.", Toast.LENGTH_SHORT).show();
+                            showToastBasedOnLanguage("Mã OTP không chính xác hoặc đã hết hạn.", "OTP is incorrect or has expired.");
                         } else {
-                            Toast.makeText(EnterOtpActivity.this, "Xác thực OTP thất bại: " + error, Toast.LENGTH_SHORT).show();
+                            showToastBasedOnLanguage("Xác thực OTP thất bại: " + error, "OTP verification failed: " + error);
                         }
                     } catch (Exception e) {
-                        Toast.makeText(EnterOtpActivity.this, "Xác thực OTP thất bại.", Toast.LENGTH_SHORT).show();
+                        showToastBasedOnLanguage("Xác thực OTP thất bại.", "OTP verification failed.");
                         e.printStackTrace();
                     }
                 }
@@ -187,31 +250,17 @@ public class EnterOtpActivity extends BaseActivity {
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
                 hideLoading();
-                Toast.makeText(EnterOtpActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showToastBasedOnLanguage("Lỗi kết nối: " + t.getMessage(), "Connection error: " + t.getMessage());
             }
         });
-        tv_enter_otp = findViewById(R.id.tv_enter_otp);
-        tv_notification = findViewById(R.id.tv_notification);
-        tv_phone_number = findViewById(R.id.tv_phone_number);
-        text11 = findViewById(R.id.text11);
-        btnVerify = findViewById(R.id.btnVerify);
-        if(languageS!=null){
-            if(languageS.contains("en")){
-                tv_notification.setText("The 6-digit code has been sent");
-                tv_enter_otp.setText("Enter code OTP");
-                tv_phone_number.setText("Sent to your email!");
-                text11.setText("Didn't receive OTP?");
-                tvResendOTP.setText("Again send code");
-                btnVerify.setText("Confirm");
-
-            }
-        }
     }
+
+
     private Button btnVerify;
     private TextView text11;
     private TextView tv_phone_number;
     private TextView tv_notification;
-private TextView tv_enter_otp;
+    private TextView tv_enter_otp;
 
 
     private void resendOtp() {
@@ -225,9 +274,9 @@ private TextView tv_enter_otp;
                 hideLoading();
                 resetOtpInputs();
                 if (response.isSuccessful()) {
-                    Toast.makeText(EnterOtpActivity.this, "OTP đã được gửi lại đến email của bạn", Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("OTP đã được gửi lại đến email của bạn", "OTP has been resent to your email");
                 } else {
-                    Toast.makeText(EnterOtpActivity.this, "Gửi lại OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("Gửi lại OTP thất bại: " + response.message(), "Failed to resend OTP: " + response.message());
                 }
             }
 
@@ -236,32 +285,13 @@ private TextView tv_enter_otp;
                 hideLoading();
                 resetOtpInputs();
                 if (t instanceof IOException) {
-                    Toast.makeText(EnterOtpActivity.this, "Email không tồn tại trong hệ thống", Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("Email không tồn tại trong hệ thống", "Email does not exist in the system");
                 } else {
-                    Toast.makeText(EnterOtpActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("Lỗi kết nối: " + t.getMessage(), "Connection error: " + t.getMessage());
                 }
             }
         });
     }
-    private TextView text;
-    public void onMenuItemClick(View view) {
-        text = findViewById(R.id.languageText);
-        String language = text.getText()+"";
-        if(view.getId() == R.id.btn_change){
-            SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
-            SharedPreferences.Editor edit =  sga.edit();
 
-            if(language.contains("VN")){
-                edit.putString("language","en");
-                text.setText("ENG");
-            }else {
-                edit.putString("language","vn");
-                text.setText("VN");
-            }
-            edit.apply();
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-        }
-    }
+
 }

@@ -6,6 +6,9 @@ public class SupplierModel {
     private String Address;
     private String Phone;
     private String Email;
+    private String tenen;
+    private String diachien;
+
 
     // Getters and Setters
     public int getSupplierID() {
@@ -46,5 +49,21 @@ public class SupplierModel {
 
     public void setEmail(String email) {
         Email = email;
+    }
+
+    public String getTenen() {
+        return tenen;
+    }
+
+    public void setTenen(String tenen) {
+        this.tenen = tenen;
+    }
+
+    public String getDiachien() {
+        return diachien;
+    }
+
+    public void setDiachien(String diachien) {
+        this.diachien = diachien;
     }
 }

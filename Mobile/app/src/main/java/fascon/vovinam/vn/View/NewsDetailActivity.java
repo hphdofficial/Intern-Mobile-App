@@ -53,58 +53,75 @@ public class NewsDetailActivity extends BaseActivity {
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-        myContentE.putString("title", "Chi tiết tin tức");
+        myContentE.putString("title", "Chi tiết tin tức"); // Mặc định là tiếng Việt
         myContentE.apply();
-        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        languageS = shared.getString("language",null);
-        if(languageS!= null){
-            if(languageS.contains("en")){
-                myContentE.putString("title", "News Detail");
-                myContentE.apply();
-            }
-        }
-        // chèn fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        // Thêm hoặc thay thế Fragment mới
-        titleFragment newFragment = new titleFragment();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-        fragmentTransaction.replace(R.id.fragment_container, newFragment);
-//        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
-        fragmentTransaction.commit();
 
+        // Lấy ngôn ngữ hiện tại từ SharedPreferences
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language", "vn"); // Mặc định là tiếng Việt
+
+        // Cập nhật tiêu đề trang dựa trên ngôn ngữ
+        if (languageS != null && languageS.contains("en")) {
+            myContentE.putString("title", "News Detail");
+            myContentE.apply();
+        }
+
+        // Khởi tạo các view
         newsTitle = findViewById(R.id.news_title);
         newsContent = findViewById(R.id.news_content);
         newsImage = findViewById(R.id.news_image);
 
-        String title = getIntent().getStringExtra("NewsTitle");
-        String content = getIntent().getStringExtra("NewsContent");
+        // Lấy dữ liệu từ Intent
+        String titleVi = getIntent().getStringExtra("NewsTitleVi");
+        String contentVi = getIntent().getStringExtra("NewsContentVi");
+        String titleEn = getIntent().getStringExtra("NewsTitleEn");
+        String contentEn = getIntent().getStringExtra("NewsContentEn");
         String imageUrl = getIntent().getStringExtra("NewsImage");
 
-        newsTitle.setText(title);
+        // Hiển thị nội dung dựa trên ngôn ngữ đã chọn
+        if (languageS != null && languageS.equals("en")) {
+            // Ngôn ngữ là tiếng Anh
+            newsTitle.setText(titleEn);
+            setWebViewContent(newsContent, contentEn);
+        } else {
+            // Mặc định là tiếng Việt
+            newsTitle.setText(titleVi);
+            setWebViewContent(newsContent, contentVi);
+        }
 
-        // Decode HTML content
-        String decodedContent = Html.fromHtml(content).toString();
-
-        // Add some basic CSS to make the content look better
-        String css = "<style> img{display: inline;height: auto;max-width: 100%;} body {font-size: 16px; line-height: 1.6;} </style>";
-
-        // Combine the CSS with the decoded HTML content
-        String htmlContent = "<html><head>" + css + "</head><body>" + decodedContent + "</body></html>";
-
-        // Configure WebView settings
-        WebSettings webSettings = newsContent.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-
-        // Load the HTML content into WebView using loadDataWithBaseURL
-        newsContent.setWebViewClient(new WebViewClient());
-        newsContent.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
-
-        // Load the image using Glide
+        // Load hình ảnh sử dụng Glide
         Glide.with(this)
                 .load(imageUrl)
-                .placeholder(R.drawable.ic_launcher_foreground) // Placeholder image
-                .error(R.drawable.newsvovietdao) // Error image
+                .placeholder(R.drawable.ic_launcher_foreground) // Hình ảnh chờ
+                .error(R.drawable.newsvovietdao) // Hình ảnh lỗi
                 .into(newsImage);
+
+        // Chèn fragment tiêu đề
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        titleFragment newFragment = new titleFragment();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        fragmentTransaction.commit();
     }
+
+    // Phương thức hỗ trợ hiển thị nội dung vào WebView
+    private void setWebViewContent(WebView webView, String content) {
+        if (content != null && !content.isEmpty()) {
+            // Giải mã nội dung HTML
+            String decodedContent = Html.fromHtml(content).toString();
+            // Thêm CSS cơ bản để cải thiện giao diện nội dung
+            String css = "<style> img{display: inline;height: auto;max-width: 100%;} body {font-size: 16px; line-height: 1.6;} </style>";
+            String htmlContent = "<html><head>" + css + "</head><body>" + decodedContent + "</body></html>";
+
+            // Cấu hình WebView
+            WebSettings webSettings = webView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+
+            // Load nội dung HTML vào WebView
+            webView.setWebViewClient(new WebViewClient());
+            webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 
 package fascon.vovinam.vn.ViewModel;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +36,19 @@ public class SupplierAdapter extends RecyclerView.Adapter<SupplierAdapter.Suppli
     @Override
     public void onBindViewHolder(@NonNull SupplierViewHolder holder, int position) {
         SupplierModel supplier = suppliers.get(position);
-        holder.supplierName.setText(supplier.getSupplierName());
-        holder.address.setText(supplier.getAddress());
+
+        // Lấy ngôn ngữ hiện tại từ SharedPreferences
+        SharedPreferences sharedPreferences = holder.itemView.getContext().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+        String languageS = sharedPreferences.getString("language", "vn");
+
+        // Kiểm tra ngôn ngữ và hiển thị tên nhà cung cấp cùng địa chỉ tương ứng
+        if (languageS != null && languageS.contains("en")) {
+            holder.supplierName.setText(supplier.getTenen());  // Tên nhà cung cấp bằng tiếng Anh
+            holder.address.setText(supplier.getDiachien());  // Địa chỉ bằng tiếng Anh
+        } else {
+            holder.supplierName.setText(supplier.getSupplierName());  // Tên nhà cung cấp mặc định
+            holder.address.setText(supplier.getAddress());  // Địa chỉ mặc định
+        }
 
         holder.itemView.setOnClickListener(v -> listener.onSupplierClick(supplier));
     }

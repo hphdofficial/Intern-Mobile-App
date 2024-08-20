@@ -1,6 +1,7 @@
 package fascon.vovinam.vn.ViewModel;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,10 +74,16 @@ public class ProductOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        String languageS = shared.getString("language", null);
         if (holder.getItemViewType() == TYPE_SUPPLIER) {
             String supplierName = (String) items.get(position);
             SupplierViewHolder supplierViewHolder = (SupplierViewHolder) holder;
-            supplierViewHolder.textViewSupplierName.setText("Nhà cung cấp " + supplierName);
+            if (languageS.contains("en")) {
+                supplierViewHolder.textViewSupplierName.setText("Supplier " + supplierName);
+            } else {
+                supplierViewHolder.textViewSupplierName.setText("Nhà cung cấp " + supplierName);
+            }
         } else {
             OrderListModel.DetailCart product = (OrderListModel.DetailCart) items.get(position);
             ProductViewHolder productViewHolder = (ProductViewHolder) holder;

@@ -26,7 +26,7 @@ public interface PaymentAPI {
 
 
     @GET("api/all-belts")
-    Call<List<Belt>> getAllBelt();
+    Call<List<Belt>> getAllBelt(@Query("lang") String language);
 
     @GET("paymentss/getlink")
     Call<ResponseBody> getLink(
@@ -58,7 +58,7 @@ public interface PaymentAPI {
     );
 
     @GET("api/education-grades/belt-info")
-    Call<List<DetailsBelt>> getBeltInfo(@Query ("id") int id);
+    Call<List<DetailsBelt>> getBeltInfo(@Query ("id") int id,@Query ("lang") String language);
 
     @GET("status_order")
     Call<StatusOrther> GetStatusOrder(@Query ("id") int id);
@@ -67,10 +67,10 @@ public interface PaymentAPI {
     Call<StatusRegister> GetStatusRegister(@Query ("id") int id);
 
     @GET("api/getTopSellingProducts")
-    Call<List<ProductSaleModel>> GetSaleProduct();
+    Call<List<ProductSaleModel>> GetSaleProduct(@Query ("lang") String language);
 
     @GET("api/sale-products")
-    Call<List<ProductSaleDownModel>> GetSaleDownProduct();
+    Call<List<ProductSaleDownModel>> GetSaleDownProduct(@Query ("lang") String language);
 
 
 }

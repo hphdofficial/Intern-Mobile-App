@@ -33,22 +33,28 @@ public interface ClubApiService {
 
     @GET("/api/map1")
     Call<JsonObject> getListClubMap1(
-            @Query("id_country") int countryId
+            @Query("id_country") int countryId,
+            @Query("lang") String lang
     );
 
     @GET("/api/map2")
     Call<JsonObject> getListClubMap2(
             @Query("id_country") int countryId,
-            @Query("id_city") int cityId
+            @Query("id_city") int cityId,
+            @Query("lang") String lang
     );
 
     @GET("/api/map3")
     Call<JsonObject> getListClubMap3(
-            @Query("address") String address
+            @Query("address") String address,
+            @Query("lang") String lang
     );
 
     @GET("/api/clubs/getdetail")
-    Call<Club> getDetailClub(@Query("id_club") int clubId);
+    Call<Club> getDetailClub(
+            @Query("id_club") int clubId,
+            @Query("lang") String lang
+    );
 
     @PUT("/api/clubs/joinclub")
     Call<ReponseModel> joinClub(

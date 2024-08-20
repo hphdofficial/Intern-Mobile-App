@@ -8,10 +8,11 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface NewsApiService {
     @GET("api/news/latest")
-    Call<List<NewsModel>> getAnouncements();
+    Call<List<NewsModel>> getAnouncements(@Query("lang") String language);
 
     @GET("api/news")
     Call<List<NewsModel>> getAllNews();
@@ -25,6 +26,8 @@ public interface NewsApiService {
     @GET("api/news/filter-by-club/{id_club}")
     Call<List<NewsModel>> filterAnnouncementsByClub(@Path("id_club") int idClub);
 
+    @GET("api/clubs/getall?lang=en")
+    Call<List<ClubModel>> getAllClubsInEnglish();
 
 //    @GET("api/news/filter-announcements-by-club/{id_club}")
 //    Call<List<NewsModel>> filterAnnouncementsByClub(@Path("id_club") int idClub);

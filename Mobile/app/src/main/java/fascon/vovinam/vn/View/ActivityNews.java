@@ -165,7 +165,14 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
 
     private void fetchClubs() {
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<ClubModel>> call = apiService.getAllClubs();
+
+        Call<List<ClubModel>> call;
+        if (languageS != null && languageS.contains("en")) {
+            call = apiService.getAllClubsInEnglish();
+        } else {
+            call = apiService.getAllClubs();
+        }
+
         call.enqueue(new Callback<List<ClubModel>>() {
             @Override
             public void onResponse(Call<List<ClubModel>> call, Response<List<ClubModel>> response) {
@@ -175,12 +182,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
                     // Thêm mục "Tất cả" vào đầu danh sách
                     ClubModel allClubs = new ClubModel();
                     allClubs.setId(0);
-                    allClubs.setTen("Tất cả");
-                    if(languageS!= null){
-                        if(languageS.contains("en")){
-                            allClubs.setTen("All");
-                        }
-                    }
+                    allClubs.setTen(languageS != null && languageS.contains("en") ? "All" : "Tất cả");
                     clubList.add(allClubs);
 
                     clubList.addAll(response.body());
@@ -196,6 +198,7 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
             }
         });
     }
+
     public static String decodeRoleFromToken(String jwtToken) {
         try {
             // Tách token thành các phần: header, payload, và signature
@@ -225,7 +228,13 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private void fetchAllNews() {
         showLoading();
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<NewsModel>> call = apiService.getAnouncements(); // Gọi API lấy các bài báo mới nhất
+        Call<List<NewsModel>> call;
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                 call = apiService.getAnouncements("en");
+            }else  call = apiService.getAnouncements("vi");
+        }else  call = apiService.getAnouncements("vi");
+        // Gọi API lấy các bài báo mới nhất
         call.enqueue(new Callback<List<NewsModel>>() {
             @Override
             public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
@@ -421,6 +430,12 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
 
     private void checkIfNoNews() {
         if (filteredNewsList.isEmpty()) {
+            // Kiểm tra ngôn ngữ từ SharedPreferences
+            if (languageS != null && languageS.contains("en")) {
+                noNewsText.setText("No notifications");
+            } else {
+                noNewsText.setText("Chưa có thông báo nào");
+            }
             noNewsText.setVisibility(View.VISIBLE);
         } else {
             noNewsText.setVisibility(View.GONE);
@@ -430,6 +445,12 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private void showNoNewsMessage() {
         filteredNewsList.clear();
         adapter.notifyDataSetChanged();
+        // Kiểm tra ngôn ngữ và hiển thị thông báo phù hợp
+        if (languageS != null && languageS.contains("en")) {
+            noNewsText.setText("No notifications");
+        } else {
+            noNewsText.setText("Chưa có thông báo nào");
+        }
         noNewsText.setVisibility(View.VISIBLE);
     }
 

@@ -79,12 +79,19 @@ public class ForgotPasswordActivity extends BaseActivity {
         }
     }
 
+    private void showToastBasedOnLanguage(String messageVN, String messageEN) {
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(ForgotPasswordActivity.this, messageEN, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ForgotPasswordActivity.this, messageVN, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void sendOtp() {
         String email = editTextEmail.getText().toString().trim();
 
         if (email.isEmpty()) {
-            Toast.makeText(ForgotPasswordActivity.this, "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
+            showToastBasedOnLanguage("Vui lòng nhập email", "Please enter your email");
             return;
         }
 
@@ -97,7 +104,7 @@ public class ForgotPasswordActivity extends BaseActivity {
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 hideLoading();
                 if (response.isSuccessful()) {
-                    Toast.makeText(ForgotPasswordActivity.this, "OTP đã được gửi đến email của bạn", Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("OTP đã được gửi đến email của bạn", "OTP has been sent to your email");
                     startActivity(new Intent(ForgotPasswordActivity.this, EnterOtpActivity.class).putExtra("email", email));
                 } else {
                     try {
@@ -106,12 +113,12 @@ public class ForgotPasswordActivity extends BaseActivity {
                         JSONObject errors = errorObject.getJSONObject("errors");
 
                         if (errors.has("email")) {
-                            Toast.makeText(ForgotPasswordActivity.this, "Email không hợp lệ hoặc không tồn tại.", Toast.LENGTH_SHORT).show();
+                            showToastBasedOnLanguage("Email không hợp lệ hoặc không tồn tại.", "Invalid or non-existent email.");
                         } else {
-                            Toast.makeText(ForgotPasswordActivity.this, "Gửi OTP thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                            showToastBasedOnLanguage("Gửi OTP thất bại: " + response.message(), "Failed to send OTP: " + response.message());
                         }
                     } catch (Exception e) {
-                        Toast.makeText(ForgotPasswordActivity.this, "Gửi OTP thất bại.", Toast.LENGTH_SHORT).show();
+                        showToastBasedOnLanguage("Gửi OTP thất bại.", "Failed to send OTP.");
                         e.printStackTrace();
                     }
                 }
@@ -121,13 +128,15 @@ public class ForgotPasswordActivity extends BaseActivity {
             public void onFailure(Call<ReponseModel> call, Throwable t) {
                 hideLoading(); // Ẩn loading khi có lỗi xảy ra
                 if (t instanceof IOException) {
-                    Toast.makeText(ForgotPasswordActivity.this, "Email không tồn tại trong hệ thống", Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("Email không tồn tại trong hệ thống", "Email does not exist in the system");
                 } else {
-                    Toast.makeText(ForgotPasswordActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("Lỗi kết nối: " + t.getMessage(), "Connection error: " + t.getMessage());
                 }
             }
         });
     }
+
+
     private TextView text;
     public void onMenuItemClick(View view) {
         text = findViewById(R.id.languageText);

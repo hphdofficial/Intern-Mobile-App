@@ -43,6 +43,10 @@ public class ResetPasswordActivity extends BaseActivity {
             startActivity(intent);
         }
     }
+
+
+
+
     private EditText editTextNewPassword;
     private EditText editTextConfirmPassword;
     private Button buttonResetPassword;
@@ -88,6 +92,10 @@ public class ResetPasswordActivity extends BaseActivity {
                 togglePasswordVisibility(editTextConfirmPassword, iconPasswordVisibilityConfirm);
             }
         });
+
+        // Gọi hàm updateLanguageForTextViews sau khi ánh xạ các View
+        updateLanguageForTextViews();
+
     }
 
     private void showLoading() {
@@ -115,17 +123,47 @@ public class ResetPasswordActivity extends BaseActivity {
         editText.setSelection(editText.getText().length());
     }
 
+    private void showToastBasedOnLanguage(String messageVN, String messageEN) {
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        String languageS = shared.getString("language", null);
+
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(ResetPasswordActivity.this, messageEN, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ResetPasswordActivity.this, messageVN, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateLanguageForTextViews() {
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        String languageS = shared.getString("language", null);
+
+        if (languageS != null && languageS.contains("en")) {
+            // English translations
+            buttonResetPassword.setText("Reset Password");
+            editTextNewPassword.setHint("New Password");
+            editTextConfirmPassword.setHint("Confirm Password");
+        } else {
+            // Vietnamese translations
+            buttonResetPassword.setText("Đặt lại mật khẩu");
+            editTextNewPassword.setHint("Mật khẩu mới");
+            editTextConfirmPassword.setHint("Xác nhận mật khẩu");
+        }
+    }
+
+
+
     private void resetPassword() {
         String newPassword = editTextNewPassword.getText().toString();
         String confirmPassword = editTextConfirmPassword.getText().toString();
 
         if (newPassword.isEmpty() || newPassword.length() < 6) {
-            Toast.makeText(this, "Mật khẩu phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
+            showToastBasedOnLanguage("Mật khẩu phải có ít nhất 6 ký tự", "Password must be at least 6 characters");
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            Toast.makeText(this, "Mật khẩu xác nhận không khớp", Toast.LENGTH_SHORT).show();
+            showToastBasedOnLanguage("Mật khẩu xác nhận không khớp", "Confirm password does not match");
             return;
         }
 
@@ -138,20 +176,21 @@ public class ResetPasswordActivity extends BaseActivity {
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 hideLoading();
                 if (response.isSuccessful()) {
-                    Toast.makeText(ResetPasswordActivity.this, "Đặt lại mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("Đặt lại mật khẩu thành công", "Password reset successful");
                     Intent intent = new Intent(ResetPasswordActivity.this, StartActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(ResetPasswordActivity.this, "Đặt lại mật khẩu thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    showToastBasedOnLanguage("Đặt lại mật khẩu thất bại: " + response.message(), "Password reset failed: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
                 hideLoading();
-                Toast.makeText(ResetPasswordActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showToastBasedOnLanguage("Lỗi kết nối: " + t.getMessage(), "Connection error: " + t.getMessage());
             }
         });
     }
+
 }

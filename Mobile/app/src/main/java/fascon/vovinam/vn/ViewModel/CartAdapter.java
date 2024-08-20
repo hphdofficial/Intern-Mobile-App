@@ -53,6 +53,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     private Boolean isAddMode = false;
 
     private String languageS;
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView txtNameProduct;
         public TextView txtPriceProduct;
@@ -135,14 +136,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.txtCategory.setText("Thể loại: " + productList.get(position).getCategoryName());
 
         SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
-        languageS = shared.getString("language",null);
+        languageS = shared.getString("language", null);
 
-        if(languageS != null){
-            if (languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 holder.txtNameSupplier.setText("Supplier " + productList.get(position).getSupplierName());
                 holder.txtCategory.setText("Type: " + productList.get(position).getCategoryName());
                 holder.btnRemoveCart.setText("Delete");
-              /*  holder.txtNameProduct.setText(productList.get(position).getEn());*/
+                /*  holder.txtNameProduct.setText(productList.get(position).getEn());*/
             }
         }
         if (isViewMode) {
@@ -167,8 +168,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 public void onClick(View v) {
                     holder.btnIncreaseQuantity.setEnabled(false);
                     increaseQuantity(productList.get(position).getProductID(), holder);
-                    Toast.makeText(context, "Tăng sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(context, "Increase product " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Updating cart...", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Tăng sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             });
 
@@ -176,12 +184,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     if (holder.txtQuantityProduct.getText().toString().equals("1")) {
-                        Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
+                        if (languageS != null) {
+                            if (languageS.contains("en")) {
+                                Toast.makeText(context, "Minimum quantity is 1", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     } else {
                         holder.btnDecreaseQuantity.setEnabled(false);
                         decreaseQuantity(productList.get(position).getProductID(), holder);
-                        Toast.makeText(context, "Giảm sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
+                        if (languageS != null) {
+                            if (languageS.contains("en")) {
+                                Toast.makeText(context, "Decrease product " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Updating cart...", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Giảm sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
             });
@@ -191,8 +212,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 public void onClick(View v) {
                     holder.btnRemoveCart.setEnabled(false);
                     removeProduct(productList.get(position).getProductID(), holder);
-                    Toast.makeText(context, "Xóa sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(context, "Remove product " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Updating cart...", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Xóa sản phẩm " + productList.get(holder.getAdapterPosition()).getProductName(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Đang cập nhật giỏ hàng...", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
                 }
             });
         } else if (!isAddMode) {
@@ -211,7 +240,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 public void onClick(View v) {
                     String currentQuantity = holder.txtQuantityProduct.getText().toString();
                     if (currentQuantity.equals("1")) {
-                        Toast.makeText(v.getContext(), "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
+                        if (languageS != null) {
+                            if (languageS.contains("en")) {
+                                Toast.makeText(context, "Minimum quantity is 1", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Số lượng tối thiểu là 1", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     } else {
                         int newQuantity = Integer.parseInt(currentQuantity) - 1;
                         holder.txtQuantityProduct.setText(String.valueOf(newQuantity));
@@ -233,10 +268,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             holder.btnDecreaseQuantity.setVisibility(View.GONE);
             holder.txtQuantityProduct.setVisibility(View.GONE);
             holder.btnAddProduct.setVisibility(View.VISIBLE);
+            holder.btnAddProduct.setText("Add product");
             holder.btnAddProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "Đã thêm sản phẩm vào đơn hàng", Toast.LENGTH_SHORT).show();
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(context, "Product added to order", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(v.getContext(), "Đã thêm sản phẩm vào đơn hàng", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                     ProductModel product = new ProductModel(
                             productList.get(position).getProductID(),
                             productList.get(position).getProductName(),
@@ -276,7 +318,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         Gson gson = new Gson();
 
         String jsonProductList = sharedPreferences.getString("saved_product_list", null);
-        Type type = new TypeToken<List<ProductModel>>() {}.getType();
+        Type type = new TypeToken<List<ProductModel>>() {
+        }.getType();
         List<ProductModel> productList;
 
         if (jsonProductList != null) {

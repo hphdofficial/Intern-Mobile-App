@@ -44,6 +44,7 @@ public class DetailClubActivity extends BaseActivity {
     private TextView txtAddressClub;
     private TextView txtPhoneClub;
     private TextView txtManagerClub;
+    private TextView txt_list;
     //    private Button btnJoinClubPending;
 //    private Button btnCancelClubPending;
 //    private Button btnLeaveClubPending;
@@ -57,7 +58,8 @@ public class DetailClubActivity extends BaseActivity {
     private ClassAdapter adapter;
     private List<Class> classList = new ArrayList<>();
 
-private String languageS;
+    private String languageS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,13 +73,13 @@ private String languageS;
 
         sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
 
-        languageS = sharedPreferences.getString("language",null);
+        languageS = sharedPreferences.getString("language", null);
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Chi tiết câu lạc bộ");
         myContentE.apply();
-        if(languageS!= null){
-            if(languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 myContentE.putString("title", "Club Detail");
                 myContentE.apply();
             }
@@ -98,6 +100,8 @@ private String languageS;
         txtAddressClub = findViewById(R.id.txtAddressDetailClub);
         txtPhoneClub = findViewById(R.id.txtPhoneDetailClub);
         txtManagerClub = findViewById(R.id.txtManagerDetailClub);
+        txt_list = findViewById(R.id.txt_list);
+
 //        btnJoinClubPending = findViewById(R.id.btn_join_club_pending);
 //        btnCancelClubPending = findViewById(R.id.btn_cancel_club_pending);
 //        btnLeaveClubPending = findViewById(R.id.btn_leave_club_pending);
@@ -170,20 +174,21 @@ private String languageS;
         textViewDienthoaiLabel = findViewById(R.id.textViewDienthoaiLabel);
         textViewDiachiLabel = findViewById(R.id.textViewDiachiLabel);
         textViewGioitinhLabel = findViewById(R.id.textViewGioitinhLabel);
-        if(languageS != null){
-            if(languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
 
                 textViewTenLabel.setText("Manager");
                 textViewDienthoaiLabel.setText("Description");
                 textViewDiachiLabel.setText("Address");
                 textViewGioitinhLabel.setText("Contact information");
                 textViewNgaysinhLabel.setText("Club Name");
-
+                txt_list.setText("Class List");
                 btnListClass.setText("Show List Class Opened");
             }
         }
         getListClass();
     }
+
     private TextView textViewTenLabel;
     private TextView textViewDienthoaiLabel;
     private TextView textViewDiachiLabel;
@@ -196,7 +201,7 @@ private String languageS;
 //        getListClubPending();
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<Club> call = service.getDetailClub(Integer.parseInt(idClub));
+        Call<Club> call = service.getDetailClub(Integer.parseInt(idClub), languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<Club>() {
             @Override
@@ -224,9 +229,9 @@ private String languageS;
         });
     }
 
-    private void getListClass(){
+    private void getListClass() {
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<List<Class>> call = service.getListClassofClub(Integer.parseInt(idClub));
+        Call<List<Class>> call = service.getListClassofClub(Integer.parseInt(idClub), languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<List<Class>>() {
             @Override
@@ -237,7 +242,13 @@ private String languageS;
                     List<Class> classes = response.body();
                     adapter.setData(classes);
                     if (classes.isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "Không có lớp học nào đang mở", Toast.LENGTH_SHORT).show();
+                        if (languageS != null) {
+                            if (languageS.contains("en")) {
+                                Toast.makeText(getApplicationContext(), "There are no classes open", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Không có lớp học nào đang mở", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 } else {
                     Log.e("Error", response.message());
@@ -504,19 +515,21 @@ private String languageS;
             loadingFragment = null;
         }
     }
+
     private TextView text;
+
     public void onMenuItemClick(View view) {
         text = findViewById(R.id.languageText);
-        String language = text.getText()+"";
-        if(view.getId() == R.id.btn_change){
+        String language = text.getText() + "";
+        if (view.getId() == R.id.btn_change) {
             SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
-            SharedPreferences.Editor edit =  sga.edit();
+            SharedPreferences.Editor edit = sga.edit();
 
-            if(language.contains("VN")){
-                edit.putString("language","en");
+            if (language.contains("VN")) {
+                edit.putString("language", "en");
                 text.setText("ENG");
-            }else {
-                edit.putString("language","vn");
+            } else {
+                edit.putString("language", "vn");
                 text.setText("VN");
             }
             edit.apply();

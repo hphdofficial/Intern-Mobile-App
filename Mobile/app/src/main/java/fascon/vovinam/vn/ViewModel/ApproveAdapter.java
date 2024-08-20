@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import fascon.vovinam.vn.View.ChangeClassFragment;
+import fascon.vovinam.vn.View.ClubActivity;
 import fascon.vovinam.vn.View.EditOrderFragment;
 import fascon.vovinam.vn.View.OrderDetailFragment;
 import retrofit2.Call;
@@ -120,16 +121,27 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         throw new IllegalArgumentException("Invalid viewType: " + this.viewType);
     }
+
     private String languageS;
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
-        languageS = shared.getString("language",null);
+        languageS = shared.getString("language", null);
         if (holder instanceof ClubClassViewHolder) {
 
             ApproveModel itemClubClass = approveListClubClass.get(position);
             ClubClassViewHolder clubClassViewHolder = (ClubClassViewHolder) holder;
+
+            if (languageS != null) {
+                if (languageS.contains("en")) {
+                    clubClassViewHolder.btnChangeRequest.setText("Change class");
+                    clubClassViewHolder.btnDenyRequest.setText("Deny");
+                    clubClassViewHolder.btnAcceptRequest.setText("Accept");
+                }
+            }
+
             switch (viewType) {
                 case "joinclub":
                     clubClassViewHolder.txtApprove.setTextColor(Color.BLUE);
@@ -138,8 +150,8 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
 //                    clubClassViewHolder.btnAcceptRequest.setBackgroundColor(Color.BLUE);
-                    if(languageS!= null){
-                        if(languageS.contains("en")){
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
                             clubClassViewHolder.txtApprove.setText("Request to join");
                             clubClassViewHolder.txtClubClass.setText("Club: " + itemClubClass.getTen_club());
                             clubClassViewHolder.txtMember.setText("Requester: " + itemClubClass.getTen());
@@ -163,12 +175,21 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         throw new RuntimeException(e);
                     }
 //                    clubClassViewHolder.btnAcceptRequest.setBackgroundColor(Color.BLUE);
-                    if(languageS!= null){
-                        if(languageS.contains("en")){
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
                             clubClassViewHolder.txtApprove.setText("Request to join");
                             clubClassViewHolder.txtClubClass.setText("Class: " + itemClubClass.getTen_class());
                             clubClassViewHolder.txtMember.setText("Requester: " + itemClubClass.getTen_member());
-                            clubClassViewHolder.txtTime.setText("Requested time: " + itemClubClass.getCreated_at());
+                            SimpleDateFormat inputFormat11 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            SimpleDateFormat outputFormat11 = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                            Date date11 = null;
+                            try {
+                                date1 = inputFormat1.parse(itemClubClass.getCreated_at());
+                                String formattedDate = outputFormat1.format(date1);
+                                clubClassViewHolder.txtTime.setText("Requested time: " + formattedDate);
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                     break;
@@ -179,8 +200,8 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     clubClassViewHolder.txtMember.setText("Người yêu cầu: " + itemClubClass.getTen());
                     clubClassViewHolder.txtTime.setText("Thời gian yêu cầu: " + itemClubClass.getCreated_at());
 //                    clubClassViewHolder.btnAcceptRequest.setBackgroundColor(Color.RED);
-                    if(languageS!= null){
-                        if(languageS.contains("en")){
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
 
                             clubClassViewHolder.txtApprove.setText("Request to leave");
                             clubClassViewHolder.txtClubClass.setText("Club: " + itemClubClass.getTen_club());
@@ -205,12 +226,21 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         throw new RuntimeException(e);
                     }
 //                    clubClassViewHolder.btnAcceptRequest.setBackgroundColor(Color.RED);
-                    if(languageS!= null){
-                        if(languageS.contains("en")){
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
                             clubClassViewHolder.txtApprove.setText("Request to leave");
                             clubClassViewHolder.txtClubClass.setText("Class: " + itemClubClass.getClass_name());
                             clubClassViewHolder.txtMember.setText("Requester: " + itemClubClass.getTen());
-                            clubClassViewHolder.txtTime.setText("Requested time: " + itemClubClass.getCreated_at());
+                            SimpleDateFormat inputFormat22 = getMatchingFormat(itemClubClass.getCreated_at());
+                            SimpleDateFormat outputFormat22 = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+                            Date date22 = null;
+                            try {
+                                date2 = inputFormat2.parse(itemClubClass.getCreated_at());
+                                String formattedDate = outputFormat2.format(date2);
+                                clubClassViewHolder.txtTime.setText("Requested time: " + formattedDate);
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                     clubClassViewHolder.btnDenyRequest.setVisibility(View.GONE);
@@ -275,12 +305,13 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             OrderListModel itemOrder = approveListOrder.get(position);
             OrderViewHolder orderViewHolder = (OrderViewHolder) holder;
             orderViewHolder.txtIdOrder.setText("Đơn hàng " + itemOrder.getTxn_ref());
-            if(languageS!= null){
-                if(languageS.contains("en")){
-                    orderViewHolder.txtIdOrder.setText("Order " + itemOrder.getTxn_ref());
-                }
-            }
             orderViewHolder.txtStatusOrder.setText(itemOrder.getGiao_hang().substring(0, 1).toUpperCase() + itemOrder.getGiao_hang().substring(1).toLowerCase());
+            if (languageS != null) {
+                if (languageS.contains("en")) {
+                    orderViewHolder.txtIdOrder.setText("Order " + itemOrder.getTxn_ref());
+                    String statusInEnglish = translateStatusToEnglish(itemOrder.getGiao_hang());
+                    orderViewHolder.txtStatusOrder.setText(statusInEnglish);}
+            }
             double totalPrice = 0;
             for (OrderListModel.DetailCart cart : itemOrder.getDetail_carts()) {
                 double unitPrice = cart.getProduct().getUnitPrice();
@@ -290,8 +321,8 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 totalPrice += priceAfterDiscount * cart.getQuantity();
             }
             orderViewHolder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
-            if(languageS!= null){
-                if(languageS.contains("en")){
+            if (languageS != null) {
+                if (languageS.contains("en")) {
                     orderViewHolder.totalPrice.setText(String.format("Sum money: %,.0f VND", totalPrice));
                     orderViewHolder.btnApproveOrder.setText("Confirm");
                     orderViewHolder.btnDetailOrder.setText("Details");
@@ -334,9 +365,9 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 orderViewHolder.btnEditOrder.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                            FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-                            EditOrderFragment dialogFragment = EditOrderFragment.newInstance(itemOrder);
-                            dialogFragment.show(fragmentManager, "OrderDetailsDialogFragment");
+                        FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                        EditOrderFragment dialogFragment = EditOrderFragment.newInstance(itemOrder);
+                        dialogFragment.show(fragmentManager, "OrderDetailsDialogFragment");
                     }
                 });
             }
@@ -428,7 +459,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<ReponseModel> call = service.approveJoinClass("Bearer " + accessToken, idMember, idClass);
 
-        Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        if (languageS.contains("en")) {
+            Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        }
 
         call.enqueue(new Callback<ReponseModel>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -438,7 +473,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 button2.setEnabled(true);
                 button3.setEnabled(true);
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "Duyệt tham gia lớp học thành công", Toast.LENGTH_SHORT).show();
+                    if (languageS.contains("en")) {
+                        Toast.makeText(context, "Browse join class successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Duyệt tham gia lớp học thành công", Toast.LENGTH_SHORT).show();
+                    }
                     approveListClubClass.remove(position);
                     notifyDataSetChanged();
                     if (approveListClubClass.isEmpty()) {
@@ -469,7 +508,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ClubApiService service = ApiServiceProvider.getClubApiService();
         Call<ReponseModel> call = service.approveLeaveClub("Bearer " + accessToken, new ApproveModel(idMember, idClub));
 
-        Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        if (languageS.contains("en")) {
+            Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        }
 
         call.enqueue(new Callback<ReponseModel>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -506,7 +549,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<ReponseModel> call = service.approveLeaveClass("Bearer " + accessToken, idMember, idClass);
 
-        Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        if (languageS.contains("en")) {
+            Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        }
 
         call.enqueue(new Callback<ReponseModel>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -516,7 +563,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 button2.setEnabled(true);
                 button3.setEnabled(true);
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "Duyệt rời lớp học thành công", Toast.LENGTH_SHORT).show();
+                    if (languageS.contains("en")) {
+                        Toast.makeText(context, "Browse leave class successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Duyệt rời lớp học thành công", Toast.LENGTH_SHORT).show();
+                    }
                     approveListClubClass.remove(position);
                     notifyDataSetChanged();
                     Log.i("Success", response.message());
@@ -542,7 +593,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<ReponseModel> call = service.denyJoinClass("Bearer " + accessToken, idMember, idClass);
 
-        Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        if (languageS.contains("en")) {
+            Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        }
 
         call.enqueue(new Callback<ReponseModel>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -552,7 +607,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 button2.setEnabled(true);
                 button3.setEnabled(true);
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "Đã từ chối tham gia lớp học", Toast.LENGTH_SHORT).show();
+                    if (languageS.contains("en")) {
+                        Toast.makeText(context, "Refused to attend class", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Đã từ chối tham gia lớp học", Toast.LENGTH_SHORT).show();
+                    }
                     approveListClubClass.remove(position);
                     notifyDataSetChanged();
                     if (approveListClubClass.isEmpty()) {
@@ -580,17 +639,25 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<ReponseModel> call = service.updateConfirmOrder(idOrder);
 
-        Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        if (languageS.contains("en")) {
+            Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        }
 
         call.enqueue(new Callback<ReponseModel>() {
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "Cập nhật thành công trạng thái chờ lấy hàng", Toast.LENGTH_SHORT).show();
+                    if (languageS.contains("en")) {
+                        Toast.makeText(context, "Successfully updated the status of waiting for pick up", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Cập nhật thành công trạng thái chờ lấy hàng", Toast.LENGTH_SHORT).show();
+                    }
                     approveListOrder.remove(position);
                     notifyDataSetChanged();
-                    if (approveListOrder.isEmpty()){
+                    if (approveListOrder.isEmpty()) {
                         if (context instanceof ApproveOrderActivity) {
                             ((ApproveOrderActivity) context).setEmptyList();
                         }
@@ -613,7 +680,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<ReponseModel> call = service.updateGetOrder(idOrder);
 
-        Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        if (languageS.contains("en")) {
+            Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        }
 
         call.enqueue(new Callback<ReponseModel>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -621,10 +692,14 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "Cập nhật thành công trạng thái đang giao hàng", Toast.LENGTH_SHORT).show();
+                    if (languageS.contains("en")) {
+                        Toast.makeText(context, "Successfully updated delivery status", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Cập nhật thành công trạng thái đang giao hàng", Toast.LENGTH_SHORT).show();
+                    }
                     approveListOrder.remove(position);
                     notifyDataSetChanged();
-                    if (approveListOrder.isEmpty()){
+                    if (approveListOrder.isEmpty()) {
                         if (context instanceof ApproveOrderActivity) {
                             ((ApproveOrderActivity) context).setEmptyList();
                         }
@@ -647,7 +722,11 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<ReponseModel> call = service.updateShipOrder(idOrder);
 
-        Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        if (languageS.contains("en")) {
+            Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Đang xử lý...", Toast.LENGTH_LONG).show();
+        }
 
         call.enqueue(new Callback<ReponseModel>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -655,10 +734,14 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 button.setEnabled(true);
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "Cập nhật thành công trạng thái đã giao hàng", Toast.LENGTH_SHORT).show();
+                    if (languageS.contains("en")) {
+                        Toast.makeText(context, "Successfully updated delivered status", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Cập nhật thành công trạng thái đã giao hàng", Toast.LENGTH_SHORT).show();
+                    }
                     approveListOrder.remove(position);
                     notifyDataSetChanged();
-                    if (approveListOrder.isEmpty()){
+                    if (approveListOrder.isEmpty()) {
                         if (context instanceof ApproveOrderActivity) {
                             ((ApproveOrderActivity) context).setEmptyList();
                         }
@@ -717,6 +800,23 @@ public class ApproveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }
         return null; // Không có định dạng nào khớp
+    }
+
+    private String translateStatusToEnglish(String status) {
+        switch (status.toLowerCase()) {
+            case "đang giao hàng":
+                return "Delivering";
+            case "đã giao hàng":
+                return "Delivered";
+            case "đã hủy":
+                return "Cancelled";
+            case "chờ xác nhận":
+                return "Pending confirmation";
+            case "chờ lấy hàng":
+                return "Waiting for pickup";
+            default:
+                return "Unknown status";
+        }
     }
 
 }

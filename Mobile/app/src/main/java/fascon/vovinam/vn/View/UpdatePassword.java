@@ -136,18 +136,28 @@ public class UpdatePassword extends BaseActivity {
         editText.setSelection(editText.getText().length());
     }
 
+    private void showLocalizedToast(String vietnameseMessage, String englishMessage) {
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(this, englishMessage, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, vietnameseMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void updatePassword() {
         String currentPassword = editTextCurrentPassword.getText().toString();
         String newPassword = editTextPassword.getText().toString();
         String confirmPassword = editTextPasswordConfirmation.getText().toString();
 
+        // Kiểm tra độ dài mật khẩu
         if (newPassword.length() < 6) {
-            Toast.makeText(this, "Mật khẩu mới phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Mật khẩu mới phải có ít nhất 6 ký tự", "New password must be at least 6 characters long");
             return;
         }
 
+        // Kiểm tra khớp mật khẩu mới và xác nhận mật khẩu
         if (!newPassword.equals(confirmPassword)) {
-            Toast.makeText(this, "Mật khẩu mới và xác nhận mật khẩu không khớp", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Mật khẩu mới và xác nhận mật khẩu không khớp", "New password and confirmation password do not match");
             return;
         }
 
@@ -167,7 +177,7 @@ public class UpdatePassword extends BaseActivity {
                 public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                     hideLoading();
                     if (response.isSuccessful() && response.body() != null) {
-                        Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                        showLocalizedToast("Cập nhật mật khẩu thành công", "Password updated successfully");
                         Intent intent = new Intent(UpdatePassword.this, MenuActivity.class);
                         startActivity(intent);
                         finish();
@@ -179,12 +189,12 @@ public class UpdatePassword extends BaseActivity {
                             String error = errorObject.optString("error");
 
                             if (response.code() == 400 && error.equals("Mật khẩu hiện tại không đúng")) {
-                                Toast.makeText(UpdatePassword.this, "Mật khẩu hiện tại không đúng", Toast.LENGTH_SHORT).show();
+                                showLocalizedToast("Mật khẩu hiện tại không đúng", "Current password is incorrect");
                             } else {
-                                Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại: " + error, Toast.LENGTH_SHORT).show();
+                                showLocalizedToast("Cập nhật mật khẩu thất bại: " + error, "Password update failed: " + error);
                             }
                         } catch (Exception e) {
-                            Toast.makeText(UpdatePassword.this, "Cập nhật mật khẩu thất bại.", Toast.LENGTH_SHORT).show();
+                            showLocalizedToast("Cập nhật mật khẩu thất bại.", "Password update failed.");
                             e.printStackTrace();
                         }
                     }
@@ -193,13 +203,14 @@ public class UpdatePassword extends BaseActivity {
                 @Override
                 public void onFailure(Call<ReponseModel> call, Throwable t) {
                     hideLoading();
-                    Toast.makeText(UpdatePassword.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Lỗi kết nối: " + t.getMessage(), "Connection error: " + t.getMessage());
                 }
             });
         } else {
-            Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Chưa đăng nhập", "Not logged in");
         }
     }
+
 
 
     private void showLoading() {

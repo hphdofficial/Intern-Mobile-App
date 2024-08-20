@@ -227,7 +227,13 @@ public class MenuActivity extends BaseActivity {
         String role = decodeRoleFromToken(token);
         if(role.contains("0")){
             PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-            Call<List<ProductSaleDownModel>> call = apiService.GetSaleDownProduct();
+            Call<List<ProductSaleDownModel>> call;
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    call = apiService.GetSaleDownProduct("en");
+                }else call = apiService.GetSaleDownProduct("vi");
+            }else call = apiService.GetSaleDownProduct("vi");
+
             call.enqueue(new Callback<List<ProductSaleDownModel>>() {
                 @Override
                 public void onResponse(Call<List<ProductSaleDownModel>> call, Response<List<ProductSaleDownModel>> response) {
@@ -350,7 +356,13 @@ public class MenuActivity extends BaseActivity {
         String role = decodeRoleFromToken(token);
         if(role.contains("0")) {
             PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-            Call<List<ProductSaleModel>> call = apiService.GetSaleProduct();
+            Call<List<ProductSaleModel>> call ;
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    call = apiService.GetSaleProduct("en");
+                }else  call = apiService.GetSaleProduct("vi");
+            }else  call = apiService.GetSaleProduct("vi");
+
 
             call.enqueue(new Callback<List<ProductSaleModel>>() {
                 @Override
@@ -373,6 +385,7 @@ public class MenuActivity extends BaseActivity {
 
 
     }
+
     public void ShowMenu(){
         String token = sharedPreferences.getString("access_token", null);
         String role = decodeRoleFromToken(token);
@@ -418,11 +431,10 @@ public class MenuActivity extends BaseActivity {
 
                                 @Override
                                 public void onFailure(Call<List<Class>> call, Throwable t) {
-
                                     editor.putString("id_class_shared",null);
+                                    editor.putString("name_class",null);
                                     ViewUserNotRegister();
                                     hideLoading();
-
                                 }
                             });
                         }
@@ -432,6 +444,7 @@ public class MenuActivity extends BaseActivity {
                         hideLoading();
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("id_club_shared", null);
+                        editor.putString("name_clb", null);
                         editor.apply();
                     }
                 }
@@ -446,6 +459,7 @@ public class MenuActivity extends BaseActivity {
             hideLoading();
         }
     }
+
     private LinearLayout btn_lythuyet;
     private LinearLayout btn_club;
     private LinearLayout btn_register;
@@ -631,7 +645,12 @@ public class MenuActivity extends BaseActivity {
     public void getListNew(){
 
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<NewsModel>> call = apiService.getAnouncements();
+        Call<List<NewsModel>> call;
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                call = apiService.getAnouncements("en");
+            }else  call = apiService.getAnouncements("vi");
+        }else  call = apiService.getAnouncements("vi");
         call.enqueue(new Callback<List<NewsModel>>() {
             @Override
             public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
@@ -713,11 +732,11 @@ public class MenuActivity extends BaseActivity {
                         100
                 ));
                 textView.setText(p.getName());
-                if(languageS!= null){
+/*                if(languageS!= null){
                     if(languageS.contains("en")){
                         textView.setText(p.getTenenglish());
                     }
-                }
+                }*/
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
@@ -812,7 +831,12 @@ public class MenuActivity extends BaseActivity {
                 else
                     max1 = Integer.MAX_VALUE;
                 PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-                Call<List<ProductSaleDownModel>> call = apiService.GetSaleDownProduct();
+                Call<List<ProductSaleDownModel>> call;
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        call = apiService.GetSaleDownProduct("en");
+                    }else call = apiService.GetSaleDownProduct("vi");
+                }else call = apiService.GetSaleDownProduct("vi");
                 call.enqueue(new Callback<List<ProductSaleDownModel>>() {
                     @Override
                     public void onResponse(Call<List<ProductSaleDownModel>> call, Response<List<ProductSaleDownModel>> response) {
@@ -870,7 +894,12 @@ public class MenuActivity extends BaseActivity {
                     max = Integer.MAX_VALUE;
 
                 PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-                Call<List<ProductSaleModel>> call = apiService.GetSaleProduct();
+                Call<List<ProductSaleModel>> call ;
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        call = apiService.GetSaleProduct("en");
+                    }else  call = apiService.GetSaleProduct("vi");
+                }else  call = apiService.GetSaleProduct("vi");
 
                 call.enqueue(new Callback<List<ProductSaleModel>>() {
                     @Override
@@ -942,11 +971,11 @@ public class MenuActivity extends BaseActivity {
                         100
                 ));
                 textView.setText(p.getName());
-                if(languageS!= null){
+               /* if(languageS!= null){
                     if(languageS.contains("en")){
                         textView.setText(p.getTenenglish());
                     }
-                }
+                }*/
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
@@ -1066,9 +1095,11 @@ public class MenuActivity extends BaseActivity {
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(getApplicationContext(), NewsDetailActivity.class);
-                                intent.putExtra("NewsTitle", news.getTenvi());
-                                intent.putExtra("NewsContent", news.getNoidungvi());
-                                intent.putExtra("NewsImage", imageUrl); // Pass the full image URL
+                                intent.putExtra("NewsTitleVi", news.getTenvi());
+                                intent.putExtra("NewsContentVi", news.getNoidungvi());
+                                intent.putExtra("NewsTitleEn", news.getTenen());
+                                intent.putExtra("NewsContentEn", news.getNoidungen());
+                                intent.putExtra("NewsImage", imageUrl);
                                 startActivity(intent);
                             }
                         });

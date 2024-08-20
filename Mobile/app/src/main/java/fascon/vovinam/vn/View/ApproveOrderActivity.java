@@ -1,4 +1,6 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +45,7 @@ public class ApproveOrderActivity extends BaseActivity {
     private ApproveAdapter approveAdapter;
     private TextView txtNotify;
     private String languageS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +62,9 @@ public class ApproveOrderActivity extends BaseActivity {
         myContentE.putString("title", "Duyệt đơn hàng");
         myContentE.apply();
         SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        languageS = shared.getString("language",null);
-        if(languageS!= null){
-            if(languageS.contains("en")){
+        languageS = shared.getString("language", null);
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 myContentE.putString("title", "Approve new orders");
                 myContentE.apply();
             }
@@ -82,8 +85,8 @@ public class ApproveOrderActivity extends BaseActivity {
                 "Đơn hàng chờ lấy hàng",
                 "Đơn hàng đang giao"
         };
-        if(languageS!= null){
-            if(languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 options[0] = "Order awaiting confirmation";
                 options[1] = "Orders awaiting pickup";
                 options[2] = "Order is being delivered";
@@ -97,7 +100,11 @@ public class ApproveOrderActivity extends BaseActivity {
     }
 
     private void getListConfirmOrder() {
-        txtNotify.setText("Loading...");
+        if (languageS.contains("en")) {
+            txtNotify.setText("Loading...");
+        } else {
+            txtNotify.setText("Đang tải...");
+        }
         approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "confirmorder");
         recyclerView.setAdapter(approveAdapter);
 
@@ -105,7 +112,7 @@ public class ApproveOrderActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken, languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
@@ -129,11 +136,10 @@ public class ApproveOrderActivity extends BaseActivity {
                             approveAdapter.setDataOrder(orderList);
                             txtNotify.setText("");
                         } else {
-                            txtNotify.setText("Không có đơn hàng nào");
-                            if(languageS!= null){
-                                if(languageS.contains("en")){
-                                    txtNotify.setText("Not order");
-                                }
+                            if (languageS.contains("en")) {
+                                txtNotify.setText("No orders");
+                            } else {
+                                txtNotify.setText("Không có đơn hàng nào");
                             }
                         }
                     }
@@ -150,7 +156,11 @@ public class ApproveOrderActivity extends BaseActivity {
     }
 
     private void getListGetOrder() {
-        txtNotify.setText("Loading...");
+        if (languageS.contains("en")) {
+            txtNotify.setText("Loading...");
+        } else {
+            txtNotify.setText("Đang tải...");
+        }
         approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "getorder");
         recyclerView.setAdapter(approveAdapter);
 
@@ -158,7 +168,7 @@ public class ApproveOrderActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken, languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
@@ -182,7 +192,11 @@ public class ApproveOrderActivity extends BaseActivity {
                             approveAdapter.setDataOrder(orderList);
                             txtNotify.setText("");
                         } else {
-                            txtNotify.setText("Không có đơn hàng nào");
+                            if (languageS.contains("en")) {
+                                txtNotify.setText("No orders");
+                            } else {
+                                txtNotify.setText("Không có đơn hàng nào");
+                            }
                         }
                     }
                 } else {
@@ -198,7 +212,11 @@ public class ApproveOrderActivity extends BaseActivity {
     }
 
     private void getListShipOrder() {
-        txtNotify.setText("Loading...");
+        if (languageS.contains("en")) {
+            txtNotify.setText("Loading...");
+        } else {
+            txtNotify.setText("Đang tải...");
+        }
         approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "shiporder");
         recyclerView.setAdapter(approveAdapter);
 
@@ -206,7 +224,7 @@ public class ApproveOrderActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken);
+        Call<List<OrderListModel>> call = service.getOrderCoach("Bearer " + accessToken, languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<List<OrderListModel>>() {
             @Override
@@ -230,7 +248,11 @@ public class ApproveOrderActivity extends BaseActivity {
                             approveAdapter.setDataOrder(orderList);
                             txtNotify.setText("");
                         } else {
-                            txtNotify.setText("Không có đơn hàng nào");
+                            if (languageS.contains("en")) {
+                                txtNotify.setText("No orders");
+                            } else {
+                                txtNotify.setText("Không có đơn hàng nào");
+                            }
                         }
                     }
                 } else {
@@ -288,19 +310,21 @@ public class ApproveOrderActivity extends BaseActivity {
             Log.e("ApproveOrderActivity", "Invalid position: " + position);
         }
     }
+
     private TextView text;
+
     public void onMenuItemClick(View view) {
         text = findViewById(R.id.languageText);
-        String language = text.getText()+"";
-        if(view.getId() == R.id.btn_change){
+        String language = text.getText() + "";
+        if (view.getId() == R.id.btn_change) {
             SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
-            SharedPreferences.Editor edit =  sga.edit();
+            SharedPreferences.Editor edit = sga.edit();
 
-            if(language.contains("VN")){
-                edit.putString("language","en");
+            if (language.contains("VN")) {
+                edit.putString("language", "en");
                 text.setText("ENG");
-            }else {
-                edit.putString("language","vn");
+            } else {
+                edit.putString("language", "vn");
                 text.setText("VN");
             }
             edit.apply();
@@ -309,7 +333,12 @@ public class ApproveOrderActivity extends BaseActivity {
             startActivity(intent);
         }
     }
-    public void setEmptyList(){
-        txtNotify.setText("Không có đơn hàng nào");
+
+    public void setEmptyList() {
+        if (languageS.contains("en")) {
+            txtNotify.setText("No orders");
+        } else {
+            txtNotify.setText("Không có đơn hàng nào");
+        }
     }
 }

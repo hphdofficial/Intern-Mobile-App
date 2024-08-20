@@ -9,13 +9,12 @@
     android:layout_marginRight="5dp"
     android:background="@drawable/rounded_background"
     android:elevation="3dp"
-    android:paddingTop="15dp"
-    android:paddingBottom="15dp">
+    android:paddingTop="15dp">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,13 +22,14 @@
 
     <TextView
         android:id="@+id/txt_name_club"
-        android:layout_width="150dp"
+        android:layout_width="0dp"
+        android:layout_marginEnd="20dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
         android:maxLines="2"
         android:text="Câu lạc bộ"
         android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
 
@@ -37,12 +37,17 @@
         android:id="@+id/btn_join_club"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:backgroundTint="#0000C8"
-        android:text="Chi tiết"
-        app:cornerRadius="15dp"
+        android:layout_marginEnd="-5dp"
+        android:layout_marginBottom="-5dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:text="Xem chi tiết"
+        android:textColor="#0000C8"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_name_club" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
