@@ -28,7 +28,7 @@ public interface OrderApiService {
             @Query("id_order") int orderId
     );
 
-    @GET("api/orders/All")
+    @GET("api/orders/All3")
     Call<List<OrderListModel>> getListOrder(
             @Header("Authorization") String token,
             @Query("lang") String lang
