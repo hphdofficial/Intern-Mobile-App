@@ -55,6 +55,7 @@ public class activity_item_chapter extends BaseActivity {
                     txtTheoryTittle.setText(theory.getTenvi());
                     txtTheoryContent.setText("Bài tập gồm: "+theory.getNoidungvi());
                     String videoPath = theory.getLink_video();
+//                    String videoPath = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
                     if(languageS != null){
                         if(languageS.contains("en")){
                             txtTheoryTittle.setText(theory.getTenen());
@@ -62,15 +63,31 @@ public class activity_item_chapter extends BaseActivity {
                             txtNotify.setText("Fellow, please wait for the clip from the server. If any video does not have the League Logo, there is no clip, you can film for your own reference. Will update when there is a federated clip.");
                         }
                     }
-                    player = new ExoPlayer.Builder(getApplicationContext()).build();
-                    PlayerView playerView = findViewById(R.id.webView);
-                    playerView.setPlayer(player);
 
-                    Uri uri = Uri.parse(videoPath);
-                    MediaItem mediaItem = MediaItem.fromUri(uri);
-                    player.setMediaItem(mediaItem);
-                    player.prepare();
-                    player.play();
+                    if(videoPath.isEmpty() || videoPath.equals(" ")){
+                        if(languageS != null){
+                            if(languageS.contains("en")){
+                                Toast.makeText(activity_item_chapter.this, "Theory not avaiable right now !", Toast.LENGTH_SHORT).show();
+
+                            }else{
+                                Toast.makeText(activity_item_chapter.this, "Lý thuyết hiện không khả dụng", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }else{
+                            Toast.makeText(activity_item_chapter.this, "Lý thuyết hiện không khả dụng", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else{
+                        player = new ExoPlayer.Builder(getApplicationContext()).build();
+                        PlayerView playerView = findViewById(R.id.webView);
+                        playerView.setPlayer(player);
+
+                        Uri uri = Uri.parse(videoPath);
+                        MediaItem mediaItem = MediaItem.fromUri(uri);
+                        player.setMediaItem(mediaItem);
+                        player.prepare();
+                        player.play();
+                    }
 
                     hideLoading();
                 }else {
