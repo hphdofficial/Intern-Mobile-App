@@ -385,6 +385,7 @@ public class MenuActivity extends BaseActivity {
 
 
     }
+
     public void ShowMenu(){
         String token = sharedPreferences.getString("access_token", null);
         String role = decodeRoleFromToken(token);
@@ -430,11 +431,10 @@ public class MenuActivity extends BaseActivity {
 
                                 @Override
                                 public void onFailure(Call<List<Class>> call, Throwable t) {
-
                                     editor.putString("id_class_shared",null);
+                                    editor.putString("name_class",null);
                                     ViewUserNotRegister();
                                     hideLoading();
-
                                 }
                             });
                         }
@@ -444,6 +444,7 @@ public class MenuActivity extends BaseActivity {
                         hideLoading();
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("id_club_shared", null);
+                        editor.putString("name_clb", null);
                         editor.apply();
                     }
                 }
@@ -458,6 +459,7 @@ public class MenuActivity extends BaseActivity {
             hideLoading();
         }
     }
+
     private LinearLayout btn_lythuyet;
     private LinearLayout btn_club;
     private LinearLayout btn_register;

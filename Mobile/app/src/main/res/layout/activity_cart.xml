@@ -44,11 +44,13 @@
 
     <Button
         android:id="@+id/btn_thanhtoan"
-        android:layout_width="150dp"
+        android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="5dp"
         android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/txt_sum_price"
         android:background="#FFEB3B"
         android:text="Đặt hàng"
         android:textColor="#000000"

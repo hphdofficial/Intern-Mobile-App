@@ -1,4 +1,6 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -42,6 +45,7 @@ public class ApproveActivity extends BaseActivity {
     private ApproveAdapter approveAdapter;
     private TextView txtNotify;
     private String languageS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +62,9 @@ public class ApproveActivity extends BaseActivity {
         myContentE.putString("title", "Duyệt yêu cầu");
         myContentE.apply();
         SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        languageS = shared.getString("language",null);
-        if(languageS!= null){
-            if(languageS.contains("en")){
+        languageS = shared.getString("language", null);
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 myContentE.putString("title", "Browse requests");
                 myContentE.apply();
             }
@@ -80,10 +84,10 @@ public class ApproveActivity extends BaseActivity {
                 "Yêu cầu đăng ký lớp học",
                 "Yêu cầu rời lớp học"
         };
-        if(languageS!= null){
-            if(languageS.contains("en")){
-               options[0] = "Class registration required";
-               options[1] = "Request to leave class";
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                options[0] = "Class registration required";
+                options[1] = "Request to leave class";
             }
         }
 
@@ -92,19 +96,21 @@ public class ApproveActivity extends BaseActivity {
         spinnerOptions.setAdapter(spinnerAdapter);
         selectSpinnerItem(0);
     }
+
     private TextView text;
+
     public void onMenuItemClick(View view) {
         text = findViewById(R.id.languageText);
-        String language = text.getText()+"";
-        if(view.getId() == R.id.btn_change){
+        String language = text.getText() + "";
+        if (view.getId() == R.id.btn_change) {
             SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
-            SharedPreferences.Editor edit =  sga.edit();
+            SharedPreferences.Editor edit = sga.edit();
 
-            if(language.contains("VN")){
-                edit.putString("language","en");
+            if (language.contains("VN")) {
+                edit.putString("language", "en");
                 text.setText("ENG");
-            }else {
-                edit.putString("language","vn");
+            } else {
+                edit.putString("language", "vn");
                 text.setText("VN");
             }
             edit.apply();
@@ -113,8 +119,13 @@ public class ApproveActivity extends BaseActivity {
             startActivity(intent);
         }
     }
+
     private void getListJoinClub() {
-        txtNotify.setText("Loading...");
+        if (languageS.contains("en")) {
+            txtNotify.setText("Loading...");
+        } else {
+            txtNotify.setText("Đang tải...");
+        }
         approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "joinclub");
         recyclerView.setAdapter(approveAdapter);
 
@@ -139,7 +150,11 @@ public class ApproveActivity extends BaseActivity {
                         approveAdapter.setDataClubClass(list);
                         txtNotify.setText("");
                     } else {
-                        txtNotify.setText("Không có yêu cầu nào");
+                        if (languageS.contains("en")) {
+                            txtNotify.setText("No requirements");
+                        } else {
+                            txtNotify.setText("Không có yêu cầu nào");
+                        }
                     }
                 } else {
                     Log.e("Error", response.message());
@@ -154,7 +169,11 @@ public class ApproveActivity extends BaseActivity {
     }
 
     private void getListJoinClass() {
-        txtNotify.setText("Loading...");
+        if (languageS.contains("en")) {
+            txtNotify.setText("Loading...");
+        } else {
+            txtNotify.setText("Đang tải...");
+        }
         approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "joinclass");
         recyclerView.setAdapter(approveAdapter);
 
@@ -162,7 +181,7 @@ public class ApproveActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<List<ApproveModel>> call = service.getListJoinClassPending("Bearer " + accessToken);
+        Call<List<ApproveModel>> call = service.getListJoinClassPending("Bearer " + accessToken, languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<List<ApproveModel>>() {
             @Override
@@ -179,7 +198,11 @@ public class ApproveActivity extends BaseActivity {
                         approveAdapter.setDataClubClass(list);
                         txtNotify.setText("");
                     } else {
-                        txtNotify.setText("Không có yêu cầu nào");
+                        if (languageS.contains("en")) {
+                            txtNotify.setText("No requirements");
+                        } else {
+                            txtNotify.setText("Không có yêu cầu nào");
+                        }
                     }
                 } else {
                     Log.e("Error", response.message());
@@ -194,7 +217,11 @@ public class ApproveActivity extends BaseActivity {
     }
 
     private void getListLeaveClub() {
-        txtNotify.setText("Loading...");
+        if (languageS.contains("en")) {
+            txtNotify.setText("Loading...");
+        } else {
+            txtNotify.setText("Đang tải...");
+        }
         approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "leaveclub");
         recyclerView.setAdapter(approveAdapter);
 
@@ -219,7 +246,11 @@ public class ApproveActivity extends BaseActivity {
                         approveAdapter.setDataClubClass(list);
                         txtNotify.setText("");
                     } else {
-                        txtNotify.setText("Không có yêu cầu nào");
+                        if (languageS.contains("en")) {
+                            txtNotify.setText("No requirements");
+                        } else {
+                            txtNotify.setText("Không có yêu cầu nào");
+                        }
                     }
                 } else {
                     Log.e("Error", response.message());
@@ -234,7 +265,11 @@ public class ApproveActivity extends BaseActivity {
     }
 
     private void getListLeaveClass() {
-        txtNotify.setText("Loading...");
+        if (languageS.contains("en")) {
+            txtNotify.setText("Loading...");
+        } else {
+            txtNotify.setText("Đang tải...");
+        }
         approveAdapter = new ApproveAdapter(this, new ArrayList<>(), "leaveclass");
         recyclerView.setAdapter(approveAdapter);
 
@@ -242,7 +277,7 @@ public class ApproveActivity extends BaseActivity {
         String accessToken = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<List<ApproveModel>> call = service.getListLeaveClassPending("Bearer " + accessToken);
+        Call<List<ApproveModel>> call = service.getListLeaveClassPending("Bearer " + accessToken, languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<List<ApproveModel>>() {
             @Override
@@ -259,7 +294,11 @@ public class ApproveActivity extends BaseActivity {
                         approveAdapter.setDataClubClass(list);
                         txtNotify.setText("");
                     } else {
-                        txtNotify.setText("Không có yêu cầu nào");
+                        if (languageS.contains("en")) {
+                            txtNotify.setText("No requirements");
+                        } else {
+                            txtNotify.setText("Không có yêu cầu nào");
+                        }
                     }
                 } else {
                     Log.e("Error", response.message());
@@ -311,7 +350,11 @@ public class ApproveActivity extends BaseActivity {
         }
     }
 
-    public void setEmptyList(){
-        txtNotify.setText("Không có yêu cầu nào");
+    public void setEmptyList() {
+        if (languageS.contains("en")) {
+            txtNotify.setText("No requirements");
+        } else {
+            txtNotify.setText("Không có yêu cầu nào");
+        }
     }
 }

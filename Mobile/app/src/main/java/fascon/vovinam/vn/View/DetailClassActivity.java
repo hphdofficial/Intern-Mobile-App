@@ -60,6 +60,7 @@ public class DetailClassActivity extends BaseActivity {
     private int fee = 0;
     private BlankFragment loadingFragment;
     private String languageS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,13 +75,13 @@ public class DetailClassActivity extends BaseActivity {
         sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE);
 
 
-        languageS = sharedPreferences.getString("language",null);
+        languageS = sharedPreferences.getString("language", null);
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Chi tiết lớp học");
         myContentE.apply();
-        if(languageS!= null){
-            if(languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 myContentE.putString("title", "Class Detail");
                 myContentE.apply();
             }
@@ -146,8 +147,8 @@ public class DetailClassActivity extends BaseActivity {
         textViewDienthoaiLabel = findViewById(R.id.textViewDienthoaiLabel);
         textViewDiachiLabel = findViewById(R.id.textViewDiachiLabel);
         textViewGioitinhLabel = findViewById(R.id.textViewGioitinhLabel);
-        if(languageS != null){
-            if(languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
 
                 textViewTenLabel.setText("Lecturer");
                 textViewDienthoaiLabel.setText("School schedule");
@@ -168,7 +169,7 @@ public class DetailClassActivity extends BaseActivity {
         getListClassPending();
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<Class> call = service.getDetailClassofClub(Integer.parseInt(idClass));
+        Call<Class> call = service.getDetailClassofClub(Integer.parseInt(idClass), languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<Class>() {
             @Override
@@ -200,6 +201,7 @@ public class DetailClassActivity extends BaseActivity {
             }
         });
     }
+
     private TextView textViewTenLabel;
     private TextView textViewDienthoaiLabel;
     private TextView textViewDiachiLabel;
@@ -243,7 +245,14 @@ public class DetailClassActivity extends BaseActivity {
     }
 
     public void setupButton() {
-        if (!Objects.equals(decodeRoleFromToken(sharedPreferences.getString("access_token", null)), "0")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                btnJoinClassPending.setText("Request to join this class");
+                btnCancelClassPending.setText("Cancel request to join");
+                btnLeaveClassPending.setText("Request to leave class");
+            }
+        }
+        if (!Objects.equals(decodeRoleFromToken(sharedPreferences.getString("access_token", null)), "0")) {
             btnJoinClassPending.setVisibility(View.GONE);
             btnCancelClassPending.setVisibility(View.GONE);
             btnLeaveClassPending.setVisibility(View.GONE);
@@ -264,12 +273,23 @@ public class DetailClassActivity extends BaseActivity {
 
     public void joinClassPending() {
         btnJoinClassPending.setEnabled(false);
-        Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_LONG).show();
-
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                Toast.makeText(DetailClassActivity.this, "Processing...", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_LONG).show();
+            }
+        }
         isPending = true;
         setupButton();
         btnJoinClassPending.setEnabled(true);
-        Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                Toast.makeText(DetailClassActivity.this, "Request to join class sent", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
+            }
+        }
 
         Intent intent = new Intent(DetailClassActivity.this, RegisterClass.class);
         Bundle bundle = new Bundle();
@@ -304,12 +324,23 @@ public class DetailClassActivity extends BaseActivity {
 
     public void cancelClassPending() {
         btnCancelClassPending.setEnabled(false);
-        Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_LONG).show();
-
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                Toast.makeText(DetailClassActivity.this, "Processing...", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_LONG).show();
+            }
+        }
         isPending = false;
         setupButton();
         btnCancelClassPending.setEnabled(true);
-        Toast.makeText(DetailClassActivity.this, "Đã hủy yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                Toast.makeText(DetailClassActivity.this, "Class request canceled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(DetailClassActivity.this, "Đã hủy yêu cầu tham gia lớp học", Toast.LENGTH_SHORT).show();
+            }
+        }
 
         String token = sharedPreferences.getString("access_token", null);
         ClassApiService service = ApiServiceProvider.getClassApiService();
@@ -333,7 +364,13 @@ public class DetailClassActivity extends BaseActivity {
 
     private void leaveClassPending() {
         btnLeaveClassPending.setEnabled(false);
-        Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_SHORT).show();
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                Toast.makeText(DetailClassActivity.this, "Processing...", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(DetailClassActivity.this, "Đang xử lý...", Toast.LENGTH_LONG).show();
+            }
+        }
 
         String token = sharedPreferences.getString("access_token", null);
 
@@ -348,16 +385,34 @@ public class DetailClassActivity extends BaseActivity {
                     setupButton();
                     btnLeaveClassPending.setEnabled(true);
                     btnLeaveClassPending.setVisibility(View.GONE);
-                    Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu rời lớp học", Toast.LENGTH_SHORT).show();
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(DetailClassActivity.this, "Request to leave class has been sent", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(DetailClassActivity.this, "Đã gửi yêu cầu rời lớp học", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 } else {
-                    Toast.makeText(DetailClassActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(DetailClassActivity.this, "Your request is pending approval.", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(DetailClassActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                     Log.e("Error", response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
-                Toast.makeText(DetailClassActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
+                if (languageS != null) {
+                    if (languageS.contains("en")) {
+                        Toast.makeText(DetailClassActivity.this, "Your request is pending approval.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(DetailClassActivity.this, "Yêu cầu của bạn đang chờ duyệt", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 Log.e("Fail", t.getMessage());
             }
         });
@@ -453,19 +508,21 @@ public class DetailClassActivity extends BaseActivity {
             loadingFragment = null;
         }
     }
+
     private TextView text;
+
     public void onMenuItemClick(View view) {
         text = findViewById(R.id.languageText);
-        String language = text.getText()+"";
-        if(view.getId() == R.id.btn_change){
+        String language = text.getText() + "";
+        if (view.getId() == R.id.btn_change) {
             SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
-            SharedPreferences.Editor edit =  sga.edit();
+            SharedPreferences.Editor edit = sga.edit();
 
-            if(language.contains("VN")){
-                edit.putString("language","en");
+            if (language.contains("VN")) {
+                edit.putString("language", "en");
                 text.setText("ENG");
-            }else {
-                edit.putString("language","vn");
+            } else {
+                edit.putString("language", "vn");
                 text.setText("VN");
             }
             edit.apply();

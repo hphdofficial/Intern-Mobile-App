@@ -153,7 +153,7 @@ public class CartActivity extends BaseActivity {
         updateTotalPrice(memberId);
 
         CartApiService service = ApiServiceProvider.getCartApiService();
-        Call<JsonObject> call = service.getCart("Bearer" + token, memberId);
+        Call<JsonObject> call = service.getCart(memberId, languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -180,7 +180,7 @@ public class CartActivity extends BaseActivity {
                         }
                         if (!found) {
                             ProductModel product = item.getProduct();
-                            products.add(new ProductModel(product.getEn(),product.getProductID(), product.getProductName(), product.getUnitPrice(), product.getImage_link(), product.getCategoryName(), product.getSupplierName(), product.getSale(), item.getQuantity()));
+                            products.add(new ProductModel(product.getProductID(), product.getProductName(), product.getUnitPrice(), product.getImage_link(), product.getCategoryName(), product.getSupplierName(), product.getSale(), item.getQuantity()));
                         }
                     }
 
@@ -233,10 +233,12 @@ public class CartActivity extends BaseActivity {
                     if(languageS!= null){
                         if(languageS.contains("en")){
                             txtSumPrice.setText("Sum money: " + formattedSumPrice);
-                        }
+                            Toast.makeText(CartActivity.this, "Cart updated successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(CartActivity.this, "Cập nhật giỏ hàng thành công", Toast.LENGTH_SHORT).show();
 
+                        }
                     }
-                    Toast.makeText(CartActivity.this, "Cập nhật giỏ hàng thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     System.err.println("Response error: " + response.errorBody());
                 }

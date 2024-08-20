@@ -3,6 +3,7 @@ package fascon.vovinam.vn.ViewModel;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,10 +77,27 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(OrderAdapter.ViewHolder holder, int position) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        String languageS = shared.getString("language", null);
+
         OrderListModel order = data.get(position);
 
-        holder.txtIdOrder.setText("Đơn hàng " + order.getTxn_ref());
-        holder.txtStatusOrder.setText(order.getGiao_hang().substring(0, 1).toUpperCase() + order.getGiao_hang().substring(1).toLowerCase());
+        if (languageS != null && order != null) {
+            if (languageS.contains("en")) {
+                holder.txtIdOrder.setText("Order " + order.getTxn_ref());
+                String statusInEnglish = translateStatusToEnglish(order.getGiao_hang());
+                holder.txtStatusOrder.setText(statusInEnglish);
+                holder.buttonEdit.setText("Edit");
+                holder.buttonCancel.setText("Cancel");
+                holder.buttonDetail.setText("Detail");
+            } else {
+                holder.txtIdOrder.setText("Đơn hàng " + order.getTxn_ref());
+                if (order.getGiao_hang() != null && !order.getGiao_hang().isEmpty()) {
+                    String status = order.getGiao_hang().substring(0, 1).toUpperCase() + order.getGiao_hang().substring(1).toLowerCase();
+                    holder.txtStatusOrder.setText(status);
+                }
+            }
+        }
 
         if (order.getGiao_hang().equals("chờ xác nhận")) {
             holder.buttonEdit.setVisibility(View.VISIBLE);
@@ -95,46 +113,93 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String[] reasons = {
-                            "Tôi muốn cập nhật thông tin nhận hàng",
-                            "Tôi muốn thay đổi mã giảm giá",
-                            "Tôi muốn thay đồi sản phẩm",
-                            "Tôi tìm thấy cửa hàng khác tốt hơn",
-                            "Tôi không có nhu cầu mua nữa",
-                            "Tôi không tìm thấy lý do hủy phù hợp"};
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            final String[] reasons = {
+                                    "I want to update the delivery information",
+                                    "I want to change the discount code",
+                                    "I want to change the product",
+                                    "I found a better store",
+                                    "I don't need to buy anymore",
+                                    "I can't find a suitable cancellation reason"
+                            };
 
-                    final int[] selectedReason = {-1};
+                            final int[] selectedReason = {-1};
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                    builder.setTitle("Chọn lý do hủy đơn hàng");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                            builder.setTitle("Select reason for canceling order");
 
-                    builder.setSingleChoiceItems(reasons, -1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            selectedReason[0] = which;
+                            builder.setSingleChoiceItems(reasons, -1, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    selectedReason[0] = which;
+                                }
+                            });
+
+                            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.setPositiveButton("Confirm cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (selectedReason[0] != -1) {
+                                        String reason = reasons[selectedReason[0]];
+                                        cancelOrder(order.getTxn_ref());
+                                    } else {
+                                        Toast.makeText(v.getContext(), "Please select a reason to cancel your order.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                            builder.create().show();
+                        } else {
+                            final String[] reasons = {
+                                    "Tôi muốn cập nhật thông tin nhận hàng",
+                                    "Tôi muốn thay đổi mã giảm giá",
+                                    "Tôi muốn thay đồi sản phẩm",
+                                    "Tôi tìm thấy cửa hàng khác tốt hơn",
+                                    "Tôi không có nhu cầu mua nữa",
+                                    "Tôi không tìm thấy lý do hủy phù hợp"
+                            };
+
+                            final int[] selectedReason = {-1};
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                            builder.setTitle("Chọn lý do hủy đơn hàng");
+
+                            builder.setSingleChoiceItems(reasons, -1, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    selectedReason[0] = which;
+                                }
+                            });
+
+                            builder.setNegativeButton("Đóng", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.setPositiveButton("Xác nhận hủy", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (selectedReason[0] != -1) {
+                                        String reason = reasons[selectedReason[0]];
+                                        cancelOrder(order.getTxn_ref());
+                                    } else {
+                                        Toast.makeText(v.getContext(), "Vui lòng chọn một lý do để hủy đơn hàng", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                            builder.create().show();
                         }
-                    });
-
-                    builder.setNegativeButton("Đóng", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    builder.setPositiveButton("Xác nhận hủy", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (selectedReason[0] != -1) {
-                                String reason = reasons[selectedReason[0]];
-                                cancelOrder(order.getTxn_ref());
-                            } else {
-                                Toast.makeText(v.getContext(), "Vui lòng chọn một lý do để hủy đơn hàng", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
-                    builder.create().show();
+                    }
                 }
             });
         }
@@ -148,7 +213,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             double priceAfterDiscount = unitPrice - (unitPrice * percent);
             totalPrice += priceAfterDiscount * cart.getQuantity();
         }
-        holder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                holder.totalPrice.setText(String.format("Total: %,.0f VND", totalPrice));
+            } else {
+                holder.totalPrice.setText(String.format("Tổng tiền: %,.0f VND", totalPrice));
+
+            }
+        }
 
         // Group products by supplier
         Map<String, List<OrderListModel.DetailCart>> supplierProductMap = new LinkedHashMap<>();
@@ -216,6 +288,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     }
 
     public void cancelOrder(String idOrder) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        String languageS = shared.getString("language", null);
         if (context instanceof OrderActivity) {
             ((OrderActivity) context).switchToTab(4);
         }
@@ -226,7 +300,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             @Override
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "Hủy đơn hàng thành công", Toast.LENGTH_SHORT).show();
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(context, "Order cancellation successful", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Hủy đơn hàng thành công", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 } else {
                     Log.e("Error", response.message());
                 }
@@ -237,5 +317,22 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 Log.e("Fail", Objects.requireNonNull(t.getMessage()));
             }
         });
+    }
+
+    private String translateStatusToEnglish(String status) {
+        switch (status.toLowerCase()) {
+            case "đang giao hàng":
+                return "Delivering";
+            case "đã giao hàng":
+                return "Delivered";
+            case "đã hủy":
+                return "Cancelled";
+            case "chờ xác nhận":
+                return "Pending confirmation";
+            case "chờ lấy hàng":
+                return "Waiting for pickup";
+            default:
+                return "Unknown status";
+        }
     }
 }

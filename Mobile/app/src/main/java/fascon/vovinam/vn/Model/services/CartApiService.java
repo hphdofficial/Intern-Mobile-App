@@ -13,8 +13,8 @@ import retrofit2.http.Query;
 public interface CartApiService {
     @GET("/api/cart")
     Call<JsonObject> getCart(
-            @Header("Authorization") String token,
-            @Query("member_id") int member_id
+            @Query("member_id") int member_id,
+            @Query("lang") String lang
     );
 
     @GET("/api/cart/total-price")

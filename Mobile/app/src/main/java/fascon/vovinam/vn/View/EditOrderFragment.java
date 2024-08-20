@@ -48,6 +48,7 @@ public class EditOrderFragment extends DialogFragment {
     private Button btnClose;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+    private String languageS;
 
     private static final String ARG_ORDER = "order";
     private OrderListModel order;
@@ -95,6 +96,9 @@ public class EditOrderFragment extends DialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
+        SharedPreferences shared = getActivity().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
+        languageS = shared.getString("language", null);
+
         btnClose = view.findViewById(R.id.button_close);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +122,13 @@ public class EditOrderFragment extends DialogFragment {
         };
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
 
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                btnAdd.setText("Add other product");
+                btnUpdate.setText("Update");
+                btnClose.setText("Close");
+            }
+        }
 
         return view;
     }
@@ -141,9 +152,13 @@ public class EditOrderFragment extends DialogFragment {
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<JsonObject> call = service.updateOrder("Bearer " + accessToken, request);
 
-        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
-//        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
-//        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                Toast.makeText(getContext(), "Updating...", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
+            }
+        }
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -152,7 +167,13 @@ public class EditOrderFragment extends DialogFragment {
                     btnAdd.setEnabled(true);
                     btnUpdate.setEnabled(true);
                     btnClose.setEnabled(true);
-                    Toast.makeText(getContext(), "Cập nhật đơn hàng thành công", Toast.LENGTH_SHORT).show();
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(getContext(), "Order updated successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Cập nhật đơn hàng thành công", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                     if (getContext() instanceof ApproveOrderActivity) {
                         ((ApproveOrderActivity) getContext()).selectSpinnerItem(0);
                     }
