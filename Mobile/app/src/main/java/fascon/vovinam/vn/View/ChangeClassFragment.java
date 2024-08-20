@@ -87,7 +87,11 @@ public class ChangeClassFragment extends DialogFragment implements OnItemClickLi
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateClass();
+                if (newClassId != 0) {
+                    updateClass();
+                } else {
+                    Toast.makeText(getContext(), "Vui lòng chọn lớp cần chuyển", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

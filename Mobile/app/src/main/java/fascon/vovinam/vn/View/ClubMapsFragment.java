@@ -99,8 +99,9 @@ public class ClubMapsFragment extends Fragment {
             longitude = Double.parseDouble(sharedPreferences.getString("location_long", null));
             isCurrent = true;
         } else {
-            latitude = 10.76833026;
-            longitude = 106.67583063;
+            // Location Viet Nam
+            latitude = 10.779686;
+            longitude = 106.694241;
         }
     }
 
