@@ -84,7 +84,14 @@ public class Register_belt extends BaseActivity {
                    BeltModel b = response.body();
 
                    chapterAdapter.loadBelt(b);
-                   Call<List<Belt>> callb = apiService.getAllBelt();
+                   Call<List<Belt>> callb;
+                   if(languageS != null){
+                       if(languageS.contains("en")){
+                           callb = apiService.getAllBelt("en");
+                       }else {
+                           callb = apiService.getAllBelt("vi");
+                       }
+                   }else callb = apiService.getAllBelt("vi");
                    callb.enqueue(new Callback<List<Belt>>() {
                        @Override
                        public void onResponse(Call<List<Belt>> call, Response<List<Belt>> response) {

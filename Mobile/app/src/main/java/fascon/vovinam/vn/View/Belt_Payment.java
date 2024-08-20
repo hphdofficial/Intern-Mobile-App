@@ -124,7 +124,14 @@ public class Belt_Payment extends BaseActivity {
 
          //   Toast.makeText(getApplicationContext(),idBelt+"",Toast.LENGTH_SHORT).show();
         }
-        Call<List<DetailsBelt>> callBell = apiService.getBeltInfo(idBelt);
+        Call<List<DetailsBelt>> callBell;
+        if(languageS != null){
+            if(languageS.contains("en")){
+                callBell =  apiService.getBeltInfo(idBelt,"en");
+            }else {
+                callBell =  apiService.getBeltInfo(idBelt,"vi");
+            }
+        }else  callBell =  apiService.getBeltInfo(idBelt,"vi");
         callBell.enqueue(new Callback<List<DetailsBelt>>() {
             @Override
             public void onResponse(Call<List<DetailsBelt>> call, Response<List<DetailsBelt>> response) {

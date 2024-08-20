@@ -350,7 +350,13 @@ public class MenuActivity extends BaseActivity {
         String role = decodeRoleFromToken(token);
         if(role.contains("0")) {
             PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-            Call<List<ProductSaleModel>> call = apiService.GetSaleProduct();
+            Call<List<ProductSaleModel>> call ;
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    call = apiService.GetSaleProduct("en");
+                }else  call = apiService.GetSaleProduct("vi");
+            }else  call = apiService.GetSaleProduct("vi");
+
 
             call.enqueue(new Callback<List<ProductSaleModel>>() {
                 @Override
@@ -631,7 +637,12 @@ public class MenuActivity extends BaseActivity {
     public void getListNew(){
 
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<NewsModel>> call = apiService.getAnouncements();
+        Call<List<NewsModel>> call;
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                call = apiService.getAnouncements("en");
+            }else  call = apiService.getAnouncements("vi");
+        }else  call = apiService.getAnouncements("vi");
         call.enqueue(new Callback<List<NewsModel>>() {
             @Override
             public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {
@@ -870,7 +881,12 @@ public class MenuActivity extends BaseActivity {
                     max = Integer.MAX_VALUE;
 
                 PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-                Call<List<ProductSaleModel>> call = apiService.GetSaleProduct();
+                Call<List<ProductSaleModel>> call ;
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        call = apiService.GetSaleProduct("en");
+                    }else  call = apiService.GetSaleProduct("vi");
+                }else  call = apiService.GetSaleProduct("vi");
 
                 call.enqueue(new Callback<List<ProductSaleModel>>() {
                     @Override

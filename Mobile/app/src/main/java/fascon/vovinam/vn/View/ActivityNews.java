@@ -225,7 +225,13 @@ public class ActivityNews extends BaseActivity implements NewsAdapter.OnNewsClic
     private void fetchAllNews() {
         showLoading();
         NewsApiService apiService = ApiServiceProvider.getNewsApiService();
-        Call<List<NewsModel>> call = apiService.getAnouncements(); // Gọi API lấy các bài báo mới nhất
+        Call<List<NewsModel>> call;
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                 call = apiService.getAnouncements("en");
+            }else  call = apiService.getAnouncements("vi");
+        }else  call = apiService.getAnouncements("vi");
+        // Gọi API lấy các bài báo mới nhất
         call.enqueue(new Callback<List<NewsModel>>() {
             @Override
             public void onResponse(Call<List<NewsModel>> call, Response<List<NewsModel>> response) {

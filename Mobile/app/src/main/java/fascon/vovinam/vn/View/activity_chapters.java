@@ -39,10 +39,20 @@ public class activity_chapters extends BaseActivity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
 
-
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         showLoading();
         PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-        Call<List<Belt>> call = apiService.getAllBelt();
+        Call<List<Belt>> call;
+        if(languageS != null){
+            if(languageS.contains("en")){
+
+                call = apiService.getAllBelt("en");
+            }else {
+                call = apiService.getAllBelt("vi");
+            }
+        }else call = apiService.getAllBelt("vi");
+
         call.enqueue(new Callback<List<Belt>>() {
             @Override
             public void onResponse(Call<List<Belt>> call, Response<List<Belt>> response) {
@@ -71,8 +81,7 @@ public class activity_chapters extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Danh sách lý thuyết");
         myContentE.apply();
-        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        languageS = shared.getString("language",null);
+
         if(languageS!= null){
             if(languageS.contains("en")){
                 myContentE.putString("title", "List Theories");
