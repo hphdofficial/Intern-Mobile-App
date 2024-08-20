@@ -74,5 +74,7 @@ public interface OrderApiService {
     );
 
     @GET("/api/products")
-    Call<List<ProductModel>> getAllProduct();
+    Call<List<ProductModel>> getAllProduct(
+            @Query("lang") String lang
+    );
 }

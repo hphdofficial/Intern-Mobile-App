@@ -299,7 +299,12 @@ public class StartActivity extends BaseActivity {
                         JSONObject errorObject = new JSONObject(response.errorBody().string());
                         String errorMessage = errorObject.getString("error");
 
-                        showToastBasedOnLanguage(errorMessage, "Login failed: " + errorMessage);
+                        if (languageS != null && languageS.contains("en")) {
+                            showToastBasedOnLanguage("Login failed: " + errorMessage, "Login failed: " + translateToEnglish(errorMessage));
+                        } else {
+                            showToastBasedOnLanguage("Đăng nhập thất bại: " + errorMessage, "Login failed: " + errorMessage);
+                        }
+
                     } catch (Exception e) {
                         showToastBasedOnLanguage("Đăng nhập thất bại.", "Login failed.");
                         e.printStackTrace();
@@ -364,5 +369,11 @@ public class StartActivity extends BaseActivity {
             editPassword.setText(savedPassword);
             checkboxSavePassword.setChecked(true);
         }
+    }
+    private String translateToEnglish(String vietnameseMessage) {
+        if (vietnameseMessage.equals("Sai thông tin đăng nhập hoặc mật khẩu")) {
+            return "Incorrect login information or password";
+        }
+        return vietnameseMessage;
     }
 }

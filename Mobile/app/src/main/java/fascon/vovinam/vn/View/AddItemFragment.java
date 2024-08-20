@@ -108,7 +108,7 @@ public class AddItemFragment extends DialogFragment {
         }
 
         OrderApiService service = ApiServiceProvider.getOrderApiService();
-        Call<List<ProductModel>> call = service.getAllProduct();
+        Call<List<ProductModel>> call = service.getAllProduct(languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<List<ProductModel>>() {
             @Override
