@@ -146,6 +146,11 @@ public class activity_teacher_checkin extends BaseActivity {
                 Button btnFilterById = filterDialog.findViewById(R.id.btnFilterIdMember);
                 Button btnFilterBySDT = filterDialog.findViewById(R.id.btnFilterSDTMember);
 
+                TextView textView = filterDialog.findViewById(R.id.textView4);
+                TextView textView1 = filterDialog.findViewById(R.id.textView10);
+                TextView textView2 = filterDialog.findViewById(R.id.textView11);
+                TextView textView3 = filterDialog.findViewById(R.id.textView12);
+
                 EditText editFilterByName = filterDialog.findViewById(R.id.editTextNameMember);
                 EditText editFilterById = filterDialog.findViewById(R.id.editTextIdMember);
                 EditText editFilterBySDT = filterDialog.findViewById(R.id.editTextSDTMember);
@@ -157,7 +162,18 @@ public class activity_teacher_checkin extends BaseActivity {
                         if(!nameMember.isEmpty()){
                             filterCheckedByName("Bearer "+token, beforeFormattedDate, formattedDate, idClass, nameMember);
                         }else{
-                            Toast.makeText(activity_teacher_checkin.this, "Nhập tên học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    Toast.makeText(activity_teacher_checkin.this, "Please Enter Studen Name to continue", Toast.LENGTH_SHORT).show();
+
+                                }else{
+                                    Toast.makeText(activity_teacher_checkin.this, "Nhập tên học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }else{
+                                Toast.makeText(activity_teacher_checkin.this, "Nhập tên học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+
+                            }
                         }
                     }
                 });
@@ -171,12 +187,34 @@ public class activity_teacher_checkin extends BaseActivity {
                                 int idMember = Integer.parseInt(editFilterById.getText().toString());
                                 filterCheckedById("Bearer "+token, beforeFormattedDate, formattedDate, idClass, idMember);
                             }else{
-                                Toast.makeText(activity_teacher_checkin.this, "Nhập số ký tự quá dài, mời nhập lại", Toast.LENGTH_SHORT).show();
+                                if(languageS!= null){
+                                    if(languageS.contains("en")){
+                                        Toast.makeText(activity_teacher_checkin.this, "Your Input Code is too high, please try again < 9 letter", Toast.LENGTH_SHORT).show();
+
+                                    }else{
+                                        Toast.makeText(activity_teacher_checkin.this, "Nhập số ký tự quá dài, mời nhập lại < 9 ký tự", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }else{
+                                    Toast.makeText(activity_teacher_checkin.this, "Nhập số ký tự quá dài, mời nhập lại < 9 ký tự", Toast.LENGTH_SHORT).show();
+
+                                }
 
                             }
 
                         }else{
-                            Toast.makeText(activity_teacher_checkin.this, "Nhập mã số học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    Toast.makeText(activity_teacher_checkin.this, "Please Enter Studen Code to continue", Toast.LENGTH_SHORT).show();
+
+                                }else{
+                                    Toast.makeText(activity_teacher_checkin.this, "Nhập mã số học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }else{
+                                Toast.makeText(activity_teacher_checkin.this, "Nhập mã số học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+
+                            }
                         }
                     }
                 });
@@ -189,10 +227,36 @@ public class activity_teacher_checkin extends BaseActivity {
                         if(!SDTMember.isEmpty()){
                             filterCheckedBySDT("Bearer "+token, beforeFormattedDate, formattedDate, idClass, SDTMember);
                         }else{
-                            Toast.makeText(activity_teacher_checkin.this, "Nhập SĐT học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    Toast.makeText(activity_teacher_checkin.this, "Please Enter Studen Phone number to continue", Toast.LENGTH_SHORT).show();
+
+                                }else{
+                                    Toast.makeText(activity_teacher_checkin.this, "Nhập SĐT học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }else{
+                                Toast.makeText(activity_teacher_checkin.this, "Nhập SĐT học viên để tiếp tục", Toast.LENGTH_SHORT).show();
+
+                            }
                         }
                     }
                 });
+
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        btnFilterByName.setText("Filter");
+                        btnFilterById.setText("Filter");
+                        btnFilterBySDT.setText("Filter");
+                        editFilterByName.setHint("Enter Student Name");
+                        editFilterById.setHint("Enter Student Code");
+                        editFilterBySDT.setHint("Enter Student Phone number");
+                        textView.setText("Filter Checkin In Month");
+                        textView1.setText("Filter by Name");
+                        textView2.setText("Filter by Code");
+                        textView3.setText("Filter by Phone Number");
+                    }
+                }
 
                 filterDialog.show();
             }
@@ -222,7 +286,18 @@ public class activity_teacher_checkin extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 String input = s.toString();
                 if (!isValidDate(input)) {
-                    editTextDateStart.setError("Ngày nhập vào ko hợp lệ. Use yyyy-MM-dd");
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            editTextDateStart.setError("Your input is invalid. Use yyyy-MM-dd");
+
+                        }else{
+                            editTextDateStart.setError("Ngày nhập vào ko hợp lệ. Định dạng yyyy-MM-dd");
+
+                        }
+                    }else{
+                        editTextDateStart.setError("Ngày nhập vào ko hợp lệ. Định dạng yyyy-MM-dd");
+
+                    }
                 }
             }
 
@@ -258,7 +333,18 @@ public class activity_teacher_checkin extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 String input = s.toString();
                 if (!isValidDate(input)) {
-                    editTextDateEnd.setError("Ngày nhập vào ko hợp lệ. Use yyyy-MM-dd");
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            editTextDateEnd.setError("Your input is invalid. Use yyyy-MM-dd");
+
+                        }else{
+                            editTextDateEnd.setError("Ngày nhập vào ko hợp lệ. Định dạng yyyy-MM-dd");
+
+                        }
+                    }else{
+                        editTextDateEnd.setError("Ngày nhập vào ko hợp lệ. Định dạng yyyy-MM-dd");
+
+                    }
                 }
             }
 
@@ -299,7 +385,10 @@ public class activity_teacher_checkin extends BaseActivity {
 
         showLoading();
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-        apiService.teacherViewCheckin("Bearer "+token, beforeFormattedDate, formattedDate, idClass).enqueue(new Callback<JsonObject>() {
+        if(languageS == null){
+            languageS = "vi";
+        }
+        apiService.teacherViewCheckin("Bearer "+token, beforeFormattedDate, formattedDate, idClass, languageS).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.isSuccessful()){
@@ -377,7 +466,10 @@ public class activity_teacher_checkin extends BaseActivity {
     private void filterCheckedByDate(String token ,String startDate, String endDate, int idClass){
         showLoading();
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-        apiService.teacherViewCheckin("Bearer "+token, startDate, endDate, idClass).enqueue(new Callback<JsonObject>() {
+        if(languageS == null){
+            languageS = "vi";
+        }
+        apiService.teacherViewCheckin("Bearer "+token, startDate, endDate, idClass, languageS).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.isSuccessful()){
@@ -523,7 +615,18 @@ public class activity_teacher_checkin extends BaseActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 exportExcel(listChecked);
             } else {
-                Toast.makeText(this, "Quyền bị từ chối", Toast.LENGTH_SHORT).show();
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        Toast.makeText(this, "Denied", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(this, "Quyền bị từ chối", Toast.LENGTH_SHORT).show();
+
+                    }
+                }else{
+                    Toast.makeText(this, "Quyền bị từ chối", Toast.LENGTH_SHORT).show();
+
+                }
             }
         }
     }
@@ -534,12 +637,34 @@ public class activity_teacher_checkin extends BaseActivity {
 
         // Tạo một dòng tiêu đề
         Row headerRow = sheet.createRow(0);
-        Cell headerCell1 = headerRow.createCell(0);
-        headerCell1.setCellValue("Ngày");
-        Cell headerCell2 = headerRow.createCell(1);
-        headerCell2.setCellValue("Tên");
-        Cell headerCell3 = headerRow.createCell(2);
-        headerCell3.setCellValue("Điểm danh lúc");
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                Cell headerCell1 = headerRow.createCell(0);
+                headerCell1.setCellValue("Date");
+                Cell headerCell2 = headerRow.createCell(1);
+                headerCell2.setCellValue("Name");
+                Cell headerCell3 = headerRow.createCell(2);
+                headerCell3.setCellValue("Checkin Time");
+
+            }else{
+                Cell headerCell1 = headerRow.createCell(0);
+                headerCell1.setCellValue("Ngày");
+                Cell headerCell2 = headerRow.createCell(1);
+                headerCell2.setCellValue("Tên");
+                Cell headerCell3 = headerRow.createCell(2);
+                headerCell3.setCellValue("Điểm danh lúc");
+
+            }
+        }else{
+            Cell headerCell1 = headerRow.createCell(0);
+            headerCell1.setCellValue("Ngày");
+            Cell headerCell2 = headerRow.createCell(1);
+            headerCell2.setCellValue("Tên");
+            Cell headerCell3 = headerRow.createCell(2);
+            headerCell3.setCellValue("Điểm danh lúc");
+
+        }
+
 
         // Thêm dữ liệu vào dòng tiếp theo
 //        Row dataRow = sheet.createRow(1);
@@ -564,10 +689,32 @@ public class activity_teacher_checkin extends BaseActivity {
         try (FileOutputStream fos = new FileOutputStream(file)) {
             workbook.write(fos);
             workbook.close();
-            Toast.makeText(this, "File Excel đã được lưu tại: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    Toast.makeText(this, "Your file locate at: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+                }else{
+                    Toast.makeText(this, "File Excel đã được lưu tại: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+                }
+            }else{
+                Toast.makeText(this, "File Excel đã được lưu tại: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Lỗi khi lưu file Excel", Toast.LENGTH_LONG).show();
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    Toast.makeText(this, "Error when export file Excel", Toast.LENGTH_LONG).show();
+
+                }else{
+                    Toast.makeText(this, "Lỗi khi lưu file Excel", Toast.LENGTH_LONG).show();
+
+                }
+            }else{
+                Toast.makeText(this, "Lỗi khi lưu file Excel", Toast.LENGTH_LONG).show();
+
+            }
         }
     }
     private TextView text;

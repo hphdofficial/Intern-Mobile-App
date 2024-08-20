@@ -101,8 +101,10 @@ public class activity_member_checkin extends BaseActivity {
         showLoading();
 
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-
-        apiService.memberViewCheckin("Bearer "+token, "2024-07-20", formattedDate).enqueue(new Callback<JsonObject>() {
+        if(languageS == null){
+            languageS = "vi";
+        }
+        apiService.memberViewCheckin("Bearer "+token, "2024-07-20", formattedDate, languageS).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.isSuccessful()){
@@ -165,7 +167,18 @@ public class activity_member_checkin extends BaseActivity {
                                 }
                             }else {
                                 hideLoading();
-                                Toast.makeText(activity_member_checkin.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                                if(languageS!= null){
+                                    if(languageS.contains("en")){
+                                        Toast.makeText(activity_member_checkin.this, "Fail to get Data, please try again", Toast.LENGTH_SHORT).show();
+
+                                    }else{
+                                        Toast.makeText(activity_member_checkin.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }else{
+                                    Toast.makeText(activity_member_checkin.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                                }
                             }
                         }
 
@@ -174,20 +187,52 @@ public class activity_member_checkin extends BaseActivity {
                             hideLoading();
                             System.out.println("Active: Call Onfail");
                             Log.e("PostData", "Failure: " + throwable.getMessage());
-                            Toast.makeText(activity_member_checkin.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
-                        }
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    Toast.makeText(activity_member_checkin.this, "Internet Lost, please try again", Toast.LENGTH_SHORT).show();
+
+                                }else{
+                                    Toast.makeText(activity_member_checkin.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }else{
+                                Toast.makeText(activity_member_checkin.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                            }                        }
                     });
                     hideLoading();
                 }else {
                     hideLoading();
-                    Toast.makeText(activity_member_checkin.this, "Bạn chưa đăng ký lớp học, vui lòng đăng ký và quay lại sau", Toast.LENGTH_SHORT).show();
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            Toast.makeText(activity_member_checkin.this, "You have not registered any class, please register and come again", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Toast.makeText(activity_member_checkin.this, "Bạn chưa đăng ký lớp học, vui lòng đăng ký và quay lại sau", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else{
+                        Toast.makeText(activity_member_checkin.this, "Bạn chưa đăng ký lớp học, vui lòng đăng ký và quay lại sau", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
                 hideLoading();
-                Toast.makeText(activity_member_checkin.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        Toast.makeText(activity_member_checkin.this, "Internet Lost, please try again", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(activity_member_checkin.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                    }
+                }else{
+                    Toast.makeText(activity_member_checkin.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                }
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }

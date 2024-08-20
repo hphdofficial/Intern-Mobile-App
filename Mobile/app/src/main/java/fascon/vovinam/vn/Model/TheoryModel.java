@@ -3,19 +3,39 @@ package fascon.vovinam.vn.Model;
 public class TheoryModel {
     private int id;
     private String tenvi;
+    private String tenen;
     private String photo;
     private String noidungvi;
+    private String noidungen;
     private String link_video;
 
-    public TheoryModel(int id, String link_video, String noidungvi, String photo, String tenvi) {
+    public TheoryModel(int id, String link_video, String noidungen, String noidungvi, String photo, String tenen, String tenvi) {
         this.id = id;
         this.link_video = link_video;
+        this.noidungen = noidungen;
         this.noidungvi = noidungvi;
         this.photo = photo;
+        this.tenen = tenen;
         this.tenvi = tenvi;
     }
 
     public TheoryModel() {
+    }
+
+    public String getNoidungen() {
+        return noidungen;
+    }
+
+    public void setNoidungen(String noidungen) {
+        this.noidungen = noidungen;
+    }
+
+    public String getTenen() {
+        return tenen;
+    }
+
+    public void setTenen(String tenen) {
+        this.tenen = tenen;
     }
 
     public int getId() {

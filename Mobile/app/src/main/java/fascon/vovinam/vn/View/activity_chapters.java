@@ -54,7 +54,18 @@ public class activity_chapters extends BaseActivity {
                     recyclerView.setAdapter(beltAdapter);
                     hideLoading();
                 }else{
-                    Toast.makeText(activity_chapters.this, "Lỗi lấy dữ liệu", Toast.LENGTH_SHORT).show();
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            Toast.makeText(activity_chapters.this, "Fail to get Data, please try again", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Toast.makeText(activity_chapters.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else{
+                        Toast.makeText(activity_chapters.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                    }
                     hideLoading();
                 }
 
@@ -62,7 +73,18 @@ public class activity_chapters extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<Belt>> call, Throwable t) {
-                Toast.makeText(activity_chapters.this, "Lỗi kết nối mạng", Toast.LENGTH_SHORT).show();
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        Toast.makeText(activity_chapters.this, "Internet Lost, please try again", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(activity_chapters.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                    }
+                }else{
+                    Toast.makeText(activity_chapters.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                }
                 hideLoading();
             }
         });

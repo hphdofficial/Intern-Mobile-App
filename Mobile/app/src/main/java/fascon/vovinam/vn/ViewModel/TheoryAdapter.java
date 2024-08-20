@@ -2,6 +2,7 @@ package fascon.vovinam.vn.ViewModel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class TheoryAdapter extends RecyclerView.Adapter<TheoryAdapter.ViewHolder>{
     Context context;
+    private String languageS;
     List<TheoryModel> theoryModelList;
 
     public TheoryAdapter(Context context, List<TheoryModel> theoryModelList) {
@@ -36,6 +38,8 @@ public class TheoryAdapter extends RecyclerView.Adapter<TheoryAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         String txtTitle = theoryModelList.get(i).getTenvi();
         viewHolder.txtTitle.setText(txtTitle);
         viewHolder.txtTitle.setTextSize(16);
@@ -55,6 +59,12 @@ public class TheoryAdapter extends RecyclerView.Adapter<TheoryAdapter.ViewHolder
                 context.startActivity(intent);
             }
         });
+
+        if(languageS != null){
+            if(languageS.contains("en")){
+                viewHolder.txtTitle.setText(theoryModelList.get(i).getTenen());
+            }
+        }
     }
 
     @Override

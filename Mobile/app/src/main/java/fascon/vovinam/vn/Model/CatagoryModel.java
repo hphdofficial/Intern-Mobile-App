@@ -1,18 +1,32 @@
 package fascon.vovinam.vn.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 public class CatagoryModel {
     private String CategoryID;
     private String CategoryName;
+
+    @SerializedName("tenen")
+    private String CategoryNameEn;
     private Date created_at;
     private Date update_at;
 
-    public CatagoryModel(String categoryID, String categoryName, Date created_at, Date update_at) {
+    public CatagoryModel(String categoryID, String categoryName, String categoryNameEn, Date created_at, Date update_at) {
         CategoryID = categoryID;
         CategoryName = categoryName;
+        CategoryNameEn = categoryNameEn;
         this.created_at = created_at;
         this.update_at = update_at;
+    }
+
+    public String getCategoryNameEn() {
+        return CategoryNameEn;
+    }
+
+    public void setCategoryNameEn(String categoryNameEn) {
+        CategoryNameEn = categoryNameEn;
     }
 
     public String getCategoryID() {

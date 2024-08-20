@@ -1,6 +1,7 @@
 package fascon.vovinam.vn.ViewModel;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import java.util.List;
 public class Checked_adapter extends RecyclerView.Adapter<Checked_adapter.ViewHolder>{
 
     Context context;
-
+    private String languageS;
     List<AttendanceModel.Attendance> checkinList = new ArrayList<>();
 
     public Checked_adapter(List<AttendanceModel.Attendance> checkinList, Context context) {
@@ -35,6 +36,8 @@ public class Checked_adapter extends RecyclerView.Adapter<Checked_adapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         String txtDate = checkinList.get(i).getDate();
         String txtDateOfWeek = checkinList.get(i).getDay_of_week();
         viewHolder.txtDate.setText(txtDate);
@@ -43,9 +46,20 @@ public class Checked_adapter extends RecyclerView.Adapter<Checked_adapter.ViewHo
         String txtHienDien = checkinList.get(i).getHienDien();
         if (txtTimeIn.equals("00:00")){
             viewHolder.txtChecked.setText(txtHienDien);
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    viewHolder.txtChecked.setText("Absent");
+                }
+            }
         }else{
             viewHolder.txtChecked.setText("Có mặt");
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    viewHolder.txtChecked.setText("Present");
+                }
+            }
         }
+
 
 
 

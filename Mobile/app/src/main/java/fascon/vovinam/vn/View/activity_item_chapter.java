@@ -28,10 +28,13 @@ import retrofit2.Response;
 public class activity_item_chapter extends BaseActivity {
     private BlankFragment loadingFragment;
     private ExoPlayer player;
+    private String languageS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_chapter);
+        SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
+        languageS = shared.getString("language",null);
 
         Intent intent = getIntent();
         int idTheory = intent.getIntExtra("id", -1);
@@ -52,7 +55,12 @@ public class activity_item_chapter extends BaseActivity {
                     txtTheoryTittle.setText(theory.getTenvi());
                     txtTheoryContent.setText("Bài tập gồm: "+theory.getNoidungvi());
                     String videoPath = theory.getLink_video();
-
+                    if(languageS != null){
+                        if(languageS.contains("en")){
+                            txtTheoryTittle.setText(theory.getTenen());
+                            txtTheoryContent.setText(theory.getNoidungen());
+                        }
+                    }
                     player = new ExoPlayer.Builder(getApplicationContext()).build();
                     PlayerView playerView = findViewById(R.id.webView);
                     playerView.setPlayer(player);
@@ -66,7 +74,18 @@ public class activity_item_chapter extends BaseActivity {
                     hideLoading();
                 }else {
                     hideLoading();
-                    Toast.makeText(activity_item_chapter.this, "Lý thuyết hiện không khả dụng", Toast.LENGTH_SHORT).show();
+                    if(languageS != null){
+                        if(languageS.contains("en")){
+                            Toast.makeText(activity_item_chapter.this, "Theory not avaiable right now !", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Toast.makeText(activity_item_chapter.this, "Lý thuyết hiện không khả dụng", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else{
+                        Toast.makeText(activity_item_chapter.this, "Lý thuyết hiện không khả dụng", Toast.LENGTH_SHORT).show();
+
+                    }
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
                 }
