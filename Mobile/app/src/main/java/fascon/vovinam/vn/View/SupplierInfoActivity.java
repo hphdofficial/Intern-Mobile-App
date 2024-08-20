@@ -137,21 +137,24 @@ public class SupplierInfoActivity extends BaseActivity {
         TextView emailTextView = findViewById(R.id.supplierEmail);
         Button btnViewAllProducts = findViewById(R.id.viewAllProductsButton);
 
-        supplierNameTextView.setText(supplier.getSupplierName());
-        addressTextView.setText(supplier.getAddress());
-        phoneTextView.setText(supplier.getPhone());
-        emailTextView.setText(supplier.getEmail());
-
-        if(languageS != null){
-            if(languageS.contains("en")){
-                btnViewAllProducts.setText("Show all product from supplier");
-            }
+        // Kiểm tra ngôn ngữ và hiển thị thông tin nhà cung cấp tương ứng
+        if (languageS != null && languageS.contains("en")) {
+            supplierNameTextView.setText(supplier.getTenen()); // Hiển thị tên nhà cung cấp bằng tiếng Anh
+            addressTextView.setText(supplier.getDiachien());   // Hiển thị địa chỉ bằng tiếng Anh
+            btnViewAllProducts.setText("Show all products from supplier");
+        } else {
+            supplierNameTextView.setText(supplier.getSupplierName()); // Hiển thị tên nhà cung cấp mặc định (tiếng Việt)
+            addressTextView.setText(supplier.getAddress());           // Hiển thị địa chỉ mặc định (tiếng Việt)
         }
+
+        phoneTextView.setText(supplier.getPhone()); // Số điện thoại hiển thị không thay đổi
+        emailTextView.setText(supplier.getEmail()); // Email hiển thị không thay đổi
+
         btnViewAllProducts.setOnClickListener(view -> {
             Intent productIntent = new Intent(SupplierInfoActivity.this, SupplierProductActivity.class);
-            productIntent.putExtra("SupplierID", supplierID); // Pass the SupplierID to the next activity
+            productIntent.putExtra("SupplierID", supplierID); // Chuyển SupplierID sang Activity tiếp theo
             startActivity(productIntent);
         });
-
     }
+
 }

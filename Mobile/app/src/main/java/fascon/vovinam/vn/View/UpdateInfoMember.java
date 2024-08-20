@@ -63,6 +63,8 @@ public class UpdateInfoMember extends BaseActivity {
         }
     }
     private EditText editTextUsername, editTextEmail, editTextTen, editTextDienthoai, editTextDiachi, editTextNgaysinh, editTextHotengiamho, editTextDienthoaigiamho, editTextChieucao, editTextCannang;
+    private TextView textViewUsername, textViewEmail, textViewTen, textViewDienthoai, textViewDiachi, text_view_gioitinh, textViewNgaysinh, textViewHotengiamho, textViewDienthoaigiamho, textViewChieucao, textViewCannang;
+
     private RadioGroup radioGroupGioitinh;
     private RadioButton radioNam, radioNu;
     private Button buttonUpdateInfo;
@@ -79,7 +81,7 @@ public class UpdateInfoMember extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_info_member);
         SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        languageS = shared.getString("language",null);
+        languageS = shared.getString("language", "vn");
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
@@ -103,6 +105,18 @@ public class UpdateInfoMember extends BaseActivity {
 //        fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
 
+        textViewUsername = findViewById(R.id.text_view_username);
+        textViewEmail = findViewById(R.id.text_view_email);
+        textViewTen = findViewById(R.id.text_view_ten);
+        textViewDienthoai = findViewById(R.id.text_view_dienthoai);
+        textViewDiachi = findViewById(R.id.text_view_diachi);
+        text_view_gioitinh = findViewById(R.id.text_view_gioitinh);
+        textViewNgaysinh = findViewById(R.id.text_view_ngaysinh);
+        textViewHotengiamho = findViewById(R.id.text_view_hotengiamho);
+        textViewDienthoaigiamho = findViewById(R.id.text_view_dienthoaigiamho);
+        textViewChieucao = findViewById(R.id.text_view_chieucao);
+        textViewCannang = findViewById(R.id.text_view_cannang);
+
         // Khởi tạo các view
         editTextUsername = findViewById(R.id.edit_text_username);
         editTextEmail = findViewById(R.id.edit_text_email);
@@ -114,6 +128,8 @@ public class UpdateInfoMember extends BaseActivity {
         editTextDienthoaigiamho = findViewById(R.id.edit_text_dienthoaigiamho);
         editTextChieucao = findViewById(R.id.edit_text_chieucao);
         editTextCannang = findViewById(R.id.edit_text_cannang);
+
+
         radioGroupGioitinh = findViewById(R.id.radio_group_gioitinh);
         radioNam = findViewById(R.id.radio_nam);
         radioNu = findViewById(R.id.radio_nu);
@@ -125,6 +141,12 @@ public class UpdateInfoMember extends BaseActivity {
         editTextEmail.setText(intent.getStringExtra("email"));
         editTextTen.setText(intent.getStringExtra("ten"));
         editTextDienthoai.setText(intent.getStringExtra("dienthoai"));
+
+        // Disable fields that should not be edited
+        editTextUsername.setEnabled(false);  // Không cho chỉnh sửa username
+        editTextEmail.setEnabled(false);     // Không cho chỉnh sửa email
+        editTextDienthoai.setEnabled(false); // Không cho chỉnh sửa số điện thoại
+
         editTextDiachi.setText(intent.getStringExtra("diachi"));
 
         // Chuyển đổi ngày sinh từ yyyy-MM-dd sang dd/MM/yyyy để hiển thị
@@ -151,37 +173,54 @@ public class UpdateInfoMember extends BaseActivity {
         editTextDienthoaigiamho.setText(intent.getStringExtra("dienthoaigiamho"));
         editTextChieucao.setText(intent.getStringExtra("chieucao"));
         editTextCannang.setText(intent.getStringExtra("cannang"));
+        // Xử lý giới tính
         String gioitinh = intent.getStringExtra("gioitinh");
         if (gioitinh != null) {
-            if (gioitinh.equals("Nam")) {
+            if (gioitinh.equals("Nam") || gioitinh.equals("Male")) {
                 radioNam.setChecked(true);
-            } else if (gioitinh.equals("Nữ")) {
+            } else if (gioitinh.equals("Nữ") || gioitinh.equals("Female")) {
                 radioNu.setChecked(true);
             }
         }
-
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences(NAME_SHARED, MODE_PRIVATE);
 
+        // Cập nhật ngôn ngữ cho các TextView và Button
+        updateLanguageUI();
         buttonUpdateInfo.setOnClickListener(v -> updateInfo());
+    }
 
-        if(languageS != null){
-            if(languageS.contains("en")){
-
-                editTextUsername.setText("Login name");
-                editTextEmail.setHint("Enter Email");
-                editTextTen.setHint("Enter Name");
-                editTextChieucao.setHint("Enter Height");
-                editTextCannang.setHint("Enter Weight");
-                editTextDienthoai.setHint("Enter Phone");
-                editTextDiachi.setHint("Enter Address");
-                editTextNgaysinh.setHint("Birthday ((YYYY-MM-DD))");
-                editTextHotengiamho.setHint("Guardian");
-                editTextDienthoaigiamho.setHint("Phone Guardian");
-                radioNam.setText("Male");
-                radioNu.setText("Female");
-                buttonUpdateInfo.setText("Update Information");
-            }
+    private void updateLanguageUI() {
+        if (languageS.equals("en")) {
+            textViewUsername.setText("Login name");
+            textViewEmail.setText("Email");
+            textViewTen.setText("Full Name");
+            textViewDienthoai.setText("Phone");
+            textViewDiachi.setText("Address");
+            text_view_gioitinh.setText("Gender");
+            textViewNgaysinh.setText("Birthday");
+            textViewHotengiamho.setText("Guardian Name");
+            textViewDienthoaigiamho.setText("Guardian Phone");
+            textViewChieucao.setText("Height (m)");
+            textViewCannang.setText("Weight (kg)");
+            radioNam.setText("Male");
+            radioNu.setText("Female");
+            buttonUpdateInfo.setText("Update Information");
+        } else {
+            textViewUsername.setText("Tên đăng nhập");
+            textViewEmail.setText("Email");
+            textViewTen.setText("Họ và Tên");
+            textViewDienthoai.setText("Điện thoại");
+            textViewDiachi.setText("Địa chỉ");
+            text_view_gioitinh.setText("Giới tính");
+            textViewNgaysinh.setText("Ngày sinh");
+            textViewHotengiamho.setText("Họ tên giám hộ");
+            textViewDienthoaigiamho.setText("Điện thoại giám hộ");
+            textViewChieucao.setText("Chiều cao (m)");
+            textViewCannang.setText("Cân nặng (kg)");
+            radioNam.setText("Nam");
+            radioNu.setText("Nữ");
+            buttonUpdateInfo.setText("Cập nhật thông tin");
         }
     }
     private void showDatePicker() {
@@ -233,18 +272,26 @@ public class UpdateInfoMember extends BaseActivity {
                     ngaysinh = serverFormat.format(date);
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Định dạng ngày sinh không hợp lệ", Toast.LENGTH_SHORT).show();
+                    if (languageS.equals("en")) {
+                        Toast.makeText(this, "Invalid birthdate format", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Định dạng ngày sinh không hợp lệ", Toast.LENGTH_SHORT).show();
+                    }
                     return;
                 }
 
                 // Tính toán tuổi
-                int age = getAgeFromBirthdate(displayedNgaysinh); // Tính tuổi bằng dd/MM/yyyy
+                int age = getAgeFromBirthdate(displayedNgaysinh);
 
                 // Kiểm tra thông tin giám hộ cho trẻ dưới 18
                 if (age < 18) {
                     if (TextUtils.isEmpty(editTextHotengiamho.getText().toString()) ||
                             TextUtils.isEmpty(editTextDienthoaigiamho.getText().toString())) {
-                        Toast.makeText(this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", Toast.LENGTH_SHORT).show();
+                        if (languageS.equals("en")) {
+                            Toast.makeText(this, "Guardian's name and phone are required for children under 18.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", Toast.LENGTH_SHORT).show();
+                        }
                         return;
                     }
                 }
@@ -282,8 +329,11 @@ public class UpdateInfoMember extends BaseActivity {
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                         hideLoading();
                         if (response.isSuccessful() && response.body() != null) {
-                            // Thông báo cập nhật thành công
-                            Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                            if (languageS.equals("en")) {
+                                Toast.makeText(UpdateInfoMember.this, "Information updated successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                            }
 
                             // Tạo Intent để quay lại ActivityDetailMember và gửi thông tin cập nhật
                             Intent intent = new Intent(UpdateInfoMember.this, ActivityDetailMember.class);
@@ -298,7 +348,6 @@ public class UpdateInfoMember extends BaseActivity {
                             // Kết thúc activity hiện tại để quay lại ActivityDetailMember
                             finish();
                         } else {
-                            // Xử lý khi phản hồi từ server không thành công
                             handleErrorResponse(response);
                         }
                     }
@@ -306,15 +355,31 @@ public class UpdateInfoMember extends BaseActivity {
                     @Override
                     public void onFailure(Call<ReponseModel> call, Throwable t) {
                         hideLoading();
-                        Toast.makeText(UpdateInfoMember.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        if (languageS.equals("en")) {
+                            Toast.makeText(UpdateInfoMember.this, "Connection error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(UpdateInfoMember.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
         } else {
-            Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            if (languageS.equals("en")) {
+                Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
+
+    private void showLocalizedToast(String vietnameseMessage, String englishMessage) {
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(this, englishMessage, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, vietnameseMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void handleErrorResponse(Response<ReponseModel> response) {
         try {
@@ -326,22 +391,23 @@ public class UpdateInfoMember extends BaseActivity {
                 JSONObject errors = errorObject.getJSONObject("error");
 
                 if (errors.has("ngaysinh")) {
-                    Toast.makeText(UpdateInfoMember.this, "Ngày sinh phải là ngày trước hôm nay.", Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Ngày sinh phải là ngày trước hôm nay.", "Birthdate must be before today.");
                 } else if (errors.has("username")) {
-                    Toast.makeText(UpdateInfoMember.this, "Tên tài khoản đã tồn tại.", Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Tên tài khoản đã tồn tại.", "Username already exists.");
                 } else if (errors.has("email")) {
-                    Toast.makeText(UpdateInfoMember.this, "Email đã tồn tại.", Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Email đã tồn tại.", "Email already exists.");
                 } else if (errors.has("dienthoai")) {
-                    Toast.makeText(UpdateInfoMember.this, "Số điện thoại đã tồn tại.", Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Số điện thoại đã tồn tại.", "Phone number already exists.");
                 } else {
-                    Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Cập nhật thông tin thất bại: " + response.message(), "Failed to update information: " + response.message());
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(UpdateInfoMember.this, "Cập nhật thông tin thất bại.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Cập nhật thông tin thất bại.", "Failed to update information.");
             e.printStackTrace();
         }
     }
+
 
 
     private boolean isValidInput() {
@@ -350,63 +416,63 @@ public class UpdateInfoMember extends BaseActivity {
         String ngaysinh = editTextNgaysinh.getText().toString().trim();
 
         if (TextUtils.isEmpty(editTextTen.getText().toString().trim())) {
-            Toast.makeText(this, "Họ tên không được để trống", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Họ tên không được để trống", "Full name cannot be empty");
             return false;
         }
 
         if (TextUtils.isEmpty(editTextUsername.getText().toString().trim())) {
-            Toast.makeText(this, "Tên đăng nhập không được để trống", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Tên đăng nhập không được để trống", "Username cannot be empty");
             return false;
         }
 
         if (TextUtils.isEmpty(editTextEmail.getText().toString().trim())) {
-            Toast.makeText(this, "Email không được để trống", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Email không được để trống", "Email cannot be empty");
             return false;
         }
 
         if (TextUtils.isEmpty(editTextDiachi.getText().toString().trim())) {
-            Toast.makeText(this, "Địa chỉ không được để trống", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Địa chỉ không được để trống", "Address cannot be empty");
             return false;
         }
 
         String dienthoai = editTextDienthoai.getText().toString().trim();
         if (TextUtils.isEmpty(dienthoai)) {
-            Toast.makeText(this, "Điện thoại không được để trống", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Điện thoại không được để trống", "Phone number cannot be empty");
             return false;
         } else if (dienthoai.length() < 10 || dienthoai.length() > 11) {
-            Toast.makeText(this, "Số điện thoại phải có từ 10 đến 11 chữ số.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Số điện thoại phải có từ 10 đến 11 chữ số", "Phone number must be between 10 to 11 digits");
             return false;
         }
 
         String chieucaoText = editTextChieucao.getText().toString().trim();
         if (TextUtils.isEmpty(chieucaoText)) {
-            Toast.makeText(this, "Chiều cao không được để trống", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Chiều cao không được để trống", "Height cannot be empty");
             return false;
         }
         try {
             float chieucao = Float.parseFloat(chieucaoText);
             if (chieucao < 0.5 || chieucao > 4.0) {
-                Toast.makeText(this, "Chiều cao không hợp lệ (nhập giá trị từ 0.5 đến 4.0 mét)", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Chiều cao không hợp lệ (nhập giá trị từ 0.5 đến 4.0 mét)", "Invalid height (enter values between 0.5 and 4.0 meters)");
                 return false;
             }
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Chiều cao phải là một số thập phân hợp lệ", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Chiều cao phải là một số thập phân hợp lệ", "Height must be a valid decimal number");
             return false;
         }
 
         String cannangText = editTextCannang.getText().toString().trim();
         if (TextUtils.isEmpty(cannangText)) {
-            Toast.makeText(this, "Cân nặng không được để trống", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Cân nặng không được để trống", "Weight cannot be empty");
             return false;
         }
         try {
             float cannang = Float.parseFloat(cannangText);
             if (cannang < 10 || cannang > 400) {
-                Toast.makeText(this, "Cân nặng không hợp lệ (nhập giá trị từ 10 kg đến 400 kg)", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Cân nặng không hợp lệ (nhập giá trị từ 10 kg đến 400 kg)", "Invalid weight (enter values between 10 kg and 400 kg)");
                 return false;
             }
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Cân nặng phải là một số hợp lệ", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Cân nặng phải là một số hợp lệ", "Weight must be a valid number");
             return false;
         }
 
@@ -414,20 +480,22 @@ public class UpdateInfoMember extends BaseActivity {
         Log.d("Age", "Calculated age: " + age);
         if (age < 18) {
             if (hoten_giamho.isEmpty() || dienthoai_giamho.isEmpty()) {
-                Toast.makeText(this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", "Guardian's name and phone are required for children under 18.");
                 return false;
             }
 
             if (dienthoai_giamho.length() < 10 || dienthoai_giamho.length() > 11) {
-                Toast.makeText(this, "Số điện thoại giám hộ phải có từ 10 đến 11 chữ số.", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Số điện thoại giám hộ phải có từ 10 đến 11 chữ số", "Guardian's phone number must be between 10 to 11 digits");
                 return false;
             }
         } else {
             editTextHotengiamho.setText("");
             editTextDienthoaigiamho.setText("");
         }
+
         return true;
     }
+
 
 
     private int getAgeFromBirthdate(String birthdate) {

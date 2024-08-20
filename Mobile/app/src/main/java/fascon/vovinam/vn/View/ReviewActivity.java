@@ -1,4 +1,8 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.Model.OrderListModel;
+import fascon.vovinam.vn.Model.services.UserApiService;
+import fascon.vovinam.vn.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -147,8 +151,55 @@ public class ReviewActivity extends BaseActivity implements FragmentWriteReviewA
         loadReviews();
 
         findViewById(R.id.btn_write_review).setOnClickListener(v -> {
-            FragmentWriteReviewActivity fragment = FragmentWriteReviewActivity.newInstance(productId);
-            fragment.show(getSupportFragmentManager(), "WriteReview");
+            showLoading();
+            UserApiService apiService = ApiServiceProvider.getUserApiService();
+            apiService.getAllOrders().enqueue(new Callback<List<OrderListModel>>() {
+                @Override
+                public void onResponse(Call<List<OrderListModel>> call, Response<List<OrderListModel>> response) {
+                    hideLoading();
+                    if (response.isSuccessful() && response.body() != null) {
+                        List<OrderListModel> orders = response.body();
+                        boolean hasPurchased = false;
+
+                        // Lấy member_id của người dùng hiện tại
+                        SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+                        int currentMemberId = sharedPreferences.getInt("member_id", -1);
+
+                        // Kiểm tra nếu người dùng đã mua sản phẩm này và đã nhận hàng
+                        for (OrderListModel order : orders) {
+                            if (order.getMember_id() == currentMemberId &&
+                                    "thành công".equals(order.getStatus()) &&
+                                    "đã giao hàng".equals(order.getGiao_hang())) {
+
+                                for (OrderListModel.DetailCart cartItem : order.getDetail_carts()) {
+                                    if (cartItem.getProduct().getProductID() == productId) {
+                                        hasPurchased = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (hasPurchased) break;
+                        }
+
+                        if (hasPurchased) {
+                            // Người dùng đã mua sản phẩm và nhận hàng, mở màn hình đánh giá
+                            FragmentWriteReviewActivity fragment = FragmentWriteReviewActivity.newInstance(productId);
+                            fragment.show(getSupportFragmentManager(), "WriteReview");
+                        } else {
+                            // Hiển thị thông báo nếu người dùng chưa mua hoặc chưa nhận sản phẩm
+                            showLocalizedToast("Bạn phải mua sản phẩm và hoàn tất giao hàng trước khi đánh giá", "You must purchase the product and complete delivery before reviewing");
+                        }
+                    } else {
+                        showLocalizedToast("Lỗi khi kiểm tra đơn hàng", "Error checking orders");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<OrderListModel>> call, Throwable t) {
+                    hideLoading();
+                    showLocalizedToast("Lỗi kết nối", "Connection error");
+                }
+            });
         });
 
         if(languageS != null){
@@ -177,6 +228,14 @@ public class ReviewActivity extends BaseActivity implements FragmentWriteReviewA
         if (loadingFragment != null) {
             loadingFragment.dismiss();
             loadingFragment = null;
+        }
+    }
+
+    private void showLocalizedToast(String vietnameseMessage, String englishMessage) {
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(this, englishMessage, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, vietnameseMessage, Toast.LENGTH_SHORT).show();
         }
     }
 

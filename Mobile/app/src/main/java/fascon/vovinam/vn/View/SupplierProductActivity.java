@@ -116,14 +116,23 @@ public class SupplierProductActivity extends BaseActivity {
         apiService.getSupplier(supplierID).enqueue(new Callback<SupplierModel>() {
             @Override
             public void onResponse(Call<SupplierModel> call, Response<SupplierModel> response) {
+                hideLoading();
                 if (response.isSuccessful() && response.body() != null) {
                     SupplierModel supplier = response.body();
-                    txtSupplierName.setText(supplier.getSupplierName());
-                    txtSupplierAddress.setText(supplier.getAddress());
-                    hideLoading();
+
+                    // Lấy ngôn ngữ từ SharedPreferences
+                    SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
+                    String languageS = sharedPreferences.getString("language", "vn");
+
+                    // Hiển thị tên nhà cung cấp theo ngôn ngữ
+                    if (languageS != null && languageS.contains("en")) {
+                        txtSupplierName.setText(supplier.getTenen()); // Hiển thị tên nhà cung cấp bằng tiếng Anh
+                        txtSupplierAddress.setText(supplier.getDiachien()); // Hiển thị địa chỉ bằng tiếng Anh
+                    } else {
+                        txtSupplierName.setText(supplier.getSupplierName()); // Hiển thị tên nhà cung cấp mặc định (tiếng Việt)
+                        txtSupplierAddress.setText(supplier.getAddress());   // Hiển thị địa chỉ mặc định (tiếng Việt)
+                    }
                 } else {
-                    hideLoading();
-                    // Handle error
                     Toast.makeText(SupplierProductActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -131,11 +140,11 @@ public class SupplierProductActivity extends BaseActivity {
             @Override
             public void onFailure(Call<SupplierModel> call, Throwable t) {
                 hideLoading();
-                // Handle failure
                 Toast.makeText(SupplierProductActivity.this, "Failure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     private void fetchProductsBySupplier(int supplierID) {
         if (supplierID == -1) {

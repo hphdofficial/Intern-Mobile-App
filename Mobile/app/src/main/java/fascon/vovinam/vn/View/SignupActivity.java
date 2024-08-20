@@ -134,14 +134,17 @@ public class SignupActivity extends BaseActivity {
                 text_view_signup.setText("Register");
                 text_view_subtitle.setText("Please Enter Your Personal Information");
                 editTextEmail.setHint("Enter Email");
-                editTextTen.setHint("Enter Name");
-                editTextChieucao.setHint("Enter Height");
-                editTextCannang.setHint("Enter Weight");
-                editTextDienthoai.setHint("Enter Phone");
+                editTextUsername.setHint("Enter Username");
+                editTextTen.setHint("Enter Full Name");
+                editTextChieucao.setHint("Enter Height (m)");
+                editTextCannang.setHint("Enter Weight (kg)");
+                editTextDienthoai.setHint("Enter Phone Number");
                 editTextDiachi.setHint("Enter Address");
-                editTextNgaysinh.setHint("Birthday ((YYYY-MM-DD))");
-                editTextHotenGiamho.setHint("Guardian");
-                editTextDienthoaiGiamho.setHint("Phone Guardian");
+                editTextNgaysinh.setHint("Birthday (DD-MM-YYYY)");
+                editTextPassword.setHint("Enter Password");
+                edit_text_confirm_password.setHint("Confirm Password");
+                editTextHotenGiamho.setHint("Enter Guardian Name");
+                editTextDienthoaiGiamho.setHint("Enter Guardian Phone Number");
                 radio_button_male.setText("Male");
                 radio_button_female.setText("Female");
                 buttonSignUp.setText("Sign Up");
@@ -192,127 +195,116 @@ public class SignupActivity extends BaseActivity {
         // Lấy ngày sinh từ Tag (định dạng yyyy-MM-dd)
         String ngaysinh = editTextNgaysinh.getTag() != null ? editTextNgaysinh.getTag().toString() : "";
 
-
         String hoten_giamho = editTextHotenGiamho.getText().toString().trim();
         String dienthoai_giamho = editTextDienthoaiGiamho.getText().toString().trim();
-        String confirmPasswordEditText = edit_text_confirm_password.getText().toString().trim();
+        String confirmPassword = edit_text_confirm_password.getText().toString().trim();
 
         int selectedGenderId = radioGroupGender.getCheckedRadioButtonId();
         RadioButton selectedGenderButton = findViewById(selectedGenderId);
         String gioitinh = selectedGenderButton.getText().toString();
 
-        // Kiểm tra username
+        // Chuyển đổi giá trị giới tính trước khi gửi lên server
+        if (gioitinh.equalsIgnoreCase("Male")) {
+            gioitinh = "Nam";
+        } else if (gioitinh.equalsIgnoreCase("Female")) {
+            gioitinh = "Nữ";
+        }
+
+        // Kiểm tra các trường nhập liệu
         if (username.isEmpty()) {
-            Toast.makeText(SignupActivity.this, "Vui lòng nhập tên tài khoản.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng nhập tên tài khoản.", "Please enter a username.");
             return;
         }
 
-        // Kiểm tra email
         if (email.isEmpty()) {
-            Toast.makeText(SignupActivity.this, "Vui lòng nhập email.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng nhập email.", "Please enter an email.");
             return;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(SignupActivity.this, "Email không hợp lệ.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Email không hợp lệ.", "Invalid email address.");
             return;
         }
 
-        // Kiểm tra mật khẩu có ít nhất 6 ký tự
         if (password.length() < 6) {
-            Toast.makeText(SignupActivity.this, "Mật khẩu phải có ít nhất 6 ký tự.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Mật khẩu phải có ít nhất 6 ký tự.", "Password must be at least 6 characters long.");
             return;
         }
 
-        // Kiểm tra mật khẩu xác nhận khớp với mật khẩu
-        if (!password.equals(confirmPasswordEditText)) {
-            Toast.makeText(SignupActivity.this, "Mật khẩu xác nhận không khớp.", Toast.LENGTH_SHORT).show();
+        if (!password.equals(confirmPassword)) {
+            showLocalizedToast("Mật khẩu xác nhận không khớp.", "Confirm password does not match.");
             return;
         }
 
-        // Kiểm tra tên người dùng
         if (ten.isEmpty()) {
-            Toast.makeText(SignupActivity.this, "Vui lòng nhập họ và tên.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng nhập họ và tên.", "Please enter your full name.");
             return;
         }
 
-        // Kiểm tra số điện thoại
         if (dienthoai.isEmpty()) {
-            Toast.makeText(SignupActivity.this, "Vui lòng nhập số điện thoại.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng nhập số điện thoại.", "Please enter your phone number.");
             return;
         }
 
-        // Kiểm tra định dạng số điện thoại hợp lệ
         if (!Patterns.PHONE.matcher(dienthoai).matches()) {
-            Toast.makeText(SignupActivity.this, "Số điện thoại không hợp lệ.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Số điện thoại không hợp lệ.", "Invalid phone number.");
             return;
         }
-        // Kiểm tra độ dài số điện thoại (tối đa 11 chữ số)
+
         if (dienthoai.length() < 10 || dienthoai.length() > 11) {
-            Toast.makeText(SignupActivity.this, "Số điện thoại phải có từ 10 đến 11 chữ số.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Số điện thoại phải có từ 10 đến 11 chữ số.", "Phone number must be between 10 and 11 digits.");
             return;
         }
 
-        // Kiểm tra địa chỉ
         if (diachi.isEmpty()) {
-            Toast.makeText(SignupActivity.this, "Vui lòng nhập địa chỉ.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng nhập địa chỉ.", "Please enter your address.");
             return;
         }
 
-        // Kiểm tra ngày sinh
         if (ngaysinh.isEmpty()) {
-            Toast.makeText(SignupActivity.this, "Vui lòng nhập ngày sinh.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng nhập ngày sinh.", "Please enter your date of birth.");
             return;
         }
 
-        // Kiểm tra ngày sinh có hợp lệ không (phải trước ngày hiện tại)
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             Date birthDate = dateFormat.parse(ngaysinh);
             if (birthDate.after(new Date())) {
-                Toast.makeText(SignupActivity.this, "Ngày sinh phải trước ngày hiện tại.", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Ngày sinh phải trước ngày hiện tại.", "Date of birth must be before the current date.");
                 return;
             }
         } catch (ParseException e) {
-            Toast.makeText(SignupActivity.this, "Ngày sinh không hợp lệ.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Ngày sinh không hợp lệ.", "Invalid date of birth.");
             return;
         }
-        // Kiểm tra chiều cao và cân nặng
+
         float chieucao;
         try {
             chieucao = Float.parseFloat(editTextChieucao.getText().toString().trim());
-
-            // Kiểm tra nếu chiều cao không nằm trong khoảng hợp lệ
             if (chieucao < 0.5 || chieucao > 4) {
-                Toast.makeText(SignupActivity.this, "Vui lòng nhập chiều cao hợp lệ trong khoảng 0.5 - 4.0 mét.", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Vui lòng nhập chiều cao hợp lệ trong khoảng 0.5 - 4.0 mét.", "Please enter a valid height between 0.5 and 4.0 meters.");
                 return;
             }
         } catch (NumberFormatException e) {
-            Toast.makeText(SignupActivity.this, "Vui lòng nhập chiều cao hợp lệ (ví dụ: 1.58).", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng nhập chiều cao hợp lệ (ví dụ: 1.58).", "Please enter a valid height (e.g., 1.58).");
             return;
         }
 
-        // Kiểm tra cân nặng
         int cannang;
         try {
             cannang = Integer.parseInt(editTextCannang.getText().toString().trim());
-
-            // Kiểm tra nếu cân nặng không nằm trong khoảng hợp lệ
             if (cannang < 10 || cannang > 400) {
-                Toast.makeText(SignupActivity.this, "Vui lòng nhập cân nặng hợp lệ (từ 10kg đến 400kg).", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Vui lòng nhập cân nặng hợp lệ (từ 10kg đến 400kg).", "Please enter a valid weight (between 10kg and 400kg).");
                 return;
             }
         } catch (NumberFormatException e) {
-            Toast.makeText(SignupActivity.this, "Cân nặng phải là số hợp lệ.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Cân nặng phải là số hợp lệ.", "Weight must be a valid number.");
             return;
         }
 
-
-        // Kiểm tra giới tính
         if (gioitinh.isEmpty()) {
-            Toast.makeText(SignupActivity.this, "Vui lòng chọn giới tính.", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng chọn giới tính.", "Please select your gender.");
             return;
         }
 
-        // Kiểm tra độ tuổi
         Calendar birthDate = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
         String[] dateParts = ngaysinh.split("-");
@@ -322,20 +314,18 @@ public class SignupActivity extends BaseActivity {
             age--;
         }
 
-        // Kiểm tra số điện thoại giám hộ (chỉ khi dưới 18 tuổi)
         if (age < 18) {
             if (hoten_giamho.isEmpty() || dienthoai_giamho.isEmpty()) {
-                Toast.makeText(SignupActivity.this, "Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Yêu cầu họ tên và số điện thoại phụ huynh cho trẻ dưới 18.", "Guardian name and phone are required for children under 18.");
                 return;
             }
 
-            // Kiểm tra độ dài số điện thoại giám hộ (tối đa 11 chữ số)
             if (dienthoai_giamho.length() < 10 || dienthoai_giamho.length() > 11) {
-                Toast.makeText(SignupActivity.this, "Số điện thoại giám hộ phải có từ 10 đến 11 chữ số.", Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Số điện thoại giám hộ phải có từ 10 đến 11 chữ số.", "Guardian phone number must be between 10 and 11 digits.");
                 return;
             }
-
         }
+
         // Tạo đối tượng RegisterModel và gửi yêu cầu đăng ký
         RegisterModel request = new RegisterModel();
         request.setUsername(username);
@@ -346,7 +336,7 @@ public class SignupActivity extends BaseActivity {
         request.setCannang(cannang);
         request.setDienthoai(dienthoai);
         request.setDiachi(diachi);
-        request.setGioitinh(gioitinh);
+        request.setGioitinh(gioitinh);  // Sử dụng giá trị đã chuyển đổi
         request.setNgaysinh(ngaysinh);
         if (age < 18) {
             request.setHoten_giamho(hoten_giamho);
@@ -365,31 +355,28 @@ public class SignupActivity extends BaseActivity {
             public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                 hideLoading();
                 if (response.isSuccessful()) {
-                    Toast.makeText(SignupActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Đăng ký thành công", "Registration successful");
                     Intent intent = new Intent(SignupActivity.this, StartActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
                     try {
-                        // Xử lý phản hồi lỗi từ server
                         JSONObject errorObject = new JSONObject(response.errorBody().string());
                         JSONObject errors = errorObject.getJSONObject("error");
 
                         if (errors.has("username")) {
-                            Toast.makeText(SignupActivity.this, "Tên tài khoản đã tồn tại.", Toast.LENGTH_SHORT).show();
+                            showLocalizedToast("Tên tài khoản đã tồn tại.", "Username already exists.");
                         } else if (errors.has("email")) {
-                            Toast.makeText(SignupActivity.this, "Email đã tồn tại.", Toast.LENGTH_SHORT).show();
+                            showLocalizedToast("Email đã tồn tại.", "Email already exists.");
                         } else if (errors.has("dienthoai")) {
-                            Toast.makeText(SignupActivity.this, "Số điện thoại đã tồn tại.", Toast.LENGTH_SHORT).show();
-                        }
-                        else if (errors.has("ngaysinh")) {
-                            Toast.makeText(SignupActivity.this, "Ngày sinh không hợp lệ: " + errors.getJSONArray("ngaysinh").getString(0), Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(SignupActivity.this, "Đăng ký thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                            showLocalizedToast("Số điện thoại đã tồn tại.", "Phone number already exists.");
+                        } else if (errors.has("ngaysinh")) {
+                            showLocalizedToast("Ngày sinh không hợp lệ: " + errors.getJSONArray("ngaysinh").getString(0), "Invalid date of birth: " + errors.getJSONArray("ngaysinh").getString(0));
+                        } else {
+                            showLocalizedToast("Đăng ký thất bại: " + response.message(), "Registration failed: " + response.message());
                         }
                     } catch (Exception e) {
-                        Toast.makeText(SignupActivity.this, "Đăng ký thất bại.", Toast.LENGTH_SHORT).show();
+                        showLocalizedToast("Đăng ký thất bại.", "Registration failed.");
                         e.printStackTrace();
                     }
                 }
@@ -398,9 +385,18 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onFailure(Call<ReponseModel> call, Throwable t) {
                 hideLoading();
-                Toast.makeText(SignupActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Lỗi kết nối: " + t.getMessage(), "Connection error: " + t.getMessage());
             }
         });
+    }
+
+
+    private void showLocalizedToast(String vietnameseMessage, String englishMessage) {
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(this, englishMessage, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, vietnameseMessage, Toast.LENGTH_SHORT).show();
+        }
     }
 
 

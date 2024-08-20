@@ -25,6 +25,8 @@ public interface NewsApiService {
     @GET("api/news/filter-by-club/{id_club}")
     Call<List<NewsModel>> filterAnnouncementsByClub(@Path("id_club") int idClub);
 
+    @GET("api/clubs/getall?lang=en")
+    Call<List<ClubModel>> getAllClubsInEnglish();
 
 //    @GET("api/news/filter-announcements-by-club/{id_club}")
 //    Call<List<NewsModel>> filterAnnouncementsByClub(@Path("id_club") int idClub);

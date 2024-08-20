@@ -83,4 +83,11 @@
         <item>Map</item>
         <item>List</item>
     </string-array>
+
+
+    <string-array name="language_options">
+        <item>English</item>
+        <item>Tiếng Việt</item>
+    </string-array>
+
 </resources>

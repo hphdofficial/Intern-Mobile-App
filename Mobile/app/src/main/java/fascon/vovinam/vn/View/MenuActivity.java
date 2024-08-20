@@ -1066,9 +1066,11 @@ public class MenuActivity extends BaseActivity {
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(getApplicationContext(), NewsDetailActivity.class);
-                                intent.putExtra("NewsTitle", news.getTenvi());
-                                intent.putExtra("NewsContent", news.getNoidungvi());
-                                intent.putExtra("NewsImage", imageUrl); // Pass the full image URL
+                                intent.putExtra("NewsTitleVi", news.getTenvi());
+                                intent.putExtra("NewsContentVi", news.getNoidungvi());
+                                intent.putExtra("NewsTitleEn", news.getTenen());
+                                intent.putExtra("NewsContentEn", news.getNoidungen());
+                                intent.putExtra("NewsImage", imageUrl);
                                 startActivity(intent);
                             }
                         });

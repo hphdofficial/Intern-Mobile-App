@@ -98,4 +98,9 @@ public interface UserApiService {
     @GET("api/chitiethoadon")
     Call<List<ProductModel>> getListProductOrder(@Query("id_order") int orderId);
 
+
+
+    @GET("/admin_order")
+    Call<List<OrderListModel>> getAllOrders();
+
 }
