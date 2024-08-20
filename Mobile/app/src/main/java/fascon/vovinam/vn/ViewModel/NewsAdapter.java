@@ -44,11 +44,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
 
         holder.newsTitle.setText(news.getTenvi());
-        if(languageS!= null){
-            if(languageS.contains("en")){
-                holder.newsTitle.setText(news.getTenen());
-            }
+        if (languageS != null && languageS.contains("en")) {
+            holder.newsTitle.setText(news.getTenen());
+        } else {
+            holder.newsTitle.setText(news.getTenvi());
         }
+
         // Khai báo biến imageUrl trước khối if
         final String imageUrl;
 
@@ -78,11 +79,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         // Sử dụng biến imageUrl trong OnClickListener
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), NewsDetailActivity.class);
-            intent.putExtra("NewsTitle", news.getTenvi());
-            intent.putExtra("NewsContent", news.getNoidungvi());
-            if (imageUrl != null) {
-                intent.putExtra("NewsImage", imageUrl); // Pass the full image URL if available
-            }
+            // Truyền cả 4 trường qua Intent
+            intent.putExtra("NewsTitleVi", news.getTenvi());
+            intent.putExtra("NewsContentVi", news.getNoidungvi());
+            intent.putExtra("NewsTitleEn", news.getTenen());
+            intent.putExtra("NewsContentEn", news.getNoidungen());
+            intent.putExtra("NewsImage", imageUrl);
             holder.itemView.getContext().startActivity(intent);
         });
     }

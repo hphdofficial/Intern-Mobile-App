@@ -109,6 +109,13 @@ private TextView reviewP;
             loadingFragment = null;
         }
     }
+    private void showLocalizedToast(String vietnameseMessage, String englishMessage) {
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(getContext(), englishMessage, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), vietnameseMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     private void submitReview() {
@@ -116,7 +123,7 @@ private TextView reviewP;
         String reviewContent = editReviewContent.getText().toString().trim();
 
         if (ratingValue == 0 || TextUtils.isEmpty(reviewContent)) {
-            Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Vui lòng nhập đầy đủ thông tin", "Please fill out all information");
             return;
         }
 
@@ -125,7 +132,7 @@ private TextView reviewP;
         String token = sharedPreferences.getString("access_token", null);
         int memberId = sharedPreferences.getInt("member_id", -1);
         if (token == null || memberId == -1) {
-            Toast.makeText(getContext(), "Bạn cần đăng nhập để gửi đánh giá", Toast.LENGTH_SHORT).show();
+            showLocalizedToast("Bạn cần đăng nhập để gửi đánh giá", "Bạn cần đăng nhập để gửi đánh giá");
             return;
         }
 
@@ -148,7 +155,7 @@ private TextView reviewP;
                 hideLoading();
                 if (response.isSuccessful()) {
                     ReviewModel createdReview = response.body();
-                    Toast.makeText(getContext(), "Đánh giá đã được gửi", Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Đánh giá đã được gửi", "Your review has been submitted");
                     if (createdReview != null) {
                         Log.i("ReviewSubmit", "Created ReviewID: " + createdReview.getReviewID());
                     }
@@ -157,24 +164,28 @@ private TextView reviewP;
                     }
                     dismiss();
                 } else {
-                    Toast.makeText(getContext(), "Lỗi khi gửi đánh giá: " + response.message(), Toast.LENGTH_SHORT).show();
+                    showLocalizedToast("Lỗi khi gửi đánh giá: " + response.message(), "Error submitting review: " + response.message());
+
                     // Thêm log để kiểm tra lỗi chi tiết hơn
                     Log.e("ReviewSubmit", "Error response code: " + response.code() + " - " + response.message());
+
                     try {
                         Log.e("ReviewSubmit", "Error body: " + response.errorBody().string());
                     } catch (IOException e) {
-                        Toast.makeText(getContext(), "Lỗi khi gửi đánh giá. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
+                        showLocalizedToast("Lỗi khi gửi đánh giá. Vui lòng thử lại.", "Error submitting review. Please try again.");
                         e.printStackTrace();
                     }
                 }
+
             }
 
             @Override
             public void onFailure(Call<ReviewModel> call, Throwable t) {
                 hideLoading();
-                Toast.makeText(getContext(), "Lỗi khi gửi đánh giá: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showLocalizedToast("Lỗi khi gửi đánh giá: " + t.getMessage(), "Error submitting review: " + t.getMessage());
                 Log.e("ReviewSubmit", "Error: ", t);
             }
+
         });
     }
 

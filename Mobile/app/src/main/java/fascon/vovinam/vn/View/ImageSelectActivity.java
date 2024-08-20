@@ -115,6 +115,13 @@ public class ImageSelectActivity extends BaseActivity {
             loadingFragment = null;
         }
     }
+    private void showLocalizedToast(String vietnameseMessage, String englishMessage) {
+        if (languageS != null && languageS.contains("en")) {
+            Toast.makeText(this, englishMessage, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, vietnameseMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
 
@@ -136,7 +143,7 @@ public class ImageSelectActivity extends BaseActivity {
                     public void onResponse(Call<ReponseModel> call, Response<ReponseModel> response) {
                         hideLoading();
                         if (response.isSuccessful()) {
-                            Toast.makeText(ImageSelectActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
+                            showLocalizedToast("Upload thành công", "Upload successful");
                             String avatarUrl = response.body().getAvatar();
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("avatar_url_" + memberId, avatarUrl);

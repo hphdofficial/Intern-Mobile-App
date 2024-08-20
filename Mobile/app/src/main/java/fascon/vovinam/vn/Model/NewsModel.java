@@ -7,9 +7,10 @@ public class NewsModel {
     private String photo;
     private String type;
     private long ngaytao;
-    private int id_club; // Thêm trường id_club
+    private int id_club;
     private String link_video;
     private String tenen;
+    private String noidungen;   // Nội dung tiếng Anh
 
     public String getTenen() {
         return tenen;
@@ -82,5 +83,13 @@ public class NewsModel {
 
     public void setLink_video(String link_video) {
         this.link_video = link_video;
+    }
+
+    public String getNoidungen() {
+        return noidungen;
+    }
+
+    public void setNoidungen(String noidungen) {
+        this.noidungen = noidungen;
     }
 }

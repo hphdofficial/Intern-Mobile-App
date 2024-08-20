@@ -17,6 +17,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Language Selector (Spinner) -->
+        <Spinner
+            android:id="@+id/language_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="-25dp"
+            android:spinnerMode="dropdown" />
+
         <ImageView
             android:id="@+id/imageViewLogo"
             android:layout_width="180dp"
@@ -167,5 +178,6 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             app:cornerRadius="15dp" />
+
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

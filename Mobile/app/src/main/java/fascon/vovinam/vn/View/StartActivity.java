@@ -6,10 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +71,7 @@ public class StartActivity extends BaseActivity {
 
         // Reset id
         SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        languageS = shared.getString("language",null);
+        languageS = shared.getString("language", "vn");  // Mặc định là "en"
         SharedPreferences.Editor edit = shared.edit();
         edit.putString("id_club_shared", null);
         edit.putString("id_class_shared", null);
@@ -88,7 +91,7 @@ public class StartActivity extends BaseActivity {
             return;
         } else if (accessToken != null && currentTime >= expiryTime) {
             // Token hết hạn, thông báo cho người dùng và xóa thông tin đăng nhập
-            Toast.makeText(this, "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.", Toast.LENGTH_LONG).show();
+            showToastBasedOnLanguage("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.", "Session expired, please log in again.");
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             // Nếu không lưu mật khẩu, xóa tất cả thông tin đăng nhập
@@ -105,6 +108,7 @@ public class StartActivity extends BaseActivity {
             editor.apply();
         }
 
+        // Ánh xạ các thành phần UI
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
         editEmail = findViewById(R.id.edit_email);
@@ -114,19 +118,53 @@ public class StartActivity extends BaseActivity {
         checkboxSavePassword = findViewById(R.id.checkbox_save_password);
         subtitle = findViewById(R.id.subtitle);
         title = findViewById(R.id.title);
-        if(languageS!= null){
-            if(languageS.contains("en")){
-                title.setText("Login");
-                editEmail.setHint("Email, Phone, Account");
-                editPassword.setHint("Password");
-                checkboxSavePassword.setText("Save Password");
-                forgotPassword.setText("Forgot Password");
-                btn_login.setText("Login");
-                btn_register.setText("Register");
-                subtitle.setText("Log in to continue using the application");
-            }
+
+        // Spinner để chọn ngôn ngữ
+        Spinner languageSpinner = findViewById(R.id.language_spinner);
+
+        // Thiết lập dữ liệu cho Spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.language_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        languageSpinner.setAdapter(adapter);
+
+        // Đặt ngôn ngữ hiện tại cho Spinner
+        if (languageS.equals("vn")) {
+            languageSpinner.setSelection(1); // Chọn Tiếng Việt
+        } else {
+            languageSpinner.setSelection(0); // Chọn English
         }
 
+        // Cập nhật giao diện theo ngôn ngữ đã lưu
+        updateLanguage(languageS);
+
+        // Lắng nghe sự kiện thay đổi ngôn ngữ từ Spinner
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1) {
+                    languageS = "vn"; // Tiếng Việt
+                } else {
+                    languageS = "en"; // English
+                }
+
+                // Lưu ngôn ngữ vào SharedPreferences
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("language", languageS);
+                editor.apply();
+
+                // Cập nhật giao diện với ngôn ngữ mới
+                updateLanguage(languageS);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Không làm gì khi không có lựa chọn
+            }
+        });
+
+
+        // Gán sự kiện cho các nút và phần tử khác
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,6 +197,40 @@ public class StartActivity extends BaseActivity {
         loadSavedCredentials();
     }
 
+    // Phương thức để hiển thị Toast theo ngôn ngữ người dùng chọn
+    private void showToastBasedOnLanguage(String messageVN, String messageEN) {
+        if (languageS.equals("vn")) {
+            Toast.makeText(this, messageVN, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, messageEN, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    // Phương thức để cập nhật giao diện theo ngôn ngữ
+    private void updateLanguage(String language) {
+        if (language.equals("en")) {
+            title.setText("Login");
+            editEmail.setHint("Email, Phone, Account");
+            editPassword.setHint("Password");
+            checkboxSavePassword.setText("Save Password");
+            forgotPassword.setText("Forgot Password");
+            btn_login.setText("Login");
+            btn_register.setText("Register");
+            subtitle.setText("Log in to continue using the application");
+        } else {
+            title.setText("Đăng nhập");
+            editEmail.setHint("Email, Số điện thoại, Tài khoản");
+            editPassword.setHint("Mật khẩu");
+            checkboxSavePassword.setText("Lưu mật khẩu");
+            forgotPassword.setText("Quên mật khẩu");
+            btn_login.setText("Đăng nhập");
+            btn_register.setText("Đăng ký");
+            subtitle.setText("Đăng nhập để tiếp tục sử dụng ứng dụng");
+        }
+    }
+
+
     private void showLoading() {
         if (loadingFragment == null) {
             loadingFragment = new BlankFragment();
@@ -186,12 +258,14 @@ public class StartActivity extends BaseActivity {
         editPassword.setSelection(editPassword.getText().length());
     }
 
+    // Phương thức loginUser đã điều chỉnh để hiển thị Toast theo ngôn ngữ người dùng chọn
     private void loginUser() {
-        String login = editEmail.getText().toString().trim();  // login có thể là username, email hoặc số điện thoại
+        String login = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
 
         if (login.isEmpty() || password.isEmpty()) {
-            Toast.makeText(StartActivity.this, "Vui lòng nhập tên tài khoản, email hoặc số điện thoại và mật khẩu", Toast.LENGTH_SHORT).show();
+            showToastBasedOnLanguage("Vui lòng nhập tên tài khoản, email hoặc số điện thoại và mật khẩu",
+                    "Please enter your account name, email, or phone number and password.");
             return;
         }
 
@@ -215,20 +289,19 @@ public class StartActivity extends BaseActivity {
                             saveCheckboxState(false); // Lưu trạng thái của checkbox
                         }
 
-                        Toast.makeText(StartActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                        showToastBasedOnLanguage("Đăng nhập thành công", "Login successful");
 
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                         finish(); // Đóng StartActivity để người dùng không quay lại trang đăng nhập
                     }
                 } else {
                     try {
-                        // Xử lý phản hồi lỗi từ server
                         JSONObject errorObject = new JSONObject(response.errorBody().string());
                         String errorMessage = errorObject.getString("error");
 
-                        Toast.makeText(StartActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        showToastBasedOnLanguage(errorMessage, "Login failed: " + errorMessage);
                     } catch (Exception e) {
-                        Toast.makeText(StartActivity.this, "Đăng nhập thất bại.", Toast.LENGTH_SHORT).show();
+                        showToastBasedOnLanguage("Đăng nhập thất bại.", "Login failed.");
                         e.printStackTrace();
                     }
                 }
@@ -237,14 +310,10 @@ public class StartActivity extends BaseActivity {
             @Override
             public void onFailure(Call<TokenModel> call, Throwable t) {
                 hideLoading();
-                Toast.makeText(StartActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showToastBasedOnLanguage("Lỗi kết nối: " + t.getMessage(), "Connection error: " + t.getMessage());
             }
         });
     }
-
-
-
-
 
 
     private void saveLoginDetails(TokenModel tokenResponse) {

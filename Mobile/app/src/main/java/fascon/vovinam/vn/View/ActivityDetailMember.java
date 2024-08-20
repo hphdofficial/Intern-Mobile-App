@@ -137,7 +137,18 @@ public class ActivityDetailMember extends BaseActivity {
             intent.putExtra("ten", textViewTenValue.getText().toString());
             intent.putExtra("dienthoai", textViewDienthoaiValue.getText().toString());
             intent.putExtra("diachi", textViewDiachiValue.getText().toString());
-            intent.putExtra("gioitinh", textViewGioitinhValue.getText().toString());
+
+            // Truyền giới tính theo ngôn ngữ
+            String gender = textViewGioitinhValue.getText().toString();
+            if (languageS != null && languageS.contains("en")) {
+                if (gender.equals("Nam")) {
+                    gender = "Male";
+                } else if (gender.equals("Nữ")) {
+                    gender = "Female";
+                }
+            }
+            intent.putExtra("gioitinh", gender);  // Truyền giới tính qua Intent
+
             intent.putExtra("ngaysinh", textViewNgaysinhValue.getText().toString());
             intent.putExtra("hotengiamho", textViewHotengiamhoValue.getText().toString());
             intent.putExtra("dienthoaigiamho", textViewDienthoaiGiamhoValue.getText().toString());
@@ -427,7 +438,18 @@ private TextView textViewUsernameLabel;
                             textViewEmailValue.setText(profile.getEmail());
                             textViewDienthoaiValue.setText(profile.getDienthoai());
                             textViewDiachiValue.setText(profile.getDiachi());
-                            textViewGioitinhValue.setText(profile.getGioitinh());
+
+                            if (languageS != null && languageS.contains("en")) {
+                                if ("Nam".equals(profile.getGioitinh())) {
+                                    textViewGioitinhValue.setText("Male");
+                                } else if ("Nữ".equals(profile.getGioitinh())) {
+                                    textViewGioitinhValue.setText("Female");
+                                } else {
+                                    textViewGioitinhValue.setText(profile.getGioitinh()); // Nếu có giá trị khác
+                                }
+                            } else {
+                                textViewGioitinhValue.setText(profile.getGioitinh()); // Mặc định hiển thị Tiếng Việt
+                            }
 
 
                             // Chuyển đổi ngày sinh từ yyyy-MM-dd sang dd/MM/yyyy
