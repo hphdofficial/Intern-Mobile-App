@@ -61,7 +61,7 @@ public interface OrderApiService {
             @Query("action") String action
     );
 
-    @POST("/api/search_order_HLV")
+    @POST("/api/search_order_HLV2")
     Call<List<OrderListModel>> getOrderCoach(
             @Header("Authorization") String token,
             @Query("lang") String lang
