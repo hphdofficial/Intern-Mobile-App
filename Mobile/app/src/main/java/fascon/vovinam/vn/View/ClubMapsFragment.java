@@ -113,8 +113,8 @@ public class ClubMapsFragment extends Fragment {
 
         map = rootView.findViewById(R.id.map);
         SharedPreferences shared = getActivity().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
-        languageS = shared.getString("language",null);
-             ViewCompat.setOnApplyWindowInsetsListener(rootView.findViewById(R.id.main), (v, insets) -> {
+        languageS = shared.getString("language", null);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView.findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -152,8 +152,8 @@ public class ClubMapsFragment extends Fragment {
             startMarker.setIcon(resizeDrawable(getResources().getDrawable(R.drawable.icons8_marker_48), 60, 80));
 
             startMarker.setTitle("Vị trí hiện tại của bạn");
-            if(languageS!= null){
-                if(languageS.contains("en")){
+            if (languageS != null) {
+                if (languageS.contains("en")) {
                     startMarker.setTitle("Your current location");
                 }
             }
@@ -267,14 +267,15 @@ public class ClubMapsFragment extends Fragment {
         showLoading();
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
+//        Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude, languageS.equals("vn") ? "vi" : "en");
+        Call<JsonObject> call = service.getListClubMap1(230, languageS.equals("vn") ? "vi" : "en");
 
         if (isCurrent) {
-            call = service.getListClubMap3(latitude + ", " + longitude);
+            call = service.getListClubMap3(latitude + ", " + longitude, languageS.equals("vn") ? "vi" : "en");
         } else if (countryId != 0 && cityId == 0) {
-            call = service.getListClubMap1(countryId);
+            call = service.getListClubMap1(countryId, languageS.equals("vn") ? "vi" : "en");
         } else if (countryId != 0 && cityId != 0) {
-            call = service.getListClubMap2(countryId, cityId);
+            call = service.getListClubMap2(countryId, cityId, languageS.equals("vn") ? "vi" : "en");
         }
 
 
@@ -296,7 +297,13 @@ public class ClubMapsFragment extends Fragment {
                     displayClubsOnMap(clubItems, marker);
 //                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
-                        Toast.makeText(requireContext(), "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                        if (languageS != null) {
+                            if (languageS.contains("en")) {
+                                Toast.makeText(requireContext(), "No clubs found", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(requireContext(), "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 } else {
                     Log.e("Response error", response.errorBody().toString());
@@ -338,8 +345,8 @@ public class ClubMapsFragment extends Fragment {
             marker.setIcon(pDefaultMarker);
 
             marker.setTitle("Tên câu lạc bộ: " + item.getTitle() + "\n" + "Địa chỉ: " + item.getSnippet());
-            if(languageS != null){
-                if(languageS.contains("en")){
+            if (languageS != null) {
+                if (languageS.contains("en")) {
                     marker.setTitle("Club name: " + item.getTitle() + "\n" + "Address: " + item.getSnippet());
                 }
             }

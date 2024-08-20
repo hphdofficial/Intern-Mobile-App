@@ -57,6 +57,7 @@ public class ChangeClassFragment extends DialogFragment implements OnItemClickLi
     private Button btnClose;
     private Button btnUpdate;
     private TextView txtNotify;
+    private String languageS;
 
     public ChangeClassFragment(int memberId, int classId) {
         this.memberId = memberId;
@@ -75,8 +76,18 @@ public class ChangeClassFragment extends DialogFragment implements OnItemClickLi
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
+        SharedPreferences shared = getActivity().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
+        languageS = shared.getString("language", null);
+
         btnClose = view.findViewById(R.id.button_close);
         btnUpdate = view.findViewById(R.id.button_update);
+
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                btnClose.setText("Close");
+                btnUpdate.setText("Update");
+            }
+        }
 
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +101,13 @@ public class ChangeClassFragment extends DialogFragment implements OnItemClickLi
                 if (newClassId != 0) {
                     updateClass();
                 } else {
-                    Toast.makeText(getContext(), "Vui lòng chọn lớp cần chuyển", Toast.LENGTH_SHORT).show();
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(getContext(), "Please select the class to transfer", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Vui lòng chọn lớp cần chuyển", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
         });
@@ -103,11 +120,16 @@ public class ChangeClassFragment extends DialogFragment implements OnItemClickLi
     }
 
     public void getAllClass() {
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                txtNotify.setText("Loading...");
+            }
+        }
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
 
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<JsonObject> call = service.getCoachClass("Bearer " + accessToken);
+        Call<JsonObject> call = service.getCoachClass("Bearer " + accessToken, languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -131,7 +153,13 @@ public class ChangeClassFragment extends DialogFragment implements OnItemClickLi
                         txtNotify.setText("");
                     }
                     else {
-                        txtNotify.setText("Không có lớp học khác");
+                        if (languageS != null) {
+                            if (languageS.contains("en")) {
+                                txtNotify.setText("No other classes");
+                            } else {
+                                txtNotify.setText("Không có lớp học khác");
+                            }
+                        }
                     }
 
                     adapter.setData(classList);
@@ -157,7 +185,13 @@ public class ChangeClassFragment extends DialogFragment implements OnItemClickLi
         ClassApiService service = ApiServiceProvider.getClassApiService();
         Call<ReponseModel> call = service.changeJoinClass("Bearer " + accessToken, memberId, classId, newClassId);
 
-        Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                Toast.makeText(getContext(), "Updating...", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "Đang cập nhật...", Toast.LENGTH_LONG).show();
+            }
+        }
 
         call.enqueue(new Callback<ReponseModel>() {
             @Override
@@ -165,7 +199,14 @@ public class ChangeClassFragment extends DialogFragment implements OnItemClickLi
                 if (response.isSuccessful()) {
                     btnUpdate.setEnabled(true);
                     btnClose.setEnabled(true);
-                    Toast.makeText(getContext(), "Cập nhật chuyển lớp thành công", Toast.LENGTH_SHORT).show();
+
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            Toast.makeText(getContext(), "Update class transfer successful", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Cập nhật chuyển lớp thành công", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                     if (getContext() instanceof ApproveActivity) {
                         ((ApproveActivity) getContext()).selectSpinnerItem(0);
                     }

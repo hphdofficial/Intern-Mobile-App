@@ -3,6 +3,7 @@ package fascon.vovinam.vn.ViewModel;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,14 @@ public class ClubAdapter extends RecyclerView.Adapter<ClubAdapter.ViewHolder> {
         } else {
             holder.textView.setText("Không có");
         }
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        String languageS = shared.getString("language", null);
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                holder.btnJoin.setText("Detail");
+            }
+        }
+
         holder.btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

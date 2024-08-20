@@ -28,12 +28,14 @@ public interface ClassApiService {
 
     @GET("/api/classes/by-id")
     Call<Class> getDetailClassofClub(
-            @Query("id_class") int classId
+            @Query("id_class") int classId,
+            @Query("lang") String lang
     );
 
     @GET("/api/classes/by-club")
     Call<List<Class>> getListClassofClub(
-            @Query("id_club") int clubId
+            @Query("id_club") int clubId,
+            @Query("lang") String lang
     );
 
     @GET("/api/user/classes")
@@ -75,12 +77,14 @@ public interface ClassApiService {
 
     @GET("/api/coach/classes/getMemberpending")
     Call<List<ApproveModel>> getListJoinClassPending(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Query("lang") String lang
     );
 
     @GET("/api/coach/leave-class-requests")
     Call<List<ApproveModel>> getListLeaveClassPending(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Query("lang") String lang
     );
 
     @POST("/api/coach/classes/approve-join")
@@ -114,6 +118,7 @@ public interface ClassApiService {
 
     @GET("/api/teacher/classes/getall")
     Call<JsonObject> getCoachClass(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Query("lang") String lang
     );
 }

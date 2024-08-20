@@ -1,4 +1,6 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.R;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -37,6 +39,7 @@ import fascon.vovinam.vn.Model.Club;
 import fascon.vovinam.vn.Model.CountryModel;
 import fascon.vovinam.vn.Model.network.ApiServiceProvider;
 import fascon.vovinam.vn.Model.services.ClubApiService;
+
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -80,16 +83,16 @@ public class ClubActivity extends BaseActivity {
 
     public void onMenuItemClick(View view) {
         text = findViewById(R.id.languageText);
-        String language = text.getText()+"";
-        if(view.getId() == R.id.btn_change){
+        String language = text.getText() + "";
+        if (view.getId() == R.id.btn_change) {
             SharedPreferences sga = getSharedPreferences("login_prefs", MODE_PRIVATE);
-            SharedPreferences.Editor edit =  sga.edit();
+            SharedPreferences.Editor edit = sga.edit();
 
-            if(language.contains("VN")){
-                edit.putString("language","en");
+            if (language.contains("VN")) {
+                edit.putString("language", "en");
                 text.setText("ENG");
-            }else {
-                edit.putString("language","vn");
+            } else {
+                edit.putString("language", "vn");
                 text.setText("VN");
             }
             edit.apply();
@@ -98,6 +101,7 @@ public class ClubActivity extends BaseActivity {
             startActivity(intent);
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,9 +118,9 @@ public class ClubActivity extends BaseActivity {
         myContentE.putString("title", "Danh sách câu lạc bộ");
         myContentE.apply();
         SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
-        languageS = shared.getString("language",null);
-        if(languageS!= null){
-            if(languageS.contains("en")){
+        languageS = shared.getString("language", null);
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 myContentE.putString("title", "List Clubs");
                 myContentE.apply();
             }
@@ -161,8 +165,8 @@ public class ClubActivity extends BaseActivity {
 
         viewOptionsSpinner = findViewById(R.id.spinner_view_options);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.view_options, android.R.layout.simple_spinner_item);
-        if(languageS != null){
-            if(languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 adapter = ArrayAdapter.createFromResource(this, R.array.viewaa, android.R.layout.simple_spinner_item);
             }
         }
@@ -212,13 +216,14 @@ public class ClubActivity extends BaseActivity {
         showListCityDefault();
         loadListClubDefault();
 
-            if(languageS != null){
-                if(languageS.contains("en")){
-                    btnLocation.setText("Search around my location");
-                    label_view_options.setText("View");
-                }
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                btnLocation.setText("Search around my location");
+                label_view_options.setText("View: ");
             }
+        }
     }
+
     private TextView label_view_options;
 
 
@@ -233,8 +238,8 @@ public class ClubActivity extends BaseActivity {
         Button buttonOk = dialog.findViewById(R.id.button_ok);
 
 
-        if(languageS != null){
-            if(languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 text_view_result.setText("Search");
                 editTextSearch.setHint("Enter the club to search for");
                 buttonOk.setText("Start search");
@@ -276,7 +281,15 @@ public class ClubActivity extends BaseActivity {
                     if (!clubs.isEmpty()) {
 //                        Toast.makeText(ClubActivity.this, "Tìm kiếm thành công", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(ClubActivity.this, "Không có câu lạc bộ nào khớp với tìm kiếm", Toast.LENGTH_SHORT).show();
+                        if (clubs.isEmpty()) {
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
+                                    Toast.makeText(ClubActivity.this, "No clubs match your search", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ClubActivity.this, "Không có câu lạc bộ nào khớp với tìm kiếm", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
                     }
                 } else {
                     System.err.println("Response error: " + response.errorBody());
@@ -301,7 +314,13 @@ public class ClubActivity extends BaseActivity {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
                         if (locationResult == null) {
-                            Toast.makeText(ClubActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
+                                    Toast.makeText(ClubActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ClubActivity.this, "Không lấy được vị trí", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                             return;
                         }
                         Location location = locationResult.getLastLocation();
@@ -310,9 +329,21 @@ public class ClubActivity extends BaseActivity {
                             double longitude = location.getLongitude();
                             loadClubListByLocation(latitude, longitude);
                             Log.e("current_location", latitude + ", " + longitude);
-                            Toast.makeText(ClubActivity.this, "Truy cập vị trí hiện tại thành công", Toast.LENGTH_SHORT).show();
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
+                                    Toast.makeText(ClubActivity.this, "Access current location successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ClubActivity.this, "Truy cập vị trí hiện tại thành công", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         } else {
-                            Toast.makeText(ClubActivity.this, "Không lấy được vị trí hiện tại", Toast.LENGTH_SHORT).show();
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
+                                    Toast.makeText(ClubActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ClubActivity.this, "Không lấy được vị trí hiện tại", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                         fusedLocationProviderClient.removeLocationUpdates(this);
                     }
@@ -363,7 +394,13 @@ public class ClubActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 getCurrentLocation();
             } else {
-                Toast.makeText(this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
+                if (languageS != null) {
+                    if (languageS.contains("en")) {
+                        Toast.makeText(ClubActivity.this, "You have canceled access to your current location.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ClubActivity.this, "Bạn đã hủy truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         }
     }
@@ -375,7 +412,13 @@ public class ClubActivity extends BaseActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkLocationSettings();
             } else {
-                Toast.makeText(this, "Bạn đã từ chối truy cập vị trí hiện tại", Toast.LENGTH_SHORT).show();
+                if (languageS != null) {
+                    if (languageS.contains("en")) {
+                        Toast.makeText(ClubActivity.this, "You have denied access to your current location.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ClubActivity.this, "Bạn đã từ chối truy cập vị trí hiện tại", Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         }
     }
@@ -386,7 +429,7 @@ public class ClubActivity extends BaseActivity {
 //        switchToMapsFragment(10.76833026, 106.67583063);
 
         ClubApiService service = ApiServiceProvider.getClubApiService();
-        Call<JsonObject> call = service.getListClubMap2(230, 50);
+        Call<JsonObject> call = service.getListClubMap2(230, 50, languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -402,7 +445,15 @@ public class ClubActivity extends BaseActivity {
                     clubListFragment.setData(clubs);
 //                    Toast.makeText(ClubActivity.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
                     if (clubs.isEmpty()) {
-                        Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                        if (clubs.isEmpty()) {
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
+                                    Toast.makeText(ClubActivity.this, "No clubs found", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
                     }
                 } else {
                     System.err.println("Response error: " + response.errorBody());
@@ -426,7 +477,7 @@ public class ClubActivity extends BaseActivity {
             hideLoading();
         } else {
             ClubApiService service = ApiServiceProvider.getClubApiService();
-            Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude);
+            Call<JsonObject> call = service.getListClubMap3(latitude + ", " + longitude, languageS.equals("vn") ? "vi" : "en");
 
             call.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -442,8 +493,13 @@ public class ClubActivity extends BaseActivity {
                         clubListFragment.setData(clubs);
 //                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                         if (clubs.isEmpty()) {
-                            Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
-                        }
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
+                                    Toast.makeText(ClubActivity.this, "No clubs found", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                                }
+                            }                        }
                     } else {
                         System.err.println("Response error: " + response.errorBody());
                     }
@@ -468,7 +524,7 @@ public class ClubActivity extends BaseActivity {
             hideLoading();
         } else {
             ClubApiService service = ApiServiceProvider.getClubApiService();
-            Call<JsonObject> call = service.getListClubMap1(countryId);
+            Call<JsonObject> call = service.getListClubMap1(countryId, languageS.equals("vn") ? "vi" : "en");
 
             call.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -484,8 +540,13 @@ public class ClubActivity extends BaseActivity {
                         clubListFragment.setData(clubs);
 //                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                         if (clubs.isEmpty()) {
-                            Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
-                        }
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
+                                    Toast.makeText(ClubActivity.this, "No clubs found", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                                }
+                            }                        }
                     } else {
                         System.err.println("Response error: " + response.errorBody());
                     }
@@ -510,7 +571,7 @@ public class ClubActivity extends BaseActivity {
             hideLoading();
         } else {
             ClubApiService service = ApiServiceProvider.getClubApiService();
-            Call<JsonObject> call = service.getListClubMap2(230, cityId);
+            Call<JsonObject> call = service.getListClubMap2(city, cityId, languageS.equals("vn") ? "vi" : "en");
 
             call.enqueue(new Callback<JsonObject>() {
                 @Override
@@ -526,8 +587,13 @@ public class ClubActivity extends BaseActivity {
                         clubListFragment.setData(clubs);
 //                        Toast.makeText(ClubActivity.this, "Success " + response.message(), Toast.LENGTH_SHORT).show();
                         if (clubs.isEmpty()) {
-                            Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
-                        }
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
+                                    Toast.makeText(ClubActivity.this, "No clubs found", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ClubActivity.this, "Không tìm thấy câu lạc bộ nào", Toast.LENGTH_SHORT).show();
+                                }
+                            }                        }
                     } else {
                         System.err.println("Response error: " + response.errorBody());
                     }
@@ -555,8 +621,8 @@ public class ClubActivity extends BaseActivity {
                     List<CountryModel> countries = new ArrayList<>();
 
                     countries.add(new CountryModel(0, "Quốc gia", "0", "0"));
-                    if(languageS != null){
-                        if(languageS.contains("en")){
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
                             countries.clear();
                             countries.add(new CountryModel(0, "Country", "0", "0"));
                         }
@@ -611,8 +677,8 @@ public class ClubActivity extends BaseActivity {
                     List<CityModel> cityList = response.body();
                     List<CityModel> cities = new ArrayList<>();
                     cities.add(new CityModel(0, "Thành phố", "0", "0"));
-                    if(languageS != null){
-                        if(languageS.contains("en")){
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
                             cities.clear();
                             cities.add(new CityModel(0, "City", "0", "0"));
                         }
@@ -632,7 +698,7 @@ public class ClubActivity extends BaseActivity {
                             String longitude = selectedCity.getMap_long();
                             if (position > 0) {
 //                                Toast.makeText(ClubActivity.this, "Selected: " + selectedCity.getTen(), Toast.LENGTH_SHORT).show();
-                               city = cityId;
+                                city = cityId;
                                 loadClubListByCity(cityId, latitude, longitude);
 //                                spinnerCountry.setSelection(0);
                             }
@@ -658,8 +724,8 @@ public class ClubActivity extends BaseActivity {
     private void showListCityDefault() {
         List<CityModel> cities = new ArrayList<>();
         cities.add(new CityModel(0, "Thành phố", "0", "0"));
-        if(languageS != null){
-            if(languageS.contains("en")){
+        if (languageS != null) {
+            if (languageS.contains("en")) {
                 cities.clear();
                 cities.add(new CityModel(0, "City", "0", "0"));
             }

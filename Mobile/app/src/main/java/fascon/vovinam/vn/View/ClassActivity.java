@@ -151,7 +151,7 @@ public class ClassActivity extends BaseActivity {
 
     private void getListClass(){
         ClassApiService service = ApiServiceProvider.getClassApiService();
-        Call<List<Class>> call = service.getListClassofClub(Integer.parseInt(idClub));
+        Call<List<Class>> call = service.getListClassofClub(Integer.parseInt(idClub), languageS.equals("vn") ? "vi" : "en");
 
         call.enqueue(new Callback<List<Class>>() {
             @Override

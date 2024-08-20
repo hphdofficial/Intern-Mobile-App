@@ -30,7 +30,9 @@ public interface OrderApiService {
 
     @GET("api/orders/All")
     Call<List<OrderListModel>> getListOrder(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Query("lang") String lang
+
     );
 
     @GET("/admin_order")
@@ -61,7 +63,8 @@ public interface OrderApiService {
 
     @POST("/api/search_order_HLV")
     Call<List<OrderListModel>> getOrderCoach(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Query("lang") String lang
     );
 
     @POST("/api/update_sanpham")

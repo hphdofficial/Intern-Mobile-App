@@ -1,5 +1,6 @@
 package fascon.vovinam.vn.View;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class AddItemFragment extends DialogFragment {
     private SearchView searchView;
     private Button btnClose;
     private TextView txtNotify;
+    private String languageS;
 
     public AddItemFragment(List<ProductModel> list) {
         this.currentProductList = list;
@@ -60,7 +62,15 @@ public class AddItemFragment extends DialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
+        SharedPreferences shared = getActivity().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
+        languageS = shared.getString("language", null);
+
         btnClose = view.findViewById(R.id.button_close);
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                btnClose.setText("Close");
+            }
+        }
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +101,12 @@ public class AddItemFragment extends DialogFragment {
     }
 
     public void getAllProduct() {
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                txtNotify.setText("Loading...");
+            }
+        }
+
         OrderApiService service = ApiServiceProvider.getOrderApiService();
         Call<List<ProductModel>> call = service.getAllProduct();
 

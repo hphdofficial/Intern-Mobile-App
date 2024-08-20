@@ -1,4 +1,6 @@
-package fascon.vovinam.vn.View;import fascon.vovinam.vn.R;
+package fascon.vovinam.vn.View;
+
+import fascon.vovinam.vn.R;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -38,6 +40,7 @@ public class OrderFragment extends Fragment {
     private ImageView imgNotify;
     private TextView txtNotify;
     private String languageS;
+
     public OrderFragment(String statusOrder) {
         this.statusOrder = statusOrder;
     }
@@ -46,7 +49,7 @@ public class OrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
         SharedPreferences shared = getContext().getSharedPreferences("login_prefs", getContext().MODE_PRIVATE);
-        languageS = shared.getString("language",null);
+        languageS = shared.getString("language", null);
 
         apiService = ApiServiceProvider.getOrderApiService();
         imgNotify = view.findViewById(R.id.img_notify);
@@ -66,12 +69,18 @@ public class OrderFragment extends Fragment {
     private void fetchListOrder() {
         shippingItemAdapter.setData(new ArrayList<>());
         imgNotify.setVisibility(View.GONE);
-        txtNotify.setText("Loading...");
+        if (languageS != null) {
+            if (languageS.contains("en")) {
+                txtNotify.setText("Loading...");
+            } else {
+                txtNotify.setText("Đang tải...");
+            }
+        }
         if (getView() == null) return;
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String accessToken = sharedPreferences.getString("access_token", null);
-        apiService.getListOrder("Bearer " + accessToken).enqueue(new Callback<List<OrderListModel>>() {
+        apiService.getListOrder("Bearer " + accessToken, languageS.equals("vn") ? "vi" : "en").enqueue(new Callback<List<OrderListModel>>() {
             @Override
             public void onResponse(Call<List<OrderListModel>> call, Response<List<OrderListModel>> response) {
                 if (response.isSuccessful()) {
@@ -95,8 +104,8 @@ public class OrderFragment extends Fragment {
                         } else {
                             imgNotify.setVisibility(View.VISIBLE);
                             txtNotify.setText("Bạn chưa có đơn hàng nào cả");
-                            if(languageS!= null){
-                                if(languageS.contains("en")){
+                            if (languageS != null) {
+                                if (languageS.contains("en")) {
                                     txtNotify.setText("You don't have any orders yet");
                                 }
                             }
@@ -104,8 +113,8 @@ public class OrderFragment extends Fragment {
                     } else {
                         imgNotify.setVisibility(View.VISIBLE);
                         txtNotify.setText("Bạn chưa có đơn hàng nào cả");
-                        if(languageS!= null){
-                            if(languageS.contains("en")){
+                        if (languageS != null) {
+                            if (languageS.contains("en")) {
                                 txtNotify.setText("You don't have any orders yet");
                             }
                         }
@@ -114,6 +123,11 @@ public class OrderFragment extends Fragment {
                     Log.e("Error", response.message());
                     imgNotify.setVisibility(View.VISIBLE);
                     txtNotify.setText("Không thể tải danh sách đơn hàng. Vui lòng thử lại.");
+                    if (languageS != null) {
+                        if (languageS.contains("en")) {
+                            txtNotify.setText("Unable to load order list. Please try again.");
+                        }
+                    }
                 }
             }
 
@@ -122,6 +136,11 @@ public class OrderFragment extends Fragment {
                 Log.e("Fail", Objects.requireNonNull(t.getMessage()));
                 imgNotify.setVisibility(View.VISIBLE);
                 txtNotify.setText("Lỗi kết nối. Vui lòng thử lại.");
+                if (languageS != null) {
+                    if (languageS.contains("en")) {
+                        txtNotify.setText("Connection error. Please try again.");
+                    }
+                }
             }
         });
     }
