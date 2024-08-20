@@ -70,7 +70,7 @@ public interface PaymentAPI {
     Call<List<ProductSaleModel>> GetSaleProduct(@Query ("lang") String language);
 
     @GET("api/sale-products")
-    Call<List<ProductSaleDownModel>> GetSaleDownProduct();
+    Call<List<ProductSaleDownModel>> GetSaleDownProduct(@Query ("lang") String language);
 
 
 }

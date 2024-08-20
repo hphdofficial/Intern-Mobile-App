@@ -227,7 +227,13 @@ public class MenuActivity extends BaseActivity {
         String role = decodeRoleFromToken(token);
         if(role.contains("0")){
             PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-            Call<List<ProductSaleDownModel>> call = apiService.GetSaleDownProduct();
+            Call<List<ProductSaleDownModel>> call;
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    call = apiService.GetSaleDownProduct("en");
+                }else call = apiService.GetSaleDownProduct("vi");
+            }else call = apiService.GetSaleDownProduct("vi");
+
             call.enqueue(new Callback<List<ProductSaleDownModel>>() {
                 @Override
                 public void onResponse(Call<List<ProductSaleDownModel>> call, Response<List<ProductSaleDownModel>> response) {
@@ -724,11 +730,11 @@ public class MenuActivity extends BaseActivity {
                         100
                 ));
                 textView.setText(p.getName());
-                if(languageS!= null){
+/*                if(languageS!= null){
                     if(languageS.contains("en")){
                         textView.setText(p.getTenenglish());
                     }
-                }
+                }*/
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
@@ -823,7 +829,12 @@ public class MenuActivity extends BaseActivity {
                 else
                     max1 = Integer.MAX_VALUE;
                 PaymentAPI apiService = APIServicePayment.getPaymentApiService();
-                Call<List<ProductSaleDownModel>> call = apiService.GetSaleDownProduct();
+                Call<List<ProductSaleDownModel>> call;
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        call = apiService.GetSaleDownProduct("en");
+                    }else call = apiService.GetSaleDownProduct("vi");
+                }else call = apiService.GetSaleDownProduct("vi");
                 call.enqueue(new Callback<List<ProductSaleDownModel>>() {
                     @Override
                     public void onResponse(Call<List<ProductSaleDownModel>> call, Response<List<ProductSaleDownModel>> response) {
@@ -958,11 +969,11 @@ public class MenuActivity extends BaseActivity {
                         100
                 ));
                 textView.setText(p.getName());
-                if(languageS!= null){
+               /* if(languageS!= null){
                     if(languageS.contains("en")){
                         textView.setText(p.getTenenglish());
                     }
-                }
+                }*/
                 textView.setTextColor(Color.BLUE);
                 textView.setTextSize(12);
 
