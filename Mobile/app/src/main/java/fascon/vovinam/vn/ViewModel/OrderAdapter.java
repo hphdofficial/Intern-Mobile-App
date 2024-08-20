@@ -273,6 +273,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
             OrderDetailFragment dialogFragment = OrderDetailFragment.newInstance(order);
             dialogFragment.show(fragmentManager, "OrderDetailsDialogFragment");
+//            Toast.makeText(context, ""+order.getOrder_info(), Toast.LENGTH_SHORT).show();
         });
     }
 

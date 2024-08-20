@@ -35,3 +35,5 @@ Có vấn đề tim mạch,Have heart problems
 Có vấn đề về hô hấp,Have breathing problems
 Có vấn đề về xương khớp (từng bị gãy tay/chân hoặc trật khớp),Have bone and joint problems (ever broken arms/legs or dislocated joints)
 Hoàn toàn khỏe mạnh,Completely healthy
+Thanh toán khi nhận hàng,Cash on delivery
+chưa thanh toán,Not yet paid

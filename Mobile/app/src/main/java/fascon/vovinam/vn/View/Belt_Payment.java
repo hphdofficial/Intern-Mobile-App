@@ -40,8 +40,10 @@ public class Belt_Payment extends BaseActivity {
     private TextView status_class;
     private TextView money;
     private TextView date;
+    private TextView date1;
     private ImageView image;
     private TextView color;
+    private TextView money1;
     private TextView danhxung;
     private Button buttonRegister;
     private LinearLayout linear;
@@ -71,6 +73,8 @@ public class Belt_Payment extends BaseActivity {
             return insets;
         });
 
+        date1 = findViewById(R.id.date);
+        money1 = findViewById(R.id.money);
         change_class = findViewById(R.id.change_class);
         status_class = findViewById(R.id.status);
         money = findViewById(R.id.total);
@@ -97,7 +101,8 @@ public class Belt_Payment extends BaseActivity {
                 myContentE.apply();
                 buttonRegister.setText("Scan qr to pay registration fee");
                 satus.setText("Description");
-
+                money1.setText("Register up belt");
+                date1.setText("Time");
             }
         }
 
@@ -204,6 +209,7 @@ public class Belt_Payment extends BaseActivity {
                 Toast.makeText(getApplicationContext(),"fail nn",Toast.LENGTH_SHORT).show();
             }
         });
+
 
 
     }

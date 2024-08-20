@@ -19,6 +19,11 @@ import fascon.vovinam.vn.Model.OrderListModel;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class OrderDetailFragment extends DialogFragment {
 
     private static final String ARG_ORDER = "order";
@@ -85,6 +90,12 @@ public class OrderDetailFragment extends DialogFragment {
         orderInfo.setText(order.getOrder_info());
         orderAmount.setText(String.format("%,.0f VND", order.getAmount()));
         orderStatus.setText(order.getStatus());
+        if (languageS != null) {
+            if (languageS.contains("en")){
+                orderInfo.setText(TranslateText(order.getOrder_info(), 1));
+                orderStatus.setText(TranslateText(order.getStatus(), 1));
+            }
+        }
         orderPayDate.setText(order.getPay_date());
 
         // Tính toán lại tổng số tiền sau khi đã áp dụng giảm giá
@@ -120,5 +131,32 @@ public class OrderDetailFragment extends DialogFragment {
         if (getDialog() != null) {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
+    }
+    public String TranslateText(String text, int k){
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.language);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            String s = "";
+            while ((line = reader.readLine()) != null) {
+                if(line.contains(text)){
+                    String temp[] = line.split(",");
+                    if(k == 0){
+                        s =  temp[0];
+                    } else s= temp[1];
+                    break;
+                }
+
+            }
+
+            reader.close();
+            return s;
+            // Use the fileContent string
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
