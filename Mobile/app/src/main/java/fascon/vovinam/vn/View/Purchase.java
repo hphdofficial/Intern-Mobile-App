@@ -420,7 +420,7 @@ private TextView addessP;
                                     }else {
                                         Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
                                     }                                } else {
-                                    Toast.makeText(getApplicationContext(), "Đặt hàng thất bại vì k có hàng", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getApplicationContext(), "Đặt hàng thất bại vì k có hàng", Toast.LENGTH_SHORT).show();
 
                                 }
                             }
@@ -430,7 +430,16 @@ private TextView addessP;
 
                             }
                         });
-                        Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                        if (languageS != null) {
+                            if (languageS.contains("en")) {
+                                Toast.makeText(getApplicationContext(), "order successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                        }
                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                     }
 
