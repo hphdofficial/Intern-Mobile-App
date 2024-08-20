@@ -73,7 +73,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:padding="8dp"
-                        android:text="@string/tbl_header_text_nameAttendee"
+                        android:text="Tên"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 

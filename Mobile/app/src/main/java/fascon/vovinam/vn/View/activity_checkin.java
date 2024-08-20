@@ -205,11 +205,20 @@ public class activity_checkin extends BaseActivity {
                                 // Xử lý phản hồi lỗi từ server
                                 JSONObject errorObject = new JSONObject(response.errorBody().string());
                                 String errorMessage = errorObject.getString("error");
-
                                 Toast.makeText(activity_checkin.this, errorMessage, Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
+                                if(languageS!= null){
+                                    if(languageS.contains("en")){
+                                        Toast.makeText(activity_checkin.this, "Checkin Fail.", Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(activity_checkin.this, "Điểm danh thất bại.", Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        Toast.makeText(activity_checkin.this, "Điểm danh thất bại.", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }else{
+                                    Toast.makeText(activity_checkin.this, "Điểm danh thất bại.", Toast.LENGTH_SHORT).show();
+
+                                }
                                 e.printStackTrace();
                             }
                             hideLoading();
