@@ -1,6 +1,7 @@
 package fascon.vovinam.vn.ViewModel;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.List;
 public class OptionCheckBoxAdapter2 extends RecyclerView.Adapter<OptionCheckBoxAdapter2.ViewHolder>{
 
     Context context;
+    private String languageS;
     private List<OptionSupplier> optionList;
 
     public OptionCheckBoxAdapter2(Context context, List<OptionSupplier> optionList) {
@@ -34,6 +36,8 @@ public class OptionCheckBoxAdapter2 extends RecyclerView.Adapter<OptionCheckBoxA
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        SharedPreferences shared = context.getSharedPreferences("login_prefs", context.MODE_PRIVATE);
+        languageS = shared.getString("language",null);
         OptionSupplier option = optionList.get(i);
         viewHolder.checkBox.setText(option.getSupplierName());
         viewHolder.checkBox.setChecked(option.isChecked());
@@ -41,6 +45,13 @@ public class OptionCheckBoxAdapter2 extends RecyclerView.Adapter<OptionCheckBoxA
         viewHolder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             option.setChecked(isChecked);
         });
+
+        if(languageS != null){
+            if(languageS.contains("en")){
+                viewHolder.checkBox.setText(option.getSupplierNameEn());
+            }
+        }
+
     }
 
     @Override

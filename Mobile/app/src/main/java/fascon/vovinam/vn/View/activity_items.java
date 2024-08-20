@@ -242,7 +242,7 @@ public class activity_items extends BaseActivity {
                             List<SupplierModelOption> supplierList = response.body();
                             List<OptionSupplier> supplierOptionList = new ArrayList<>();
                             for (SupplierModelOption supplier : supplierList){
-                                OptionSupplier optionSupplier = new OptionSupplier(false, supplier.getSupplierID(), supplier.getSupplierName());
+                                OptionSupplier optionSupplier = new OptionSupplier(false, supplier.getSupplierID(), supplier.getSupplierName(), supplier.getSupplierNameEn());
                                 supplierOptionList.add(optionSupplier);
                             }
                             optionAdapter2 = new OptionCheckBoxAdapter2(getApplicationContext(), supplierOptionList);
