@@ -163,6 +163,12 @@ public class activity_member_checkin extends BaseActivity {
 
 
                                     txtSoNgayHienDien.setText(checkedAdapter.getItemCount() + " Ngày");
+                                    if(languageS!= null){
+                                        if(languageS.contains("en")){
+                                            txtSoNgayHienDien.setText(checkedAdapter.getItemCount() + " Day");
+                                        }
+                                    }
+
                                     hideLoading();
                                 }
                             }else {
@@ -240,6 +246,8 @@ public class activity_member_checkin extends BaseActivity {
         textView20 = findViewById(R.id.textView9);
         textView9 = findViewById(R.id.textView2);
         textView2 = findViewById(R.id.textView7);
+        textView5 = findViewById(R.id.textView5);
+
 
         if(languageS!= null){
             if(languageS.contains("en")){
@@ -247,6 +255,7 @@ public class activity_member_checkin extends BaseActivity {
                 textView20.setText("Day");
                 textView9.setText("Name");
                 textView2.setText("Time check in");
+                textView5.setText("Number Of Day Attend To Class");
             }
         }
 
@@ -254,6 +263,7 @@ public class activity_member_checkin extends BaseActivity {
     private TextView textView20;
     private TextView textView9;
     private TextView textView2;
+    private TextView textView5;
 
     private void showLoading() {
         loadingFragment = new BlankFragment();
