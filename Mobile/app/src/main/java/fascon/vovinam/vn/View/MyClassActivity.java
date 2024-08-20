@@ -110,7 +110,10 @@ public class MyClassActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("access_token", null);
         CheckinApiService apiService = ApiServiceProvider.getCheckinApiService();
-        apiService.getTeacherClasses("Bearer " + token).enqueue(new Callback<JsonObject>() {
+        if(languageS == null){
+            languageS = "vi";
+        }
+        apiService.getTeacherClasses("Bearer " + token, languageS).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful()) {

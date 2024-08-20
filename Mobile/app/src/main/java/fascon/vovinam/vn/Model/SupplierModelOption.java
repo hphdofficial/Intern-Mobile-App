@@ -1,12 +1,26 @@
 package fascon.vovinam.vn.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SupplierModelOption {
     private int SupplierID;
     private String SupplierName;
 
-    public SupplierModelOption(int supplierID, String supplierName) {
+    @SerializedName("tenen")
+    private String SupplierNameEng;
+
+    public SupplierModelOption(int supplierID, String supplierName, String supplierNameEng) {
         SupplierID = supplierID;
         SupplierName = supplierName;
+        SupplierNameEng = supplierNameEng;
+    }
+
+    public String getSupplierNameEn() {
+        return SupplierNameEng;
+    }
+
+    public void setSupplierNameEng(String supplierNameEn) {
+        SupplierNameEng = supplierNameEn;
     }
 
     public SupplierModelOption() {

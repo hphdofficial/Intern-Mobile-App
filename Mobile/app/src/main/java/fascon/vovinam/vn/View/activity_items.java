@@ -182,6 +182,25 @@ public class activity_items extends BaseActivity {
                 editMinPrice = filterDialog.findViewById(R.id.editMinPrice);
                 editMaxPrice = filterDialog.findViewById(R.id.editMaxPrice);
 
+                TextView textView = filterDialogView.findViewById(R.id.textView4);
+                TextView textView1 = filterDialogView.findViewById(R.id.textView10);
+                TextView textView2 = filterDialogView.findViewById(R.id.textView11);
+                TextView textView3 = filterDialogView.findViewById(R.id.textView15);
+                TextView textView4 = filterDialogView.findViewById(R.id.textView18);
+                TextView textView5 = filterDialogView.findViewById(R.id.textView12);
+
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        textView.setText("Filter");
+                        textView1.setText("Category:");
+                        textView2.setText("Price:");
+                        textView3.setText("Min Price: ");
+                        textView4.setText("Max Price: ");
+                        textView5.setText("Supplier: ");
+                        btnFilterActive.setText("Filter");
+                    }
+                }
+
                 //Fetch Category
 
                 CatagoryApiService apiService = ApiServiceProvider.getCatagoryApiService();
@@ -192,7 +211,7 @@ public class activity_items extends BaseActivity {
                             List<CatagoryModel> catagoryList = response.body();
                             List<OptionCategory> catagoryOptionList = new ArrayList<>();
                             for (CatagoryModel catagory : catagoryList){
-                                OptionCategory optionCategory = new OptionCategory(catagory.getCategoryID(), catagory.getCategoryName(), false);
+                                OptionCategory optionCategory = new OptionCategory(catagory.getCategoryID(), catagory.getCategoryName(), catagory.getCategoryNameEn(), false);
                                 catagoryOptionList.add(optionCategory);
                             }
                             optionAdapter = new OptionCheckBoxAdapter(getApplicationContext(), catagoryOptionList);
@@ -223,7 +242,7 @@ public class activity_items extends BaseActivity {
                             List<SupplierModelOption> supplierList = response.body();
                             List<OptionSupplier> supplierOptionList = new ArrayList<>();
                             for (SupplierModelOption supplier : supplierList){
-                                OptionSupplier optionSupplier = new OptionSupplier(false, supplier.getSupplierID(), supplier.getSupplierName());
+                                OptionSupplier optionSupplier = new OptionSupplier(false, supplier.getSupplierID(), supplier.getSupplierName(), supplier.getSupplierNameEn());
                                 supplierOptionList.add(optionSupplier);
                             }
                             optionAdapter2 = new OptionCheckBoxAdapter2(getApplicationContext(), supplierOptionList);
@@ -400,7 +419,18 @@ public class activity_items extends BaseActivity {
                 }
             });
         }if(min_price_str.length() > 8 || max_price_str.length() > 8){
-            Toast.makeText(this, "Giá tiền nhập vào quá lớn, vui lòng nhập lại", Toast.LENGTH_SHORT).show();
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    Toast.makeText(this, "The Price you enter is too high, please enter again < 99999999", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Toast.makeText(this, "Giá tiền nhập vào quá lớn, vui lòng nhập lại < 99999999", Toast.LENGTH_SHORT).show();
+
+                }
+            }else{
+                Toast.makeText(this, "Giá tiền nhập vào quá lớn, vui lòng nhập lại < 99999999", Toast.LENGTH_SHORT).show();
+
+            }
             return;
         }
 
@@ -453,7 +483,18 @@ public class activity_items extends BaseActivity {
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
-                    Toast.makeText(activity_items.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            Toast.makeText(activity_items.this, "Fail to get Data, please try again", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Toast.makeText(activity_items.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else{
+                        Toast.makeText(activity_items.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                    }
                     hideLoading();
                 }
             }
@@ -461,7 +502,18 @@ public class activity_items extends BaseActivity {
             @Override
             public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
                 hideLoading();
-                Toast.makeText(activity_items.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        Toast.makeText(activity_items.this, "Internet Lost, please try again", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(activity_items.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                    }
+                }else{
+                    Toast.makeText(activity_items.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                }
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }

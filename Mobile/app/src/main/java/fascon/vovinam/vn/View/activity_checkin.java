@@ -205,10 +205,20 @@ public class activity_checkin extends BaseActivity {
                                 // Xử lý phản hồi lỗi từ server
                                 JSONObject errorObject = new JSONObject(response.errorBody().string());
                                 String errorMessage = errorObject.getString("error");
-
                                 Toast.makeText(activity_checkin.this, errorMessage, Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
-                                Toast.makeText(activity_checkin.this, "Điểm danh thất bại.", Toast.LENGTH_SHORT).show();
+                                if(languageS!= null){
+                                    if(languageS.contains("en")){
+                                        Toast.makeText(activity_checkin.this, "Checkin Fail.", Toast.LENGTH_SHORT).show();
+
+                                    }else{
+                                        Toast.makeText(activity_checkin.this, "Điểm danh thất bại.", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }else{
+                                    Toast.makeText(activity_checkin.this, "Điểm danh thất bại.", Toast.LENGTH_SHORT).show();
+
+                                }
                                 e.printStackTrace();
                             }
                             hideLoading();
@@ -223,7 +233,18 @@ public class activity_checkin extends BaseActivity {
                         hideLoading();
                         System.out.println("Active: Call Onfail");
                         Log.e("PostData", "Failure: " + throwable.getMessage());
-                        Toast.makeText(activity_checkin.this, "Điểm danh thất bại do lỗi mạng", Toast.LENGTH_SHORT).show();
+                        if(languageS!= null){
+                            if(languageS.contains("en")){
+                                Toast.makeText(activity_checkin.this, "Fail by Lost Connection", Toast.LENGTH_SHORT).show();
+
+                            }else{
+                                Toast.makeText(activity_checkin.this, "Điểm danh thất bại do lỗi mạng", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }else{
+                            Toast.makeText(activity_checkin.this, "Điểm danh thất bại do lỗi mạng", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 });
 
@@ -289,10 +310,26 @@ public class activity_checkin extends BaseActivity {
                         textViewNotify.setVisibility(View.VISIBLE);
                         btnDiemDanh.setVisibility(View.INVISIBLE);
                     }
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            textViewNotify.setText("Can only Chekin When Class Start !");
+                        }
+                    }
                     Type checkinMemberListType = new TypeToken<List<CheckinMemberModel>>() {}.getType();
                     List<CheckinMemberModel> checkinMembers = gson.fromJson(jsonObject.get("data"), checkinMemberListType);
                     if(checkinMembers == null){
-                        Toast.makeText(activity_checkin.this, "Lớp chưa có thành viên", Toast.LENGTH_SHORT).show();
+                        if(languageS!= null){
+                            if(languageS.contains("en")){
+                                Toast.makeText(activity_checkin.this, "Class have No Student", Toast.LENGTH_SHORT).show();
+
+                            }else{
+                                Toast.makeText(activity_checkin.this, "Lớp chưa có thành viên", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }else{
+                            Toast.makeText(activity_checkin.this, "Lớp chưa có thành viên", Toast.LENGTH_SHORT).show();
+
+                        }
                         hideLoading();
                     }else{
                         if(in_time_class){
@@ -313,7 +350,18 @@ public class activity_checkin extends BaseActivity {
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
-                    Toast.makeText(activity_checkin.this, "Lỗi lấy dữ liệu vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            Toast.makeText(activity_checkin.this, "Fail to get Data, please try again", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Toast.makeText(activity_checkin.this, "Lỗi lấy dữ liệu vui lòng thử lại", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else{
+                        Toast.makeText(activity_checkin.this, "Lỗi lấy dữ liệu vui lòng thử lại", Toast.LENGTH_SHORT).show();
+
+                    }
                     hideLoading();
                 }
             }

@@ -135,7 +135,6 @@ public class activity_item_detail extends BaseActivity {
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(response.isSuccessful()){
                                 hideLoading();
-                                Toast.makeText(activity_item_detail.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
 
                                 FragmentAfterAddCart choiceFragment = new FragmentAfterAddCart();
 
@@ -150,12 +149,34 @@ public class activity_item_detail extends BaseActivity {
 
                                 // Hoàn tất việc thêm Fragment
                                 transaction.commit();
-                                Toast.makeText(activity_item_detail.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                if(languageS!= null){
+                                    if(languageS.contains("en")){
+                                        Toast.makeText(activity_item_detail.this, "Added To Cart", Toast.LENGTH_SHORT).show();
+
+                                    }else{
+                                        Toast.makeText(activity_item_detail.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }else{
+                                    Toast.makeText(activity_item_detail.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
+                                }
 
                             }else {
                                 hideLoading();
                                 System.out.println("On Response Fail");
-                                Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
+                                if(languageS!= null){
+                                    if(languageS.contains("en")){
+                                        Toast.makeText(activity_item_detail.this, "Fail to Add, Please try again", Toast.LENGTH_SHORT).show();
+
+                                    }else{
+                                        Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }else{
+                                    Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
+
+                                }
                             }
                         }
 
@@ -163,12 +184,33 @@ public class activity_item_detail extends BaseActivity {
                         public void onFailure(Call<Void> call, Throwable throwable) {
                             hideLoading();
                             System.out.println("On Failure Fail");
-                            Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
-                        }
+                            if(languageS!= null){
+                                if(languageS.contains("en")){
+                                    Toast.makeText(activity_item_detail.this, "Fail to Add, Please try again", Toast.LENGTH_SHORT).show();
+
+                                }else{
+                                    Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }else{
+                                Toast.makeText(activity_item_detail.this, "Thêm không thành công", Toast.LENGTH_SHORT).show();
+
+                            }                        }
                     });
                 }else{
                     hideLoading();
-                    Toast.makeText(activity_item_detail.this, "Quá số hàng trong kho, không thể thêm", Toast.LENGTH_SHORT).show();
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            Toast.makeText(activity_item_detail.this, "Product Instock not enough, can not add cart", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Toast.makeText(activity_item_detail.this, "Quá số hàng trong kho, không thể thêm", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else{
+                        Toast.makeText(activity_item_detail.this, "Quá số hàng trong kho, không thể thêm", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
 
 
@@ -184,38 +226,6 @@ public class activity_item_detail extends BaseActivity {
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         fragmentTransaction.addToBackStack(null); // Để có thể quay lại Fragment trước đó
         fragmentTransaction.commit();
-
-
-        //Fetch Tên nhà cung cấp
-
-/*        CatagoryApiService apiService2 = ApiServiceProvider.getCatagoryApiService();
-        apiService2.getSupplier(idSupplier).enqueue(new Callback<SupplierModelOption>() {
-            @Override
-            public void onResponse(Call<SupplierModelOption> call, Response<SupplierModelOption> response) {
-                if(response.isSuccessful()){
-                    SupplierModelOption supplier = response.body();
-                    txtItemSupplier.setText(supplier.getSupplierName());
-
-                    // Thêm sự kiện onClickListener cho txtItemSupplier
-                    txtItemSupplier.setOnClickListener(view -> {
-                        Intent supplierIntent = new Intent(activity_item_detail.this, SupplierInfoActivity.class);
-                        supplierIntent.putExtra("SupplierID", idSupplier);
-                        startActivity(supplierIntent);
-                    });
-                    hideLoading();
-                }else {
-                    hideLoading();
-                    System.out.println("Active: Call onResponse");
-                    Log.e("PostData", "Error: " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SupplierModelOption> call, Throwable throwable) {
-                System.out.println("Active: Call Lỗi Category");
-                hideLoading();
-            }
-        });*/
 
         //Fetch thông tin sản phẩm
         ProductApiService apiService = ApiServiceProvider.getProductApiService();
@@ -234,7 +244,16 @@ public class activity_item_detail extends BaseActivity {
                         startActivity(supplierIntent);
                     });
                     myContentE.apply();
-                    txtItemName.setText(product.getProductName());
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            txtItemName.setText(product.getEn());
+                        }else{
+                            txtItemName.setText(product.getProductName());
+                        }
+                    }else{
+                        txtItemName.setText(product.getProductName());
+                    }
+
                    /* if(languageS!= null){
                         if(languageS.contains("en")){
                             txtItemName.setText(product.getEn());
@@ -321,7 +340,16 @@ public class activity_item_detail extends BaseActivity {
             currentNumber--;
             editQuantity.setText(String.valueOf(currentNumber));
         } else {
-            Toast.makeText(this, "Số lượng không bé hơn 1", Toast.LENGTH_SHORT).show();
+            if(languageS!= null){
+                if(languageS.contains("en")){
+                    Toast.makeText(this, "Cant add lower than 1", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Số lượng không bé hơn 1", Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(this, "Số lượng không bé hơn 1", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -354,7 +382,15 @@ public class activity_item_detail extends BaseActivity {
                 }else {
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
-                    Toast.makeText(activity_item_detail.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            Toast.makeText(activity_item_detail.this, "Get data fail, please try again", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(activity_item_detail.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(activity_item_detail.this, "Lấy dữ liệu thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                    }
                     hideLoading();
                 }
             }
@@ -362,7 +398,15 @@ public class activity_item_detail extends BaseActivity {
             @Override
             public void onFailure(Call<List<ProductModel>> call, Throwable throwable) {
                 hideLoading();
-                Toast.makeText(activity_item_detail.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        Toast.makeText(activity_item_detail.this, "Internet Lost, please try again", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(activity_item_detail.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(activity_item_detail.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                }
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }

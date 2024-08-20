@@ -53,7 +53,8 @@ public class activity_lessons extends BaseActivity {
         // Lưu tên trang vào SharedPreferences
         SharedPreferences myContent = getSharedPreferences("myContent", Context.MODE_PRIVATE);
         SharedPreferences.Editor myContentE = myContent.edit();
-
+        myContentE.putString("title", "Danh sách lý thuyết theo đai");
+        myContentE.apply();
         SharedPreferences shared = getSharedPreferences("login_prefs", MODE_PRIVATE);
 
 
@@ -77,6 +78,8 @@ public class activity_lessons extends BaseActivity {
         if(languageS!= null){
             if(languageS.contains("en")){
                 search_edit_text.setHint("Find Theories");
+                myContentE.putString("title", "List Theories By Belt");
+                myContentE.apply();
             }
         }
         search_edit_text.setOnEditorActionListener((v, actionId, event) -> {
@@ -125,7 +128,18 @@ public class activity_lessons extends BaseActivity {
                 if(response.isSuccessful()){
                     Club club = response.body();
                     if(club.getId_club().equals("0")){
-                        Toast.makeText(activity_lessons.this, "Bạn chưa đăng ký club, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                        if(languageS!= null){
+                            if(languageS.contains("en")){
+                                Toast.makeText(activity_lessons.this, "You have not resgíter any club, please register and come again", Toast.LENGTH_SHORT).show();
+
+                            }else{
+                                Toast.makeText(activity_lessons.this, "Bạn chưa đăng ký club, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }else{
+                            Toast.makeText(activity_lessons.this, "Bạn chưa đăng ký club, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                        }
 
                     }else{
                         int idClub = Integer.parseInt(club.getId_club());
@@ -142,7 +156,18 @@ public class activity_lessons extends BaseActivity {
                                     theoryList.clear(); // Clear existing data
                                     theoryList.addAll(response.body());
                                     if(theoryList.isEmpty()){
-                                        Toast.makeText(activity_lessons.this, "Club chưa có lý thuyết", Toast.LENGTH_SHORT).show();
+                                        if(languageS!= null){
+                                            if(languageS.contains("en")){
+                                                Toast.makeText(activity_lessons.this, "Club have no Theory", Toast.LENGTH_SHORT).show();
+
+                                            }else{
+                                                Toast.makeText(activity_lessons.this, "Club chưa có lý thuyết", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        }else{
+                                            Toast.makeText(activity_lessons.this, "Club chưa có lý thuyết", Toast.LENGTH_SHORT).show();
+
+                                        }
 
                                     }else{
                                         filterTheory(search_edit_text.getText().toString());
@@ -151,7 +176,18 @@ public class activity_lessons extends BaseActivity {
                                     hideLoading();
                                 }else {
                                     hideLoading();
-                                    Toast.makeText(activity_lessons.this, "Không tìm thấy lý thuyết", Toast.LENGTH_SHORT).show();
+                                    if(languageS!= null){
+                                        if(languageS.contains("en")){
+                                            Toast.makeText(activity_lessons.this, "Cant find any Theory", Toast.LENGTH_SHORT).show();
+
+                                        }else{
+                                            Toast.makeText(activity_lessons.this, "Không tìm thấy lý thuyết", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }else{
+                                        Toast.makeText(activity_lessons.this, "Không tìm thấy lý thuyết", Toast.LENGTH_SHORT).show();
+
+                                    }
                                     System.out.println("Active: Call onResponse");
                                     Log.e("PostData", "Error: " + response.message());
                                 }
@@ -160,7 +196,18 @@ public class activity_lessons extends BaseActivity {
                             @Override
                             public void onFailure(Call<List<TheoryModel>> call, Throwable throwable) {
                                 hideLoading();
-                                Toast.makeText(activity_lessons.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                                if(languageS!= null){
+                                    if(languageS.contains("en")){
+                                        Toast.makeText(activity_lessons.this, "Internet Lost, please try again", Toast.LENGTH_SHORT).show();
+
+                                    }else{
+                                        Toast.makeText(activity_lessons.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }else{
+                                    Toast.makeText(activity_lessons.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                                }
                                 System.out.println("Active: Call Onfail");
                                 Log.e("PostData", "Failure: " + throwable.getMessage());
                             }
@@ -169,7 +216,18 @@ public class activity_lessons extends BaseActivity {
 
                 }else {
                     hideLoading();
-                    Toast.makeText(activity_lessons.this, "Bạn chưa đăng ký club, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                    if(languageS!= null){
+                        if(languageS.contains("en")){
+                            Toast.makeText(activity_lessons.this, "You have not resgíter any club, please register and come again", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Toast.makeText(activity_lessons.this, "Bạn chưa đăng ký club, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }else{
+                        Toast.makeText(activity_lessons.this, "Bạn chưa đăng ký club, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                    }
                     System.out.println("Active: Call onResponse");
                     Log.e("PostData", "Error: " + response.message());
                 }
@@ -178,7 +236,18 @@ public class activity_lessons extends BaseActivity {
             @Override
             public void onFailure(Call<Club> call, Throwable throwable) {
                 hideLoading();
-                Toast.makeText(activity_lessons.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                if(languageS!= null){
+                    if(languageS.contains("en")){
+                        Toast.makeText(activity_lessons.this, "Internet Lost, please try again", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(activity_lessons.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                    }
+                }else{
+                    Toast.makeText(activity_lessons.this, "Lỗi kết nối mạng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+
+                }
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }

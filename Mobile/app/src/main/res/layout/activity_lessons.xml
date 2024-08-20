@@ -30,7 +30,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:drawablePadding="8dp"
-                android:hint="@string/hint_search_lesson_edit"
+                android:hint="Tìm kiếm lý thuyết"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:padding="8dp"

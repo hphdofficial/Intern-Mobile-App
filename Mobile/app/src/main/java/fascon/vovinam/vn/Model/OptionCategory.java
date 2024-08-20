@@ -4,11 +4,21 @@ public class OptionCategory {
     private String CategoryName;
     private String CategoryID;
     private boolean isChecked;
+    private String CategoryNameEn;
 
-    public OptionCategory(String categoryID, String categoryName, boolean isChecked) {
+    public OptionCategory(String categoryID, String categoryName, String categoryNameEn, boolean isChecked) {
         CategoryID = categoryID;
         CategoryName = categoryName;
+        CategoryNameEn = categoryNameEn;
         this.isChecked = isChecked;
+    }
+
+    public String getCategoryNameEn() {
+        return CategoryNameEn;
+    }
+
+    public void setCategoryNameEn(String categoryNameEn) {
+        CategoryNameEn = categoryNameEn;
     }
 
     public OptionCategory() {
