@@ -41,7 +41,7 @@ public class activity_item_chapter extends BaseActivity {
 
         TextView txtTheoryTittle = findViewById(R.id.txtTheoryTitle);
         TextView txtTheoryContent = findViewById(R.id.txtTheoryContent);
-
+        TextView txtNotify = findViewById(R.id.textView3);
 
 
         //Fetch thông tin lý thuyết
@@ -59,6 +59,7 @@ public class activity_item_chapter extends BaseActivity {
                         if(languageS.contains("en")){
                             txtTheoryTittle.setText(theory.getTenen());
                             txtTheoryContent.setText(theory.getNoidungen());
+                            txtNotify.setText("Fellow, please wait for the clip from the server. If any video does not have the League Logo, there is no clip, you can film for your own reference. Will update when there is a federated clip.");
                         }
                     }
                     player = new ExoPlayer.Builder(getApplicationContext()).build();
@@ -94,7 +95,18 @@ public class activity_item_chapter extends BaseActivity {
             @Override
             public void onFailure(Call<TheoryModel> call, Throwable throwable) {
                 hideLoading();
-                Toast.makeText(activity_item_chapter.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
+                if(languageS != null){
+                    if(languageS.contains("en")){
+                        Toast.makeText(activity_item_chapter.this, "Internet lost Connection, please Try Again", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(activity_item_chapter.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
+
+                    }
+                }else{
+                    Toast.makeText(activity_item_chapter.this, "Lỗi kết nối, vui lòng thử lại", Toast.LENGTH_SHORT).show();
+
+                }
                 System.out.println("Active: Call Onfail");
                 Log.e("PostData", "Failure: " + throwable.getMessage());
             }
@@ -106,6 +118,12 @@ public class activity_item_chapter extends BaseActivity {
         SharedPreferences.Editor myContentE = myContent.edit();
         myContentE.putString("title", "Bài giảng lý thuyết");
         myContentE.apply();
+        if(languageS!= null){
+            if(languageS.contains("en")){
+                myContentE.putString("title", "Detail Theory");
+                myContentE.apply();
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
